@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
 
+- Update and clean up the template repo.
 
 [Unreleased]: https://github.com/giantswarm/REPOSITORY_NAME/tree/master
