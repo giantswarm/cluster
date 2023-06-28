@@ -15,5 +15,3 @@ version: 0.0.0-dev # [[ .Version ]] if you're using architect instead of app-bui
 annotations:
   application.giantswarm.io/team: "turtles"
   application.giantswarm.io/app-type: "cluster"
-  branch: my-branch # Used through .Chart.Annotations.branch (This is not replaced automatically)
-  commit: f00bar # Used through .Chart.Annotations.commit (This is not replaced automatically)
