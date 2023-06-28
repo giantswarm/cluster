@@ -1,0 +1,6 @@
+replace-chart-version-with-git: true
+generate-metadata: true
+chart-dir: ./helm/cluster
+destination: ./build
+ct-config: ./.circleci/ct-config.yaml
+catalog-base-url: http://localhost/
