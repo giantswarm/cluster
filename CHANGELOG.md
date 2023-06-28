@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add basic empty Helm chart.
+- Add app-build-suite config.
+- Add CircleCI job to build and push the chart with app-build-suite.
+
 ### Changed
 
 - Update and clean up the template repo.
