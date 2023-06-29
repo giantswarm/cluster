@@ -15,5 +15,5 @@ generate-schema: ensure-schema-gen ## Generate the values.schema.json file from 
 template: ## Output the rendered Helm template
 	@cd helm/cluster && \
 		sed -i 's/version: \[/version: 1 #\[/' Chart.yaml && \
-		helm template -f test/minimal-values.yaml . && \
+		helm template -f ci/ci-values.yaml . && \
 		sed -i 's/version: 1 #\[/version: \[/' Chart.yaml
