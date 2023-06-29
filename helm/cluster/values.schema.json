@@ -26,6 +26,7 @@
         "metadata": {
             "type": "object",
             "title": "Metadata",
+            "additionalProperties": false,
             "properties": {
                 "description": {
                     "type": "string",
@@ -67,14 +68,17 @@
         "connectivity": {
             "type": "object",
             "title": "Connectivity",
+            "additionalProperties": false,
             "properties": {
                 "network": {
                     "type": "object",
                     "title": "Network",
+                    "additionalProperties": false,
                     "properties": {
                         "pods": {
                             "type": "object",
                             "title": "Pods",
+                            "additionalProperties": false,
                             "properties": {
                                 "cidrBlocks": {
                                     "type": "array",
@@ -98,6 +102,7 @@
                         "services": {
                             "type": "object",
                             "title": "Services",
+                            "additionalProperties": false,
                             "properties": {
                                 "cidrBlocks": {
                                     "type": "array",
@@ -125,6 +130,7 @@
         "internal": {
             "type": "object",
             "title": "Internal",
+            "additionalProperties": false,
             "properties": {
                 "paused": {
                     "type": "boolean",
@@ -134,15 +140,18 @@
                 "controlPlane": {
                     "type": "object",
                     "title": "Internal control plane configuration",
+                    "additionalProperties": false,
                     "properties": {
                         "resources": {
                             "type": "object",
                             "title": "Resources configuration",
                             "description": "GVK and other configuration for control plane resources.",
+                            "additionalProperties": false,
                             "properties": {
                                 "controlPlane": {
                                     "type": "object",
                                     "title": "Control plane resource config",
+                                    "additionalProperties": false,
                                     "properties": {
                                         "api": {
                                             "$ref": "#/$defs/api"
@@ -172,11 +181,13 @@
                 "providerSpecific": {
                     "type": "object",
                     "title": "Internal provider specific configuration",
+                    "additionalProperties": false,
                     "properties": {
                         "resources": {
                             "type": "object",
                             "title": "Resources configuration",
                             "description": "GVK and other configuration for provider-specific infrastructure resources.",
+                            "additionalProperties": false,
                             "properties": {
                                 "cluster": {
                                     "type": "object",
