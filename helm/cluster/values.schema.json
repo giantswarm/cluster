@@ -3,6 +3,9 @@
     "$defs": {
         "api": {
             "type": "object",
+            "title": "API",
+            "description": "Group, version and kind",
+            "readOnly": true,
             "group": {
                 "type": "string",
                 "title": "API group"
@@ -32,11 +35,14 @@
                 "name": {
                     "type": "string",
                     "title": "Cluster name",
-                    "description": "Unique identifier, cannot be changed after creation."
+                    "description": "Unique identifier, cannot be changed after creation.",
+                    "readOnly": true
                 },
                 "organization": {
                     "type": "string",
-                    "title": "Organization"
+                    "title": "Organization",
+                    "description": "The name of organization that owns the cluster.",
+                    "readOnly": true
                 },
                 "servicePriority": {
                     "type": "string",
@@ -153,9 +159,15 @@
                                         "api"
                                     ]
                                 }
-                            }
+                            },
+                            "required": [
+                                "controlPlane"
+                            ]
                         }
-                    }
+                    },
+                    "required": [
+                        "resources"
+                    ]
                 },
                 "providerSpecific": {
                     "type": "object",
@@ -168,7 +180,7 @@
                             "properties": {
                                 "cluster": {
                                     "type": "object",
-                                    "title": "Provider specific cluster resource config",
+                                    "title": "Provider specific cluster resource",
                                     "properties": {
                                         "api": {
                                             "$ref": "#/$defs/api"
@@ -184,9 +196,15 @@
                                         "api"
                                     ]
                                 }
-                            }
+                            },
+                            "required": [
+                                "cluster"
+                            ]
                         }
-                    }
+                    },
+                    "required": [
+                        "resources"
+                    ]
                 }
             },
             "required":[
