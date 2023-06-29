@@ -8,6 +8,11 @@ metadata:
   labels:
     {{- include "labels.common" $ | nindent 4 }}
     cluster-apps-operator.giantswarm.io/watching: ""
+    {{- if .Values.metadata.labels }}
+    {{- range $key, $val := .Values.metadata.labels }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
+    {{- end }}
   name: {{ include "resource.default.name" $ }}
   namespace: {{ .Release.Namespace }}
 spec:
