@@ -1,0 +1,10 @@
+metadata:
+  name: awesome
+  organization: giantswarm
+  description: "Awesome Giant Swarm cluster"
+internal:
+  providerSpecific:
+    resources:
+      cluster:
+        api:
+          kind: AWSCluster
