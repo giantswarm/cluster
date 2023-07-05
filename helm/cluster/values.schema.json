@@ -161,45 +161,7 @@
             "additionalProperties": false,
             "properties": {
                 "controlPlane": {
-                    "type": "object",
-                    "title": "Internal control plane configuration",
-                    "additionalProperties": false,
-                    "properties": {
-                        "resources": {
-                            "type": "object",
-                            "title": "Resources configuration",
-                            "description": "GVK and other configuration for control plane resources.",
-                            "additionalProperties": false,
-                            "properties": {
-                                "controlPlane": {
-                                    "type": "object",
-                                    "title": "Control plane resource config",
-                                    "additionalProperties": false,
-                                    "properties": {
-                                        "api": {
-                                            "$ref": "#/$defs/api"
-                                        }
-                                    },
-                                    "default": {
-                                        "api": {
-                                            "group": "controlplane.cluster.x-k8s.io",
-                                            "version": "v1beta1",
-                                            "kind": "KubeadmControlPlane"
-                                        }
-                                    },
-                                    "required": [
-                                        "api"
-                                    ]
-                                }
-                            },
-                            "required": [
-                                "controlPlane"
-                            ]
-                        }
-                    },
-                    "required": [
-                        "resources"
-                    ]
+                    "$ref": "file://templates/clusterapi/controlplane/values.internal.schema.json"
                 },
                 "kubernetesVersion": {
                     "type": "string",
@@ -225,43 +187,7 @@
                     "default": false
                 },
                 "providerSpecific": {
-                    "type": "object",
-                    "title": "Internal provider specific configuration",
-                    "additionalProperties": false,
-                    "properties": {
-                        "resources": {
-                            "type": "object",
-                            "title": "Resources configuration",
-                            "description": "GVK and other configuration for provider-specific infrastructure resources.",
-                            "additionalProperties": false,
-                            "properties": {
-                                "cluster": {
-                                    "type": "object",
-                                    "title": "Provider specific cluster resource",
-                                    "properties": {
-                                        "api": {
-                                            "$ref": "#/$defs/api"
-                                        }
-                                    },
-                                    "default":{
-                                        "api": {
-                                            "group": "infrastructure.cluster.x-k8s.io",
-                                            "version": "v1beta1"
-                                        }
-                                    },
-                                    "required": [
-                                        "api"
-                                    ]
-                                }
-                            },
-                            "required": [
-                                "cluster"
-                            ]
-                        }
-                    },
-                    "required": [
-                        "resources"
-                    ]
+                    "$ref": "file://templates/clusterapi/provider/values.internal.schema.json"
                 }
             },
             "required":[

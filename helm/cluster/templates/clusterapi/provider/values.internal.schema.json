@@ -1,0 +1,68 @@
+{
+    "$schema": "http://json-schema.org/schema#",
+    "$defs": {
+        "api": {
+            "type": "object",
+            "title": "API",
+            "description": "Group, version and kind",
+            "readOnly": true,
+            "additionalProperties": false,
+            "properties": {
+                "group": {
+                    "type": "string",
+                    "title": "API group"
+                },
+                "version": {
+                    "type": "string",
+                    "title": "API version"
+                },
+                "kind": {
+                    "type": "string",
+                    "title": "API kind"
+                }
+            },
+            "required": [
+                "group",
+                "version",
+                "kind"
+            ]
+        }
+    },
+    "type": "object",
+    "title": "Internal provider specific configuration",
+    "additionalProperties": false,
+    "properties": {
+        "resources": {
+            "type": "object",
+            "title": "Resources configuration",
+            "description": "GVK and other configuration for provider-specific infrastructure resources.",
+            "additionalProperties": false,
+            "properties": {
+                "cluster": {
+                    "type": "object",
+                    "title": "Provider specific cluster resource",
+                    "properties": {
+                        "api": {
+                            "$ref": "#/$defs/api"
+                        }
+                    },
+                    "default":{
+                        "api": {
+                            "group": "infrastructure.cluster.x-k8s.io",
+                            "version": "v1beta1"
+                        }
+                    },
+                    "required": [
+                        "api"
+                    ]
+                }
+            },
+            "required": [
+                "cluster"
+            ]
+        }
+    },
+    "required": [
+        "resources"
+    ]
+}

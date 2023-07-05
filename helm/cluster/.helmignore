@@ -1,0 +1,3 @@
+# Ignore JSON schemas for values
+templates/clusterapi/controlplane/values.internal.schema.json
+templates/clusterapi/provider/values.internal.schema.json
