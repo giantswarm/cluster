@@ -28,6 +28,19 @@
             "title": "Metadata",
             "additionalProperties": false,
             "properties": {
+                "annotations": {
+                    "type": "object",
+                    "title": "Annotations",
+                    "description": "These annotations are added to all Kubernetes resources defining this cluster.",
+                    "additionalProperties": false,
+                    "patternProperties": {
+                        "^([a-zA-Z0-9\\.-]{1,253}\/)?[a-zA-Z0-9\\._-]{1,63}$": {
+                            "type": "string",
+                            "title": "Annotation",
+                            "minLength": 1
+                        }
+                    }
+                },
                 "description": {
                     "type": "string",
                     "title": "Cluster description",
