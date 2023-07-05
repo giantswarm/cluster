@@ -160,11 +160,6 @@
             "title": "Internal",
             "additionalProperties": false,
             "properties": {
-                "paused": {
-                    "type": "boolean",
-                    "title": "Paused",
-                    "default": false
-                },
                 "controlPlane": {
                     "type": "object",
                     "title": "Internal control plane configuration",
@@ -205,6 +200,29 @@
                     "required": [
                         "resources"
                     ]
+                },
+                "kubernetesVersion": {
+                    "type": "string",
+                    "title": "Kubernetes version",
+                    "examples": [
+                        "1.24.7"
+                    ],
+                    "default": "1.24.10"
+                },
+                "operatingSystem": {
+                    "type": "string",
+                    "title": "Operating system",
+                    "enum": [
+                        "flatcar",
+                        "ubuntu"
+                    ],
+                    "default": "flatcar",
+                    "example": "flatcar"
+                },
+                "paused": {
+                    "type": "boolean",
+                    "title": "Paused",
+                    "default": false
                 },
                 "providerSpecific": {
                     "type": "object",
@@ -247,8 +265,10 @@
                 }
             },
             "required":[
-                "paused",
                 "controlPlane",
+                "kubernetesVersion",
+                "operatingSystem",
+                "paused",
                 "providerSpecific"
             ]
         }

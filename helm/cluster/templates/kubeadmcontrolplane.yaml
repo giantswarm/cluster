@@ -1,0 +1,24 @@
+apiVersion: controlplane.cluster.x-k8s.io/v1beta1
+kind: KubeadmControlPlane
+metadata:
+  annotations:
+    "helm.sh/resource-policy": keep
+    {{- if .Values.metadata.annotations }}
+    {{- range $key, $val := .Values.metadata.annotations }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
+    {{- end }}
+  labels:
+    {{- include "labels.common" $ | nindent 4 }}
+    {{- if .Values.metadata.labels }}
+    {{- range $key, $val := .Values.metadata.labels }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
+    {{- end }}
+  name: {{ include "resource.default.name" $ }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  version: v{{ trimPrefix "v" .Values.internal.kubernetesVersion }}
+  kubeadmConfigSpec:
+    format: {{ include "cluster.os.kubeadmConfigSpecFormat" $ }}
+    {{- include "cluster.os.config" $ | nindent 4 }}
