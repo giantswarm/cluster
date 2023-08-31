@@ -1,25 +1,6 @@
 {
     "$schema": "http://json-schema.org/schema#",
-    "$defs": {
-        "api": {
-            "type": "object",
-            "title": "API",
-            "description": "Group, version and kind",
-            "readOnly": true,
-            "group": {
-                "type": "string",
-                "title": "API group"
-            },
-            "version": {
-                "type": "string",
-                "title": "API version"
-            },
-            "kind": {
-                "type": "string",
-                "title": "API kind"
-            }
-        }
-    },
+    "$id": "values.schema.json",
     "type": "object",
     "additionalProperties": false,
     "properties": {
@@ -161,7 +142,45 @@
             "additionalProperties": false,
             "properties": {
                 "controlPlane": {
-                    "$ref": "file://templates/clusterapi/controlplane/values.internal.schema.json"
+                    "type": "object",
+                    "title": "Internal control plane configuration",
+                    "additionalProperties": false,
+                    "properties": {
+                        "resources": {
+                            "type": "object",
+                            "title": "Resources configuration",
+                            "description": "GVK and other configuration for control plane resources.",
+                            "additionalProperties": false,
+                            "properties": {
+                                "controlPlane": {
+                                    "type": "object",
+                                    "title": "Control plane resource config",
+                                    "additionalProperties": false,
+                                    "properties": {
+                                        "api": {
+                                            "$ref": "https://raw.githubusercontent.com/giantswarm/schema/add-gvk-schema/gvk/v0.0.1.json"
+                                        }
+                                    },
+                                    "default": {
+                                        "api": {
+                                            "group": "controlplane.cluster.x-k8s.io",
+                                            "version": "v1beta1",
+                                            "kind": "KubeadmControlPlane"
+                                        }
+                                    },
+                                    "required": [
+                                        "api"
+                                    ]
+                                }
+                            },
+                            "required": [
+                                "controlPlane"
+                            ]
+                        }
+                    },
+                    "required": [
+                        "resources"
+                    ]
                 },
                 "kubernetesVersion": {
                     "type": "string",
@@ -187,7 +206,43 @@
                     "default": false
                 },
                 "providerSpecific": {
-                    "$ref": "file://templates/clusterapi/provider/values.internal.schema.json"
+                    "type": "object",
+                    "title": "Internal provider specific configuration",
+                    "additionalProperties": false,
+                    "properties": {
+                        "resources": {
+                            "type": "object",
+                            "title": "Resources configuration",
+                            "description": "GVK and other configuration for provider-specific infrastructure resources.",
+                            "additionalProperties": false,
+                            "properties": {
+                                "cluster": {
+                                    "type": "object",
+                                    "title": "Provider specific cluster resource",
+                                    "properties": {
+                                        "api": {
+                                            "$ref": "https://raw.githubusercontent.com/giantswarm/schema/add-gvk-schema/gvk/v0.0.1.json"
+                                        }
+                                    },
+                                    "default":{
+                                        "api": {
+                                            "group": "infrastructure.cluster.x-k8s.io",
+                                            "version": "v1beta1"
+                                        }
+                                    },
+                                    "required": [
+                                        "api"
+                                    ]
+                                }
+                            },
+                            "required": [
+                                "cluster"
+                            ]
+                        }
+                    },
+                    "required": [
+                        "resources"
+                    ]
                 }
             },
             "required":[

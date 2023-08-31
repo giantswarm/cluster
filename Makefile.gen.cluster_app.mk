@@ -28,6 +28,4 @@ generate-docs: ## Generate values documentation from schema
 generate-values: ## Generate values.yaml from schema
 	go install github.com/giantswarm/helm-values-gen@v1
 	@cd helm/cluster && \
-		sed -i 's/^\(\s*\)\"$$ref\"\:\s\"file\:\/\/\(.*\)$$/\1\"$$ref\"\: \"\2/' ./values.schema.json && \
-		helm-values-gen ./values.schema.json -o ./values.yaml --force && \
-		sed -i 's/^\(\s*\)\"$$ref\"\:\s\"\(.*\)$$/\1\"$$ref\"\: \"file:\/\/\2/' ./values.schema.json
+		helm-values-gen ./values.schema.json -o ./values.yaml --force
