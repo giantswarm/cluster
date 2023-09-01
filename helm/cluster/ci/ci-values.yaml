@@ -3,6 +3,44 @@ metadata:
   organization: giantswarm
   description: "Awesome Giant Swarm cluster"
 internal:
+  controlPlane:
+    kubeadmConfig:
+      ignition:
+        containerLinuxConfig:
+          additionalConfig:
+            systemd:
+              units:
+              - name: kubeadm.service
+                dropins:
+                - name: 10-flatcar.conf
+                  contents: |
+                    [Unit]
+                    # kubeadm must run after coreos-metadata populated /run/metadata directory.
+                    Requires=coreos-metadata.service
+                    After=coreos-metadata.service
+                    [Service]
+                    # Ensure kubeadm service has access to kubeadm binary in /opt/bin on Flatcar.
+                    Environment=PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/opt/bin
+                    # To make metadata environment variables available for pre-kubeadm commands.
+                    EnvironmentFile=/run/metadata/*
+              - name: containerd.service
+                enabled: true
+                dropins:
+                - name: 10-change-cgroup.conf
+                  contents: |
+                    [Service]
+                    CPUAccounting=true
+                    MemoryAccounting=true
+                    Slice=kubereserved.slice
+    resources:
+      controlPlane:
+        api:
+          group: asd
+          version: v1
+          kind: KubeadmControlPlane
+  kubernetesVersion: 1.24.10
+  operatingSystem: flatcar
+  paused: false
   providerSpecific:
     resources:
       cluster:

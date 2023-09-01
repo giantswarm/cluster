@@ -10,6 +10,7 @@ connectivity:
         - 172.31.0.0/16
 internal:
   controlPlane:
+    replicas: 3
     resources:
       controlPlane:
         api:
