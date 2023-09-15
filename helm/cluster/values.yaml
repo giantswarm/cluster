@@ -8,9 +8,16 @@ connectivity:
     services:
       cidrBlocks:
         - 172.31.0.0/16
+controlPlane:
+  replicas: 3
 internal:
   controlPlane:
-    replicas: 3
+    kubeadmConfig:
+      ignition:
+        containerLinuxConfig:
+          additionalConfig:
+            storage: {}
+            systemd: {}
     resources:
       controlPlane:
         api:
@@ -18,7 +25,6 @@ internal:
           kind: KubeadmControlPlane
           version: v1beta1
   kubernetesVersion: 1.24.10
-  operatingSystem: flatcar
   paused: false
   providerSpecific:
     resources:

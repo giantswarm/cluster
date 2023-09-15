@@ -502,16 +502,6 @@
                     ],
                     "default": "1.24.10"
                 },
-                "operatingSystem": {
-                    "type": "string",
-                    "title": "Operating system",
-                    "enum": [
-                        "flatcar",
-                        "ubuntu"
-                    ],
-                    "default": "flatcar",
-                    "example": "flatcar"
-                },
                 "paused": {
                     "type": "boolean",
                     "title": "Paused",
@@ -560,7 +550,6 @@
             "required":[
                 "controlPlane",
                 "kubernetesVersion",
-                "operatingSystem",
                 "paused",
                 "providerSpecific"
             ]

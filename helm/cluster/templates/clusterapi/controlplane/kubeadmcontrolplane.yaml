@@ -20,5 +20,10 @@ metadata:
 spec:
   version: v{{ trimPrefix "v" .Values.internal.kubernetesVersion }}
   kubeadmConfigSpec:
-    format: {{ include "cluster.os.kubeadmConfigSpecFormat" $ }}
-    {{- include "cluster.os.config" $ | nindent 4 }}
+    format: ignition
+    ignition:
+      containerLinuxConfig:
+        additionalConfig: |
+          systemd:
+            units:
+            {{- include "cluster.kubeadmControlPlane.kubeadmConfigSpec.ignition.containerLinuxConfig.additionalConfig.systemd.units" $ | nindent 12 }}
