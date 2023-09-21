@@ -26,4 +26,7 @@ spec:
         additionalConfig: |
           systemd:
             units:
-            {{- include "cluster.kubeadmControlPlane.kubeadmConfigSpec.ignition.containerLinuxConfig.additionalConfig.systemd.units" $ | nindent 12 }}
+            {{- include "cluster.kubeadmControlPlane.kubeadmConfigSpec.ignition.containerLinuxConfig.additionalConfig.systemd.units" $ | indent 12 }}
+          storage:
+            filesystems:
+            {{- include "cluster.kubeadmControlPlane.kubeadmConfigSpec.ignition.containerLinuxConfig.additionalConfig.storage.filesystems" $ | indent 12 }}

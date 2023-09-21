@@ -91,6 +91,26 @@ internal:
                   contents: |
                     # Multi-line
                     # contents goes here
+            storage:
+              filesystems:
+              - name: etcd
+                mount:
+                  device: /dev/xvdc
+                  wipeFilesystem: true
+                  label: etcd
+                  format: xfs
+              - name: containerd
+                mount:
+                  device: /dev/xvdd
+                  wipeFilesystem: true
+                  label: containerd
+                  format: xfs
+              - name: kubelet
+                mount:
+                  device: /dev/xvde
+                  wipeFilesystem: true
+                  label: kubelet
+                  format: xfs
     resources:
       controlPlane:
         api:
