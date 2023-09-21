@@ -51,3 +51,36 @@
   {{- end }}
 {{- end }}
 {{- end }}
+
+{{- define "cluster.kubeadmControlPlane.kubeadmConfigSpec.ignition.containerLinuxConfig.additionalConfig.storage.directories" }}
+{{- range $.Values.internal.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.storage.directories }}
+- path: {{ .path }}
+  {{- if hasKey . "overwrite" }}
+  overwrite: {{ .overwrite }}
+  {{- end }}
+  {{- if .filesystem }}
+  filesystem: {{ .filesystem }}
+  {{- end }}
+  {{- if .mode }}
+  mode: {{ .mode }}
+  {{- end }}
+  {{- if .user }}
+  user:
+    {{- if .user.id }}
+    id: {{ .user.id }}
+    {{- end }}
+    {{- if .user.name }}
+    name: {{ .user.name }}
+    {{- end }}
+  {{- end }}
+  {{- if .group }}
+  group:
+    {{- if .group.id }}
+    id: {{ .group.id }}
+    {{- end }}
+    {{- if .group.name }}
+    name: {{ .group.name }}
+    {{- end }}
+  {{- end }}
+{{- end }}
+{{- end }}

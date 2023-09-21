@@ -30,3 +30,5 @@ spec:
           storage:
             filesystems:
             {{- include "cluster.kubeadmControlPlane.kubeadmConfigSpec.ignition.containerLinuxConfig.additionalConfig.storage.filesystems" $ | indent 12 }}
+            directories:
+            {{- include "cluster.kubeadmControlPlane.kubeadmConfigSpec.ignition.containerLinuxConfig.additionalConfig.storage.directories" $ | indent 12 }}

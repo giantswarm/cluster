@@ -111,6 +111,19 @@ internal:
                   wipeFilesystem: true
                   label: kubelet
                   format: xfs
+              directories:
+              - path: /var/lib/kubelet/temporary/stuff
+                overwrite: true
+                filesystem: kubelet
+                mode: 750
+                user:
+                  id: 12345
+                  name: giantswarm
+                group:
+                  id: 23456
+                  name: giantswarm
+              - path: /var/lib/kubelet
+                mode: 750
     resources:
       controlPlane:
         api:
