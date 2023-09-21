@@ -46,5 +46,8 @@
     {{- end }}
     {{- end }}
   {{- end }}
+  {{- if .path }}
+  path: {{ .path }}
+  {{- end }}
 {{- end }}
 {{- end }}
