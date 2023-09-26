@@ -432,6 +432,54 @@
             "title": "Control plane",
             "description": "Configuration of the control plane.",
             "properties": {
+                "oidc": {
+                    "type": "object",
+                    "title": "OIDC authentication",
+                    "properties": {
+                        "caPem": {
+                            "type": "string",
+                            "title": "Certificate authority",
+                            "description": "Identity provider's CA certificate in PEM format."
+                        },
+                        "clientId": {
+                            "type": "string",
+                            "title": "Client ID"
+                        },
+                        "groupsClaim": {
+                            "type": "string",
+                            "title": "Groups claim"
+                        },
+                        "issuerUrl": {
+                            "type": "string",
+                            "title": "Issuer URL",
+                            "description": "Exact issuer URL that will be included in identity tokens."
+                        },
+                        "usernameClaim": {
+                            "type": "string",
+                            "title": "Username claim"
+                        }
+                    },
+                    "oneOf": [
+                        {
+                            "required": [
+                                "clientId",
+                                "groupsClaim",
+                                "issuerUrl",
+                                "usernameClaim"
+                            ]
+                        },
+                        {
+                            "not": {
+                                "required": [
+                                    "clientId",
+                                    "groupsClaim",
+                                    "issuerUrl",
+                                    "usernameClaim"
+                                ]
+                            }
+                        }
+                    ]
+                },
                 "replicas": {
                     "type": "integer",
                     "title": "Replicas",
@@ -476,43 +524,49 @@
                                             "additionalProperties": false,
                                             "properties": {
                                                 "serviceAccountIssuer": {
-                                                    "type": "object",
                                                     "title": "Service account issuer",
                                                     "description": "Configuration of the identifier of the service account token issuer. You must specify either URL or clusterDomainPrefix (only one, not both).",
-                                                    "additionalProperties": false,
-                                                    "properties": {
-                                                        "URL": {
-                                                            "type": "string",
-                                                            "title": "URL",
-                                                            "description": "This URL is used as the identifier of the service account token issuer."
-                                                        },
-                                                        "clusterDomainPrefix": {
-                                                            "type": "string",
-                                                            "title": "Cluster domain prefix",
-                                                            "description": "Prefix that is prepended to the cluster domain name, so that resulting URL is used as the identifier of the service account token issuer."
-                                                        }
-                                                    },
                                                     "oneOf": [
                                                         {
-                                                            "required": ["URL"],
-                                                            "not": {"required": ["clusterDomainPrefix"]}
+                                                            "type": "null"
                                                         },
                                                         {
-                                                            "required": ["clusterDomainPrefix"],
-                                                            "not": {"required": ["URL"]}
+                                                            "type": "object",
+                                                            "additionalProperties": false,
+                                                            "properties": {
+                                                                "url": {
+                                                                    "type": "string",
+                                                                    "title": "URL",
+                                                                    "description": "This URL is used as the identifier of the service account token issuer."
+                                                                },
+                                                                "clusterDomainPrefix": {
+                                                                    "type": "string",
+                                                                    "title": "Cluster domain prefix",
+                                                                    "description": "Prefix that is prepended to the cluster domain name, so that resulting URL is used as the identifier of the service account token issuer."
+                                                                }
+                                                            },
+                                                            "oneOf": [
+                                                                {
+                                                                    "required": ["url"],
+                                                                    "not": {"required": ["clusterDomainPrefix"]}
+                                                                },
+                                                                {
+                                                                    "required": ["clusterDomainPrefix"],
+                                                                    "not": {"required": ["url"]}
+                                                                }
+                                                            ]
                                                         }
                                                     ]
                                                 }
+                                            },
+                                            "default": {
+                                                "serviceAccountIssuer": null
                                             }
                                         }
-                                    },
-                                    "required": [
-                                        "apiServer"
-                                    ]
+                                    }
                                 }
                             },
                             "required": [
-                                "clusterConfiguration",
                                 "ignition"
                             ]
                         },

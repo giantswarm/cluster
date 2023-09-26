@@ -52,3 +52,17 @@ spec:
           {{- if .Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuer }}
           service-account-issuer: "{{ include "cluster.kubeadmControlPlane.kubeadmConfigSpec.clusterConfiguration.apiServer.serviceAccountIssuer" $ }}"
           {{- end }}
+          {{- if .Values.controlPlane.oidc }}
+          #
+          # OpenID Connect configuration
+          #
+          {{- include "cluster.kubeadmControlPlane.kubeadmConfigSpec.clusterConfiguration.apiServer.oidc" $ | indent 10 }}
+          {{- end }}
+          #
+          # Audit logs
+          #
+          audit-log-maxage: "30"
+          audit-log-maxbackup: "30"
+          audit-log-maxsize: "100"
+          audit-log-path: /var/log/apiserver/audit.log
+          audit-policy-file: /etc/kubernetes/policies/audit-policy.yaml

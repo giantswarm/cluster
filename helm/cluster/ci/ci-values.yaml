@@ -4,13 +4,21 @@ metadata:
   description: "Awesome Giant Swarm cluster"
 connectivity:
   baseDomain: example.gigantic.io
+controlPlane:
+  oidc:
+    clientId: hello
+    groupsClaim: groupsClaim
+    issuerUrl: https://giantswarm.io
+    usernameClaim: usernameClaim
+    caPem: "..."
+  replicas: 3
 internal:
   controlPlane:
     kubeadmConfig:
       clusterConfiguration:
         apiServer:
           serviceAccountIssuer:
-            clusterDomainPrefix: "irsa"
+            clusterDomainPrefix: irsa
       ignition:
         containerLinuxConfig:
           additionalConfig:
