@@ -32,3 +32,23 @@ spec:
             {{- include "cluster.kubeadmControlPlane.kubeadmConfigSpec.ignition.containerLinuxConfig.additionalConfig.storage.filesystems" $ | indent 12 }}
             directories:
             {{- include "cluster.kubeadmControlPlane.kubeadmConfigSpec.ignition.containerLinuxConfig.additionalConfig.storage.directories" $ | indent 12 }}
+    clusterConfiguration:
+      # Avoid accessibility issues (e.g. on private clusters) and potential future rate limits for
+      # the default `registry.k8s.io`.
+      imageRepository: docker.io/giantswarm
+
+      # API server configuration
+      apiServer:
+        # Timeout for the API server to appear.
+        # TODO: this should be aligned with alerts, i.e. time here should be less than the time after which we alert for API server replica being down.
+        timeoutForControlPlane: 20min
+        certSANs:
+        - localhost
+        - 127.0.0.1
+        - "api.{{ include "resource.default.name" $ }}.{{ required "The baseDomain value is required" .Values.connectivity.baseDomain }}"
+        - "apiserver.{{ include "resource.default.name" $ }}.{{ required "The baseDomain value is required" .Values.connectivity.baseDomain }}"
+        extraArgs:
+          cloud-provider: external
+          {{- if .Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuer }}
+          service-account-issuer: "{{ include "cluster.kubeadmControlPlane.kubeadmConfigSpec.clusterConfiguration.apiServer.serviceAccountIssuer" $ }}"
+          {{- end }}

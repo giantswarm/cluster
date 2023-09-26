@@ -2,9 +2,15 @@ metadata:
   name: awesome
   organization: giantswarm
   description: "Awesome Giant Swarm cluster"
+connectivity:
+  baseDomain: example.gigantic.io
 internal:
   controlPlane:
     kubeadmConfig:
+      clusterConfiguration:
+        apiServer:
+          serviceAccountIssuer:
+            clusterDomainPrefix: "irsa"
       ignition:
         containerLinuxConfig:
           additionalConfig:

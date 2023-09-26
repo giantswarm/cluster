@@ -363,6 +363,10 @@
             "title": "Connectivity",
             "additionalProperties": false,
             "properties": {
+                "baseDomain": {
+                    "type": "string",
+                    "title": "Base DNS domain"
+                },
                 "network": {
                     "type": "object",
                     "title": "Network",
@@ -418,7 +422,10 @@
                         }
                     }
                 }
-            }
+            },
+            "required": [
+                "baseDomain"
+            ]
         },
         "controlPlane": {
             "type": "object",
@@ -451,11 +458,63 @@
                             "type": "object",
                             "title": "Kubeadm config",
                             "description": "Configuration of control plane nodes.",
+                            "additionalProperties": false,
                             "properties": {
                                 "ignition": {
                                     "$ref": "#/$defs/ignition"
+                                },
+                                "clusterConfiguration": {
+                                    "type": "object",
+                                    "title": "Cluster configuration",
+                                    "description": "Configuration of Kubernetes components.",
+                                    "additionalProperties": false,
+                                    "properties": {
+                                        "apiServer": {
+                                            "type": "object",
+                                            "title": "API server",
+                                            "description": "Configuration of API server.",
+                                            "additionalProperties": false,
+                                            "properties": {
+                                                "serviceAccountIssuer": {
+                                                    "type": "object",
+                                                    "title": "Service account issuer",
+                                                    "description": "Configuration of the identifier of the service account token issuer. You must specify either URL or clusterDomainPrefix (only one, not both).",
+                                                    "additionalProperties": false,
+                                                    "properties": {
+                                                        "URL": {
+                                                            "type": "string",
+                                                            "title": "URL",
+                                                            "description": "This URL is used as the identifier of the service account token issuer."
+                                                        },
+                                                        "clusterDomainPrefix": {
+                                                            "type": "string",
+                                                            "title": "Cluster domain prefix",
+                                                            "description": "Prefix that is prepended to the cluster domain name, so that resulting URL is used as the identifier of the service account token issuer."
+                                                        }
+                                                    },
+                                                    "oneOf": [
+                                                        {
+                                                            "required": ["URL"],
+                                                            "not": {"required": ["clusterDomainPrefix"]}
+                                                        },
+                                                        {
+                                                            "required": ["clusterDomainPrefix"],
+                                                            "not": {"required": ["URL"]}
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "required": [
+                                        "apiServer"
+                                    ]
                                 }
-                            }
+                            },
+                            "required": [
+                                "clusterConfiguration",
+                                "ignition"
+                            ]
                         },
                         "resources": {
                             "type": "object",

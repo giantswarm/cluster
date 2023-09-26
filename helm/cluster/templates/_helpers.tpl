@@ -21,7 +21,7 @@ Given that Kubernetes allows 63 characters for resource names, the stem is trunc
 room for such suffix.
 */}}
 {{- define "resource.default.name" -}}
-{{- .Values.metadata.name | default (.Release.Name | replace "." "-" | trunc 47 | trimSuffix "-") -}}
+{{- $.Values.metadata.name | default (.Release.Name | replace "." "-" | trunc 47 | trimSuffix "-") -}}
 {{- end -}}
 
 {{/*
@@ -33,8 +33,8 @@ app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
 app.kubernetes.io/version: {{ .Chart.Version | quote }}
 application.giantswarm.io/team: {{ index .Chart.Annotations "application.giantswarm.io/team" | quote }}
 giantswarm.io/cluster: {{ include "resource.default.name" . | quote }}
-giantswarm.io/organization: {{ required "You must provide an existing organization name in .metadata.organization" .Values.metadata.organization | quote }}
-giantswarm.io/service-priority: {{ .Values.metadata.servicePriority }}
+giantswarm.io/organization: {{ required "You must provide an existing organization name in .metadata.organization" $.Values.metadata.organization | quote }}
+giantswarm.io/service-priority: {{ $.Values.metadata.servicePriority }}
 cluster.x-k8s.io/cluster-name: {{ include "resource.default.name" . | quote }}
 cluster.x-k8s.io/watch-filter: capi
 helm.sh/chart: {{ include "chart" . | quote }}
