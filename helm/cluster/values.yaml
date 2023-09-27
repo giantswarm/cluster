@@ -9,14 +9,12 @@ connectivity:
       cidrBlocks:
         - 172.31.0.0/16
 controlPlane:
-  oidc: {}
   replicas: 3
 internal:
   controlPlane:
     kubeadmConfig:
       clusterConfiguration:
-        apiServer:
-          serviceAccountIssuer: null
+        apiServer: {}
       ignition:
         containerLinuxConfig:
           additionalConfig:
