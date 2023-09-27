@@ -517,6 +517,39 @@
                                             "description": "Configuration of API server.",
                                             "additionalProperties": false,
                                             "properties": {
+                                                "additionalAdmissionPlugins": {
+                                                    "type": "array",
+                                                    "title": "Additional admission plugins",
+                                                    "description": "A list of plugins to enable, in addition to the default ones that include DefaultStorageClass, DefaultTolerationSeconds, LimitRanger, MutatingAdmissionWebhook, NamespaceLifecycle, PersistentVolumeClaimResize, Priority, ResourceQuota, ServiceAccount and ValidatingAdmissionWebhook.",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "title": "Additional admission plugin"
+                                                    }
+                                                },
+                                                "apiAudiences": {
+                                                    "title": "API audiences",
+                                                    "description": "Identifiers of the API. The service account token authenticator will validate that tokens used against the API are bound to at least one of these audiences. If the --service-account-issuer flag is configured and this flag is not, 'api-audiences' field defaults to a single element list containing the issuer URL.",
+                                                    "oneOf": [
+                                                        {
+                                                            "type": "null"
+                                                        },
+                                                        {
+                                                            "type": "string"
+                                                        },
+                                                        {
+                                                            "type": "object",
+                                                            "additionalProperties": false,
+                                                            "properties": {
+                                                                "templateName": {
+                                                                    "type": "string",
+                                                                    "title": "Template name",
+                                                                    "description": "The name of the Helm template which renders the 'api-audiences' value"
+                                                                }
+                                                            },
+                                                            "required": ["templateName"]
+                                                        }
+                                                    ]
+                                                },
                                                 "serviceAccountIssuer": {
                                                     "title": "Service account issuer",
                                                     "description": "Configuration of the identifier of the service account token issuer. You must specify either URL or clusterDomainPrefix (only one, not both).",
@@ -549,30 +582,6 @@
                                                                     "not": {"required": ["url"]}
                                                                 }
                                                             ]
-                                                        }
-                                                    ]
-                                                },
-                                                "apiAudiences": {
-                                                    "title": "API audiences",
-                                                    "description": "Identifiers of the API. The service account token authenticator will validate that tokens used against the API are bound to at least one of these audiences. If the --service-account-issuer flag is configured and this flag is not, 'api-audiences' field defaults to a single element list containing the issuer URL.",
-                                                    "oneOf": [
-                                                        {
-                                                            "type": "null"
-                                                        },
-                                                        {
-                                                            "type": "string"
-                                                        },
-                                                        {
-                                                            "type": "object",
-                                                            "additionalProperties": false,
-                                                            "properties": {
-                                                                "templateName": {
-                                                                    "type": "string",
-                                                                    "title": "Template name",
-                                                                    "description": "The name of the Helm template which renders the 'api-audiences' value"
-                                                                }
-                                                            },
-                                                            "required": ["templateName"]
                                                         }
                                                     ]
                                                 }

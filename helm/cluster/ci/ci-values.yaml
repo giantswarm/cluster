@@ -17,6 +17,9 @@ internal:
     kubeadmConfig:
       clusterConfiguration:
         apiServer:
+          additionalAdmissionPlugins:
+          - AlwaysPullImages
+          - PodSecurityPolicy
           apiAudiences:
             templateName: "cluster.test.kubeadmControlPlane.kubeadmConfigSpec.clusterConfiguration.apiServer.apiAudiences"
           serviceAccountIssuer:

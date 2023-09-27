@@ -69,3 +69,8 @@ spec:
           audit-log-maxsize: "100"
           audit-log-path: /var/log/apiserver/audit.log
           audit-policy-file: /etc/kubernetes/policies/audit-policy.yaml
+          #
+          # Other
+          #
+          encryption-provider-config: /etc/kubernetes/encryption/config.yaml
+          enable-admission-plugins: {{ include "cluster.test.kubeadmControlPlane.kubeadmConfigSpec.clusterConfiguration.apiServer.enableAdmissionPlugins" $ }}

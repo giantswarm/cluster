@@ -1,3 +1,21 @@
+{{- define "cluster.test.kubeadmControlPlane.kubeadmConfigSpec.clusterConfiguration.apiServer.enableAdmissionPlugins" }}
+{{- $enabledAdmissionPlugins := list
+  "DefaultStorageClass"
+  "DefaultTolerationSeconds"
+  "LimitRanger"
+  "MutatingAdmissionWebhook"
+  "NamespaceLifecycle"
+  "PersistentVolumeClaimResize"
+  "Priority"
+  "ResourceQuota"
+  "ServiceAccount"
+  "ValidatingAdmissionWebhook" -}}
+{{- range $additionalAdmissionPlugin := $.Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.additionalAdmissionPlugins }}
+{{- $enabledAdmissionPlugins = append $enabledAdmissionPlugins $additionalAdmissionPlugin -}}
+{{- end }}
+{{- join "," (compact $enabledAdmissionPlugins) }}
+{{- end }}
+
 {{- define "cluster.kubeadmControlPlane.kubeadmConfigSpec.clusterConfiguration.apiServer.oidc" }}
 {{- with $oidc := .Values.controlPlane.oidc }}
 oidc-issuer-url: {{ $oidc.issuerUrl }}
