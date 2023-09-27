@@ -52,6 +52,9 @@ spec:
           {{- if .Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuer }}
           service-account-issuer: "{{ include "cluster.kubeadmControlPlane.kubeadmConfigSpec.clusterConfiguration.apiServer.serviceAccountIssuer" $ }}"
           {{- end }}
+          {{- if .Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.apiAudiences }}
+          {{- include "cluster.kubeadmControlPlane.kubeadmConfigSpec.clusterConfiguration.apiServer.apiAudiences" $ | indent 10 }}
+          {{- end }}
           {{- if .Values.controlPlane.oidc }}
           #
           # OpenID Connect configuration

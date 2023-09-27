@@ -551,6 +551,30 @@
                                                             ]
                                                         }
                                                     ]
+                                                },
+                                                "apiAudiences": {
+                                                    "title": "API audiences",
+                                                    "description": "Identifiers of the API. The service account token authenticator will validate that tokens used against the API are bound to at least one of these audiences. If the --service-account-issuer flag is configured and this flag is not, 'api-audiences' field defaults to a single element list containing the issuer URL.",
+                                                    "oneOf": [
+                                                        {
+                                                            "type": "null"
+                                                        },
+                                                        {
+                                                            "type": "string"
+                                                        },
+                                                        {
+                                                            "type": "object",
+                                                            "additionalProperties": false,
+                                                            "properties": {
+                                                                "templateName": {
+                                                                    "type": "string",
+                                                                    "title": "Template name",
+                                                                    "description": "The name of the Helm template which renders the 'api-audiences' value"
+                                                                }
+                                                            },
+                                                            "required": ["templateName"]
+                                                        }
+                                                    ]
                                                 }
                                             },
                                             "default": {}

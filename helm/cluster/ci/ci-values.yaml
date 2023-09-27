@@ -17,6 +17,8 @@ internal:
     kubeadmConfig:
       clusterConfiguration:
         apiServer:
+          apiAudiences:
+            templateName: "cluster.test.kubeadmControlPlane.kubeadmConfigSpec.clusterConfiguration.apiServer.apiAudiences"
           serviceAccountIssuer:
             clusterDomainPrefix: irsa
       ignition:
