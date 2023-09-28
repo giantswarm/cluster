@@ -73,4 +73,10 @@ spec:
           # Other
           #
           encryption-provider-config: /etc/kubernetes/encryption/config.yaml
-          enable-admission-plugins: {{ include "cluster.test.kubeadmControlPlane.kubeadmConfigSpec.clusterConfiguration.apiServer.enableAdmissionPlugins" $ }}
+          enable-admission-plugins: {{ include "cluster.kubeadmControlPlane.kubeadmConfigSpec.clusterConfiguration.apiServer.enableAdmissionPlugins" $ }}
+          kubelet-preferred-address-types: InternalIP
+          profiling: "false"
+          runtime-config: api/all=true
+          service-account-lookup: "true"
+          feature-gates: CronJobTimeZone=true
+          tls-cipher-suites: {{ include "cluster.kubeadmControlPlane.kubeadmConfigSpec.clusterConfiguration.apiServer.tlsCipherSuites" $ }}

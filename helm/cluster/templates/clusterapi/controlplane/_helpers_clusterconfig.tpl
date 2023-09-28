@@ -1,4 +1,4 @@
-{{- define "cluster.test.kubeadmControlPlane.kubeadmConfigSpec.clusterConfiguration.apiServer.enableAdmissionPlugins" }}
+{{- define "cluster.kubeadmControlPlane.kubeadmConfigSpec.clusterConfiguration.apiServer.enableAdmissionPlugins" }}
 {{- $enabledAdmissionPlugins := list
   "DefaultStorageClass"
   "DefaultTolerationSeconds"
@@ -46,4 +46,29 @@ api-audiences: "{{ include $.Values.internal.controlPlane.kubeadmConfig.clusterC
 
 {{- define "cluster.test.kubeadmControlPlane.kubeadmConfigSpec.clusterConfiguration.apiServer.apiAudiences" }}
 api-audiences-example.giantswarm.io
+{{- end }}
+
+{{- define "cluster.kubeadmControlPlane.kubeadmConfigSpec.clusterConfiguration.apiServer.tlsCipherSuites" }}
+{{- $preferredCiphers := list
+  "TLS_AES_128_GCM_SHA256"
+  "TLS_AES_256_GCM_SHA384"
+  "TLS_CHACHA20_POLY1305_SHA256"
+  "TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA"
+  "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256"
+  "TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA"
+  "TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384"
+  "TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305"
+  "TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256"
+  "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA"
+  "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
+  "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA"
+  "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384"
+  "TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305"
+  "TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256"
+  "TLS_RSA_WITH_AES_128_CBC_SHA"
+  "TLS_RSA_WITH_AES_128_GCM_SHA256"
+  "TLS_RSA_WITH_AES_256_CBC_SHA"
+  "TLS_RSA_WITH_AES_256_GCM_SHA384"
+-}}
+{{- join "," (compact $preferredCiphers) }}
 {{- end }}
