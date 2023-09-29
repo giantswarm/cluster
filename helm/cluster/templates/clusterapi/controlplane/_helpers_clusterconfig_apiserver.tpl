@@ -1,4 +1,4 @@
-{{- define "cluster.kubeadmControlPlane.kubeadmConfigSpec.clusterConfiguration.apiServer.apiAudiences" }}
+{{- define "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.apiAudiences" }}
 {{- if kindIs "string" $.Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.apiAudiences }}
 {{ $.Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.apiAudiences | trim }}
 {{- else if $.Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.apiAudiences.templateName }}
@@ -6,7 +6,7 @@
 {{- end }}
 {{- end }}
 
-{{- define "cluster.kubeadmControlPlane.kubeadmConfigSpec.clusterConfiguration.apiServer.enableAdmissionPlugins" }}
+{{- define "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.enableAdmissionPlugins" }}
 {{- $enabledAdmissionPlugins := list
   "DefaultStorageClass"
   "DefaultTolerationSeconds"
@@ -24,7 +24,7 @@
 {{- join "," (compact $enabledAdmissionPlugins) }}
 {{- end }}
 
-{{- define "cluster.kubeadmControlPlane.kubeadmConfigSpec.clusterConfiguration.apiServer.serviceAccountIssuer" }}
+{{- define "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.serviceAccountIssuer" }}
 {{- if .Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuer.clusterDomainPrefix -}}
 https://{{ .Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuer.clusterDomainPrefix }}.{{ include "resource.default.name" $ }}.{{ required "The baseDomain value is required" .Values.connectivity.baseDomain }}
 {{- else -}}
@@ -36,7 +36,7 @@ https://{{ .Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiS
 api-audiences-example.giantswarm.io
 {{- end }}
 
-{{- define "cluster.kubeadmControlPlane.kubeadmConfigSpec.clusterConfiguration.apiServer.tlsCipherSuites" }}
+{{- define "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.tlsCipherSuites" }}
 {{- $preferredCiphers := list
   "TLS_AES_128_GCM_SHA256"
   "TLS_AES_256_GCM_SHA384"
@@ -71,7 +71,7 @@ api-audiences-example.giantswarm.io
 
 {{- define "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer" }}
 {{- if .Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.apiAudiences }}
-api-audiences: {{ include "cluster.kubeadmControlPlane.kubeadmConfigSpec.clusterConfiguration.apiServer.apiAudiences" $ | trim | quote }}
+api-audiences: {{ include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.apiAudiences" $ | trim | quote }}
 {{- end }}
 audit-log-maxage: "30"
 audit-log-maxbackup: "30"
@@ -79,7 +79,7 @@ audit-log-maxsize: "100"
 audit-log-path: /var/log/apiserver/audit.log
 audit-policy-file: /etc/kubernetes/policies/audit-policy.yaml
 cloud-provider: external
-enable-admission-plugins: {{ include "cluster.kubeadmControlPlane.kubeadmConfigSpec.clusterConfiguration.apiServer.enableAdmissionPlugins" $ }}
+enable-admission-plugins: {{ include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.enableAdmissionPlugins" $ }}
 encryption-provider-config: /etc/kubernetes/encryption/config.yaml
 {{- if .Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.featureGates }}
 feature-gates: {{ include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.featureGates" $ }}
@@ -97,8 +97,8 @@ oidc-username-claim: {{ $.Values.controlPlane.oidc.usernameClaim | quote }}
 profiling: "false"
 runtime-config: api/all=true
 {{- if .Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuer }}
-service-account-issuer: "{{ include "cluster.kubeadmControlPlane.kubeadmConfigSpec.clusterConfiguration.apiServer.serviceAccountIssuer" $ }}"
+service-account-issuer: "{{ include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.serviceAccountIssuer" $ }}"
 {{- end }}
 service-account-lookup: "true"
-tls-cipher-suites: {{ include "cluster.kubeadmControlPlane.kubeadmConfigSpec.clusterConfiguration.apiServer.tlsCipherSuites" $ }}
+tls-cipher-suites: {{ include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.tlsCipherSuites" $ }}
 {{- end }}
