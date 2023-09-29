@@ -39,3 +39,5 @@ spec:
       # API server configuration
       apiServer:
         {{- include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer" $ | indent 8 }}
+      controllerManager:
+        {{- include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.controllerManager" $ | indent 8 }}
