@@ -9,13 +9,13 @@ metadata:
     {{- end }}
     {{- end }}
   labels:
-    {{- include "labels.common" $ | nindent 4 }}
+    {{- include "cluster.labels.common" $ | nindent 4 }}
     {{- if .Values.metadata.labels }}
     {{- range $key, $val := .Values.metadata.labels }}
     {{ $key }}: {{ $val | quote }}
     {{- end }}
     {{- end }}
-  name: {{ include "resource.default.name" $ }}
+  name: {{ include "cluster.resource.name" $ }}
   namespace: {{ .Release.Namespace }}
 spec:
   version: v{{ trimPrefix "v" .Values.internal.kubernetesVersion }}
@@ -45,7 +45,7 @@ spec:
         certSANs:
         - localhost
         - 127.0.0.1
-        - "api.{{ include "resource.default.name" $ }}.{{ required "The baseDomain value is required" .Values.connectivity.baseDomain }}"
-        - "apiserver.{{ include "resource.default.name" $ }}.{{ required "The baseDomain value is required" .Values.connectivity.baseDomain }}"
+        - "api.{{ include "cluster.resource.name" $ }}.{{ required "The baseDomain value is required" .Values.connectivity.baseDomain }}"
+        - "apiserver.{{ include "cluster.resource.name" $ }}.{{ required "The baseDomain value is required" .Values.connectivity.baseDomain }}"
         extraArgs:
           {{- include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer" $ | indent 10 }}
