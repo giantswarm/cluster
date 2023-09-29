@@ -1,3 +1,11 @@
+{{- define "cluster.kubeadmControlPlane.kubeadmConfigSpec.clusterConfiguration.apiServer.apiAudiences" }}
+{{- if kindIs "string" $.Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.apiAudiences }}
+{{ $.Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.apiAudiences | trim }}
+{{- else if $.Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.apiAudiences.templateName }}
+{{ include $.Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.apiAudiences.templateName $ | trim }}
+{{- end }}
+{{- end }}
+
 {{- define "cluster.kubeadmControlPlane.kubeadmConfigSpec.clusterConfiguration.apiServer.enableAdmissionPlugins" }}
 {{- $enabledAdmissionPlugins := list
   "DefaultStorageClass"
@@ -16,31 +24,11 @@
 {{- join "," (compact $enabledAdmissionPlugins) }}
 {{- end }}
 
-{{- define "cluster.kubeadmControlPlane.kubeadmConfigSpec.clusterConfiguration.apiServer.oidc" }}
-{{- with $oidc := .Values.controlPlane.oidc }}
-oidc-issuer-url: {{ $oidc.issuerUrl }}
-oidc-client-id: {{ $oidc.clientId }}
-oidc-username-claim: {{ $oidc.usernameClaim }}
-oidc-groups-claim: {{ $oidc.groupsClaim }}
-{{- if $oidc.caPem }}
-oidc-ca-file: /etc/ssl/certs/oidc.pem
-{{- end }}
-{{- end }}
-{{- end }}
-
 {{- define "cluster.kubeadmControlPlane.kubeadmConfigSpec.clusterConfiguration.apiServer.serviceAccountIssuer" }}
 {{- if .Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuer.clusterDomainPrefix -}}
 https://{{ .Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuer.clusterDomainPrefix }}.{{ include "resource.default.name" $ }}.{{ required "The baseDomain value is required" .Values.connectivity.baseDomain }}
 {{- else -}}
 {{ .Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuer.url }}
-{{- end }}
-{{- end }}
-
-{{- define "cluster.kubeadmControlPlane.kubeadmConfigSpec.clusterConfiguration.apiServer.apiAudiences" }}
-{{- if kindIs "string" $.Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.apiAudiences }}
-api-audiences: "{{ $.Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.apiAudiences | trim }}"
-{{- else if $.Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.apiAudiences.templateName }}
-api-audiences: "{{ include $.Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.apiAudiences.templateName $ | trim }}"
 {{- end }}
 {{- end }}
 
@@ -83,7 +71,7 @@ api-audiences-example.giantswarm.io
 
 {{- define "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer" }}
 {{- if .Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.apiAudiences }}
-{{- include "cluster.kubeadmControlPlane.kubeadmConfigSpec.clusterConfiguration.apiServer.apiAudiences" $ }}
+api-audiences: {{ include "cluster.kubeadmControlPlane.kubeadmConfigSpec.clusterConfiguration.apiServer.apiAudiences" $ | trim | quote }}
 {{- end }}
 audit-log-maxage: "30"
 audit-log-maxbackup: "30"
@@ -97,8 +85,14 @@ encryption-provider-config: /etc/kubernetes/encryption/config.yaml
 feature-gates: {{ include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.featureGates" $ }}
 {{- end}}
 kubelet-preferred-address-types: InternalIP
-{{- if .Values.controlPlane.oidc }}
-{{- include "cluster.kubeadmControlPlane.kubeadmConfigSpec.clusterConfiguration.apiServer.oidc" $ }}
+{{- if $.Values.controlPlane.oidc }}
+{{- if $.Values.controlPlane.oidc.caPem }}
+oidc-ca-file: /etc/ssl/certs/oidc.pem
+{{- end }}
+oidc-client-id: {{ $.Values.controlPlane.oidc.clientId | quote }}
+oidc-groups-claim: {{ $.Values.controlPlane.oidc.groupsClaim | quote }}
+oidc-issuer-url: {{ $.Values.controlPlane.oidc.issuerUrl | quote }}
+oidc-username-claim: {{ $.Values.controlPlane.oidc.usernameClaim | quote }}
 {{- end }}
 profiling: "false"
 runtime-config: api/all=true
