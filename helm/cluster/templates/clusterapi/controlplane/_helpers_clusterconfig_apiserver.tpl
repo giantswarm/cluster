@@ -82,7 +82,29 @@ api-audiences-example.giantswarm.io
 {{- end }}
 
 {{- define "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer" }}
+{{- if .Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.apiAudiences }}
+{{- include "cluster.kubeadmControlPlane.kubeadmConfigSpec.clusterConfiguration.apiServer.apiAudiences" $ }}
+{{- end }}
+audit-log-maxage: "30"
+audit-log-maxbackup: "30"
+audit-log-maxsize: "100"
+audit-log-path: /var/log/apiserver/audit.log
+audit-policy-file: /etc/kubernetes/policies/audit-policy.yaml
+cloud-provider: external
+enable-admission-plugins: {{ include "cluster.kubeadmControlPlane.kubeadmConfigSpec.clusterConfiguration.apiServer.enableAdmissionPlugins" $ }}
+encryption-provider-config: /etc/kubernetes/encryption/config.yaml
 {{- if .Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.featureGates }}
 feature-gates: {{ include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.featureGates" $ }}
 {{- end}}
+kubelet-preferred-address-types: InternalIP
+{{- if .Values.controlPlane.oidc }}
+{{- include "cluster.kubeadmControlPlane.kubeadmConfigSpec.clusterConfiguration.apiServer.oidc" $ }}
+{{- end }}
+profiling: "false"
+runtime-config: api/all=true
+{{- if .Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuer }}
+service-account-issuer: "{{ include "cluster.kubeadmControlPlane.kubeadmConfigSpec.clusterConfiguration.apiServer.serviceAccountIssuer" $ }}"
+{{- end }}
+service-account-lookup: "true"
+tls-cipher-suites: {{ include "cluster.kubeadmControlPlane.kubeadmConfigSpec.clusterConfiguration.apiServer.tlsCipherSuites" $ }}
 {{- end }}
