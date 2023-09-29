@@ -39,13 +39,4 @@ spec:
 
       # API server configuration
       apiServer:
-        # Timeout for the API server to appear.
-        # TODO: this should be aligned with alerts, i.e. time here should be less than the time after which we alert for API server replica being down.
-        timeoutForControlPlane: 20min
-        certSANs:
-        - localhost
-        - 127.0.0.1
-        - "api.{{ include "cluster.resource.name" $ }}.{{ required "The baseDomain value is required" .Values.connectivity.baseDomain }}"
-        - "apiserver.{{ include "cluster.resource.name" $ }}.{{ required "The baseDomain value is required" .Values.connectivity.baseDomain }}"
-        extraArgs:
-          {{- include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer" $ | indent 10 }}
+        {{- include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer" $ | indent 8 }}
