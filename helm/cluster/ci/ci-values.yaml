@@ -5,6 +5,10 @@ metadata:
 connectivity:
   baseDomain: example.gigantic.io
 controlPlane:
+  customNodeTaints:
+  - key: you
+    value: shall
+    effect: NoExecute
   oidc:
     clientId: hello
     groupsClaim: groupsClaim

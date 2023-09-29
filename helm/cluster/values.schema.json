@@ -2,6 +2,37 @@
     "$schema": "http://json-schema.org/schema#",
     "$id": "values.schema.json",
     "$defs": {
+        "customNodeTaints": {
+            "type": "array",
+            "title": "Custom node taints",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "effect": {
+                        "type": "string",
+                        "title": "Effect",
+                        "enum": [
+                            "NoSchedule",
+                            "PreferNoSchedule",
+                            "NoExecute"
+                        ]
+                    },
+                    "key": {
+                        "type": "string",
+                        "title": "Key"
+                    },
+                    "value": {
+                        "type": "string",
+                        "title": "Value"
+                    }
+                },
+                "required": [
+                    "effect",
+                    "key",
+                    "value"
+                ]
+            }
+        },
         "gvk": {
             "type": "object",
             "title": "Schema for Kubernetes API group, version and kind",
@@ -432,6 +463,9 @@
             "title": "Control plane",
             "description": "Configuration of the control plane.",
             "properties": {
+                "customNodeTaints": {
+                    "$ref": "#/$defs/customNodeTaints"
+                },
                 "oidc": {
                     "title": "OIDC authentication",
                     "oneOf": [
