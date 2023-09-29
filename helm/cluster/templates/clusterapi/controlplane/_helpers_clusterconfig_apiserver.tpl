@@ -1,3 +1,49 @@
+{{- define "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer" }}
+certSANs:
+- localhost
+- 127.0.0.1
+- "api.{{ include "cluster.resource.name" $ }}.{{ required "The baseDomain value is required" .Values.connectivity.baseDomain }}"
+- "apiserver.{{ include "cluster.resource.name" $ }}.{{ required "The baseDomain value is required" .Values.connectivity.baseDomain }}"
+{{- /*
+    Timeout for the API server to appear.
+    TODO: this should be aligned with alerts, i.e. time here should be less than the time after
+          which we alert for API server replica being down.
+*/}}
+timeoutForControlPlane: 20min
+extraArgs:
+  {{- if .Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.apiAudiences }}
+  api-audiences: {{ include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.apiAudiences" $ | trim | quote }}
+  {{- end }}
+  audit-log-maxage: "30"
+  audit-log-maxbackup: "30"
+  audit-log-maxsize: "100"
+  audit-log-path: /var/log/apiserver/audit.log
+  audit-policy-file: /etc/kubernetes/policies/audit-policy.yaml
+  cloud-provider: external
+  enable-admission-plugins: {{ include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.enableAdmissionPlugins" $ }}
+  encryption-provider-config: /etc/kubernetes/encryption/config.yaml
+  {{- if .Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.featureGates }}
+  feature-gates: {{ include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.featureGates" $ }}
+  {{- end}}
+  kubelet-preferred-address-types: InternalIP
+  {{- if $.Values.controlPlane.oidc }}
+  {{- if $.Values.controlPlane.oidc.caPem }}
+  oidc-ca-file: /etc/ssl/certs/oidc.pem
+  {{- end }}
+  oidc-client-id: {{ $.Values.controlPlane.oidc.clientId | quote }}
+  oidc-groups-claim: {{ $.Values.controlPlane.oidc.groupsClaim | quote }}
+  oidc-issuer-url: {{ $.Values.controlPlane.oidc.issuerUrl | quote }}
+  oidc-username-claim: {{ $.Values.controlPlane.oidc.usernameClaim | quote }}
+  {{- end }}
+  profiling: "false"
+  runtime-config: api/all=true
+  {{- if .Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuer }}
+  service-account-issuer: "{{ include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.serviceAccountIssuer" $ }}"
+  {{- end }}
+  service-account-lookup: "true"
+  tls-cipher-suites: {{ include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.tlsCipherSuites" $ }}
+{{- end }}
+
 {{- define "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.apiAudiences" }}
 {{- if kindIs "string" $.Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.apiAudiences }}
 {{ $.Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.apiAudiences | trim }}
@@ -67,50 +113,4 @@ api-audiences-example.giantswarm.io
 {{- $featureGates = append $featureGates (printf "%s=%t" $featureGate.name $featureGate.enabled) -}}
 {{- end }}
 {{- join "," (compact $featureGates) | quote }}
-{{- end }}
-
-{{- define "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer" }}
-certSANs:
-- localhost
-- 127.0.0.1
-- "api.{{ include "cluster.resource.name" $ }}.{{ required "The baseDomain value is required" .Values.connectivity.baseDomain }}"
-- "apiserver.{{ include "cluster.resource.name" $ }}.{{ required "The baseDomain value is required" .Values.connectivity.baseDomain }}"
-{{- /*
-    Timeout for the API server to appear.
-    TODO: this should be aligned with alerts, i.e. time here should be less than the time after
-          which we alert for API server replica being down.
-*/}}
-timeoutForControlPlane: 20min
-extraArgs:
-  {{- if .Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.apiAudiences }}
-  api-audiences: {{ include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.apiAudiences" $ | trim | quote }}
-  {{- end }}
-  audit-log-maxage: "30"
-  audit-log-maxbackup: "30"
-  audit-log-maxsize: "100"
-  audit-log-path: /var/log/apiserver/audit.log
-  audit-policy-file: /etc/kubernetes/policies/audit-policy.yaml
-  cloud-provider: external
-  enable-admission-plugins: {{ include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.enableAdmissionPlugins" $ }}
-  encryption-provider-config: /etc/kubernetes/encryption/config.yaml
-  {{- if .Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.featureGates }}
-  feature-gates: {{ include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.featureGates" $ }}
-  {{- end}}
-  kubelet-preferred-address-types: InternalIP
-  {{- if $.Values.controlPlane.oidc }}
-  {{- if $.Values.controlPlane.oidc.caPem }}
-  oidc-ca-file: /etc/ssl/certs/oidc.pem
-  {{- end }}
-  oidc-client-id: {{ $.Values.controlPlane.oidc.clientId | quote }}
-  oidc-groups-claim: {{ $.Values.controlPlane.oidc.groupsClaim | quote }}
-  oidc-issuer-url: {{ $.Values.controlPlane.oidc.issuerUrl | quote }}
-  oidc-username-claim: {{ $.Values.controlPlane.oidc.usernameClaim | quote }}
-  {{- end }}
-  profiling: "false"
-  runtime-config: api/all=true
-  {{- if .Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuer }}
-  service-account-issuer: "{{ include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.serviceAccountIssuer" $ }}"
-  {{- end }}
-  service-account-lookup: "true"
-  tls-cipher-suites: {{ include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.tlsCipherSuites" $ }}
 {{- end }}
