@@ -45,3 +45,5 @@ spec:
         {{- include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.scheduler" $ | indent 8 }}
       etcd:
         {{- include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.etcd" $ | indent 8 }}
+      networking:
+        {{- include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.networking" $ | indent 8 }}
