@@ -22,6 +22,13 @@ internal:
           - PodSecurityPolicy
           apiAudiences:
             templateName: "cluster.test.kubeadmControlPlane.kubeadmConfigSpec.clusterConfiguration.apiServer.apiAudiences"
+          featureGates:
+          - name: CronJobTimeZone
+            enabled: true
+          - name: DownwardAPIHugePages
+            enabled: false
+          - name: TTLAfterFinished
+            enabled: true
           serviceAccountIssuer:
             clusterDomainPrefix: irsa
       ignition:

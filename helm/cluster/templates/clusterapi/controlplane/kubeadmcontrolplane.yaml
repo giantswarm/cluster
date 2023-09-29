@@ -80,3 +80,4 @@ spec:
           service-account-lookup: "true"
           feature-gates: CronJobTimeZone=true
           tls-cipher-suites: {{ include "cluster.kubeadmControlPlane.kubeadmConfigSpec.clusterConfiguration.apiServer.tlsCipherSuites" $ }}
+          {{- include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer" $ | indent 10 }}

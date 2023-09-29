@@ -550,6 +550,29 @@
                                                         }
                                                     ]
                                                 },
+                                                "featureGates": {
+                                                    "type": "array",
+                                                    "title": "Feature gates",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "title": "Feature gate",
+                                                        "additionalProperties": false,
+                                                        "properties": {
+                                                            "name": {
+                                                                "type": "string",
+                                                                "title": "Name"
+                                                            },
+                                                            "enabled": {
+                                                                "type": "boolean",
+                                                                "title": "Enabled"
+                                                            }
+                                                        },
+                                                        "required": [
+                                                            "name",
+                                                            "enabled"
+                                                        ]
+                                                    }
+                                                },
                                                 "serviceAccountIssuer": {
                                                     "title": "Service account issuer",
                                                     "description": "Configuration of the identifier of the service account token issuer. You must specify either URL or clusterDomainPrefix (only one, not both).",
