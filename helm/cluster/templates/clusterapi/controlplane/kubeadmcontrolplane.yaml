@@ -49,3 +49,5 @@ spec:
         {{- include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.networking" $ | indent 8 }}
     initConfiguration:
       {{- include "cluster.internal.controlPlane.kubeadm.initConfiguration" $ | indent 6 }}
+    joinConfiguration:
+      {{- include "cluster.internal.controlPlane.kubeadm.joinConfiguration" $ | indent 6 }}
