@@ -3,6 +3,7 @@
 {{- include "cluster.internal.kubeadm.files.systemd" . }}
 {{- include "cluster.internal.kubeadm.files.ssh" . }}
 {{- include "cluster.internal.kubeadm.files.kubelet" . }}
+{{- include "cluster.internal.kubeadm.files.kubernetes" . }}
 {{- end }}
 
 {{- define "cluster.internal.kubeadm.files.sysctl" }}
@@ -36,6 +37,19 @@
   content: {{ $.Files.Get "files/etc/systemd/logind.conf.d/zzz-kubelet-graceful-shutdown.conf" | b64enc }}
 {{- end }}
 {{- end }}
+{{- end }}
+
+{{- define "cluster.internal.kubeadm.files.kubernetes" }}
+- path: /etc/kubernetes/policies/audit-policy.yaml
+  permissions: "0600"
+  encoding: base64
+  content: {{ $.Files.Get "files/etc/kubernetes/policies/audit-policy.yaml" | b64enc }}
+- path: /etc/kubernetes/encryption/config.yaml
+  permissions: "0600"
+  contentFrom:
+    secret:
+      name: {{ include "cluster.resource.name" $ }}-encryption-provider-config
+      key: encryption
 {{- end }}
 
 {{- define "cluster.internal.kubeadm.files.ssh" }}
