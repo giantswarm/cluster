@@ -546,7 +546,7 @@
                     "title": "Internal control plane configuration",
                     "additionalProperties": false,
                     "properties": {
-                        "kubeadm": {
+                        "kubeadmConfig": {
                             "type": "object",
                             "title": "Kubeadm config",
                             "description": "Configuration of control plane nodes.",
@@ -701,7 +701,7 @@
                         }
                     },
                     "required": [
-                        "kubeadm",
+                        "kubeadmConfig",
                         "resources"
                     ]
                 },
