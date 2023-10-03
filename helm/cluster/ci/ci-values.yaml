@@ -160,6 +160,11 @@ internal:
           group: asd
           version: v1
           kind: KubeadmControlPlane
+  kubeadmConfig:
+    kubelet:
+      gracefulNodeShutdown:
+        shutdownGracePeriod: 5m
+        shutdownGracePeriodCriticalPods: 1m
   kubernetesVersion: 1.24.10
   paused: false
   providerSpecific:
