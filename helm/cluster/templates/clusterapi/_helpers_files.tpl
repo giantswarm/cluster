@@ -1,13 +1,6 @@
 {{- define "cluster.internal.kubeadm.files" }}
 {{- include "cluster.internal.kubeadm.files.systemd" . }}
-- path: /etc/ssh/trusted-user-ca-keys.pem
-  permissions: "0600"
-  encoding: base64
-  content: {{ tpl ($.Files.Get "files/etc/ssh/trusted-user-ca-keys.pem") . | b64enc }}
-- path: /etc/ssh/sshd_config
-  permissions: "0600"
-  encoding: base64
-  content: {{ $.Files.Get "files/etc/ssh/sshd_config" | b64enc }}
+{{- include "cluster.internal.kubeadm.files.ssh" . }}
 {{- include "cluster.internal.kubeadm.files.kubelet" . }}
 {{- end }}
 
@@ -35,4 +28,15 @@
   content: {{ $.Files.Get "files/etc/systemd/logind.conf.d/zzz-kubelet-graceful-shutdown.conf" | b64enc }}
 {{- end }}
 {{- end }}
+{{- end }}
+
+{{- define "cluster.internal.kubeadm.files.ssh" }}
+- path: /etc/ssh/trusted-user-ca-keys.pem
+  permissions: "0600"
+  encoding: base64
+  content: {{ tpl ($.Files.Get "files/etc/ssh/trusted-user-ca-keys.pem") . | b64enc }}
+- path: /etc/ssh/sshd_config
+  permissions: "0600"
+  encoding: base64
+  content: {{ $.Files.Get "files/etc/ssh/sshd_config" | b64enc }}
 {{- end }}
