@@ -51,3 +51,5 @@ spec:
       {{- include "cluster.internal.controlPlane.kubeadm.initConfiguration" $ | indent 6 }}
     joinConfiguration:
       {{- include "cluster.internal.controlPlane.kubeadm.joinConfiguration" $ | indent 6 }}
+    files:
+    {{- include "cluster.internal.controlPlane.kubeadm.files" . | indent 4 }}
