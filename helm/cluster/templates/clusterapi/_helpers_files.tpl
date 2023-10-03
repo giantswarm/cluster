@@ -1,7 +1,15 @@
 {{- define "cluster.internal.kubeadm.files" }}
+{{- include "cluster.internal.kubeadm.files.sysctl" . }}
 {{- include "cluster.internal.kubeadm.files.systemd" . }}
 {{- include "cluster.internal.kubeadm.files.ssh" . }}
 {{- include "cluster.internal.kubeadm.files.kubelet" . }}
+{{- end }}
+
+{{- define "cluster.internal.kubeadm.files.sysctl" }}
+- path: /etc/sysctl.d/hardening.conf
+  permissions: "0644"
+  encoding: base64
+  content: {{ $.Files.Get "files/etc/sysctl.d/hardening.conf" | b64enc }}
 {{- end }}
 
 {{- define "cluster.internal.kubeadm.files.systemd" }}
