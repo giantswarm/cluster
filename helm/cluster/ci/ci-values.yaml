@@ -165,6 +165,10 @@ internal:
       gracefulNodeShutdown:
         shutdownGracePeriod: 5m
         shutdownGracePeriodCriticalPods: 1m
+    systemd:
+      timesyncd:
+        npt:
+        - 169.254.169.123
   kubernetesVersion: 1.24.10
   paused: false
   providerSpecific:

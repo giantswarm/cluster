@@ -1,4 +1,5 @@
 {{- define "cluster.internal.kubeadm.files" }}
+{{- include "cluster.internal.kubeadm.files.systemd" . }}
 - path: /etc/ssh/trusted-user-ca-keys.pem
   permissions: "0600"
   encoding: base64
@@ -7,7 +8,18 @@
   permissions: "0600"
   encoding: base64
   content: {{ $.Files.Get "files/etc/ssh/sshd_config" | b64enc }}
-{{- include "cluster.internal.kubeadm.files.kubelet" . -}}
+{{- include "cluster.internal.kubeadm.files.kubelet" . }}
+{{- end }}
+
+{{- define "cluster.internal.kubeadm.files.systemd" }}
+{{- if and $.Values.internal.kubeadmConfig $.Values.internal.kubeadmConfig.systemd }}
+{{- if and $.Values.internal.kubeadmConfig $.Values.internal.kubeadmConfig.systemd.timesyncd }}
+- path: /etc/systemd/timesyncd.conf
+  permissions: "0644"
+  encoding: base64
+  content: {{ tpl ($.Files.Get "files/etc/systemd/timesyncd.conf") . | b64enc }}
+{{- end }}
+{{- end }}
 {{- end }}
 
 {{- define "cluster.internal.kubeadm.files.kubelet" }}

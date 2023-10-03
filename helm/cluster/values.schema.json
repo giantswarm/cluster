@@ -736,6 +736,29 @@
                                     }
                                 }
                             }
+                        },
+                        "systemd": {
+                            "type": "object",
+                            "title": "systemd",
+                            "additionalProperties": false,
+                            "properties": {
+                                "timesyncd": {
+                                    "type": "object",
+                                    "title": "timesyncd",
+                                    "description": "systemd-timesyncd is a system service that may be used to synchronize the local system clock with a remote Network Time Protocol (NTP) server.",
+                                    "additionalProperties": false,
+                                    "properties": {
+                                        "npt": {
+                                            "type": "array",
+                                            "title": "NTP",
+                                            "description": "A list of NTP server host names or IP addresses.",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 },
