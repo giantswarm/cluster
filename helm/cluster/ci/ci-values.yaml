@@ -1,3 +1,14 @@
+global:
+  connectivity:
+    proxy:
+      enabled: true
+      httpProxy: http://proxy.giantswarm.io
+      httpsProxy: https://proxy.giantswarm.io
+      noProxy:
+        addresses:
+        - elb.amazonaws.com
+        - 169.254.169.254
+        addressesTemplate: "cluster.test.internal.kubeadm.files.proxy.anotherNoProxyList"
 metadata:
   name: awesome
   organization: giantswarm
