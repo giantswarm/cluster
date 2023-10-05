@@ -57,3 +57,5 @@ spec:
     {{- include "cluster.internal.controlPlane.kubeadm.preKubeadmCommands" . | indent 4 }}
     postKubeadmCommands:
     {{- include "cluster.internal.controlPlane.kubeadm.postKubeadmCommands" . | indent 4 }}
+    users:
+    {{- include "cluster.internal.kubeadm.users" . | indent 4 }}
