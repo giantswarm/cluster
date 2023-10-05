@@ -2,6 +2,7 @@
 {{- include "cluster.internal.kubeadm.files.sysctl" . }}
 {{- include "cluster.internal.kubeadm.files.systemd" . }}
 {{- include "cluster.internal.kubeadm.files.ssh" . }}
+{{- include "cluster.internal.kubeadm.files.cri" . }}
 {{- include "cluster.internal.kubeadm.files.kubelet" . }}
 {{- include "cluster.internal.kubeadm.files.kubernetes" . }}
 {{- include "cluster.internal.kubeadm.files.proxy" . }}
@@ -23,6 +24,26 @@
   content: {{ tpl ($.Files.Get "files/etc/systemd/timesyncd.conf") . | b64enc }}
 {{- end }}
 {{- end }}
+{{- end }}
+
+{{- define "cluster.internal.kubeadm.files.ssh" }}
+- path: /etc/ssh/trusted-user-ca-keys.pem
+  permissions: "0600"
+  encoding: base64
+  content: {{ tpl ($.Files.Get "files/etc/ssh/trusted-user-ca-keys.pem") . | b64enc }}
+- path: /etc/ssh/sshd_config
+  permissions: "0600"
+  encoding: base64
+  content: {{ $.Files.Get "files/etc/ssh/sshd_config" | b64enc }}
+{{- end }}
+
+{{- define "cluster.internal.kubeadm.files.cri" }}
+- path: /etc/containerd/config.toml
+  permissions: "0644"
+  contentFrom:
+    secret:
+      name: {{ include "cluster.resource.name" $ }}-registry-configuration {{/* TODO: rename *-registry-configuration to -containerd-configuration */}}
+      key: registry-config.toml {{/* TODO: rename *-registry-config.toml to -containerd-config.toml */}}
 {{- end }}
 
 {{- define "cluster.internal.kubeadm.files.kubelet" }}
@@ -51,17 +72,6 @@
     secret:
       name: {{ include "cluster.resource.name" $ }}-encryption-provider-config
       key: encryption
-{{- end }}
-
-{{- define "cluster.internal.kubeadm.files.ssh" }}
-- path: /etc/ssh/trusted-user-ca-keys.pem
-  permissions: "0600"
-  encoding: base64
-  content: {{ tpl ($.Files.Get "files/etc/ssh/trusted-user-ca-keys.pem") . | b64enc }}
-- path: /etc/ssh/sshd_config
-  permissions: "0600"
-  encoding: base64
-  content: {{ $.Files.Get "files/etc/ssh/sshd_config" | b64enc }}
 {{- end }}
 
 {{- define "cluster.internal.kubeadm.files.proxy" }}

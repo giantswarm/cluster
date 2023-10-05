@@ -10,7 +10,21 @@ connectivity:
         - 172.31.0.0/16
 controlPlane:
   replicas: 3
+global:
+  components:
+    cri:
+      registries:
+        docker.io:
+          - endpoint: registry-1.docker.io
+          - endpoint: giantswarm.azurecr.io
+  connectivity: {}
 internal:
+  components:
+    cri:
+      sandboxContainerImage:
+        name: giantswarm/pause
+        registry: quay.io
+        tag: "3.9"
   connectivity:
     sshSsoPublicKey: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM4cvZ01fLmO9cJbWUj7sfF+NhECgy+Cl0bazSrZX7sU vault-ca@vault.operations.giantswarm.io
   controlPlane:

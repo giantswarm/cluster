@@ -332,50 +332,139 @@
                     "additionalProperties": false,
                     "properties": {
                         "proxy": {
-                            "type": "object",
                             "title": "Proxy",
                             "description": "Whether/how outgoing traffic is routed through proxy servers.",
-                            "additionalProperties": false,
-                            "properties": {
-                                "enabled": {
-                                    "type": "boolean",
-                                    "title": "Enable"
+                            "default": null,
+                            "oneOf": [
+                                {
+                                    "type": "null"
                                 },
-                                "httpProxy": {
-                                    "type": "string",
-                                    "title": "HTTP proxy",
-                                    "description": "To be passed to the HTTP_PROXY environment variable in all hosts."
-                                },
-                                "httpsProxy": {
-                                    "type": "string",
-                                    "title": "HTTPS proxy",
-                                    "description": "To be passed to the HTTPS_PROXY environment variable in all hosts."
-                                },
-                                "noProxy": {
+                                {
                                     "type": "object",
-                                    "title": "No proxy",
                                     "additionalProperties": false,
                                     "properties": {
-                                        "addresses": {
-                                            "type": "array",
-                                            "title": "Addresses",
-                                            "description": "To be passed to the NO_PROXY environment variable in all hosts.",
-                                            "items": {
-                                                "type": "string"
-                                            }
+                                        "enabled": {
+                                            "type": "boolean",
+                                            "title": "Enable"
                                         },
-                                        "addressesTemplate": {
+                                        "httpProxy": {
                                             "type": "string",
-                                            "title": "Addresses template",
-                                            "description": "Name of Helm template that renders a YAML array with NO_PROXY addresses"
+                                            "title": "HTTP proxy",
+                                            "description": "To be passed to the HTTP_PROXY environment variable in all hosts."
+                                        },
+                                        "httpsProxy": {
+                                            "type": "string",
+                                            "title": "HTTPS proxy",
+                                            "description": "To be passed to the HTTPS_PROXY environment variable in all hosts."
+                                        },
+                                        "noProxy": {
+                                            "type": "object",
+                                            "title": "No proxy",
+                                            "additionalProperties": false,
+                                            "properties": {
+                                                "addresses": {
+                                                    "type": "array",
+                                                    "title": "Addresses",
+                                                    "description": "To be passed to the NO_PROXY environment variable in all hosts.",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "addressesTemplate": {
+                                                    "type": "string",
+                                                    "title": "Addresses template",
+                                                    "description": "Name of Helm template that renders a YAML array with NO_PROXY addresses"
+                                                }
+                                            }
                                         }
                                     }
                                 }
-                            }
+                            ]
                         }
                     }
+                },
+                "components": {
+                    "type": "object",
+                    "title": "Components",
+                    "description": "Advanced configuration of machine and cluster components.",
+                    "additionalProperties": false,
+                    "properties": {
+                        "cri": {
+                            "type": "object",
+                            "title": "CRI (container runtime interface)",
+                            "description": "Configuration of container runtime interface.",
+                            "additionalProperties": false,
+                            "properties": {
+                                "registries": {
+                                    "type": "object",
+                                    "title": "Container registries",
+                                    "description": "Endpoints and credentials configuration for container registries.",
+                                    "additionalProperties": {
+                                        "type": "array",
+                                        "title": "Registries",
+                                        "description": "Container registries and mirrors",
+                                        "items": {
+                                            "type": "object",
+                                            "title": "Registry",
+                                            "required": [
+                                                "endpoint"
+                                            ],
+                                            "properties": {
+                                                "credentials": {
+                                                    "type": "object",
+                                                    "title": "Credentials",
+                                                    "properties": {
+                                                        "auth": {
+                                                            "type": "string",
+                                                            "title": "Auth",
+                                                            "description": "Base64-encoded string from the concatenation of the username, a colon, and the password."
+                                                        },
+                                                        "identitytoken": {
+                                                            "type": "string",
+                                                            "title": "Identity token",
+                                                            "description": "Used to authenticate the user and obtain an access token for the registry."
+                                                        },
+                                                        "password": {
+                                                            "type": "string",
+                                                            "title": "Password",
+                                                            "description": "Used to authenticate for the registry with username/password."
+                                                        },
+                                                        "username": {
+                                                            "type": "string",
+                                                            "title": "Username",
+                                                            "description": "Used to authenticate for the registry with username/password."
+                                                        }
+                                                    }
+                                                },
+                                                "endpoint": {
+                                                    "type": "string",
+                                                    "title": "Endpoint",
+                                                    "description": "Endpoint for the container registry."
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "default": {
+                                        "docker.io": [
+                                            {
+                                                "endpoint": "registry-1.docker.io"
+                                            },
+                                            {
+                                                "endpoint": "giantswarm.azurecr.io"
+                                            }
+                                        ]
+                                    }
+                                }
+                            },
+                            "required": [
+                                "registries"
+                            ]
+                        }
+                    },
+                    "required": [
+                        "cri"
+                    ]
                 }
-
             }
         },
         "metadata": {
@@ -600,6 +689,119 @@
                         "sshSsoPublicKey"
                     ]
                 },
+                "components": {
+                    "type": "object",
+                    "title": "Components",
+                    "description": "Internal configuration of various components that form the Kubernetes cluster.",
+                    "additionalProperties": false,
+                    "properties": {
+                        "cri": {
+                            "type": "object",
+                            "title": "CRI (container runtime interface)",
+                            "description": "Configuration of container runtime interface.",
+                            "additionalProperties": false,
+                            "properties": {
+                                "sandboxContainerImage": {
+                                    "type": "object",
+                                    "title": "Kubectl image",
+                                    "properties": {
+                                        "name": {
+                                            "type": "string",
+                                            "title": "Repository",
+                                            "default": "giantswarm/pause"
+                                        },
+                                        "registry": {
+                                            "type": "string",
+                                            "title": "Registry",
+                                            "default": "quay.io"
+                                        },
+                                        "tag": {
+                                            "type": "string",
+                                            "title": "Tag",
+                                            "default": "3.9"
+                                        }
+                                    },
+                                    "required": [
+                                        "name",
+                                        "registry",
+                                        "tag"
+                                    ]
+                                }
+                            },
+                            "required": [
+                                "sandboxContainerImage"
+                            ]
+                        },
+                        "kubelet": {
+                            "title": "Kubelet",
+                            "description": "Kubelet configuration that is used on all nodes.",
+                            "default": null,
+                            "oneOf": [
+                                {
+                                    "type": "null"
+                                },
+                                {
+                                    "type": "object",
+                                    "additionalProperties": false,
+                                    "properties": {
+                                        "gracefulNodeShutdown": {
+                                            "type": "object",
+                                            "title": "Graceful node shut down",
+                                            "description": "It enables kubelet to gracefully evict pods during a node shutdown. It is enabled by default in Kubernetes 1.21.",
+                                            "additionalProperties": false,
+                                            "properties": {
+                                                "shutdownGracePeriod": {
+                                                    "type": "string",
+                                                    "title": "Shutdown grace period",
+                                                    "description": "Specifies the total duration that the node should delay the shutdown by. This is the total grace period for pod termination for both regular and critical pods."
+                                                },
+                                                "shutdownGracePeriodCriticalPods": {
+                                                    "type": "string",
+                                                    "title": "Shutdown grace period for critical pods",
+                                                    "description": "Specifies the duration used to terminate critical pods during a node shutdown. This should be less than shutdownGracePeriod."
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        "systemd": {
+                            "title": "systemd",
+                            "default": null,
+                            "oneOf": [
+                                {
+                                    "type": "null"
+                                },
+                                {
+                                    "type": "object",
+                                    "additionalProperties": false,
+                                    "properties": {
+                                        "timesyncd": {
+                                            "type": "object",
+                                            "title": "timesyncd",
+                                            "description": "systemd-timesyncd is a system service that may be used to synchronize the local system clock with a remote Network Time Protocol (NTP) server.",
+                                            "additionalProperties": false,
+                                            "properties": {
+                                                "npt": {
+                                                    "type": "array",
+                                                    "title": "NTP",
+                                                    "description": "A list of NTP server host names or IP addresses.",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "required": [
+                        "cri"
+                    ]
+                },
                 "controlPlane": {
                     "type": "object",
                     "title": "Internal control plane configuration",
@@ -764,63 +966,6 @@
                         "resources"
                     ]
                 },
-                "kubeadmConfig": {
-                    "type": "object",
-                    "title": "Kubeadm config",
-                    "description": "Configuration for clusters that are managed with kubeadm control plane and bootstrap providers.",
-                    "additionalProperties": false,
-                    "properties": {
-                        "kubelet": {
-                            "type": "object",
-                            "title": "Kubelet",
-                            "description": "Kubelet configuration that is used on all nodes.",
-                            "additionalProperties": false,
-                            "properties": {
-                                "gracefulNodeShutdown": {
-                                    "type": "object",
-                                    "title": "Graceful node shut down",
-                                    "description": "It enables kubelet to gracefully evict pods during a node shutdown. It is enabled by default in Kubernetes 1.21.",
-                                    "additionalProperties": false,
-                                    "properties": {
-                                        "shutdownGracePeriod": {
-                                            "type": "string",
-                                            "title": "Shutdown grace period",
-                                            "description": "Specifies the total duration that the node should delay the shutdown by. This is the total grace period for pod termination for both regular and critical pods."
-                                        },
-                                        "shutdownGracePeriodCriticalPods": {
-                                            "type": "string",
-                                            "title": "Shutdown grace period for critical pods",
-                                            "description": "Specifies the duration used to terminate critical pods during a node shutdown. This should be less than shutdownGracePeriod."
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        "systemd": {
-                            "type": "object",
-                            "title": "systemd",
-                            "additionalProperties": false,
-                            "properties": {
-                                "timesyncd": {
-                                    "type": "object",
-                                    "title": "timesyncd",
-                                    "description": "systemd-timesyncd is a system service that may be used to synchronize the local system clock with a remote Network Time Protocol (NTP) server.",
-                                    "additionalProperties": false,
-                                    "properties": {
-                                        "npt": {
-                                            "type": "array",
-                                            "title": "NTP",
-                                            "description": "A list of NTP server host names or IP addresses.",
-                                            "items": {
-                                                "type": "string"
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
                 "kubernetesVersion": {
                     "type": "string",
                     "title": "Kubernetes version",
@@ -876,6 +1021,7 @@
             },
             "required":[
                 "connectivity",
+                "components",
                 "controlPlane",
                 "kubernetesVersion",
                 "paused",
