@@ -1,5 +1,6 @@
 global:
   connectivity:
+    baseDomain: example.gigantic.io
     proxy:
       enabled: true
       httpProxy: http://proxy.giantswarm.io
@@ -22,8 +23,6 @@ metadata:
   name: awesome
   organization: giantswarm
   description: "Awesome Giant Swarm cluster"
-connectivity:
-  baseDomain: example.gigantic.io
 controlPlane:
   customNodeTaints:
   - key: you

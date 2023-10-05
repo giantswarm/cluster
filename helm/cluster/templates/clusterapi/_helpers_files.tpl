@@ -96,7 +96,7 @@
   "local"
 -}}
 {{- /* Add cluster domain */}}
-{{- $noProxyList = append $noProxyList (printf "%s.%s" (include "cluster.resource.name" $) $.Values.connectivity.baseDomain) -}}
+{{- $noProxyList = append $noProxyList (printf "%s.%s" (include "cluster.resource.name" $) $.Values.global.connectivity.baseDomain) -}}
 {{- /* Add services CIDR blocks */}}
 {{- range $servicesCidrBlock := $.Values.connectivity.network.services.cidrBlocks }}
 {{- $noProxyList = append $noProxyList $servicesCidrBlock -}}

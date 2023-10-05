@@ -331,6 +331,10 @@
                     "description": "Configuration of connectivity and networking options.",
                     "additionalProperties": false,
                     "properties": {
+                        "baseDomain": {
+                            "type": "string",
+                            "title": "Base DNS domain"
+                        },
                         "proxy": {
                             "title": "Proxy",
                             "description": "Whether/how outgoing traffic is routed through proxy servers.",
@@ -381,7 +385,10 @@
                                 }
                             ]
                         }
-                    }
+                    },
+                    "required": [
+                        "baseDomain"
+                    ]
                 },
                 "components": {
                     "type": "object",
@@ -542,10 +549,6 @@
             "title": "Connectivity",
             "additionalProperties": false,
             "properties": {
-                "baseDomain": {
-                    "type": "string",
-                    "title": "Base DNS domain"
-                },
                 "network": {
                     "type": "object",
                     "title": "Network",
@@ -601,10 +604,7 @@
                         }
                     }
                 }
-            },
-            "required": [
-                "baseDomain"
-            ]
+            }
         },
         "controlPlane": {
             "type": "object",

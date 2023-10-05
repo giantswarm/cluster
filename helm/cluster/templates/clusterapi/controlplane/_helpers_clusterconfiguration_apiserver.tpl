@@ -2,8 +2,8 @@
 certSANs:
 - localhost
 - 127.0.0.1
-- "api.{{ include "cluster.resource.name" $ }}.{{ required "The baseDomain value is required" .Values.connectivity.baseDomain }}"
-- "apiserver.{{ include "cluster.resource.name" $ }}.{{ required "The baseDomain value is required" .Values.connectivity.baseDomain }}"
+- "api.{{ include "cluster.resource.name" $ }}.{{ required "The baseDomain value is required" $.Values.global.connectivity.baseDomain }}"
+- "apiserver.{{ include "cluster.resource.name" $ }}.{{ required "The baseDomain value is required" $.Values.global.connectivity.baseDomain }}"
 {{- /*
     Timeout for the API server to appear.
     TODO: this should be aligned with alerts, i.e. time here should be less than the time after
@@ -72,7 +72,7 @@ extraArgs:
 
 {{- define "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.serviceAccountIssuer" }}
 {{- if .Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuer.clusterDomainPrefix -}}
-https://{{ .Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuer.clusterDomainPrefix }}.{{ include "cluster.resource.name" $ }}.{{ required "The baseDomain value is required" .Values.connectivity.baseDomain }}
+https://{{ .Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuer.clusterDomainPrefix }}.{{ include "cluster.resource.name" $ }}.{{ required "The baseDomain value is required" $.Values.global.connectivity.baseDomain }}
 {{- else -}}
 {{ .Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuer.url }}
 {{- end }}
