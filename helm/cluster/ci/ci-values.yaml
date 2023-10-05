@@ -192,6 +192,9 @@ internal:
     preKubeadmCommands:
     - echo "hello"
     - echo "cluster"
+    postKubeadmCommands:
+    - echo "hello"
+    - echo "cluster"
   kubernetesVersion: 1.24.10
   paused: false
   providerSpecific:

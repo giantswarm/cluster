@@ -989,6 +989,14 @@
                             "items": {
                                 "type": "string"
                             }
+                        },
+                        "postKubeadmCommands": {
+                            "type": "array",
+                            "title": "Post-kubeadm commands",
+                            "description": "Extra commands to run after kubeadm runs.",
+                            "items": {
+                                "type": "string"
+                            }
                         }
                     }
                 },
