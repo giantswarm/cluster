@@ -1,4 +1,8 @@
 global:
+  metadata:
+    name: awesome
+    organization: giantswarm
+    description: "Awesome Giant Swarm cluster"
   connectivity:
     baseDomain: example.gigantic.io
     proxy:
@@ -19,10 +23,6 @@ global:
             username: giantswarm
             password: super_secret_password
         - endpoint: giantswarm.azurecr.io
-metadata:
-  name: awesome
-  organization: giantswarm
-  description: "Awesome Giant Swarm cluster"
 controlPlane:
   customNodeTaints:
   - key: you

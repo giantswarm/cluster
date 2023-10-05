@@ -3,15 +3,15 @@ kind: KubeadmControlPlane
 metadata:
   annotations:
     "helm.sh/resource-policy": keep
-    {{- if .Values.metadata.annotations }}
-    {{- range $key, $val := .Values.metadata.annotations }}
+    {{- if $.Values.global.metadata.annotations }}
+    {{- range $key, $val := $.Values.global.metadata.annotations }}
     {{ $key }}: {{ $val | quote }}
     {{- end }}
     {{- end }}
   labels:
     {{- include "cluster.labels.common" $ | nindent 4 }}
-    {{- if .Values.metadata.labels }}
-    {{- range $key, $val := .Values.metadata.labels }}
+    {{- if $.Values.global.metadata.labels }}
+    {{- range $key, $val := $.Values.global.metadata.labels }}
     {{ $key }}: {{ $val | quote }}
     {{- end }}
     {{- end }}

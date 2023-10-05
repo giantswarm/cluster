@@ -17,6 +17,8 @@ global:
       services:
         cidrBlocks:
           - 172.31.0.0/16
+  metadata:
+    servicePriority: highest
 internal:
   components:
     cri:
@@ -49,5 +51,3 @@ internal:
         api:
           group: infrastructure.cluster.x-k8s.io
           version: v1beta1
-metadata:
-  servicePriority: highest
