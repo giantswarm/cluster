@@ -14,6 +14,18 @@ global:
         - elb.amazonaws.com
         - 169.254.169.254
         addressesTemplate: "cluster.test.internal.kubeadm.files.proxy.anotherNoProxyList"
+  controlPlane:
+    customNodeTaints:
+    - key: you
+      value: shall
+      effect: NoExecute
+    oidc:
+      clientId: hello
+      groupsClaim: groupsClaim
+      issuerUrl: https://giantswarm.io
+      usernameClaim: usernameClaim
+      caPem: "..."
+    replicas: 3
   components:
     cri:
       registries:
@@ -23,18 +35,6 @@ global:
             username: giantswarm
             password: super_secret_password
         - endpoint: giantswarm.azurecr.io
-controlPlane:
-  customNodeTaints:
-  - key: you
-    value: shall
-    effect: NoExecute
-  oidc:
-    clientId: hello
-    groupsClaim: groupsClaim
-    issuerUrl: https://giantswarm.io
-    usernameClaim: usernameClaim
-    caPem: "..."
-  replicas: 3
 internal:
   controlPlane:
     kubeadmConfig:

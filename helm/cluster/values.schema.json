@@ -456,6 +456,68 @@
                         "network"
                     ]
                 },
+                "controlPlane": {
+                    "type": "object",
+                    "title": "Control plane",
+                    "description": "Configuration of the control plane.",
+                    "properties": {
+                        "customNodeTaints": {
+                            "$ref": "#/$defs/customNodeTaints"
+                        },
+                        "oidc": {
+                            "title": "OIDC authentication",
+                            "oneOf": [
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "caPem": {
+                                            "type": "string",
+                                            "title": "Certificate authority",
+                                            "description": "Identity provider's CA certificate in PEM format."
+                                        },
+                                        "clientId": {
+                                            "type": "string",
+                                            "title": "Client ID"
+                                        },
+                                        "groupsClaim": {
+                                            "type": "string",
+                                            "title": "Groups claim"
+                                        },
+                                        "issuerUrl": {
+                                            "type": "string",
+                                            "title": "Issuer URL",
+                                            "description": "Exact issuer URL that will be included in identity tokens."
+                                        },
+                                        "usernameClaim": {
+                                            "type": "string",
+                                            "title": "Username claim"
+                                        }
+                                    },
+                                    "required": [
+                                        "clientId",
+                                        "groupsClaim",
+                                        "issuerUrl",
+                                        "usernameClaim"
+                                    ]
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "default": null
+                        },
+                        "replicas": {
+                            "type": "integer",
+                            "title": "Replicas",
+                            "description": "The number of control plane nodes.",
+                            "enum": [1, 3, 5],
+                            "default": 3
+                        }
+                    },
+                    "required": [
+                        "replicas"
+                    ]
+                },
                 "components": {
                     "type": "object",
                     "title": "Components",
@@ -610,71 +672,10 @@
                 }
             },
             "required": [
-                "connectivity",
                 "components",
+                "connectivity",
+                "controlPlane",
                 "metadata"
-            ]
-        },
-        "controlPlane": {
-            "type": "object",
-            "title": "Control plane",
-            "description": "Configuration of the control plane.",
-            "properties": {
-                "customNodeTaints": {
-                    "$ref": "#/$defs/customNodeTaints"
-                },
-                "oidc": {
-                    "title": "OIDC authentication",
-                    "oneOf": [
-                        {
-                            "type": "object",
-                            "properties": {
-                                "caPem": {
-                                    "type": "string",
-                                    "title": "Certificate authority",
-                                    "description": "Identity provider's CA certificate in PEM format."
-                                },
-                                "clientId": {
-                                    "type": "string",
-                                    "title": "Client ID"
-                                },
-                                "groupsClaim": {
-                                    "type": "string",
-                                    "title": "Groups claim"
-                                },
-                                "issuerUrl": {
-                                    "type": "string",
-                                    "title": "Issuer URL",
-                                    "description": "Exact issuer URL that will be included in identity tokens."
-                                },
-                                "usernameClaim": {
-                                    "type": "string",
-                                    "title": "Username claim"
-                                }
-                            },
-                            "required": [
-                                "clientId",
-                                "groupsClaim",
-                                "issuerUrl",
-                                "usernameClaim"
-                            ]
-                        },
-                        {
-                            "type": "null"
-                        }
-                    ],
-                    "default": null
-                },
-                "replicas": {
-                    "type": "integer",
-                    "title": "Replicas",
-                    "description": "The number of control plane nodes",
-                    "enum": [1, 3, 5],
-                    "default": 3
-                }
-            },
-            "required": [
-                "replicas"
             ]
         },
         "internal": {

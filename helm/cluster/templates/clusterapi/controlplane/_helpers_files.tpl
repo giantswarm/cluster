@@ -1,6 +1,6 @@
 {{- define "cluster.internal.controlPlane.kubeadm.files" }}
 {{- include "cluster.internal.kubeadm.files" . -}}
-{{- if .Values.controlPlane.oidc.caPem }}
+{{- if $.Values.global.controlPlane.oidc.caPem }}
 - path: /etc/ssl/certs/oidc.pem
   permissions: "0600"
   encoding: base64

@@ -26,14 +26,14 @@ extraArgs:
   feature-gates: {{ include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.featureGates" $ }}
   {{- end}}
   kubelet-preferred-address-types: InternalIP
-  {{- if $.Values.controlPlane.oidc }}
-  {{- if $.Values.controlPlane.oidc.caPem }}
+  {{- if $.Values.global.controlPlane.oidc }}
+  {{- if $.Values.global.controlPlane.oidc.caPem }}
   oidc-ca-file: /etc/ssl/certs/oidc.pem
   {{- end }}
-  oidc-client-id: {{ $.Values.controlPlane.oidc.clientId | quote }}
-  oidc-groups-claim: {{ $.Values.controlPlane.oidc.groupsClaim | quote }}
-  oidc-issuer-url: {{ $.Values.controlPlane.oidc.issuerUrl | quote }}
-  oidc-username-claim: {{ $.Values.controlPlane.oidc.usernameClaim | quote }}
+  oidc-client-id: {{ $.Values.global.controlPlane.oidc.clientId | quote }}
+  oidc-groups-claim: {{ $.Values.global.controlPlane.oidc.groupsClaim | quote }}
+  oidc-issuer-url: {{ $.Values.global.controlPlane.oidc.issuerUrl | quote }}
+  oidc-username-claim: {{ $.Values.global.controlPlane.oidc.usernameClaim | quote }}
   {{- end }}
   profiling: "false"
   runtime-config: api/all=true
