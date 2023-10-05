@@ -608,7 +608,12 @@
                         "servicePriority"
                     ]
                 }
-            }
+            },
+            "required": [
+                "connectivity",
+                "components",
+                "metadata"
+            ]
         },
         "controlPlane": {
             "type": "object",
