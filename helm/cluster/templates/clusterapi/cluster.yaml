@@ -19,10 +19,10 @@ spec:
   clusterNetwork:
     services:
       cidrBlocks:
-      {{- toYaml .Values.connectivity.network.services.cidrBlocks | nindent 8 }}
+      {{- toYaml $.Values.global.connectivity.network.services.cidrBlocks | nindent 8 }}
     pods:
       cidrBlocks:
-      {{- toYaml .Values.connectivity.network.pods.cidrBlocks | nindent 8 }}
+      {{- toYaml $.Values.global.connectivity.network.pods.cidrBlocks | nindent 8 }}
   controlPlaneRef:
     apiVersion: {{ .Values.internal.controlPlane.resources.controlPlane.api.group }}/{{ .Values.internal.controlPlane.resources.controlPlane.api.version }}
     kind: {{ .Values.internal.controlPlane.resources.controlPlane.api.kind }}

@@ -98,11 +98,11 @@
 {{- /* Add cluster domain */}}
 {{- $noProxyList = append $noProxyList (printf "%s.%s" (include "cluster.resource.name" $) $.Values.global.connectivity.baseDomain) -}}
 {{- /* Add services CIDR blocks */}}
-{{- range $servicesCidrBlock := $.Values.connectivity.network.services.cidrBlocks }}
+{{- range $servicesCidrBlock := $.Values.global.connectivity.network.services.cidrBlocks }}
 {{- $noProxyList = append $noProxyList $servicesCidrBlock -}}
 {{- end }}
 {{- /* Add pods CIDR blocks */}}
-{{- range $podsCidrBlock := $.Values.connectivity.network.pods.cidrBlocks }}
+{{- range $podsCidrBlock := $.Values.global.connectivity.network.pods.cidrBlocks }}
 {{- $noProxyList = append $noProxyList $podsCidrBlock -}}
 {{- end }}
 {{- /* Add custom NO_PROXY values */}}
