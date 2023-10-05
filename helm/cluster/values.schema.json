@@ -976,6 +976,22 @@
                         "resources"
                     ]
                 },
+                "kubeadmConfig": {
+                    "type": "object",
+                    "title": "Kubeadm config",
+                    "description": "Kubeadm config for all control plane and worker nodes.",
+                    "additionalProperties": false,
+                    "properties": {
+                        "preKubeadmCommands": {
+                            "type": "array",
+                            "title": "Pre-kubeadm commands",
+                            "description": "Extra commands to run before kubeadm runs.",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
                 "kubernetesVersion": {
                     "type": "string",
                     "title": "Kubernetes version",

@@ -188,6 +188,10 @@ internal:
       timesyncd:
         npt:
         - 169.254.169.123
+  kubeadmConfig:
+    preKubeadmCommands:
+    - echo "hello"
+    - echo "cluster"
   kubernetesVersion: 1.24.10
   paused: false
   providerSpecific:
