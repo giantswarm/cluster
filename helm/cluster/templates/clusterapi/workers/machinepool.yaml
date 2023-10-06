@@ -1,0 +1,44 @@
+{{- if eq $.Values.internal.resourcesApi.nodePoolKind "MachinePool" }}
+{{- range $nodePoolName, $nodePoolConfig := $.Values.global.nodePools }}
+apiVersion: cluster.x-k8s.io/v1beta1
+kind: MachinePool
+metadata:
+  annotations:
+    helm.sh/resource-policy: keep
+    machine-pool.giantswarm.io/name: {{ include "cluster.resource.name" $ }}-{{ $nodePoolName }}
+    {{- include "cluster.annotations.custom" $ | indent 4 }}
+    {{- if $nodePoolConfig.annotations }}
+    {{- range $key, $val := $nodePoolConfig.annotations }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
+    {{- end }}
+  labels:
+    {{- include "cluster.labels.common" $ | nindent 4 }}
+    {{- include "cluster.labels.custom" $ | indent 4 }}
+    giantswarm.io/machine-pool: {{ include "cluster.resource.name" $ }}-{{ $nodePoolName }}
+    {{- if $nodePoolConfig.labels }}
+    {{- range $key, $val := $nodePoolConfig.labels }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
+    {{- end }}
+  name: {{ include "cluster.resource.name" $ }}-{{ $nodePoolName }}
+  namespace: {{ $.Release.Namespace }}
+spec:
+  clusterName: {{ include "cluster.resource.name" $ }}
+  replicas: {{ $nodePoolConfig.replicas }}
+  template:
+    spec:
+      bootstrap:
+        configRef:
+          apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
+          kind: KubeadmConfig
+          name: {{ include "cluster.resource.name" $ }}-{{ $nodePoolName }}
+      clusterName: {{ include "cluster.resource.name" $ }}
+      infrastructureRef:
+        apiVersion: {{ $.Values.internal.resourcesApi.infrastructureMachinePool.group }}/{{ $.Values.internal.resourcesApi.infrastructureMachinePool.version }}
+        kind: {{ $.Values.internal.resourcesApi.infrastructureMachinePool.kind }}
+        name: {{ include "cluster.resource.name" $ }}-{{ $nodePoolName }}
+      version: {{ $.Values.internal.kubernetesVersion }}
+---
+{{- end }}
+{{- end }}

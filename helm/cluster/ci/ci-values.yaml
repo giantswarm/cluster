@@ -3,6 +3,12 @@ global:
     name: awesome
     organization: giantswarm
     description: "Awesome Giant Swarm cluster"
+    labels:
+      some-cluster-label: label-1
+      another-cluster-label: label-2
+    annotations:
+      important-cluster-value: "1000"
+      robots-need-this-in-the-cluster: "eW91IGNhbm5vdCByZWFkIHRoaXMsIGJ1dCByb2JvdHMgY2FuCg=="
   connectivity:
     baseDomain: example.gigantic.io
     proxy:
@@ -26,6 +32,23 @@ global:
       usernameClaim: usernameClaim
       caPem: "..."
     replicas: 3
+  nodePools:
+    def00:
+      replicas: 3
+      labels:
+        nodepool-workload-type: ai
+      annotations:
+        for-robots-in-nodepool: "cm9ib3RzIGFyZSBvcGVyYXRpbmcgb24gdGhpcyBub2RlIHBvb2wK"
+      nodeLabels:
+        workload-type: ai
+      nodeTaints:
+      - key: supernodepool
+        value: hello
+        effect: NoSchedule
+    rt5y7:
+      replicas: 100
+      nodeLabels:
+        workload-type: robots
   components:
     cri:
       registries:
@@ -197,8 +220,13 @@ internal:
     - echo "cluster"
   kubernetesVersion: 1.24.10
   paused: false
-  providerSpecific:
-    resources:
-      cluster:
-        api:
-          kind: AWSCluster
+  resourcesApi:
+    nodePoolKind: MachinePool
+    infrastructureCluster:
+      group: infrastructure.cluster.x-k8s.io
+      version: v1beta1
+      kind: AWSCluster
+    infrastructureMachinePool:
+      group: infrastructure.cluster.x-k8s.io
+      version: v1beta1
+      kind: AWSMachinePool

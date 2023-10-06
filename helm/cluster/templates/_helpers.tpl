@@ -39,3 +39,19 @@ cluster.x-k8s.io/cluster-name: {{ include "cluster.resource.name" . | quote }}
 cluster.x-k8s.io/watch-filter: capi
 helm.sh/chart: {{ include "cluster.chart.nameAndVersion" . | quote }}
 {{- end -}}
+
+{{- define "cluster.labels.custom" }}
+{{- if $.Values.global.metadata.labels }}
+{{- range $key, $val := $.Values.global.metadata.labels }}
+{{ $key }}: {{ $val | quote }}
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{- define "cluster.annotations.custom" }}
+{{- if $.Values.global.metadata.annotations }}
+{{- range $key, $val := $.Values.global.metadata.annotations }}
+{{ $key }}: {{ $val | quote }}
+{{- end }}
+{{- end }}
+{{- end }}

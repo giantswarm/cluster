@@ -43,11 +43,6 @@ internal:
           group: controlplane.cluster.x-k8s.io
           kind: KubeadmControlPlane
           version: v1beta1
+  kubeadmConfig: {}
   kubernetesVersion: 1.24.10
   paused: false
-  providerSpecific:
-    resources:
-      cluster:
-        api:
-          group: infrastructure.cluster.x-k8s.io
-          version: v1beta1

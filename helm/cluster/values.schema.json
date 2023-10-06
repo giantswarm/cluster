@@ -72,6 +72,86 @@
                 }
             }
         },
+        "infrastructureCluster": {
+            "type": "object",
+            "title": "Infrastructure cluster",
+            "description": "Group, version and kind of provider-specific infrastructure cluster resource.",
+            "additionalProperties": false,
+            "required": [
+                "group",
+                "version",
+                "kind"
+            ],
+            "properties": {
+                "group": {
+                    "type": "string",
+                    "title": "API group",
+                    "examples": [
+                        "infrastructure.cluster.x-k8s.io"
+                    ]
+                },
+                "kind": {
+                    "type": "string",
+                    "title": "API kind",
+                    "examples": [
+                        "AWSCluster",
+                        "AzureCluster",
+                        "VCDCluster",
+                        "VSphereCluster"
+                    ]
+                },
+                "version": {
+                    "type": "string",
+                    "title": "API version",
+                    "examples": [
+                        "v1alpha1",
+                        "v1beta1",
+                        "v1beta2",
+                        "v1",
+                        "v2"
+                    ]
+                }
+            }
+        },
+        "infrastructureMachinePool": {
+            "type": "object",
+            "title": "Infrastructure MachinePool",
+            "description": "Group, version and kind of provider-specific infrastructure MachinePool resource.",
+            "additionalProperties": false,
+            "required": [
+                "group",
+                "version",
+                "kind"
+            ],
+            "properties": {
+                "group": {
+                    "type": "string",
+                    "title": "API group",
+                    "examples": [
+                        "infrastructure.cluster.x-k8s.io"
+                    ]
+                },
+                "kind": {
+                    "type": "string",
+                    "title": "API kind",
+                    "examples": [
+                        "AWSMachinePool",
+                        "AzureMachinePool"
+                    ]
+                },
+                "version": {
+                    "type": "string",
+                    "title": "API version",
+                    "examples": [
+                        "v1alpha1",
+                        "v1beta1",
+                        "v1beta2",
+                        "v1",
+                        "v2"
+                    ]
+                }
+            }
+        },
         "ignition": {
             "type": "object",
             "title": "Ignition",
@@ -669,6 +749,93 @@
                         "organization",
                         "servicePriority"
                     ]
+                },
+                "nodePools": {
+                    "type": "object",
+                    "title": "Node pools",
+                    "patternProperties": {
+                        "^[a-z0-9]{5,10}$": {
+                            "type": "object",
+                            "title": "Node pool",
+                            "properties": {
+                                "annotations": {
+                                    "type": "object",
+                                    "title": "Annotations",
+                                    "description": "These annotations are added to all Kubernetes resources defining this node pool.",
+                                    "additionalProperties": false,
+                                    "patternProperties": {
+                                        "^([a-zA-Z0-9\\.-]{1,253}\/)?[a-zA-Z0-9\\._-]{1,63}$": {
+                                            "type": "string",
+                                            "title": "Annotation",
+                                            "minLength": 1
+                                        }
+                                    }
+                                },
+                                "labels": {
+                                    "type": "object",
+                                    "title": "Labels",
+                                    "description": "These labels are added to all Kubernetes resources defining this node pool.",
+                                    "additionalProperties": false,
+                                    "patternProperties": {
+                                        "^[a-zA-Z0-9/\\._-]+$": {
+                                            "type": "string",
+                                            "title": "Label",
+                                            "maxLength": 63,
+                                            "minLength": 0,
+                                            "pattern": "^[a-zA-Z0-9\\._-]+$"
+                                        }
+                                    }
+                                },
+                                "nodeLabels": {
+                                    "type": "object",
+                                    "title": "Node labels",
+                                    "description": "Labels that are passed to kubelet argument 'node-labels'.",
+                                    "additionalProperties": {
+                                        "type": "string"
+                                    }
+                                },
+                                "nodeTaints": {
+                                    "type": "array",
+                                    "title": "Custom node taints",
+                                    "items": {
+                                        "type": "object",
+                                        "required": [
+                                            "effect",
+                                            "key",
+                                            "value"
+                                        ],
+                                        "additionalProperties": false,
+                                        "properties": {
+                                            "effect": {
+                                                "type": "string",
+                                                "title": "Effect",
+                                                "enum": [
+                                                    "NoSchedule",
+                                                    "PreferNoSchedule",
+                                                    "NoExecute"
+                                                ]
+                                            },
+                                            "key": {
+                                                "type": "string",
+                                                "title": "Key"
+                                            },
+                                            "value": {
+                                                "type": "string",
+                                                "title": "Value"
+                                            }
+                                        }
+                                    }
+                                },
+                                "replicas": {
+                                    "type": "integer",
+                                    "title": "Replicas",
+                                    "description": "The number of node pool nodes.",
+                                    "minimum": 0,
+                                    "maximum": 1000
+                                }
+                            }
+                        }
+                    }
                 }
             },
             "required": [
@@ -1013,43 +1180,45 @@
                     "title": "Paused",
                     "default": false
                 },
-                "providerSpecific": {
+                "resourcesApi": {
                     "type": "object",
-                    "title": "Internal provider specific configuration",
-                    "additionalProperties": false,
-                    "properties": {
-                        "resources": {
-                            "type": "object",
-                            "title": "Resources configuration",
-                            "description": "GVK and other configuration for provider-specific infrastructure resources.",
+                    "title": "Resources API",
+                    "description": "Group, version and kind configuration that is required and used by a specific Cluster API provider.",
+                    "oneOf": [
+                        {
                             "additionalProperties": false,
                             "properties": {
-                                "cluster": {
-                                    "type": "object",
-                                    "title": "Provider specific cluster resource",
-                                    "properties": {
-                                        "api": {
-                                            "$ref": "#/$defs/gvk"
-                                        }
-                                    },
-                                    "default":{
-                                        "api": {
-                                            "group": "infrastructure.cluster.x-k8s.io",
-                                            "version": "v1beta1"
-                                        }
-                                    },
-                                    "required": [
-                                        "api"
-                                    ]
+                                "infrastructureCluster": {
+                                    "$ref": "#/$defs/infrastructureCluster"
+                                },
+                                "infrastructureMachinePool": {
+                                    "$ref": "#/$defs/infrastructureMachinePool"
+                                },
+                                "nodePoolKind": {
+                                    "const": "MachinePool"
                                 }
                             },
                             "required": [
-                                "cluster"
+                                "infrastructureCluster",
+                                "infrastructureMachinePool",
+                                "nodePoolKind"
+                            ]
+                        },
+                        {
+                            "additionalProperties": false,
+                            "properties": {
+                                "infrastructureCluster": {
+                                    "$ref": "#/$defs/infrastructureCluster"
+                                },
+                                "nodePoolKind": {
+                                    "const": "MachineDeployment"
+                                }
+                            },
+                            "required": [
+                                "infrastructureCluster",
+                                "nodePoolKind"
                             ]
                         }
-                    },
-                    "required": [
-                        "resources"
                     ]
                 }
             },
@@ -1059,7 +1228,7 @@
                 "controlPlane",
                 "kubernetesVersion",
                 "paused",
-                "providerSpecific"
+                "resourcesApi"
             ]
         }
     }
