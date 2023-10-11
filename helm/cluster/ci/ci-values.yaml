@@ -196,6 +196,12 @@ internal:
                   name: giantswarm
               - path: /var/lib/kubelet
                 mode: 750
+      preKubeadmCommands:
+      - echo "hello control plane before kubeadm"
+      - echo "cluster control plane before kubeadm"
+      postKubeadmCommands:
+      - echo "hello control plane after kubeadm"
+      - echo "cluster control plane after kubeadm"
     resources:
       controlPlane:
         api:
@@ -213,11 +219,11 @@ internal:
         - 169.254.169.123
   kubeadmConfig:
     preKubeadmCommands:
-    - echo "hello"
-    - echo "cluster"
+    - echo "hello all nodes before kubeadm"
+    - echo "all cluster nodes before kubeadm"
     postKubeadmCommands:
-    - echo "hello"
-    - echo "cluster"
+    - echo "hello all nodes after kubeadm"
+    - echo "all cluster nodes after kubeadm"
   kubernetesVersion: 1.24.10
   paused: false
   resourcesApi:
@@ -230,3 +236,11 @@ internal:
       group: infrastructure.cluster.x-k8s.io
       version: v1beta1
       kind: AWSMachinePool
+  workers:
+    kubeadmConfig:
+      preKubeadmCommands:
+      - echo "hello workers before kubeadm"
+      - echo "cluster workers before kubeadm"
+      postKubeadmCommands:
+      - echo "hello workers after kubeadm"
+      - echo "cluster workers after kubeadm"

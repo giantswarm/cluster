@@ -46,3 +46,10 @@ internal:
   kubeadmConfig: {}
   kubernetesVersion: 1.24.10
   paused: false
+  workers:
+    kubeadmConfig:
+      ignition:
+        containerLinuxConfig:
+          additionalConfig:
+            storage: {}
+            systemd: {}

@@ -21,7 +21,7 @@ Given that Kubernetes allows 63 characters for resource names, the stem is trunc
 room for such suffix.
 */}}
 {{- define "cluster.resource.name" -}}
-{{- $.Values.global.metadata.name | default (.Release.Name | replace "." "-" | trunc 47 | trimSuffix "-") -}}
+{{- $.Values.global.metadata.name | default ($.Release.Name | replace "." "-" | trunc 47 | trimSuffix "-") -}}
 {{- end -}}
 
 {{/*

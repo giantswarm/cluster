@@ -394,6 +394,22 @@
             "required": [
                 "name"
             ]
+        },
+        "preKubeadmCommands": {
+            "type": "array",
+            "title": "Pre-kubeadm commands",
+            "description": "Extra commands to run before kubeadm runs.",
+            "items": {
+                "type": "string"
+            }
+        },
+        "postKubeadmCommands": {
+            "type": "array",
+            "title": "Post-kubeadm commands",
+            "description": "Extra commands to run after kubeadm runs.",
+            "items": {
+                "type": "string"
+            }
         }
     },
     "type": "object",
@@ -1100,6 +1116,12 @@
                                             "default": {}
                                         }
                                     }
+                                },
+                                "preKubeadmCommands": {
+                                    "$ref": "#/$defs/preKubeadmCommands"
+                                },
+                                "postKubeadmCommands": {
+                                    "$ref": "#/$defs/postKubeadmCommands"
                                 }
                             },
                             "required": [
@@ -1146,24 +1168,14 @@
                 "kubeadmConfig": {
                     "type": "object",
                     "title": "Kubeadm config",
-                    "description": "Kubeadm config for all control plane and worker nodes.",
+                    "description": "Common kubeadm config for all nodes, including both control plane and workers.",
                     "additionalProperties": false,
                     "properties": {
                         "preKubeadmCommands": {
-                            "type": "array",
-                            "title": "Pre-kubeadm commands",
-                            "description": "Extra commands to run before kubeadm runs.",
-                            "items": {
-                                "type": "string"
-                            }
+                            "$ref": "#/$defs/preKubeadmCommands"
                         },
                         "postKubeadmCommands": {
-                            "type": "array",
-                            "title": "Post-kubeadm commands",
-                            "description": "Extra commands to run after kubeadm runs.",
-                            "items": {
-                                "type": "string"
-                            }
+                            "$ref": "#/$defs/postKubeadmCommands"
                         }
                     }
                 },
@@ -1220,6 +1232,33 @@
                             ]
                         }
                     ]
+                },
+                "workers": {
+                    "type": "object",
+                    "title": "Internal workers configuration",
+                    "additionalProperties": false,
+                    "properties": {
+                        "kubeadmConfig": {
+                            "type": "object",
+                            "title": "Kubeadm config",
+                            "description": "Configuration of workers nodes.",
+                            "additionalProperties": false,
+                            "properties": {
+                                "ignition": {
+                                    "$ref": "#/$defs/ignition"
+                                },
+                                "preKubeadmCommands": {
+                                    "$ref": "#/$defs/preKubeadmCommands"
+                                },
+                                "postKubeadmCommands": {
+                                    "$ref": "#/$defs/postKubeadmCommands"
+                                }
+                            },
+                            "required": [
+                                "ignition"
+                            ]
+                        }
+                    }
                 }
             },
             "required":[
