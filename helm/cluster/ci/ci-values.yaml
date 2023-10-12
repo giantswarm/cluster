@@ -137,8 +137,6 @@ internal:
                 group:
                   id: 23456
                   name: giantswarm
-              - path: /var/lib/kubelet
-                mode: 750
       preKubeadmCommands:
       - echo "hello control plane before kubeadm"
       - echo "cluster control plane before kubeadm"

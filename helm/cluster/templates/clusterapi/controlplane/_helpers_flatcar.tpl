@@ -1,86 +1,39 @@
-{{- define "cluster.kubeadmControlPlane.kubeadmConfigSpec.ignition.containerLinuxConfig.additionalConfig.systemd.units" }}
-{{- range $.Values.internal.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units }}
-- name: {{ .name }}
-  {{- if hasKey . "enabled" }}
-  enabled: {{ .enabled }}
-  {{- end }}
-  {{- if hasKey . "mask" }}
-  mask: {{ .mask }}
-  {{- end }}
-  {{- if .contents }}
-  contents: |
-    {{- .contents | trim | nindent 4 }}
-  {{- end }}
-  {{- if .dropins }}
-  dropins:
-  {{- range .dropins }}
-  - name: {{ .name }}
-    {{- if .contents }}
-    contents: |
-      {{- .contents | trim | nindent 6 }}
-    {{- end }}
-  {{- end }}
-  {{- end }}
+{{- define "cluster.internal.controlPlane.kubeadm.ignition" }}
+containerLinuxConfig:
+  additionalConfig: |
+    systemd:
+      units:
+      {{- include "cluster.internal.controlPlane.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units" $ | indent 6 }}
+    storage:
+      filesystems:
+      {{- include "cluster.internal.controlPlane.kubeadm.ignition.containerLinuxConfig.additionalConfig.storage.filesystems" $ | indent 6 }}
+      directories:
+      {{- include "cluster.internal.controlPlane.kubeadm.ignition.containerLinuxConfig.additionalConfig.storage.directories" $ | indent 6 }}
+{{- end }}
+
+{{- define "cluster.internal.controlPlane.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units" }}
+{{- if ((((($.Values.internal.kubeadmConfig).ignition).containerLinuxConfig).additionalConfig).systemd).units }}
+{{- include "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units" $.Values.internal.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units }}
+{{- end }}
+{{- if (((((($.Values.internal.controlPlane).kubeadmConfig).ignition).containerLinuxConfig).additionalConfig).systemd).units }}
+{{- include "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units" $.Values.internal.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units }}
 {{- end }}
 {{- end }}
 
-{{- define "cluster.kubeadmControlPlane.kubeadmConfigSpec.ignition.containerLinuxConfig.additionalConfig.storage.filesystems" }}
-{{- range $.Values.internal.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.storage.filesystems }}
-- name: {{ .name }}
-  {{- if .mount }}
-  mount:
-    device: {{ .mount.device }}
-    format: {{ .mount.format }}
-    {{- if hasKey . "wipeFilesystem" }}
-    wipeFilesystem: {{ .mount.wipeFilesystem }}
-    {{- end }}
-    {{- if .mount.label }}
-    label: {{ .mount.label }}
-    {{- end }}
-    {{- if .mount.uuid }}
-    uuid: {{ .mount.uuid }}
-    {{- end }}
-    {{- if .mount.options }}
-    {{- range $option := .mount.options }}
-    - {{ $option }}
-    {{- end }}
-    {{- end }}
-  {{- end }}
-  {{- if .path }}
-  path: {{ .path }}
-  {{- end }}
+{{- define "cluster.internal.controlPlane.kubeadm.ignition.containerLinuxConfig.additionalConfig.storage.filesystems" }}
+{{- if ((((($.Values.internal.kubeadmConfig).ignition).containerLinuxConfig).additionalConfig).storage).filesystems }}
+{{- include "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.storage.filesystems" $.Values.internal.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.storage.filesystems }}
+{{- end }}
+{{- if (((((($.Values.internal.controlPlane).kubeadmConfig).ignition).containerLinuxConfig).additionalConfig).storage).filesystems }}
+{{- include "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.storage.filesystems" $.Values.internal.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.storage.filesystems }}
 {{- end }}
 {{- end }}
 
-{{- define "cluster.kubeadmControlPlane.kubeadmConfigSpec.ignition.containerLinuxConfig.additionalConfig.storage.directories" }}
-{{- range $.Values.internal.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.storage.directories }}
-- path: {{ .path }}
-  {{- if hasKey . "overwrite" }}
-  overwrite: {{ .overwrite }}
-  {{- end }}
-  {{- if .filesystem }}
-  filesystem: {{ .filesystem }}
-  {{- end }}
-  {{- if .mode }}
-  mode: {{ .mode }}
-  {{- end }}
-  {{- if .user }}
-  user:
-    {{- if .user.id }}
-    id: {{ .user.id }}
-    {{- end }}
-    {{- if .user.name }}
-    name: {{ .user.name }}
-    {{- end }}
-  {{- end }}
-  {{- if .group }}
-  group:
-    {{- if .group.id }}
-    id: {{ .group.id }}
-    {{- end }}
-    {{- if .group.name }}
-    name: {{ .group.name }}
-    {{- end }}
-  {{- end }}
+{{- define "cluster.internal.controlPlane.kubeadm.ignition.containerLinuxConfig.additionalConfig.storage.directories" }}
+{{- if ((((($.Values.internal.kubeadmConfig).ignition).containerLinuxConfig).additionalConfig).storage).directories }}
+{{- include "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.storage.directories" $.Values.internal.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.storage.directories }}
+{{- end }}
+{{- if (((((($.Values.internal.controlPlane).kubeadmConfig).ignition).containerLinuxConfig).additionalConfig).storage).directories }}
+{{- include "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.storage.directories" $.Values.internal.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.storage.directories }}
 {{- end }}
 {{- end }}
