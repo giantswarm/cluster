@@ -32,6 +32,10 @@ spec:
   {{- include "cluster.internal.workers.kubeadm.preKubeadmCommands" $ | indent 2 }}
   postKubeadmCommands:
   {{- include "cluster.internal.workers.kubeadm.postKubeadmCommands" $ | indent 2 }}
+  users:
+  {{- include "cluster.internal.kubeadm.users" $ | indent 2 }}
+  files:
+  {{- include "cluster.internal.workers.kubeadm.files" $ | indent 2 }}
 ---
 {{- end }}
 {{- end }}
