@@ -560,6 +560,53 @@
                         "customNodeTaints": {
                             "$ref": "#/$defs/customNodeTaints"
                         },
+                        "machineHealthCheck": {
+                            "type": "object",
+                            "title": "Machine health check",
+                            "properties": {
+                                "enabled": {
+                                    "type": "boolean",
+                                    "title": "Enable",
+                                    "default": true
+                                },
+                                "maxUnhealthy": {
+                                    "type": "string",
+                                    "title": "Maximum unhealthy nodes",
+                                    "examples": [
+                                        "40%"
+                                    ],
+                                    "default": "40%"
+                                },
+                                "nodeStartupTimeout": {
+                                    "type": "string",
+                                    "title": "Node startup timeout",
+                                    "description": "Determines how long a machine health check should wait for a node to join the cluster, before considering a machine unhealthy.",
+                                    "examples": [
+                                        "10m",
+                                        "100s"
+                                    ],
+                                    "default": "8m0s"
+                                },
+                                "unhealthyNotReadyTimeout": {
+                                    "type": "string",
+                                    "title": "Timeout for ready",
+                                    "description": "If a node is not in condition 'Ready' after this timeout, it will be considered unhealthy.",
+                                    "examples": [
+                                        "300s"
+                                    ],
+                                    "default": "10m0s"
+                                },
+                                "unhealthyUnknownTimeout": {
+                                    "type": "string",
+                                    "title": "Timeout for unknown condition",
+                                    "description": "If a node is in 'Unknown' condition after this timeout, it will be considered unhealthy.",
+                                    "examples": [
+                                        "300s"
+                                    ],
+                                    "default": "10m0s"
+                                }
+                            }
+                        },
                         "oidc": {
                             "title": "OIDC authentication",
                             "oneOf": [
@@ -611,6 +658,7 @@
                         }
                     },
                     "required": [
+                        "machineHealthCheck",
                         "replicas"
                     ]
                 },
