@@ -1171,6 +1171,9 @@
                     "description": "Common kubeadm config for all nodes, including both control plane and workers.",
                     "additionalProperties": false,
                     "properties": {
+                        "ignition": {
+                            "$ref": "#/$defs/ignition"
+                        },
                         "preKubeadmCommands": {
                             "$ref": "#/$defs/preKubeadmCommands"
                         },

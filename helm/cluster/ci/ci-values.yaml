@@ -82,64 +82,7 @@ internal:
           additionalConfig:
             systemd:
               units:
-              - name: kubereserved.slice
-                contents: |
-                  [Unit]
-                  Description=Limited resources slice for Kubernetes services
-                  Documentation=man:systemd.special(7)
-                  DefaultDependencies=no
-                  Before=slices.target
-                  Requires=-.slice
-                  After=-.slice
-              - name: kubeadm.service
-                dropins:
-                - name: 10-flatcar.conf
-                  contents: |
-                    [Unit]
-                    # kubeadm must run after coreos-metadata populated /run/metadata directory.
-                    Requires=coreos-metadata.service
-                    After=coreos-metadata.service
-                    [Service]
-                    # Ensure kubeadm service has access to kubeadm binary in /opt/bin on Flatcar.
-                    Environment=PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/opt/bin
-                    # To make metadata environment variables available for pre-kubeadm commands.
-                    EnvironmentFile=/run/metadata/*
-              - name: containerd.service
-                enabled: true
-                contents: |
-                dropins:
-                - name: 10-change-cgroup.conf
-                  contents: |
-                    [Service]
-                    CPUAccounting=true
-                    MemoryAccounting=true
-                    Slice=kubereserved.slice
-              - name: os-hardening.service
-                enabled: true
-                contents: |
-                  [Unit]
-                  Description=Apply os hardening
-                  [Service]
-                  Type=oneshot
-                  ExecStartPre=-/bin/bash -c "gpasswd -d core rkt; gpasswd -d core docker; gpasswd -d core wheel"
-                  ExecStartPre=/bin/bash -c "until [ -f '/etc/sysctl.d/hardening.conf' ]; do echo Waiting for sysctl file; sleep 1s;done;"
-                  ExecStart=/usr/sbin/sysctl -p /etc/sysctl.d/hardening.conf
-                  [Install]
-                  WantedBy=multi-user.target
-              - name: audit-rules.service
-                enabled: true
-                dropins:
-                - name: 10-wait-for-containerd.conf
-                  contents: |
-                    [Service]
-                    ExecStartPre=/bin/bash -c "while [ ! -f /etc/audit/rules.d/containerd.rules ]; do echo 'Waiting for /etc/audit/rules.d/containerd.rules to be written' && sleep 1; done"
-              - name: update-engine.service
-                enabled: false
-                mask: true
-              - name: locksmithd.service
-                enabled: false
-                mask: true
-              - name: example1.service
+              - name: example1-control-plane.service
                 enabled: false
                 mask: false
                 contents: |
@@ -148,18 +91,18 @@ internal:
                 - name: hello.conf
                   contents: |
                     # Contents goes here
-              - name: example2.service
+              - name: example2-control-plane.service
                 enabled: false
                 mask: false
                 contents: |
                   # Multi-line
                   # contents goes here
                 dropins:
-                - name: hello1.conf
+                - name: hello1-control-plane.conf
                   contents: |
                     # Multi-line
                     # contents goes here
-                - name: hello2.conf
+                - name: hello2-control-plane.conf
                   contents: |
                     # Multi-line
                     # contents goes here
@@ -184,7 +127,7 @@ internal:
                   label: kubelet
                   format: xfs
               directories:
-              - path: /var/lib/kubelet/temporary/stuff
+              - path: /var/lib/kubelet/temporary/stuff/control-plane
                 overwrite: true
                 filesystem: kubelet
                 mode: 750
@@ -218,6 +161,62 @@ internal:
         npt:
         - 169.254.169.123
   kubeadmConfig:
+    ignition:
+      containerLinuxConfig:
+        additionalConfig:
+          systemd:
+            units:
+            - name: kubeadm.service
+              dropins:
+              - name: 10-flatcar.conf
+                contents: |
+                  [Unit]
+                  # kubeadm must run after coreos-metadata populated /run/metadata directory.
+                  Requires=coreos-metadata.service
+                  After=coreos-metadata.service
+                  [Service]
+                  # Ensure kubeadm service has access to kubeadm binary in /opt/bin on Flatcar.
+                  Environment=PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/opt/bin
+                  # To make metadata environment variables available for pre-kubeadm commands.
+                  EnvironmentFile=/run/metadata/*
+            - name: example1.service
+              enabled: false
+              mask: false
+              contents: |
+                # Contents goes here
+              dropins:
+              - name: hello.conf
+                contents: |
+                  # Contents goes here
+            - name: example2.service
+              enabled: false
+              mask: false
+              contents: |
+                # Multi-line
+                # contents goes here
+              dropins:
+              - name: hello1.conf
+                contents: |
+                  # Multi-line
+                  # contents goes here
+              - name: hello2.conf
+                contents: |
+                  # Multi-line
+                  # contents goes here
+          storage:
+            directories:
+            - path: /var/lib/kubelet/temporary/stuff
+              overwrite: true
+              filesystem: kubelet
+              mode: 750
+              user:
+                id: 12345
+                name: giantswarm
+              group:
+                id: 23456
+                name: giantswarm
+            - path: /var/lib/kubelet
+              mode: 750
     preKubeadmCommands:
     - echo "hello all nodes before kubeadm"
     - echo "all cluster nodes before kubeadm"
@@ -238,6 +237,47 @@ internal:
       kind: AWSMachinePool
   workers:
     kubeadmConfig:
+      ignition:
+        containerLinuxConfig:
+          additionalConfig:
+            systemd:
+              units:
+              - name: example1-workers.service
+                enabled: false
+                mask: false
+                contents: |
+                  # Contents goes here
+                dropins:
+                - name: hello.conf
+                  contents: |
+                    # Contents goes here
+              - name: example2-workers.service
+                enabled: false
+                mask: false
+                contents: |
+                  # Multi-line
+                  # contents goes here
+                dropins:
+                - name: hello1-workers.conf
+                  contents: |
+                    # Multi-line
+                    # contents goes here
+                - name: hello2-workers.conf
+                  contents: |
+                    # Multi-line
+                    # contents goes here
+            storage:
+              directories:
+              - path: /var/lib/kubelet/temporary/stuff/workers
+                overwrite: true
+                filesystem: kubelet
+                mode: 750
+                user:
+                  id: 12345
+                  name: giantswarm
+                group:
+                  id: 23456
+                  name: giantswarm
       preKubeadmCommands:
       - echo "hello workers before kubeadm"
       - echo "cluster workers before kubeadm"

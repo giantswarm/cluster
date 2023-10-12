@@ -6,7 +6,7 @@
     .config: node pool config, a value from $.Values.global.nodepools map.
 */}}
 {{- define "cluster.internal.workers.kubeadm.joinConfiguration" }}
-{{ with $machinePool := .nodePool }}
+{{- with $machinePool := .nodePool }}
 nodeRegistration:
   name: ${COREOS_EC2_HOSTNAME}
   kubeletExtraArgs:
@@ -26,5 +26,5 @@ nodeRegistration:
   {{- end }}
   {{- end }}
   {{- end }}
-{{ end }}
+{{- end }}
 {{- end }}

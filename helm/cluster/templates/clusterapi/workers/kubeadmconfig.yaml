@@ -25,14 +25,7 @@ metadata:
 spec:
   format: ignition
   ignition:
-    containerLinuxConfig:
-      additionalConfig: |
-        systemd:
-          units:
-          {{ printf "- TODO" }}
-        storage:
-          directories:
-          {{ printf "- TODO" }}
+    {{- include "cluster.internal.workers.kubeadm.ignition" $ | indent 4 }}
   joinConfiguration:
     {{- include "cluster.internal.workers.kubeadm.joinConfiguration" (dict "Values" $.Values "Release" $.Release "nodePool" (dict "name" $nodePoolName "config" $nodePoolConfig)) | indent 4 }}
   preKubeadmCommands:
