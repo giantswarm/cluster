@@ -8,6 +8,9 @@ global:
           - endpoint: registry-1.docker.io
           - endpoint: giantswarm.azurecr.io
   connectivity:
+    bastion:
+      enabled: true
+      replicas: 1
     network:
       pods:
         cidrBlocks:

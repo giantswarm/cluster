@@ -152,6 +152,45 @@
                 }
             }
         },
+        "infrastructureMachineTemplate": {
+            "type": "object",
+            "title": "Infrastructure Machine template",
+            "description": "Group, version and kind of provider-specific infrastructure Machine template resource.",
+            "additionalProperties": false,
+            "required": [
+                "group",
+                "version",
+                "kind"
+            ],
+            "properties": {
+                "group": {
+                    "type": "string",
+                    "title": "API group",
+                    "examples": [
+                        "infrastructure.cluster.x-k8s.io"
+                    ]
+                },
+                "kind": {
+                    "type": "string",
+                    "title": "API kind",
+                    "examples": [
+                        "AWSMachineTemplate",
+                        "AzureMachineTemplate"
+                    ]
+                },
+                "version": {
+                    "type": "string",
+                    "title": "API version",
+                    "examples": [
+                        "v1alpha1",
+                        "v1beta1",
+                        "v1beta2",
+                        "v1",
+                        "v2"
+                    ]
+                }
+            }
+        },
         "ignition": {
             "type": "object",
             "title": "Ignition",
@@ -430,6 +469,22 @@
                         "baseDomain": {
                             "type": "string",
                             "title": "Base DNS domain"
+                        },
+                        "bastion": {
+                            "type": "object",
+                            "title": "Bastion host",
+                            "properties": {
+                                "enabled": {
+                                    "type": "boolean",
+                                    "title": "Enable",
+                                    "default": true
+                                },
+                                "replicas": {
+                                    "type": "integer",
+                                    "title": "Number of hosts",
+                                    "default": 1
+                                }
+                            }
                         },
                         "network": {
                             "type": "object",
@@ -1213,6 +1268,11 @@
                         "resources"
                     ]
                 },
+                "hashSalt": {
+                    "type": "string",
+                    "title": "Hash salt",
+                    "description": "If specified, this token is used as a salt to the hash suffix of some resource names. Can be used to force-recreate some resources."
+                },
                 "kubeadmConfig": {
                     "type": "object",
                     "title": "Kubeadm config",
@@ -1247,13 +1307,32 @@
                     "type": "object",
                     "title": "Resources API",
                     "description": "Group, version and kind configuration that is required and used by a specific Cluster API provider.",
+                    "properties": {
+                        "infrastructureCluster": {
+                            "$ref": "#/$defs/infrastructureCluster"
+                        },
+                        "bastion": {
+                            "type": "object",
+                            "title": "Bastion",
+                            "description": "Configuration of bastion resources API and names.",
+                            "properties": {
+                                "infrastructureMachineTemplate": {
+                                    "$ref": "#/$defs/infrastructureMachineTemplate"
+                                },
+                                "infrastructureMachineTemplateSpecTemplateName": {
+                                    "type": "string",
+                                    "title": "Infrastructure Machine template spec template name",
+                                    "description": "The name of Helm template that renders Infrastructure Machine template spec."
+                                }
+                            }
+                        }
+                    },
+                    "required": [
+                        "infrastructureCluster"
+                    ],
                     "oneOf": [
                         {
-                            "additionalProperties": false,
                             "properties": {
-                                "infrastructureCluster": {
-                                    "$ref": "#/$defs/infrastructureCluster"
-                                },
                                 "infrastructureMachinePool": {
                                     "$ref": "#/$defs/infrastructureMachinePool"
                                 },
@@ -1262,25 +1341,24 @@
                                 }
                             },
                             "required": [
-                                "infrastructureCluster",
                                 "infrastructureMachinePool",
                                 "nodePoolKind"
                             ]
                         },
                         {
-                            "additionalProperties": false,
                             "properties": {
-                                "infrastructureCluster": {
-                                    "$ref": "#/$defs/infrastructureCluster"
-                                },
                                 "nodePoolKind": {
                                     "const": "MachineDeployment"
                                 }
                             },
                             "required": [
-                                "infrastructureCluster",
                                 "nodePoolKind"
-                            ]
+                            ],
+                            "not": {
+                                "required": [
+                                    "infrastructureMachinePool"
+                                ]
+                            }
                         }
                     ]
                 },

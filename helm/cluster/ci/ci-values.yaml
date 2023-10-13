@@ -158,6 +158,7 @@ internal:
       timesyncd:
         npt:
         - 169.254.169.123
+  hashSalt: salty-1
   kubeadmConfig:
     ignition:
       containerLinuxConfig:
@@ -233,6 +234,12 @@ internal:
       group: infrastructure.cluster.x-k8s.io
       version: v1beta1
       kind: AWSMachinePool
+    bastion:
+      infrastructureMachineTemplate:
+        group: infrastructure.cluster.x-k8s.io
+        version: v1beta1
+        kind: AWSMachineTemplate
+      infrastructureMachineTemplateSpecTemplateName: "cluster.test.bastion.machineTemplate.spec"
   workers:
     kubeadmConfig:
       ignition:
