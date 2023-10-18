@@ -29,6 +29,13 @@ global:
   metadata:
     servicePriority: highest
 internal:
+  bastion:
+    kubeadmConfig:
+      ignition:
+        containerLinuxConfig:
+          additionalConfig:
+            storage: {}
+            systemd: {}
   components:
     cri:
       sandboxContainerImage:
@@ -60,6 +67,10 @@ internal:
           systemd: {}
   kubernetesVersion: 1.24.10
   paused: false
+  resourcesApi:
+    bastion:
+      infrastructureMachineTemplate: {}
+    infrastructureCluster: {}
   workers:
     kubeadmConfig:
       ignition:
