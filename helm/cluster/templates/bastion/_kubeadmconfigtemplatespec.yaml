@@ -1,0 +1,11 @@
+{{- define "cluster.internal.bastion.kubeadmconfigtemplate.spec" }}
+format: ignition
+ignition:
+  {{- include "cluster.internal.bastion.kubeadm.ignition" $ | indent 2 }}
+preKubeadmCommands:
+{{- include "cluster.internal.bastion.kubeadm.preKubeadmCommands" $ }}
+files:
+{{- include "cluster.internal.bastion.kubeadm.files" $ }}
+users:
+{{- include "cluster.internal.kubeadm.users" $ }}
+{{- end }}

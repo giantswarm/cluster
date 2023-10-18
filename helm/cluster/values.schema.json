@@ -969,6 +969,27 @@
             "title": "Internal",
             "additionalProperties": false,
             "properties": {
+                "bastion": {
+                    "type": "object",
+                    "title": "Internal bastion configuration",
+                    "additionalProperties": false,
+                    "properties": {
+                        "kubeadmConfig": {
+                            "type": "object",
+                            "title": "Kubeadm config",
+                            "description": "Configuration of bastion nodes.",
+                            "additionalProperties": false,
+                            "properties": {
+                                "ignition": {
+                                    "$ref": "#/$defs/ignition"
+                                },
+                                "preKubeadmCommands": {
+                                    "$ref": "#/$defs/preKubeadmCommands"
+                                }
+                            }
+                        }
+                    }
+                },
                 "connectivity": {
                     "type": "object",
                     "title": "Connectivity",
