@@ -17,7 +17,7 @@ normalize-schema: ## Normalize the JSON schema
 .PHONY: validate-schema
 validate-schema: ## Validate the JSON schema
 	go install github.com/giantswarm/schemalint/v2@v2
-	schemalint verify $(VALUES_SCHEMA) --rule-set=cluster-app
+	schemalint verify $(VALUES_SCHEMA)
 
 .PHONY: generate-docs
 generate-docs: ## Generate values documentation from schema

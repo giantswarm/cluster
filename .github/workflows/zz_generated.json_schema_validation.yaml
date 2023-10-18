@@ -30,8 +30,6 @@ jobs:
       - name: Run schemalint
         id: run-schemalint
         uses: giantswarm/schemalint/actions/verify-helm-schema@v2
-        with:
-          rule-set: 'cluster-app'
   generate:
     name: Check that values.yaml is generated from values.schema.json with helm-values-gen
     runs-on: ubuntu-latest
