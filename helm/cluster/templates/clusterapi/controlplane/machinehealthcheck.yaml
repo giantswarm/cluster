@@ -11,7 +11,7 @@ metadata:
     {{- end }}
     {{- end }}
   labels:
-    {{- include "cluster.labels.common" . | nindent 4 }}
+    {{- include "cluster.labels.common" $ | nindent 4 }}
     {{- if $.Values.global.metadata.labels }}
     {{- range $key, $val := $.Values.global.metadata.labels }}
     {{ $key }}: {{ $val | quote }}
