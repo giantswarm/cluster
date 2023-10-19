@@ -27,5 +27,5 @@ generate-docs: ## Generate values documentation from schema
 .PHONY: generate-values
 generate-values: ## Generate values.yaml from schema
 	go install github.com/giantswarm/helm-values-gen@v1
-	helm-values-gen $(VALUES_SCHEMA) -o $(VALUES) --force
-
+	@cd helm/cluster && \
+		helm-values-gen ./values.schema.json -o ./values.yaml --force

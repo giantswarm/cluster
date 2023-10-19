@@ -1,8 +1,202 @@
-metadata:
-  name: awesome
-  organization: giantswarm
-  description: "Awesome Giant Swarm cluster"
+global:
+  metadata:
+    name: awesome
+    organization: giantswarm
+    description: "Awesome Giant Swarm cluster"
+  connectivity:
+    baseDomain: example.gigantic.io
+    proxy:
+      enabled: true
+      httpProxy: http://proxy.giantswarm.io
+      httpsProxy: https://proxy.giantswarm.io
+      noProxy:
+        addresses:
+        - elb.amazonaws.com
+        - 169.254.169.254
+        addressesTemplate: "cluster.test.internal.kubeadm.proxy.anotherNoProxyList"
+  controlPlane:
+    customNodeTaints:
+    - key: you
+      value: shall
+      effect: NoExecute
+    oidc:
+      clientId: hello
+      groupsClaim: groupsClaim
+      issuerUrl: https://giantswarm.io
+      usernameClaim: usernameClaim
+      caPem: "..."
+    replicas: 3
+  components:
+    cri:
+      registries:
+        docker.io:
+        - endpoint: registry-1.docker.io
+          credentials:
+            username: giantswarm
+            password: super_secret_password
+        - endpoint: giantswarm.azurecr.io
 internal:
+  controlPlane:
+    kubeadmConfig:
+      clusterConfiguration:
+        apiServer:
+          additionalAdmissionPlugins:
+          - AlwaysPullImages
+          - PodSecurityPolicy
+          apiAudiences:
+            templateName: "cluster.test.kubeadmControlPlane.kubeadmConfigSpec.clusterConfiguration.apiServer.apiAudiences"
+          featureGates:
+          - name: CronJobTimeZone
+            enabled: true
+          - name: DownwardAPIHugePages
+            enabled: false
+          - name: TTLAfterFinished
+            enabled: true
+          serviceAccountIssuer:
+            clusterDomainPrefix: irsa
+      ignition:
+        containerLinuxConfig:
+          additionalConfig:
+            systemd:
+              units:
+              - name: kubereserved.slice
+                contents: |
+                  [Unit]
+                  Description=Limited resources slice for Kubernetes services
+                  Documentation=man:systemd.special(7)
+                  DefaultDependencies=no
+                  Before=slices.target
+                  Requires=-.slice
+                  After=-.slice
+              - name: kubeadm.service
+                dropins:
+                - name: 10-flatcar.conf
+                  contents: |
+                    [Unit]
+                    # kubeadm must run after coreos-metadata populated /run/metadata directory.
+                    Requires=coreos-metadata.service
+                    After=coreos-metadata.service
+                    [Service]
+                    # Ensure kubeadm service has access to kubeadm binary in /opt/bin on Flatcar.
+                    Environment=PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/opt/bin
+                    # To make metadata environment variables available for pre-kubeadm commands.
+                    EnvironmentFile=/run/metadata/*
+              - name: containerd.service
+                enabled: true
+                contents: |
+                dropins:
+                - name: 10-change-cgroup.conf
+                  contents: |
+                    [Service]
+                    CPUAccounting=true
+                    MemoryAccounting=true
+                    Slice=kubereserved.slice
+              - name: os-hardening.service
+                enabled: true
+                contents: |
+                  [Unit]
+                  Description=Apply os hardening
+                  [Service]
+                  Type=oneshot
+                  ExecStartPre=-/bin/bash -c "gpasswd -d core rkt; gpasswd -d core docker; gpasswd -d core wheel"
+                  ExecStartPre=/bin/bash -c "until [ -f '/etc/sysctl.d/hardening.conf' ]; do echo Waiting for sysctl file; sleep 1s;done;"
+                  ExecStart=/usr/sbin/sysctl -p /etc/sysctl.d/hardening.conf
+                  [Install]
+                  WantedBy=multi-user.target
+              - name: audit-rules.service
+                enabled: true
+                dropins:
+                - name: 10-wait-for-containerd.conf
+                  contents: |
+                    [Service]
+                    ExecStartPre=/bin/bash -c "while [ ! -f /etc/audit/rules.d/containerd.rules ]; do echo 'Waiting for /etc/audit/rules.d/containerd.rules to be written' && sleep 1; done"
+              - name: update-engine.service
+                enabled: false
+                mask: true
+              - name: locksmithd.service
+                enabled: false
+                mask: true
+              - name: example1.service
+                enabled: false
+                mask: false
+                contents: |
+                  # Contents goes here
+                dropins:
+                - name: hello.conf
+                  contents: |
+                    # Contents goes here
+              - name: example2.service
+                enabled: false
+                mask: false
+                contents: |
+                  # Multi-line
+                  # contents goes here
+                dropins:
+                - name: hello1.conf
+                  contents: |
+                    # Multi-line
+                    # contents goes here
+                - name: hello2.conf
+                  contents: |
+                    # Multi-line
+                    # contents goes here
+            storage:
+              filesystems:
+              - name: etcd
+                mount:
+                  device: /dev/xvdc
+                  wipeFilesystem: true
+                  label: etcd
+                  format: xfs
+              - name: containerd
+                mount:
+                  device: /dev/xvdd
+                  wipeFilesystem: true
+                  label: containerd
+                  format: xfs
+              - name: kubelet
+                mount:
+                  device: /dev/xvde
+                  wipeFilesystem: true
+                  label: kubelet
+                  format: xfs
+              directories:
+              - path: /var/lib/kubelet/temporary/stuff
+                overwrite: true
+                filesystem: kubelet
+                mode: 750
+                user:
+                  id: 12345
+                  name: giantswarm
+                group:
+                  id: 23456
+                  name: giantswarm
+              - path: /var/lib/kubelet
+                mode: 750
+    resources:
+      controlPlane:
+        api:
+          group: asd
+          version: v1
+          kind: KubeadmControlPlane
+  components:
+    kubelet:
+      gracefulNodeShutdown:
+        shutdownGracePeriod: 5m
+        shutdownGracePeriodCriticalPods: 1m
+    systemd:
+      timesyncd:
+        npt:
+        - 169.254.169.123
+  kubeadmConfig:
+    preKubeadmCommands:
+    - echo "hello"
+    - echo "cluster"
+    postKubeadmCommands:
+    - echo "hello"
+    - echo "cluster"
+  kubernetesVersion: 1.24.10
+  paused: false
   providerSpecific:
     resources:
       cluster:
