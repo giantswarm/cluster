@@ -161,12 +161,6 @@ internal:
       postKubeadmCommands:
       - echo "hello control plane after kubeadm"
       - echo "cluster control plane after kubeadm"
-    resources:
-      controlPlane:
-        api:
-          group: asd
-          version: v1
-          kind: KubeadmControlPlane
   components:
     kubelet:
       gracefulNodeShutdown:
