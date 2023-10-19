@@ -1,0 +1,36 @@
+apiVersion: cluster.x-k8s.io/v1beta1
+kind: Cluster
+metadata:
+  annotations:
+    {{- with .Values.metadata.description }}
+    cluster.giantswarm.io/description: "{{ . }}"
+    {{- end }}
+  labels:
+    {{- include "labels.common" $ | nindent 4 }}
+    cluster-apps-operator.giantswarm.io/watching: ""
+    {{- if .Values.metadata.labels }}
+    {{- range $key, $val := .Values.metadata.labels }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
+    {{- end }}
+  name: {{ include "resource.default.name" $ }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  clusterNetwork:
+    services:
+      cidrBlocks:
+      {{- toYaml .Values.connectivity.network.services.cidrBlocks | nindent 8 }}
+    pods:
+      cidrBlocks:
+      {{- toYaml .Values.connectivity.network.pods.cidrBlocks | nindent 8 }}
+  controlPlaneRef:
+    apiVersion: {{ .Values.internal.controlPlane.resources.controlPlane.api.group }}/{{ .Values.internal.controlPlane.resources.controlPlane.api.version }}
+    kind: {{ .Values.internal.controlPlane.resources.controlPlane.api.kind }}
+    name: {{ include "resource.default.name" $ }}
+  infrastructureRef:
+    apiVersion: {{ .Values.internal.providerSpecific.resources.cluster.api.group }}/{{ .Values.internal.providerSpecific.resources.cluster.api.version }}
+    kind: {{ .Values.internal.providerSpecific.resources.cluster.api.kind }}
+    name: {{ include "resource.default.name" $ }}
+  {{- if .Values.internal.paused }}
+  paused: true
+  {{- end -}}
