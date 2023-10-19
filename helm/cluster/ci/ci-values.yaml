@@ -243,6 +243,11 @@ internal:
   kubernetesVersion: 1.24.10
   paused: false
   resourcesApi:
+    clusterResourceEnabled: true
+    controlPlaneResourceEnabled: true
+    machinePoolResourcesEnabled: true
+    machineHealthCheckResourceEnabled: true
+    bastionResourceEnabled: true
     nodePoolKind: MachinePool
     infrastructureCluster:
       group: infrastructure.cluster.x-k8s.io

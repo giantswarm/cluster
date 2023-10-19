@@ -1,3 +1,4 @@
+{{- if $.Values.internal.resourcesApi.bastionResourceEnabled }}
 {{- if .Values.global.connectivity.bastion.enabled }}
 apiVersion: cluster.x-k8s.io/v1beta1
 kind: MachineDeployment
@@ -44,4 +45,5 @@ spec:
         kind: {{ $.Values.internal.resourcesApi.bastion.infrastructureMachineTemplate.kind }}
         name: {{ include "cluster.resource.name" $ }}-bastion-{{ include "cluster.data.hash" (dict "data" (include $.Values.internal.resourcesApi.bastion.infrastructureMachineTemplateSpecTemplateName $) "salt" $.Values.internal.hashSalt) }}
       version: {{ $.Values.internal.kubernetesVersion }}
+{{- end }}
 {{- end }}

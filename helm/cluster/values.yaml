@@ -70,7 +70,12 @@ internal:
   resourcesApi:
     bastion:
       infrastructureMachineTemplate: {}
+    bastionResourceEnabled: true
+    clusterResourceEnabled: true
+    controlPlaneResourceEnabled: true
     infrastructureCluster: {}
+    machineHealthCheckResourceEnabled: true
+    machinePoolResourcesEnabled: true
   workers:
     kubeadmConfig:
       ignition:
