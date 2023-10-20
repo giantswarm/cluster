@@ -22,16 +22,7 @@ spec:
   kubeadmConfigSpec:
     format: ignition
     ignition:
-      containerLinuxConfig:
-        additionalConfig: |
-          systemd:
-            units:
-            {{- include "cluster.kubeadmControlPlane.kubeadmConfigSpec.ignition.containerLinuxConfig.additionalConfig.systemd.units" $ | indent 12 }}
-          storage:
-            filesystems:
-            {{- include "cluster.kubeadmControlPlane.kubeadmConfigSpec.ignition.containerLinuxConfig.additionalConfig.storage.filesystems" $ | indent 12 }}
-            directories:
-            {{- include "cluster.kubeadmControlPlane.kubeadmConfigSpec.ignition.containerLinuxConfig.additionalConfig.storage.directories" $ | indent 12 }}
+      {{- include "cluster.internal.controlPlane.kubeadm.ignition" $ | indent 6 }}
     clusterConfiguration:
       # Avoid accessibility issues (e.g. on private clusters) and potential future rate limits for
       # the default `registry.k8s.io`.
@@ -52,10 +43,10 @@ spec:
     joinConfiguration:
       {{- include "cluster.internal.controlPlane.kubeadm.joinConfiguration" $ | indent 6 }}
     files:
-    {{- include "cluster.internal.controlPlane.kubeadm.files" . | indent 4 }}
+    {{- include "cluster.internal.controlPlane.kubeadm.files" $ | indent 4 }}
     preKubeadmCommands:
-    {{- include "cluster.internal.controlPlane.kubeadm.preKubeadmCommands" . | indent 4 }}
+    {{- include "cluster.internal.controlPlane.kubeadm.preKubeadmCommands" $ | indent 4 }}
     postKubeadmCommands:
-    {{- include "cluster.internal.controlPlane.kubeadm.postKubeadmCommands" . | indent 4 }}
+    {{- include "cluster.internal.controlPlane.kubeadm.postKubeadmCommands" $ | indent 4 }}
     users:
-    {{- include "cluster.internal.kubeadm.users" . | indent 4 }}
+    {{- include "cluster.internal.kubeadm.users" $ | indent 4 }}

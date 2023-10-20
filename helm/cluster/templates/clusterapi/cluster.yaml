@@ -28,8 +28,8 @@ spec:
     kind: {{ .Values.internal.controlPlane.resources.controlPlane.api.kind }}
     name: {{ include "cluster.resource.name" $ }}
   infrastructureRef:
-    apiVersion: {{ .Values.internal.providerSpecific.resources.cluster.api.group }}/{{ .Values.internal.providerSpecific.resources.cluster.api.version }}
-    kind: {{ .Values.internal.providerSpecific.resources.cluster.api.kind }}
+    apiVersion: {{ .Values.internal.resourcesApi.infrastructureCluster.group }}/{{ .Values.internal.resourcesApi.infrastructureCluster.version }}
+    kind: {{ .Values.internal.resourcesApi.infrastructureCluster.kind }}
     name: {{ include "cluster.resource.name" $ }}
   {{- if .Values.internal.paused }}
   paused: true
