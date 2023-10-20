@@ -1,6 +1,6 @@
 # DO NOT EDIT. Generated with:
 #
-#    devctl@6.13.0
+#    devctl@6.14.0
 #
 
 ##@ Schema
@@ -27,5 +27,5 @@ generate-docs: ## Generate values documentation from schema
 .PHONY: generate-values
 generate-values: ## Generate values.yaml from schema
 	go install github.com/giantswarm/helm-values-gen@v1
-	@cd helm/cluster && \
-		helm-values-gen ./values.schema.json -o ./values.yaml --force
+	helm-values-gen $(VALUES_SCHEMA) -o $(VALUES) --force
+
