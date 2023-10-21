@@ -16,6 +16,12 @@ global:
         cidrBlocks:
           - 172.31.0.0/16
   controlPlane:
+    machineHealthCheck:
+      enabled: true
+      maxUnhealthy: 40%
+      nodeStartupTimeout: 8m0s
+      unhealthyNotReadyTimeout: 10m0s
+      unhealthyUnknownTimeout: 10m0s
     replicas: 3
   metadata:
     servicePriority: highest
