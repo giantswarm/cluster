@@ -59,6 +59,24 @@ global:
             password: super_secret_password
         - endpoint: giantswarm.azurecr.io
 internal:
+  bastion:
+    kubeadmConfig:
+      ignition:
+        containerLinuxConfig:
+          additionalConfig:
+            systemd:
+              units:
+              - name: example1-bastion.service
+                enabled: false
+                mask: false
+                contents: |
+                  # Contents goes here
+                dropins:
+                - name: hello-bastion.conf
+                  contents: |
+                    # Contents goes here
+      preKubeadmCommands:
+      - sleep infinity
   controlPlane:
     kubeadmConfig:
       clusterConfiguration:
@@ -158,6 +176,7 @@ internal:
       timesyncd:
         npt:
         - 169.254.169.123
+  hashSalt: salty-1
   kubeadmConfig:
     ignition:
       containerLinuxConfig:
@@ -233,6 +252,12 @@ internal:
       group: infrastructure.cluster.x-k8s.io
       version: v1beta1
       kind: AWSMachinePool
+    bastion:
+      infrastructureMachineTemplate:
+        group: infrastructure.cluster.x-k8s.io
+        version: v1beta1
+        kind: AWSMachineTemplate
+      infrastructureMachineTemplateSpecTemplateName: "cluster.test.bastion.machineTemplate.spec"
   workers:
     kubeadmConfig:
       ignition:

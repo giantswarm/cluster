@@ -1,0 +1,16 @@
+apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
+kind: KubeadmConfigTemplate
+metadata:
+  annotations:
+    "helm.sh/resource-policy": keep
+      {{- include "cluster.annotations.custom" $ | indent 4 }}
+  labels:
+    cluster.x-k8s.io/role: bastion
+    {{- include "cluster.labels.common" $ | nindent 4 }}
+    {{- include "cluster.labels.custom" $ | indent 4 }}
+  name: {{ include "cluster.resource.name" $ }}-bastion-{{ include "cluster.data.hash" (dict "data" (include "cluster.internal.bastion.kubeadmconfigtemplate.spec" $) "salt" $.Values.internal.hashSalt) }}
+  namespace: {{ $.Release.Namespace }}
+spec:
+  template:
+    spec:
+      {{- include "cluster.internal.bastion.kubeadmconfigtemplate.spec" $ | indent 6 }}

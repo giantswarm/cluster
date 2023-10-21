@@ -55,3 +55,16 @@ helm.sh/chart: {{ include "cluster.chart.nameAndVersion" . | quote }}
 {{- end }}
 {{- end }}
 {{- end }}
+
+{{/*
+Hash function based on data provided
+Expects two arguments (as a `dict`) E.g.
+  {{ include "hash" (dict "data" . "salt" $.Values.internal.hasSalt) }}
+Where `data` is the data to hash and `global` is the top level scope.
+*/}}
+{{- define "cluster.data.hash" -}}
+{{- $data := mustToJson .data | toString  }}
+{{- $salt := "" }}
+{{- if .salt }}{{ $salt = .salt}}{{end}}
+{{- (printf "%s%s" $data $salt) | quote | sha1sum | trunc 8 }}
+{{- end -}}

@@ -1,0 +1,47 @@
+{{- if .Values.global.connectivity.bastion.enabled }}
+apiVersion: cluster.x-k8s.io/v1beta1
+kind: MachineDeployment
+metadata:
+  annotations:
+    "helm.sh/resource-policy": keep
+    {{- include "cluster.annotations.custom" $ | indent 4 }}
+  labels:
+    cluster.x-k8s.io/role: bastion
+    {{- include "cluster.labels.common" $ | nindent 4 }}
+    {{- include "cluster.labels.custom" $ | indent 4 }}
+  name: {{ include "cluster.resource.name" $ }}-bastion
+  namespace: {{ $.Release.Namespace }}
+spec:
+  clusterName: {{ include "cluster.resource.name" $ }}
+  replicas: {{ $.Values.global.connectivity.bastion.replicas }}
+  selector:
+    matchLabels:
+      cluster.x-k8s.io/cluster-name: {{ include "cluster.resource.name" $ }}
+      cluster.x-k8s.io/deployment-name: {{ include "cluster.resource.name" $ }}-bastion
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        {{- include "cluster.annotations.custom" $ | indent 8 }}
+      labels:
+        cluster.x-k8s.io/role: bastion
+        cluster.x-k8s.io/deployment-name: {{ include "cluster.resource.name" $ }}-bastion
+        {{- include "cluster.labels.common" $ | nindent 8 }}
+        {{- include "cluster.labels.custom" $ | indent 4 }}
+    spec:
+      bootstrap:
+        configRef:
+          apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
+          kind: KubeadmConfigTemplate
+          name: {{ include "cluster.resource.name" $ }}-bastion-{{ include "cluster.data.hash" (dict "data" (include "cluster.internal.bastion.kubeadmconfigtemplate.spec" $) "salt" $.Values.internal.hashSalt) }}
+      clusterName: {{ include "cluster.resource.name" $ }}
+      infrastructureRef:
+        apiVersion: {{ $.Values.internal.resourcesApi.bastion.infrastructureMachineTemplate.group }}/{{ $.Values.internal.resourcesApi.bastion.infrastructureMachineTemplate.version }}
+        kind: {{ $.Values.internal.resourcesApi.bastion.infrastructureMachineTemplate.kind }}
+        name: {{ include "cluster.resource.name" $ }}-bastion-{{ include "cluster.data.hash" (dict "data" (include $.Values.internal.resourcesApi.bastion.infrastructureMachineTemplateSpecTemplateName $) "salt" $.Values.internal.hashSalt) }}
+      version: {{ $.Values.internal.kubernetesVersion }}
+{{- end }}
