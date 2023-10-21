@@ -1,3 +1,5 @@
+{{- if $.Values.internal.resourcesApi.controlPlaneResourceEnabled }}
+{{- if $.Values.internal.resourcesApi.machineHealthCheckResourceEnabled }}
 {{- if $.Values.global.controlPlane.machineHealthCheck.enabled }}
 apiVersion: cluster.x-k8s.io/v1beta1
 kind: MachineHealthCheck
@@ -9,7 +11,7 @@ metadata:
     {{- end }}
     {{- end }}
   labels:
-    {{- include "cluster.labels.common" . | nindent 4 }}
+    {{- include "cluster.labels.common" $ | nindent 4 }}
     {{- if $.Values.global.metadata.labels }}
     {{- range $key, $val := $.Values.global.metadata.labels }}
     {{ $key }}: {{ $val | quote }}
@@ -32,4 +34,6 @@ spec:
   - type: Ready
     status: "False"
     timeout: {{ $.Values.global.controlPlane.machineHealthCheck.unhealthyNotReadyTimeout }}
+{{- end }}
+{{- end }}
 {{- end }}
