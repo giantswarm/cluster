@@ -59,6 +59,7 @@ internal:
           group: controlplane.cluster.x-k8s.io
           kind: KubeadmControlPlane
           version: v1beta1
+      infrastructureMachineTemplate: {}
   kubeadmConfig:
     ignition:
       containerLinuxConfig:
