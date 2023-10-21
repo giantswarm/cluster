@@ -1287,7 +1287,9 @@
                             "title": "Resources configuration",
                             "description": "GVK and other configuration for control plane resources.",
                             "required": [
-                                "controlPlane"
+                                "controlPlane",
+                                "infrastructureMachineTemplate",
+                                "infrastructureMachineTemplateSpecTemplateName"
                             ],
                             "additionalProperties": false,
                             "properties": {
@@ -1310,6 +1312,14 @@
                                             "version": "v1beta1"
                                         }
                                     }
+                                },
+                                "infrastructureMachineTemplate": {
+                                    "$ref": "#/$defs/infrastructureMachineTemplate"
+                                },
+                                "infrastructureMachineTemplateSpecTemplateName": {
+                                    "type": "string",
+                                    "title": "Infrastructure Machine template spec template name",
+                                    "description": "The name of Helm template that renders Infrastructure Machine template spec."
                                 }
                             }
                         }
