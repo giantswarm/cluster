@@ -33,6 +33,57 @@
                 }
             }
         },
+        "fileFromSecret": {
+            "type": "object",
+            "title": "File from secret",
+            "description": "It defines a file with content in a Secret",
+            "properties": {
+                "contentFrom": {
+                    "type": "object",
+                    "title": "Content from",
+                    "description": "It specifies where the file content is coming from.",
+                    "properties": {
+                        "secret": {
+                            "type": "object",
+                            "title": "Secret",
+                            "description": "Kubernetes Secret resource with the file content.",
+                            "properties": {
+                                "key": {
+                                    "type": "string",
+                                    "title": "Key",
+                                    "description": "Secret key where the file content is."
+                                },
+                                "name": {
+                                    "type": "string",
+                                    "title": "Name",
+                                    "description": "Name of the Secret resource."
+                                }
+                            },
+                            "required": [
+                                "key",
+                                "name"
+                            ]
+                        }
+                    }
+                },
+                "path": {
+                    "type": "string",
+                    "title": "Path",
+                    "description": "File path on the node."
+                },
+                "permissions": {
+                    "type": "string",
+                    "title": "Permissions",
+                    "description": "File permissions in form 0644",
+                    "default": "0644"
+                }
+            },
+            "required": [
+                "contentFrom",
+                "path",
+                "permissions"
+            ]
+        },
         "gvk": {
             "type": "object",
             "title": "Schema for Kubernetes API group, version and kind",
@@ -1271,6 +1322,14 @@
                                         }
                                     }
                                 },
+                                "files": {
+                                    "type": "array",
+                                    "title": "Files",
+                                    "description": "These are the files that are included on control plane nodes.",
+                                    "items": {
+                                        "$ref": "#/$defs/fileFromSecret"
+                                    }
+                                },
                                 "ignition": {
                                     "$ref": "#/$defs/ignition"
                                 },
@@ -1336,6 +1395,14 @@
                     "description": "Common kubeadm config for all nodes, including both control plane and workers.",
                     "additionalProperties": false,
                     "properties": {
+                        "files": {
+                            "type": "array",
+                            "title": "Files",
+                            "description": "These are the files that are included on all the nodes.",
+                            "items": {
+                                "$ref": "#/$defs/fileFromSecret"
+                            }
+                        },
                         "ignition": {
                             "$ref": "#/$defs/ignition"
                         },
@@ -1468,6 +1535,14 @@
                             ],
                             "additionalProperties": false,
                             "properties": {
+                                "files": {
+                                    "type": "array",
+                                    "title": "Files",
+                                    "description": "These are the files that are included on worker nodes.",
+                                    "items": {
+                                        "$ref": "#/$defs/fileFromSecret"
+                                    }
+                                },
                                 "ignition": {
                                     "$ref": "#/$defs/ignition"
                                 },

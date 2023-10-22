@@ -5,6 +5,7 @@
 {{- include "cluster.internal.kubeadm.files.cri" $ }}
 {{- include "cluster.internal.kubeadm.files.kubelet" $ }}
 {{- include "cluster.internal.kubeadm.files.proxy" $ }}
+{{- include "cluster.internal.kubeadm.files.custom" $ }}
 {{- end }}
 
 {{- define "cluster.internal.kubeadm.files.sysctl" }}
@@ -70,5 +71,11 @@
   permissions: "0644"
   encoding: base64
   content: {{ tpl ($.Files.Get "files/etc/systemd/http-proxy.conf") $ | b64enc }}
+{{- end }}
+{{- end }}
+
+{{- define "cluster.internal.kubeadm.files.custom" }}
+{{- if $.Values.internal.kubeadmConfig.files }}
+{{ toYaml $.Values.internal.kubeadmConfig.files }}
 {{- end }}
 {{- end }}

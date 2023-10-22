@@ -95,6 +95,13 @@ internal:
             enabled: true
           serviceAccountIssuer:
             clusterDomainPrefix: irsa
+      files:
+      - path: /etc/hello/control-plane/node/stuff.yaml
+        permissions: "0644"
+        contentFrom:
+          secret:
+            name: cluster-super-secret-control-plane
+            key: node-stuff
       ignition:
         containerLinuxConfig:
           additionalConfig:
@@ -178,6 +185,13 @@ internal:
         - 169.254.169.123
   hashSalt: salty-1
   kubeadmConfig:
+    files:
+    - path: /etc/hello/any/node/stuff.yaml
+      permissions: "0644"
+      contentFrom:
+        secret:
+          name: cluster-super-secret
+          key: node-stuff
     ignition:
       containerLinuxConfig:
         additionalConfig:
@@ -265,6 +279,13 @@ internal:
       infrastructureMachineTemplateSpecTemplateName: "cluster.test.bastion.machineTemplate.spec"
   workers:
     kubeadmConfig:
+      files:
+      - path: /etc/hello/worker/node/stuff.yaml
+        permissions: "0644"
+        contentFrom:
+          secret:
+            name: cluster-super-secret-worker
+            key: node-stuff
       ignition:
         containerLinuxConfig:
           additionalConfig:
