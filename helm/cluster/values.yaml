@@ -48,6 +48,7 @@ internal:
     kubeadmConfig:
       clusterConfiguration:
         apiServer: {}
+        etcd: {}
       ignition:
         containerLinuxConfig:
           additionalConfig:

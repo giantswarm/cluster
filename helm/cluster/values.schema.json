@@ -1346,6 +1346,19 @@
                                                 "extraArgs": {
                                                     "type": "object",
                                                     "title": "Extra args"
+                                                },
+                                                "initialCluster": {
+                                                    "type": "string",
+                                                    "title": "Initial cluster",
+                                                    "description": "Initial cluster configuration for bootstrapping."
+                                                },
+                                                "initialClusterState": {
+                                                    "type": "string",
+                                                    "title": "Initial cluster state",
+                                                    "enum": [
+                                                        "new",
+                                                        "existing"
+                                                    ]
                                                 }
                                             }
                                         }
