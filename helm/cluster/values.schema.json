@@ -1196,7 +1196,8 @@
                             "title": "Kubeadm config",
                             "description": "Configuration of control plane nodes.",
                             "required": [
-                                "ignition"
+                                "ignition",
+                                "init"
                             ],
                             "additionalProperties": false,
                             "properties": {
@@ -1385,6 +1386,31 @@
                                 },
                                 "ignition": {
                                     "$ref": "#/$defs/ignition"
+                                },
+                                "init": {
+                                    "type": "object",
+                                    "title": "Init",
+                                    "description": "Kubeadm init configuration for control plane nodes.",
+                                    "properties": {
+                                        "localAPIEndpoint": {
+                                            "type": "object",
+                                            "title": "Local API endpoint",
+                                            "properties": {
+                                                "bindPort": {
+                                                    "type": "integer",
+                                                    "title": "Bind port",
+                                                    "description": "Kubernetes API bind port used for API server pod.",
+                                                    "default": 6443
+                                                }
+                                            },
+                                            "required": [
+                                                "bindPort"
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "localAPIEndpoint"
+                                    ]
                                 },
                                 "postKubeadmCommands": {
                                     "$ref": "#/$defs/postKubeadmCommands"

@@ -55,6 +55,9 @@ internal:
           additionalConfig:
             storage: {}
             systemd: {}
+      init:
+        localAPIEndpoint:
+          bindPort: 6443
     resources:
       controlPlane:
         api:
