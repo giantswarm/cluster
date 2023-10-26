@@ -22,9 +22,12 @@ extraArgs:
   cloud-provider: external
   enable-admission-plugins: {{ include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.enableAdmissionPlugins" $ }}
   encryption-provider-config: /etc/kubernetes/encryption/config.yaml
+  {{- if $.Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.etcdPrefix }}
+  etcd-prefix: {{ $.Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.etcdPrefix }}
+  {{- end }}
   {{- if .Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.featureGates }}
   feature-gates: {{ include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.featureGates" $ }}
-  {{- end}}
+  {{- end }}
   kubelet-preferred-address-types: InternalIP
   {{- if $.Values.global.controlPlane.oidc }}
   {{- if $.Values.global.controlPlane.oidc.caPem }}

@@ -86,6 +86,7 @@ internal:
           - PodSecurityPolicy
           apiAudiences:
             templateName: "cluster.test.kubeadmControlPlane.kubeadmConfigSpec.clusterConfiguration.apiServer.apiAudiences"
+          etcdPrefix: giantswarm.io
           featureGates:
           - name: CronJobTimeZone
             enabled: true

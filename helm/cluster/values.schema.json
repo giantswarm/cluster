@@ -1247,6 +1247,10 @@
                                                         }
                                                     ]
                                                 },
+                                                "etcdPrefix": {
+                                                    "type": "string",
+                                                    "title": "etcd prefix"
+                                                },
                                                 "featureGates": {
                                                     "type": "array",
                                                     "title": "Feature gates",
