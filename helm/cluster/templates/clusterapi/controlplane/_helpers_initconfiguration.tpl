@@ -4,7 +4,7 @@ skipPhases:
 - addon/coredns
 localAPIEndpoint:
   advertiseAddress: ""
-  bindPort: {{ $.Values.internal.controlPlane.kubeadmConfig.init.localAPIEndpoint.bindPort }}
+  bindPort: {{ $.Values.internal.controlPlane.kubeadmConfig.localAPIEndpoint.bindPort }}
 nodeRegistration:
   kubeletExtraArgs:
     cloud-provider: external

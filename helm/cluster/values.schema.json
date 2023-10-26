@@ -1197,7 +1197,7 @@
                             "description": "Configuration of control plane nodes.",
                             "required": [
                                 "ignition",
-                                "init"
+                                "localAPIEndpoint"
                             ],
                             "additionalProperties": false,
                             "properties": {
@@ -1387,29 +1387,19 @@
                                 "ignition": {
                                     "$ref": "#/$defs/ignition"
                                 },
-                                "init": {
+                                "localAPIEndpoint": {
                                     "type": "object",
-                                    "title": "Init",
-                                    "description": "Kubeadm init configuration for control plane nodes.",
+                                    "title": "Local API endpoint",
                                     "properties": {
-                                        "localAPIEndpoint": {
-                                            "type": "object",
-                                            "title": "Local API endpoint",
-                                            "properties": {
-                                                "bindPort": {
-                                                    "type": "integer",
-                                                    "title": "Bind port",
-                                                    "description": "Kubernetes API bind port used for API server pod.",
-                                                    "default": 6443
-                                                }
-                                            },
-                                            "required": [
-                                                "bindPort"
-                                            ]
+                                        "bindPort": {
+                                            "type": "integer",
+                                            "title": "Bind port",
+                                            "description": "Kubernetes API bind port used for API server pod.",
+                                            "default": 6443
                                         }
                                     },
                                     "required": [
-                                        "localAPIEndpoint"
+                                        "bindPort"
                                     ]
                                 },
                                 "postKubeadmCommands": {
