@@ -4,6 +4,9 @@ certSANs:
 - 127.0.0.1
 - "api.{{ include "cluster.resource.name" $ }}.{{ required "The baseDomain value is required" $.Values.global.connectivity.baseDomain }}"
 - "apiserver.{{ include "cluster.resource.name" $ }}.{{ required "The baseDomain value is required" $.Values.global.connectivity.baseDomain }}"
+{{- if $.Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.extraCertificateSANs }}
+{{ toYaml $.Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.extraCertificateSANs }}
+{{- end }}
 {{- /*
     Timeout for the API server to appear.
     TODO: this should be aligned with alerts, i.e. time here should be less than the time after

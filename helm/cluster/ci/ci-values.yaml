@@ -87,6 +87,9 @@ internal:
           apiAudiences:
             templateName: "cluster.test.kubeadmControlPlane.kubeadmConfigSpec.clusterConfiguration.apiServer.apiAudiences"
           etcdPrefix: giantswarm.io
+          extraCertificateSANs:
+          - this-is-extra-cert-san.giantswarm.io
+          - another-extra-cert-san.giantswarm.io
           featureGates:
           - name: CronJobTimeZone
             enabled: true

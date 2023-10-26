@@ -1251,6 +1251,15 @@
                                                     "type": "string",
                                                     "title": "etcd prefix"
                                                 },
+                                                "extraCertificateSANs": {
+                                                    "type": "array",
+                                                    "title": "Extra certificate SANs",
+                                                    "description": "The additional certificate SANs that are appended to the default SANs.",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "title": "Extra certificate SAN"
+                                                    }
+                                                },
                                                 "featureGates": {
                                                     "type": "array",
                                                     "title": "Feature gates",
