@@ -1251,6 +1251,10 @@
                                                     "type": "string",
                                                     "title": "etcd prefix"
                                                 },
+                                                "extraArgs": {
+                                                    "type": "object",
+                                                    "title": "Extra args"
+                                                },
                                                 "extraCertificateSANs": {
                                                     "type": "array",
                                                     "title": "Extra certificate SANs",

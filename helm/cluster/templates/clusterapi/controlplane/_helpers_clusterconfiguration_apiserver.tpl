@@ -48,6 +48,9 @@ extraArgs:
   {{- end }}
   service-account-lookup: "true"
   tls-cipher-suites: {{ include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.tlsCipherSuites" $ }}
+  {{- range $argName, $argValue := $.Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.extraArgs }}
+  {{ $argName }}: {{ if kindIs "string" $argValue }}{{ $argValue | quote }}{{ else }}{{ $argValue }}{{ end }}
+  {{- end }}
 {{- end }}
 
 {{- define "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.apiAudiences" }}
