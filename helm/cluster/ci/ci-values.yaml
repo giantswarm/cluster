@@ -110,6 +110,8 @@ internal:
           extraArgs:
             max-snapshots: 3
             snapshot-count: 50000
+          experimental:
+            peerSkipClientSanVerification: true
       files:
       - path: /etc/hello/control-plane/node/stuff.yaml
         permissions: "0644"

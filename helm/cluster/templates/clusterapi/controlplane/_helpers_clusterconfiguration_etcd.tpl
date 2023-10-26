@@ -13,5 +13,8 @@ local:
     {{- range $argName, $argValue := $etcdConfig.extraArgs }}
     {{ $argName }}: {{ if kindIs "string" $argValue }}{{ $argValue | quote }}{{ else }}{{ $argValue }}{{ end }}
     {{- end }}
+    {{- if ($etcdConfig.experimental).peerSkipClientSanVerification }}
+    experimental-peer-skip-client-san-verification: {{ $etcdConfig.experimental.peerSkipClientSanVerification }}
+    {{- end }}
     {{- end }}
 {{- end }}

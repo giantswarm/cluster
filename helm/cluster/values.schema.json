@@ -1343,6 +1343,17 @@
                                             "description": "Configuration of etcd",
                                             "additionalProperties": false,
                                             "properties": {
+                                                "experimental": {
+                                                    "type": "object",
+                                                    "title": "Experimental",
+                                                    "properties": {
+                                                        "peerSkipClientSanVerification": {
+                                                            "type": "boolean",
+                                                            "title": "Peer skip client SAN verification",
+                                                            "description": "Skip verification of SAN field in client certificate for peer connections."
+                                                        }
+                                                    }
+                                                },
                                                 "extraArgs": {
                                                     "type": "object",
                                                     "title": "Extra args"
