@@ -104,6 +104,11 @@ internal:
             enabled: true
           serviceAccountIssuer:
             clusterDomainPrefix: irsa
+        etcd:
+          extraArgs:
+            initial-cluster-state: "new"
+            max-snapshots: 3
+            snapshot-count: 50000
       files:
       - path: /etc/hello/control-plane/node/stuff.yaml
         permissions: "0644"

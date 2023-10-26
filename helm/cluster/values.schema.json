@@ -1336,6 +1336,18 @@
                                                 }
                                             },
                                             "default": {}
+                                        },
+                                        "etcd": {
+                                            "type": "object",
+                                            "title": "etcd",
+                                            "description": "Configuration of etcd",
+                                            "additionalProperties": false,
+                                            "properties": {
+                                                "extraArgs": {
+                                                    "type": "object",
+                                                    "title": "Extra args"
+                                                }
+                                            }
                                         }
                                     }
                                 },
