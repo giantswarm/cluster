@@ -37,6 +37,11 @@
             "type": "object",
             "title": "File from secret",
             "description": "It defines a file with content in a Secret",
+            "required": [
+                "contentFrom",
+                "path",
+                "permissions"
+            ],
             "properties": {
                 "contentFrom": {
                     "type": "object",
@@ -47,6 +52,10 @@
                             "type": "object",
                             "title": "Secret",
                             "description": "Kubernetes Secret resource with the file content.",
+                            "required": [
+                                "key",
+                                "name"
+                            ],
                             "properties": {
                                 "key": {
                                     "type": "string",
@@ -58,11 +67,7 @@
                                     "title": "Name",
                                     "description": "Name of the Secret resource."
                                 }
-                            },
-                            "required": [
-                                "key",
-                                "name"
-                            ]
+                            }
                         }
                     }
                 },
@@ -77,12 +82,7 @@
                     "description": "File permissions in form 0644",
                     "default": "0644"
                 }
-            },
-            "required": [
-                "contentFrom",
-                "path",
-                "permissions"
-            ]
+            }
         },
         "gvk": {
             "type": "object",
@@ -1390,6 +1390,9 @@
                                 "localAPIEndpoint": {
                                     "type": "object",
                                     "title": "Local API endpoint",
+                                    "required": [
+                                        "bindPort"
+                                    ],
                                     "properties": {
                                         "bindPort": {
                                             "type": "integer",
@@ -1397,10 +1400,7 @@
                                             "description": "Kubernetes API bind port used for API server pod.",
                                             "default": 6443
                                         }
-                                    },
-                                    "required": [
-                                        "bindPort"
-                                    ]
+                                    }
                                 },
                                 "postKubeadmCommands": {
                                     "$ref": "#/$defs/postKubeadmCommands"
