@@ -4,6 +4,9 @@ certSANs:
 - 127.0.0.1
 - "api.{{ include "cluster.resource.name" $ }}.{{ required "The baseDomain value is required" $.Values.global.connectivity.baseDomain }}"
 - "apiserver.{{ include "cluster.resource.name" $ }}.{{ required "The baseDomain value is required" $.Values.global.connectivity.baseDomain }}"
+{{- if $.Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.extraCertificateSANs }}
+{{ toYaml $.Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.extraCertificateSANs }}
+{{- end }}
 {{- /*
     Timeout for the API server to appear.
     TODO: this should be aligned with alerts, i.e. time here should be less than the time after
@@ -22,9 +25,12 @@ extraArgs:
   cloud-provider: external
   enable-admission-plugins: {{ include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.enableAdmissionPlugins" $ }}
   encryption-provider-config: /etc/kubernetes/encryption/config.yaml
+  {{- if $.Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.etcdPrefix }}
+  etcd-prefix: {{ $.Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.etcdPrefix }}
+  {{- end }}
   {{- if .Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.featureGates }}
   feature-gates: {{ include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.featureGates" $ }}
-  {{- end}}
+  {{- end }}
   kubelet-preferred-address-types: InternalIP
   {{- if $.Values.global.controlPlane.oidc }}
   {{- if $.Values.global.controlPlane.oidc.caPem }}
@@ -42,6 +48,9 @@ extraArgs:
   {{- end }}
   service-account-lookup: "true"
   tls-cipher-suites: {{ include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.tlsCipherSuites" $ }}
+  {{- range $argName, $argValue := ((($.Values.internal.controlPlane.kubeadmConfig).clusterConfiguration).apiServer).extraArgs }}
+  {{ $argName }}: {{ if kindIs "string" $argValue }}{{ $argValue | quote }}{{ else }}{{ $argValue }}{{ end }}
+  {{- end }}
 {{- end }}
 
 {{- define "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.apiAudiences" }}

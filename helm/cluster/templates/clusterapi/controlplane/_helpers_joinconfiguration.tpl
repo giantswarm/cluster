@@ -1,5 +1,8 @@
 {{- define "cluster.internal.controlPlane.kubeadm.joinConfiguration" }}
 discovery: {}
+controlPlane:
+  localAPIEndpoint:
+    bindPort: {{ $.Values.internal.controlPlane.kubeadmConfig.localAPIEndpoint.bindPort }}
 nodeRegistration:
   kubeletExtraArgs:
     cloud-provider: external

@@ -86,6 +86,15 @@ internal:
           - PodSecurityPolicy
           apiAudiences:
             templateName: "cluster.test.kubeadmControlPlane.kubeadmConfigSpec.clusterConfiguration.apiServer.apiAudiences"
+          etcdPrefix: giantswarm.io
+          extraArgs:
+            allow-privileged: false
+            authorization-webhook-version: v1beta1
+            delete-collection-workers: 2
+            min-request-timeout: 600
+          extraCertificateSANs:
+          - this-is-extra-cert-san.giantswarm.io
+          - another-extra-cert-san.giantswarm.io
           featureGates:
           - name: CronJobTimeZone
             enabled: true
@@ -95,6 +104,21 @@ internal:
             enabled: true
           serviceAccountIssuer:
             clusterDomainPrefix: irsa
+        etcd:
+          initialCluster: "default=http://localhost:2380"
+          initialClusterState: "existing"
+          extraArgs:
+            max-snapshots: 3
+            snapshot-count: 50000
+          experimental:
+            peerSkipClientSanVerification: true
+      files:
+      - path: /etc/hello/control-plane/node/stuff.yaml
+        permissions: "0644"
+        contentFrom:
+          secret:
+            name: cluster-super-secret-control-plane
+            key: node-stuff
       ignition:
         containerLinuxConfig:
           additionalConfig:
@@ -178,6 +202,13 @@ internal:
         - 169.254.169.123
   hashSalt: salty-1
   kubeadmConfig:
+    files:
+    - path: /etc/hello/any/node/stuff.yaml
+      permissions: "0644"
+      contentFrom:
+        secret:
+          name: cluster-super-secret
+          key: node-stuff
     ignition:
       containerLinuxConfig:
         additionalConfig:
@@ -265,6 +296,13 @@ internal:
       infrastructureMachineTemplateSpecTemplateName: "cluster.test.bastion.machineTemplate.spec"
   workers:
     kubeadmConfig:
+      files:
+      - path: /etc/hello/worker/node/stuff.yaml
+        permissions: "0644"
+        contentFrom:
+          secret:
+            name: cluster-super-secret-worker
+            key: node-stuff
       ignition:
         containerLinuxConfig:
           additionalConfig:

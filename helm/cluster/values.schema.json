@@ -33,6 +33,57 @@
                 }
             }
         },
+        "fileFromSecret": {
+            "type": "object",
+            "title": "File from secret",
+            "description": "It defines a file with content in a Secret",
+            "required": [
+                "contentFrom",
+                "path",
+                "permissions"
+            ],
+            "properties": {
+                "contentFrom": {
+                    "type": "object",
+                    "title": "Content from",
+                    "description": "It specifies where the file content is coming from.",
+                    "properties": {
+                        "secret": {
+                            "type": "object",
+                            "title": "Secret",
+                            "description": "Kubernetes Secret resource with the file content.",
+                            "required": [
+                                "key",
+                                "name"
+                            ],
+                            "properties": {
+                                "key": {
+                                    "type": "string",
+                                    "title": "Key",
+                                    "description": "Secret key where the file content is."
+                                },
+                                "name": {
+                                    "type": "string",
+                                    "title": "Name",
+                                    "description": "Name of the Secret resource."
+                                }
+                            }
+                        }
+                    }
+                },
+                "path": {
+                    "type": "string",
+                    "title": "Path",
+                    "description": "File path on the node."
+                },
+                "permissions": {
+                    "type": "string",
+                    "title": "Permissions",
+                    "description": "File permissions in form 0644",
+                    "default": "0644"
+                }
+            }
+        },
         "gvk": {
             "type": "object",
             "title": "Schema for Kubernetes API group, version and kind",
@@ -1145,7 +1196,8 @@
                             "title": "Kubeadm config",
                             "description": "Configuration of control plane nodes.",
                             "required": [
-                                "ignition"
+                                "ignition",
+                                "localAPIEndpoint"
                             ],
                             "additionalProperties": false,
                             "properties": {
@@ -1195,6 +1247,23 @@
                                                             }
                                                         }
                                                     ]
+                                                },
+                                                "etcdPrefix": {
+                                                    "type": "string",
+                                                    "title": "etcd prefix"
+                                                },
+                                                "extraArgs": {
+                                                    "type": "object",
+                                                    "title": "Extra args"
+                                                },
+                                                "extraCertificateSANs": {
+                                                    "type": "array",
+                                                    "title": "Extra certificate SANs",
+                                                    "description": "The additional certificate SANs that are appended to the default SANs.",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "title": "Extra certificate SAN"
+                                                    }
                                                 },
                                                 "featureGates": {
                                                     "type": "array",
@@ -1268,11 +1337,70 @@
                                                 }
                                             },
                                             "default": {}
+                                        },
+                                        "etcd": {
+                                            "type": "object",
+                                            "title": "etcd",
+                                            "description": "Configuration of etcd",
+                                            "additionalProperties": false,
+                                            "properties": {
+                                                "experimental": {
+                                                    "type": "object",
+                                                    "title": "Experimental",
+                                                    "properties": {
+                                                        "peerSkipClientSanVerification": {
+                                                            "type": "boolean",
+                                                            "title": "Peer skip client SAN verification",
+                                                            "description": "Skip verification of SAN field in client certificate for peer connections."
+                                                        }
+                                                    }
+                                                },
+                                                "extraArgs": {
+                                                    "type": "object",
+                                                    "title": "Extra args"
+                                                },
+                                                "initialCluster": {
+                                                    "type": "string",
+                                                    "title": "Initial cluster",
+                                                    "description": "Initial cluster configuration for bootstrapping."
+                                                },
+                                                "initialClusterState": {
+                                                    "type": "string",
+                                                    "title": "Initial cluster state",
+                                                    "enum": [
+                                                        "new",
+                                                        "existing"
+                                                    ]
+                                                }
+                                            }
                                         }
+                                    }
+                                },
+                                "files": {
+                                    "type": "array",
+                                    "title": "Files",
+                                    "description": "These are the files that are included on control plane nodes.",
+                                    "items": {
+                                        "$ref": "#/$defs/fileFromSecret"
                                     }
                                 },
                                 "ignition": {
                                     "$ref": "#/$defs/ignition"
+                                },
+                                "localAPIEndpoint": {
+                                    "type": "object",
+                                    "title": "Local API endpoint",
+                                    "required": [
+                                        "bindPort"
+                                    ],
+                                    "properties": {
+                                        "bindPort": {
+                                            "type": "integer",
+                                            "title": "Bind port",
+                                            "description": "Kubernetes API bind port used for API server pod.",
+                                            "default": 6443
+                                        }
+                                    }
                                 },
                                 "postKubeadmCommands": {
                                     "$ref": "#/$defs/postKubeadmCommands"
@@ -1336,6 +1464,14 @@
                     "description": "Common kubeadm config for all nodes, including both control plane and workers.",
                     "additionalProperties": false,
                     "properties": {
+                        "files": {
+                            "type": "array",
+                            "title": "Files",
+                            "description": "These are the files that are included on all the nodes.",
+                            "items": {
+                                "$ref": "#/$defs/fileFromSecret"
+                            }
+                        },
                         "ignition": {
                             "$ref": "#/$defs/ignition"
                         },
@@ -1468,6 +1604,14 @@
                             ],
                             "additionalProperties": false,
                             "properties": {
+                                "files": {
+                                    "type": "array",
+                                    "title": "Files",
+                                    "description": "These are the files that are included on worker nodes.",
+                                    "items": {
+                                        "$ref": "#/$defs/fileFromSecret"
+                                    }
+                                },
                                 "ignition": {
                                     "$ref": "#/$defs/ignition"
                                 },
