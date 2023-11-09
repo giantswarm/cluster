@@ -3,6 +3,7 @@ global:
     name: awesome
     organization: giantswarm
     description: "Awesome Giant Swarm cluster"
+    managementCluster: giantmc
     labels:
       some-cluster-label: label-1
       another-cluster-label: label-2
@@ -294,6 +295,8 @@ internal:
         version: v1beta1
         kind: AWSMachineTemplate
       infrastructureMachineTemplateSpecTemplateName: "cluster.test.bastion.machineTemplate.spec"
+  teleport:
+    enabled: true
   workers:
     kubeadmConfig:
       files:

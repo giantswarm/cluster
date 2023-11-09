@@ -14,6 +14,4 @@ generate-schema: ensure-schema-gen ## Generate the values.schema.json file from 
 .PHONY: template
 template: ## Output the rendered Helm template
 	@cd helm/cluster && \
-		sed -i 's/version: \[/version: 1 #\[/' Chart.yaml && \
-		helm template -f ci/ci-values.yaml --debug . && \
-		sed -i 's/version: 1 #\[/version: \[/' Chart.yaml
+		helm template -f ci/ci-values.yaml --debug .
