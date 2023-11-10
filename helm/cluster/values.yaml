@@ -81,6 +81,10 @@ internal:
     infrastructureCluster: {}
     machineHealthCheckResourceEnabled: true
     machinePoolResourcesEnabled: true
+  teleport:
+    enabled: false
+    proxyAddr: test.teleport.giantswarm.io:443
+    version: 13.3.8
   workers:
     kubeadmConfig:
       ignition:

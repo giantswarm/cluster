@@ -3,6 +3,7 @@ containerLinuxConfig:
   additionalConfig: |
     systemd:
       units:
+      {{- include "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units.default" $ | indent 6 }}
       {{- include "cluster.internal.controlPlane.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units" $ | indent 6 }}
     storage:
       filesystems:

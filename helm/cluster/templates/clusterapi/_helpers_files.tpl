@@ -5,6 +5,7 @@
 {{- include "cluster.internal.kubeadm.files.cri" $ }}
 {{- include "cluster.internal.kubeadm.files.kubelet" $ }}
 {{- include "cluster.internal.kubeadm.files.proxy" $ }}
+{{- include "cluster.internal.kubeadm.files.teleport" $ }}
 {{- include "cluster.internal.kubeadm.files.custom" $ }}
 {{- end }}
 
@@ -71,6 +72,35 @@
   permissions: "0644"
   encoding: base64
   content: {{ tpl ($.Files.Get "files/etc/systemd/http-proxy.conf") $ | b64enc }}
+{{- if $.Values.internal.teleport.enabled }}
+- path: /etc/systemd/system/teleport.service.d/http-proxy.conf
+  permissions: "0644"
+  encoding: base64
+  content: {{ tpl ($.Files.Get "files/etc/systemd/http-proxy.conf") $ | b64enc }}
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{/*
+The secret `-teleport-join-token` is created by the teleport-operator in cluster namespace
+and is used to join the node to the teleport cluster.
+*/}}
+{{- define "cluster.internal.kubeadm.files.teleport" }}
+{{- if $.Values.internal.teleport.enabled }}
+- path: /etc/teleport-join-token
+  permissions: "0644"
+  contentFrom:
+    secret:
+      name: {{ include "cluster.resource.name" $ }}-teleport-join-token
+      key: joinToken
+- path: /opt/teleport-node-role.sh
+  permissions: "0755"
+  encoding: base64
+  content: {{ $.Files.Get "files/opt/teleport-node-role.sh" | b64enc }}
+- path: /etc/teleport.yaml
+  permissions: "0644"
+  encoding: base64
+  content: {{ tpl ($.Files.Get "files/etc/teleport.yaml") . | b64enc }}
 {{- end }}
 {{- end }}
 

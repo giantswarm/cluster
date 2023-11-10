@@ -1,3 +1,7 @@
+{{- define "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units.default" }}
+{{- include "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units.teleport" $ }}
+{{- end }}
+
 {{- define "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units" }}
 {{- range . }}
 - name: {{ .name }}
@@ -82,5 +86,27 @@
     name: {{ .group.name }}
     {{- end }}
   {{- end }}
+{{- end }}
+{{- end }}
+
+{{- define "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units.teleport" }}
+{{- if $.Values.internal.teleport.enabled }}
+- name: teleport.service
+  enabled: true
+  contents: |
+    [Unit]
+    Description=Teleport Service
+    After=network.target
+
+    [Service]
+    Type=simple
+    Restart=on-failure
+    ExecStart=/opt/bin/teleport start --roles=node --config=/etc/teleport.yaml --pid-file=/run/teleport.pid
+    ExecReload=/bin/kill -HUP $MAINPID
+    PIDFile=/run/teleport.pid
+    LimitNOFILE=524288
+
+    [Install]
+    WantedBy=multi-user.target
 {{- end }}
 {{- end }}

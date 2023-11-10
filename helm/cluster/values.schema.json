@@ -904,6 +904,11 @@
                                 }
                             }
                         },
+                        "managementCluster": {
+                            "type": "string",
+                            "title": "Management cluster",
+                            "description": "Name of the Cluster API cluster managing this workload cluster."
+                        },
                         "name": {
                             "type": "string",
                             "title": "Cluster name",
@@ -1589,6 +1594,27 @@
                             }
                         }
                     ]
+                },
+                "teleport": {
+                    "type": "object",
+                    "title": "Teleport",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean",
+                            "title": "Enable teleport",
+                            "default": false
+                        },
+                        "proxyAddr": {
+                            "type": "string",
+                            "title": "Teleport proxy address",
+                            "default": "test.teleport.giantswarm.io:443"
+                        },
+                        "version": {
+                            "type": "string",
+                            "title": "Teleport version",
+                            "default": "13.3.8"
+                        }
+                    }
                 },
                 "workers": {
                     "type": "object",
