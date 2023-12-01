@@ -1,9 +1,9 @@
 global:
+  managementCluster: giantmc
   metadata:
     name: awesome
     organization: giantswarm
     description: "Awesome Giant Swarm cluster"
-    managementCluster: giantmc
     labels:
       some-cluster-label: label-1
       another-cluster-label: label-2
@@ -51,8 +51,8 @@ global:
       nodeLabels:
         workload-type: robots
   components:
-    cri:
-      registries:
+    containerd:
+      containerRegistries:
         docker.io:
         - endpoint: registry-1.docker.io
           credentials:

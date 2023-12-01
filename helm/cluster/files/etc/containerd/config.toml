@@ -21,11 +21,11 @@ runtime_type = "io.containerd.runc.v2"
 [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc.options]
 SystemdCgroup = true
 [plugins."io.containerd.grpc.v1.cri"]
-sandbox_image = "{{ $.Values.internal.components.cri.sandboxContainerImage.registry }}/{{ $.Values.internal.components.cri.sandboxContainerImage.name }}:{{ $.Values.internal.components.cri.sandboxContainerImage.tag }}"
+sandbox_image = "{{ $.Values.internal.components.containerd.sandboxContainerImage.registry }}/{{ $.Values.internal.components.containerd.sandboxContainerImage.name }}:{{ $.Values.internal.components.containerd.sandboxContainerImage.tag }}"
 
 [plugins."io.containerd.grpc.v1.cri".registry]
   [plugins."io.containerd.grpc.v1.cri".registry.mirrors]
-  {{- range $host, $config := $.Values.global.components.cri.registries }}
+  {{- range $host, $config := $.Values.global.components.containerd.containerRegistries }}
     [plugins."io.containerd.grpc.v1.cri".registry.mirrors."{{$host}}"]
       endpoint = [
         {{- range $value := $config -}}
@@ -34,7 +34,7 @@ sandbox_image = "{{ $.Values.internal.components.cri.sandboxContainerImage.regis
     ]
   {{- end }}
 [plugins."io.containerd.grpc.v1.cri".registry.configs]
-  {{ range $host, $config := $.Values.global.components.cri.registries -}}
+  {{ range $host, $config := $.Values.global.components.containerd.containerRegistries -}}
     {{ range $value := $config -}}
       {{ with $value.credentials -}}
       [plugins."io.containerd.grpc.v1.cri".registry.configs."{{$value.endpoint}}".auth]
