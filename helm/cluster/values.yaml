@@ -2,8 +2,8 @@
 
 global:
   components:
-    cri:
-      registries:
+    containerd:
+      containerRegistries:
         docker.io:
           - endpoint: registry-1.docker.io
           - endpoint: giantswarm.azurecr.io
@@ -37,7 +37,7 @@ internal:
             storage: {}
             systemd: {}
   components:
-    cri:
+    containerd:
       sandboxContainerImage:
         name: giantswarm/pause
         registry: quay.io

@@ -515,27 +515,24 @@
                 "controlPlane",
                 "metadata"
             ],
-            "additionalProperties": false,
+            "additionalProperties": true,
             "properties": {
                 "components": {
                     "type": "object",
                     "title": "Components",
-                    "description": "Advanced configuration of machine and cluster components.",
-                    "required": [
-                        "cri"
-                    ],
+                    "description": "Advanced configuration of components that are running on all nodes.",
                     "additionalProperties": false,
                     "properties": {
-                        "cri": {
+                        "containerd": {
                             "type": "object",
-                            "title": "CRI (container runtime interface)",
-                            "description": "Configuration of container runtime interface.",
+                            "title": "Containerd",
+                            "description": "Configuration of containerd.",
                             "required": [
-                                "registries"
+                                "containerRegistries"
                             ],
                             "additionalProperties": false,
                             "properties": {
-                                "registries": {
+                                "containerRegistries": {
                                     "type": "object",
                                     "title": "Container registries",
                                     "description": "Endpoints and credentials configuration for container registries.",
@@ -1063,14 +1060,14 @@
                     "title": "Components",
                     "description": "Internal configuration of various components that form the Kubernetes cluster.",
                     "required": [
-                        "cri"
+                        "containerd"
                     ],
                     "additionalProperties": false,
                     "properties": {
-                        "cri": {
+                        "containerd": {
                             "type": "object",
-                            "title": "CRI (container runtime interface)",
-                            "description": "Configuration of container runtime interface.",
+                            "title": "Containerd",
+                            "description": "Configuration of containerd.",
                             "required": [
                                 "sandboxContainerImage"
                             ],
