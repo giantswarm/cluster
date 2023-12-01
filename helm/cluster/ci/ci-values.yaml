@@ -51,8 +51,8 @@ global:
       nodeLabels:
         workload-type: robots
   components:
-    cri:
-      registries:
+    containerd:
+      containerRegistries:
         docker.io:
         - endpoint: registry-1.docker.io
           credentials:
