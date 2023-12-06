@@ -730,7 +730,7 @@
                                         "addressesTemplate": {
                                             "type": "string",
                                             "title": "Addresses template",
-                                            "description": "Name of Helm template that renders a YAML array with NO_PROXY addresses"
+                                            "description": "Name of Helm template that renders a YAML array with NO_PROXY addresses."
                                         }
                                     }
                                 }
