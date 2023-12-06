@@ -737,19 +737,6 @@
                             },
                             "default": {
                                 "enabled": false
-                            },
-                            "if": {
-                                "properties": {
-                                    "enabled": {
-                                        "const": true
-                                    }
-                                }
-                            },
-                            "then": {
-                                "required": [
-                                    "httpProxy",
-                                    "httpsProxy"
-                                ]
                             }
                         }
                     }
