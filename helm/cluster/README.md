@@ -54,7 +54,14 @@ Configuration of connectivity and networking options.
 | `global.connectivity.network.services` | **Services**|**Type:** `object`<br/>|
 | `global.connectivity.network.services.cidrBlocks` | **Kubernetes Service subnets**|**Type:** `array`<br/>**Default:** `["172.31.0.0/16"]`|
 | `global.connectivity.network.services.cidrBlocks[*]` | **Service subnet** - IPv4 address range for kubernetes services, in CIDR notation.|**Type:** `string`<br/>**Example:** `"172.31.0.0/16"`<br/>|
-| `global.connectivity.proxy` | **Proxy** - Whether/how outgoing traffic is routed through proxy servers.||
+| `global.connectivity.proxy` | **Proxy** - Whether/how outgoing traffic is routed through proxy servers.|**Type:** `object`<br/>**Default:** `{"enabled":false}`|
+| `global.connectivity.proxy.enabled` | **Enable**|**Type:** `boolean`<br/>|
+| `global.connectivity.proxy.httpProxy` | **HTTP proxy** - To be passed to the HTTP_PROXY environment variable in all hosts.|**Type:** `string`<br/>|
+| `global.connectivity.proxy.httpsProxy` | **HTTPS proxy** - To be passed to the HTTPS_PROXY environment variable in all hosts.|**Type:** `string`<br/>|
+| `global.connectivity.proxy.noProxy` | **No proxy**|**Type:** `object`<br/>|
+| `global.connectivity.proxy.noProxy.addresses` | **Addresses** - To be passed to the NO_PROXY environment variable in all hosts.|**Type:** `array`<br/>|
+| `global.connectivity.proxy.noProxy.addressesTemplate` | **Addresses template** - Name of Helm template that renders a YAML array with NO_PROXY addresses.|**Type:** `string`<br/>|
+| `global.connectivity.proxy.noProxy.addresses[*]` |**None**|**Type:** `string`<br/>|
 
 ### Control plane
 Properties within the `.global.controlPlane` object
@@ -73,7 +80,12 @@ Configuration of the control plane.
 | `global.controlPlane.machineHealthCheck.nodeStartupTimeout` | **Node startup timeout** - Determines how long a machine health check should wait for a node to join the cluster, before considering a machine unhealthy.|**Type:** `string`<br/>**Examples:** `"10m", "100s"`<br/>**Default:** `"8m0s"`|
 | `global.controlPlane.machineHealthCheck.unhealthyNotReadyTimeout` | **Timeout for ready** - If a node is not in condition 'Ready' after this timeout, it will be considered unhealthy.|**Type:** `string`<br/>**Example:** `"300s"`<br/>**Default:** `"10m0s"`|
 | `global.controlPlane.machineHealthCheck.unhealthyUnknownTimeout` | **Timeout for unknown condition** - If a node is in 'Unknown' condition after this timeout, it will be considered unhealthy.|**Type:** `string`<br/>**Example:** `"300s"`<br/>**Default:** `"10m0s"`|
-| `global.controlPlane.oidc` | **OIDC authentication**||
+| `global.controlPlane.oidc` | **OIDC authentication**|**Type:** `object`<br/>|
+| `global.controlPlane.oidc.caPem` | **Certificate authority** - Identity provider's CA certificate in PEM format.|**Type:** `string`<br/>|
+| `global.controlPlane.oidc.clientId` | **Client ID**|**Type:** `string`<br/>|
+| `global.controlPlane.oidc.groupsClaim` | **Groups claim**|**Type:** `string`<br/>|
+| `global.controlPlane.oidc.issuerUrl` | **Issuer URL** - Exact issuer URL that will be included in identity tokens.|**Type:** `string`<br/>|
+| `global.controlPlane.oidc.usernameClaim` | **Username claim**|**Type:** `string`<br/>|
 | `global.controlPlane.replicas` | **Replicas** - The number of control plane nodes.|**Type:** `integer`<br/>**Default:** `3`|
 
 ### Internal
