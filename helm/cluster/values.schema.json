@@ -692,54 +692,52 @@
                             }
                         },
                         "proxy": {
+                            "type": "object",
                             "title": "Proxy",
                             "description": "Whether/how outgoing traffic is routed through proxy servers.",
-                            "default": null,
-                            "oneOf": [
-                                {
-                                    "type": "null"
+                            "required": [
+                                "enabled"
+                            ],
+                            "additionalProperties": false,
+                            "properties": {
+                                "enabled": {
+                                    "type": "boolean",
+                                    "title": "Enable"
                                 },
-                                {
+                                "httpProxy": {
+                                    "type": "string",
+                                    "title": "HTTP proxy",
+                                    "description": "To be passed to the HTTP_PROXY environment variable in all hosts."
+                                },
+                                "httpsProxy": {
+                                    "type": "string",
+                                    "title": "HTTPS proxy",
+                                    "description": "To be passed to the HTTPS_PROXY environment variable in all hosts."
+                                },
+                                "noProxy": {
                                     "type": "object",
+                                    "title": "No proxy",
                                     "additionalProperties": false,
                                     "properties": {
-                                        "enabled": {
-                                            "type": "boolean",
-                                            "title": "Enable"
-                                        },
-                                        "httpProxy": {
-                                            "type": "string",
-                                            "title": "HTTP proxy",
-                                            "description": "To be passed to the HTTP_PROXY environment variable in all hosts."
-                                        },
-                                        "httpsProxy": {
-                                            "type": "string",
-                                            "title": "HTTPS proxy",
-                                            "description": "To be passed to the HTTPS_PROXY environment variable in all hosts."
-                                        },
-                                        "noProxy": {
-                                            "type": "object",
-                                            "title": "No proxy",
-                                            "additionalProperties": false,
-                                            "properties": {
-                                                "addresses": {
-                                                    "type": "array",
-                                                    "title": "Addresses",
-                                                    "description": "To be passed to the NO_PROXY environment variable in all hosts.",
-                                                    "items": {
-                                                        "type": "string"
-                                                    }
-                                                },
-                                                "addressesTemplate": {
-                                                    "type": "string",
-                                                    "title": "Addresses template",
-                                                    "description": "Name of Helm template that renders a YAML array with NO_PROXY addresses"
-                                                }
+                                        "addresses": {
+                                            "type": "array",
+                                            "title": "Addresses",
+                                            "description": "To be passed to the NO_PROXY environment variable in all hosts.",
+                                            "items": {
+                                                "type": "string"
                                             }
+                                        },
+                                        "addressesTemplate": {
+                                            "type": "string",
+                                            "title": "Addresses template",
+                                            "description": "Name of Helm template that renders a YAML array with NO_PROXY addresses."
                                         }
                                     }
                                 }
-                            ]
+                            },
+                            "default": {
+                                "enabled": false
+                            }
                         }
                     }
                 },
@@ -803,46 +801,32 @@
                             }
                         },
                         "oidc": {
+                            "type": "object",
                             "title": "OIDC authentication",
-                            "default": null,
-                            "oneOf": [
-                                {
-                                    "type": "object",
-                                    "required": [
-                                        "clientId",
-                                        "groupsClaim",
-                                        "issuerUrl",
-                                        "usernameClaim"
-                                    ],
-                                    "properties": {
-                                        "caPem": {
-                                            "type": "string",
-                                            "title": "Certificate authority",
-                                            "description": "Identity provider's CA certificate in PEM format."
-                                        },
-                                        "clientId": {
-                                            "type": "string",
-                                            "title": "Client ID"
-                                        },
-                                        "groupsClaim": {
-                                            "type": "string",
-                                            "title": "Groups claim"
-                                        },
-                                        "issuerUrl": {
-                                            "type": "string",
-                                            "title": "Issuer URL",
-                                            "description": "Exact issuer URL that will be included in identity tokens."
-                                        },
-                                        "usernameClaim": {
-                                            "type": "string",
-                                            "title": "Username claim"
-                                        }
-                                    }
+                            "properties": {
+                                "caPem": {
+                                    "type": "string",
+                                    "title": "Certificate authority",
+                                    "description": "Identity provider's CA certificate in PEM format."
                                 },
-                                {
-                                    "type": "null"
+                                "clientId": {
+                                    "type": "string",
+                                    "title": "Client ID"
+                                },
+                                "groupsClaim": {
+                                    "type": "string",
+                                    "title": "Groups claim"
+                                },
+                                "issuerUrl": {
+                                    "type": "string",
+                                    "title": "Issuer URL",
+                                    "description": "Exact issuer URL that will be included in identity tokens."
+                                },
+                                "usernameClaim": {
+                                    "type": "string",
+                                    "title": "Username claim"
                                 }
-                            ]
+                            }
                         },
                         "replicas": {
                             "type": "integer",

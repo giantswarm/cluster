@@ -18,6 +18,8 @@ global:
       services:
         cidrBlocks:
           - 172.31.0.0/16
+    proxy:
+      enabled: false
   controlPlane:
     machineHealthCheck:
       enabled: true
@@ -25,6 +27,7 @@ global:
       nodeStartupTimeout: 8m0s
       unhealthyNotReadyTimeout: 10m0s
       unhealthyUnknownTimeout: 10m0s
+    oidc: {}
     replicas: 3
   metadata:
     servicePriority: highest

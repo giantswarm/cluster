@@ -32,7 +32,7 @@ extraArgs:
   feature-gates: {{ include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.featureGates" $ }}
   {{- end }}
   kubelet-preferred-address-types: InternalIP
-  {{- if $.Values.global.controlPlane.oidc }}
+  {{- if $.Values.global.controlPlane.oidc.issuerUrl }}
   {{- if $.Values.global.controlPlane.oidc.caPem }}
   oidc-ca-file: /etc/ssl/certs/oidc.pem
   {{- end }}
