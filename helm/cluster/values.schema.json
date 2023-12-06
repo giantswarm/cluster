@@ -1479,7 +1479,6 @@
                     "title": "Resources API",
                     "description": "Group, version and kind configuration that is required and used by a specific Cluster API provider.",
                     "required": [
-                        "infrastructureCluster",
                         "clusterResourceEnabled",
                         "controlPlaneResourceEnabled",
                         "machinePoolResourcesEnabled",
