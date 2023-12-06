@@ -604,7 +604,6 @@
                         "baseDomain",
                         "network"
                     ],
-                    "additionalProperties": false,
                     "properties": {
                         "baseDomain": {
                             "type": "string",
@@ -633,7 +632,6 @@
                                 "pods",
                                 "services"
                             ],
-                            "additionalProperties": false,
                             "properties": {
                                 "pods": {
                                     "type": "object",
@@ -641,7 +639,6 @@
                                     "required": [
                                         "cidrBlocks"
                                     ],
-                                    "additionalProperties": false,
                                     "properties": {
                                         "cidrBlocks": {
                                             "type": "array",
@@ -668,7 +665,6 @@
                                     "required": [
                                         "cidrBlocks"
                                     ],
-                                    "additionalProperties": false,
                                     "properties": {
                                         "cidrBlocks": {
                                             "type": "array",
@@ -698,7 +694,6 @@
                             "required": [
                                 "enabled"
                             ],
-                            "additionalProperties": false,
                             "properties": {
                                 "enabled": {
                                     "type": "boolean",
@@ -717,7 +712,6 @@
                                 "noProxy": {
                                     "type": "object",
                                     "title": "No proxy",
-                                    "additionalProperties": false,
                                     "properties": {
                                         "addresses": {
                                             "type": "array",
