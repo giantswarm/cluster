@@ -27,6 +27,7 @@ global:
       nodeStartupTimeout: 8m0s
       unhealthyNotReadyTimeout: 10m0s
       unhealthyUnknownTimeout: 10m0s
+    oidc: {}
     replicas: 3
   metadata:
     servicePriority: highest
