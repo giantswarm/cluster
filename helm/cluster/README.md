@@ -300,10 +300,6 @@ Properties within the `.internal` top-level object
 | `internal.resourcesApi.bastionResourceEnabled` | **Bastion resource enabled** - Flag that indicates if the Bastion resource is enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.|**Type:** `boolean`<br/>**Default:** `true`|
 | `internal.resourcesApi.clusterResourceEnabled` | **Cluster resource enabled** - Flag that indicates if the Cluster resource is enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.|**Type:** `boolean`<br/>**Default:** `true`|
 | `internal.resourcesApi.controlPlaneResourceEnabled` | **Control plane resource enabled** - Flag that indicates if the control plane resource is enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.|**Type:** `boolean`<br/>**Default:** `true`|
-| `internal.resourcesApi.infrastructureCluster` | **Infrastructure cluster** - Group, version and kind of provider-specific infrastructure cluster resource.|**Type:** `object`<br/>|
-| `internal.resourcesApi.infrastructureCluster.group` | **API group**|**Type:** `string`<br/>**Example:** `"infrastructure.cluster.x-k8s.io"`<br/>|
-| `internal.resourcesApi.infrastructureCluster.kind` | **API kind**|**Type:** `string`<br/>**Examples:** `"AWSCluster", "AzureCluster", "VCDCluster", "VSphereCluster"`<br/>|
-| `internal.resourcesApi.infrastructureCluster.version` | **API version**|**Type:** `string`<br/>**Examples:** `"v1alpha1", "v1beta1", "v1beta2", "v1", "v2"`<br/>|
 | `internal.resourcesApi.machineHealthCheckResourceEnabled` | **MachineHealthCheck resource enabled** - Flag that indicates if the MachineHealthCheck resource is enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.|**Type:** `boolean`<br/>**Default:** `true`|
 | `internal.resourcesApi.machinePoolResourcesEnabled` | **Machine pool resources enabled** - Flag that indicates if the machine pool resources are enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.|**Type:** `boolean`<br/>**Default:** `true`|
 | `internal.teleport` | **Teleport**|**Type:** `object`<br/>|
@@ -403,6 +399,18 @@ Properties within the `.global.nodePools` object
 | **Property** | **Description** | **More Details** |
 | :----------- | :-------------- | :--------------- |
 | `global.managementCluster` | **Management cluster** - Name of the Cluster API cluster managing this workload cluster.|**Type:** `string`<br/>|
+
+### Provider chart integration
+Properties within the `.providerChartIntegration` top-level object
+Provider-specific properties that must be set by cluster-$provider chart in order to render correct templates for the provider.
+
+| **Property** | **Description** | **More Details** |
+| :----------- | :-------------- | :--------------- |
+| `providerChartIntegration.resourcesApi` | **Resources API** - Group, version and kind configuration that is required and used by a specific Cluster API provider.|**Type:** `object`<br/>|
+| `providerChartIntegration.resourcesApi.infrastructureCluster` | **Infrastructure cluster** - Group, version and kind of provider-specific infrastructure cluster resource.|**Type:** `object`<br/>|
+| `providerChartIntegration.resourcesApi.infrastructureCluster.group` | **API group**|**Type:** `string`<br/>**Example:** `"infrastructure.cluster.x-k8s.io"`<br/>|
+| `providerChartIntegration.resourcesApi.infrastructureCluster.kind` | **API kind**|**Type:** `string`<br/>**Examples:** `"AWSCluster", "AzureCluster", "VCDCluster", "VSphereCluster"`<br/>|
+| `providerChartIntegration.resourcesApi.infrastructureCluster.version` | **API version**|**Type:** `string`<br/>**Examples:** `"v1alpha1", "v1beta1", "v1beta2", "v1", "v2"`<br/>|
 
 
 

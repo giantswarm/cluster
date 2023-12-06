@@ -29,8 +29,10 @@ spec:
     kind: {{ .Values.internal.controlPlane.resources.controlPlane.api.kind }}
     name: {{ include "cluster.resource.name" $ }}
   infrastructureRef:
-    apiVersion: {{ .Values.internal.resourcesApi.infrastructureCluster.group }}/{{ .Values.internal.resourcesApi.infrastructureCluster.version }}
-    kind: {{ .Values.internal.resourcesApi.infrastructureCluster.kind }}
+    {{- with .Values.providerChartIntegration.resourcesApi.infrastructureCluster }}
+    apiVersion: {{ .group }}/{{ .version }}
+    kind: {{ .kind }}
+    {{- end }}
     name: {{ include "cluster.resource.name" $ }}
   {{- if .Values.internal.paused }}
   paused: true

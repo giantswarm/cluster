@@ -81,7 +81,6 @@ internal:
     bastionResourceEnabled: true
     clusterResourceEnabled: true
     controlPlaneResourceEnabled: true
-    infrastructureCluster: {}
     machineHealthCheckResourceEnabled: true
     machinePoolResourcesEnabled: true
   teleport:
@@ -95,3 +94,6 @@ internal:
           additionalConfig:
             storage: {}
             systemd: {}
+providerChartIntegration:
+  resourcesApi:
+    infrastructureCluster: {}

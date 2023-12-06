@@ -281,10 +281,6 @@ internal:
     machineHealthCheckResourceEnabled: true
     bastionResourceEnabled: true
     nodePoolKind: MachinePool
-    infrastructureCluster:
-      group: infrastructure.cluster.x-k8s.io
-      version: v1beta1
-      kind: AWSCluster
     infrastructureMachinePool:
       group: infrastructure.cluster.x-k8s.io
       version: v1beta1
@@ -353,3 +349,9 @@ internal:
       postKubeadmCommands:
       - echo "hello workers after kubeadm"
       - echo "cluster workers after kubeadm"
+providerChartIntegration:
+  resourcesApi:
+    infrastructureCluster:
+      group: infrastructure.cluster.x-k8s.io
+      version: v1beta1
+      kind: AWSCluster
