@@ -844,12 +844,10 @@
                     "type": "object",
                     "title": "Metadata",
                     "required": [
-                        "description",
                         "name",
                         "organization",
                         "servicePriority"
                     ],
-                    "additionalProperties": false,
                     "properties": {
                         "description": {
                             "type": "string",
