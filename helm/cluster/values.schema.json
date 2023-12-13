@@ -853,7 +853,8 @@
                         "description",
                         "name",
                         "organization",
-                        "servicePriority"
+                        "servicePriority",
+                        "preventDeletion"
                     ],
                     "additionalProperties": false,
                     "properties": {
@@ -913,6 +914,12 @@
                                 "lowest"
                             ],
                             "default": "highest"
+                        },
+                        "preventDeletion": {
+                            "type": "bool",
+                            "title": "Prevent deletion",
+                            "description": "Prevent the cluster from being deleted.",
+                            "default": true
                         }
                     }
                 },
