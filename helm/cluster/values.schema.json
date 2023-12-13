@@ -916,7 +916,7 @@
                             "default": "highest"
                         },
                         "preventDeletion": {
-                            "type": "bool",
+                            "type": "boolean",
                             "title": "Prevent deletion",
                             "description": "Prevent the cluster from being deleted.",
                             "default": true
