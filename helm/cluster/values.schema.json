@@ -633,7 +633,7 @@
                                 "pods",
                                 "services"
                             ],
-                            "additionalProperties": false,
+                            "additionalProperties": true,
                             "properties": {
                                 "pods": {
                                     "type": "object",
