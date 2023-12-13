@@ -903,6 +903,12 @@
                             "description": "The name of organization that owns the cluster.",
                             "readOnly": true
                         },
+                        "preventDeletion": {
+                            "type": "boolean",
+                            "title": "Prevent deletion",
+                            "description": "Prevent the cluster from being deleted.",
+                            "default": true
+                        },
                         "servicePriority": {
                             "type": "string",
                             "title": "Service priority",
@@ -914,12 +920,6 @@
                                 "lowest"
                             ],
                             "default": "highest"
-                        },
-                        "preventDeletion": {
-                            "type": "boolean",
-                            "title": "Prevent deletion",
-                            "description": "Prevent the cluster from being deleted.",
-                            "default": true
                         }
                     }
                 },
