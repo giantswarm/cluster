@@ -604,7 +604,7 @@
                         "baseDomain",
                         "network"
                     ],
-                    "additionalProperties": false,
+                    "additionalProperties": true,
                     "properties": {
                         "baseDomain": {
                             "type": "string",
@@ -633,7 +633,7 @@
                                 "pods",
                                 "services"
                             ],
-                            "additionalProperties": false,
+                            "additionalProperties": true,
                             "properties": {
                                 "pods": {
                                     "type": "object",
@@ -853,7 +853,8 @@
                         "description",
                         "name",
                         "organization",
-                        "servicePriority"
+                        "servicePriority",
+                        "preventDeletion"
                     ],
                     "additionalProperties": false,
                     "properties": {
@@ -901,6 +902,12 @@
                             "title": "Organization",
                             "description": "The name of organization that owns the cluster.",
                             "readOnly": true
+                        },
+                        "preventDeletion": {
+                            "type": "boolean",
+                            "title": "Prevent deletion",
+                            "description": "Prevent the cluster from being deleted.",
+                            "default": true
                         },
                         "servicePriority": {
                             "type": "string",
