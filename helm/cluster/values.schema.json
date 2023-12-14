@@ -1565,6 +1565,9 @@
                             "if": {
                                 "type": "object",
                                 "properties": {
+                                    "machinePoolResourcesEnabled": {
+                                        "const": true
+                                    },
                                     "nodePoolKind": {
                                         "const": "MachinePool"
                                     }
