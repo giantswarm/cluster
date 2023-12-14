@@ -4,8 +4,8 @@ certSANs:
 - 127.0.0.1
 - "api.{{ include "cluster.resource.name" $ }}.{{ required "The baseDomain value is required" $.Values.global.connectivity.baseDomain }}"
 - "apiserver.{{ include "cluster.resource.name" $ }}.{{ required "The baseDomain value is required" $.Values.global.connectivity.baseDomain }}"
-{{- if $.Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.extraCertificateSANs }}
-{{ toYaml $.Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.extraCertificateSANs }}
+{{- if $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.extraCertificateSANs }}
+{{ toYaml $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.extraCertificateSANs }}
 {{- end }}
 {{- /*
     Timeout for the API server to appear.
@@ -14,7 +14,7 @@ certSANs:
 */}}
 timeoutForControlPlane: 20min
 extraArgs:
-  {{- if .Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.apiAudiences }}
+  {{- if .Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.apiAudiences }}
   api-audiences: {{ include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.apiAudiences" $ | trim | quote }}
   {{- end }}
   audit-log-maxage: "30"
@@ -25,10 +25,10 @@ extraArgs:
   cloud-provider: external
   enable-admission-plugins: {{ include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.enableAdmissionPlugins" $ }}
   encryption-provider-config: /etc/kubernetes/encryption/config.yaml
-  {{- if $.Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.etcdPrefix }}
-  etcd-prefix: {{ $.Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.etcdPrefix }}
+  {{- if $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.etcdPrefix }}
+  etcd-prefix: {{ $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.etcdPrefix }}
   {{- end }}
-  {{- if .Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.featureGates }}
+  {{- if .Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.featureGates }}
   feature-gates: {{ include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.featureGates" $ }}
   {{- end }}
   kubelet-preferred-address-types: InternalIP
@@ -43,21 +43,21 @@ extraArgs:
   {{- end }}
   profiling: "false"
   runtime-config: api/all=true
-  {{- if .Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuer }}
+  {{- if .Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuer }}
   service-account-issuer: "{{ include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.serviceAccountIssuer" $ }}"
   {{- end }}
   service-account-lookup: "true"
   tls-cipher-suites: {{ include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.tlsCipherSuites" $ }}
-  {{- range $argName, $argValue := ((($.Values.internal.controlPlane.kubeadmConfig).clusterConfiguration).apiServer).extraArgs }}
+  {{- range $argName, $argValue := ((($.Values.providerIntegration.controlPlane.kubeadmConfig).clusterConfiguration).apiServer).extraArgs }}
   {{ $argName }}: {{ if kindIs "string" $argValue }}{{ $argValue | quote }}{{ else }}{{ $argValue }}{{ end }}
   {{- end }}
 {{- end }}
 
 {{- define "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.apiAudiences" }}
-{{- if kindIs "string" $.Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.apiAudiences }}
-{{ $.Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.apiAudiences | trim }}
-{{- else if $.Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.apiAudiences.templateName }}
-{{ include $.Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.apiAudiences.templateName $ | trim }}
+{{- if kindIs "string" $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.apiAudiences }}
+{{ $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.apiAudiences | trim }}
+{{- else if $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.apiAudiences.templateName }}
+{{ include $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.apiAudiences.templateName $ | trim }}
 {{- end }}
 {{- end }}
 
@@ -73,17 +73,17 @@ extraArgs:
   "ResourceQuota"
   "ServiceAccount"
   "ValidatingAdmissionWebhook" -}}
-{{- range $additionalAdmissionPlugin := $.Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.additionalAdmissionPlugins }}
+{{- range $additionalAdmissionPlugin := $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.additionalAdmissionPlugins }}
 {{- $enabledAdmissionPlugins = append $enabledAdmissionPlugins $additionalAdmissionPlugin -}}
 {{- end }}
 {{- join "," (compact $enabledAdmissionPlugins) }}
 {{- end }}
 
 {{- define "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.serviceAccountIssuer" }}
-{{- if .Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuer.clusterDomainPrefix -}}
-https://{{ .Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuer.clusterDomainPrefix }}.{{ include "cluster.resource.name" $ }}.{{ required "The baseDomain value is required" $.Values.global.connectivity.baseDomain }}
+{{- if .Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuer.clusterDomainPrefix -}}
+https://{{ .Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuer.clusterDomainPrefix }}.{{ include "cluster.resource.name" $ }}.{{ required "The baseDomain value is required" $.Values.global.connectivity.baseDomain }}
 {{- else -}}
-{{ .Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuer.url }}
+{{ .Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuer.url }}
 {{- end }}
 {{- end }}
 
@@ -118,7 +118,7 @@ api-audiences-example.giantswarm.io
 
 {{- define "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.featureGates" }}
 {{- $featureGates := list -}}
-{{- range $featureGate := $.Values.internal.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.featureGates }}
+{{- range $featureGate := $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.featureGates }}
 {{- $featureGates = append $featureGates (printf "%s=%t" $featureGate.name $featureGate.enabled) -}}
 {{- end }}
 {{- join "," (compact $featureGates) | quote }}

@@ -1,4 +1,4 @@
-{{- if $.Values.internal.resourcesApi.controlPlaneResourceEnabled }}
+{{- if $.Values.providerIntegration.resourcesApi.controlPlaneResourceEnabled }}
 apiVersion: controlplane.cluster.x-k8s.io/v1beta1
 kind: KubeadmControlPlane
 metadata:
@@ -21,9 +21,9 @@ spec:
         {{- include "cluster.labels.common" $ | nindent 8 }}
         {{- include "cluster.labels.custom" $ | indent 8 }}
     infrastructureRef:
-      apiVersion: {{ $.Values.internal.controlPlane.resources.infrastructureMachineTemplate.group }}/{{ $.Values.internal.controlPlane.resources.infrastructureMachineTemplate.version }}
-      kind: {{ $.Values.internal.controlPlane.resources.infrastructureMachineTemplate.kind }}
-      name: {{ include "cluster.resource.name" $ }}-control-plane-{{ include "cluster.data.hash" (dict "data" (include $.Values.internal.controlPlane.resources.infrastructureMachineTemplateSpecTemplateName $) "salt" $.Values.internal.hashSalt) }}
+      apiVersion: {{ $.Values.providerIntegration.controlPlane.resources.infrastructureMachineTemplate.group }}/{{ $.Values.providerIntegration.controlPlane.resources.infrastructureMachineTemplate.version }}
+      kind: {{ $.Values.providerIntegration.controlPlane.resources.infrastructureMachineTemplate.kind }}
+      name: {{ include "cluster.resource.name" $ }}-control-plane-{{ include "cluster.data.hash" (dict "data" (include $.Values.providerIntegration.controlPlane.resources.infrastructureMachineTemplateSpecTemplateName $) "salt" $.Values.providerIntegration.hashSalt) }}
   kubeadmConfigSpec:
     format: ignition
     ignition:
@@ -56,5 +56,5 @@ spec:
     users:
     {{- include "cluster.internal.kubeadm.users" $ | indent 4 }}
   replicas: {{ .Values.global.controlPlane.replicas }}
-  version: v{{ trimPrefix "v" .Values.internal.kubernetesVersion }}
+  version: v{{ trimPrefix "v" .Values.providerIntegration.kubernetesVersion }}
 {{- end }}

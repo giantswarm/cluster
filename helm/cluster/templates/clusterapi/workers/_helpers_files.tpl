@@ -4,7 +4,7 @@
 {{- end }}
 
 {{- define "cluster.internal.workers.kubeadm.files.custom" }}
-{{- if $.Values.internal.workers.kubeadmConfig.files }}
-{{ toYaml $.Values.internal.workers.kubeadmConfig.files }}
+{{- if $.Values.providerIntegration.workers.kubeadmConfig.files }}
+{{ toYaml $.Values.providerIntegration.workers.kubeadmConfig.files }}
 {{- end }}
 {{- end }}

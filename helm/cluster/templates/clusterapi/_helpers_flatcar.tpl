@@ -90,7 +90,7 @@
 {{- end }}
 
 {{- define "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units.teleport" }}
-{{- if $.Values.internal.teleport.enabled }}
+{{- if $.Values.providerIntegration.teleport.enabled }}
 - name: teleport.service
   enabled: true
   contents: |

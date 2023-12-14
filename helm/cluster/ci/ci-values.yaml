@@ -59,7 +59,7 @@ global:
             username: giantswarm
             password: super_secret_password
         - endpoint: giantswarm.azurecr.io
-internal:
+providerIntegration:
   bastion:
     kubeadmConfig:
       ignition:
@@ -280,6 +280,10 @@ internal:
     machinePoolResourcesEnabled: true
     machineHealthCheckResourceEnabled: true
     bastionResourceEnabled: true
+    infrastructureCluster:
+      group: infrastructure.cluster.x-k8s.io
+      version: v1beta1
+      kind: AWSCluster
     nodePoolKind: MachinePool
     infrastructureMachinePool:
       group: infrastructure.cluster.x-k8s.io
@@ -349,9 +353,3 @@ internal:
       postKubeadmCommands:
       - echo "hello workers after kubeadm"
       - echo "cluster workers after kubeadm"
-providerChartIntegration:
-  resourcesApi:
-    infrastructureCluster:
-      group: infrastructure.cluster.x-k8s.io
-      version: v1beta1
-      kind: AWSCluster

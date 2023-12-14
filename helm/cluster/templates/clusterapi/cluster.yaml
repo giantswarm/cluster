@@ -1,4 +1,4 @@
-{{- if $.Values.internal.resourcesApi.clusterResourceEnabled }}
+{{- if $.Values.providerIntegration.resourcesApi.clusterResourceEnabled }}
 apiVersion: cluster.x-k8s.io/v1beta1
 kind: Cluster
 metadata:
@@ -25,16 +25,16 @@ spec:
       cidrBlocks:
       {{- toYaml $.Values.global.connectivity.network.pods.cidrBlocks | nindent 8 }}
   controlPlaneRef:
-    apiVersion: {{ .Values.internal.controlPlane.resources.controlPlane.api.group }}/{{ .Values.internal.controlPlane.resources.controlPlane.api.version }}
-    kind: {{ .Values.internal.controlPlane.resources.controlPlane.api.kind }}
+    apiVersion: {{ .Values.providerIntegration.controlPlane.resources.controlPlane.api.group }}/{{ .Values.providerIntegration.controlPlane.resources.controlPlane.api.version }}
+    kind: {{ .Values.providerIntegration.controlPlane.resources.controlPlane.api.kind }}
     name: {{ include "cluster.resource.name" $ }}
   infrastructureRef:
-    {{- with .Values.providerChartIntegration.resourcesApi.infrastructureCluster }}
+    {{- with .Values.providerIntegration.resourcesApi.infrastructureCluster }}
     apiVersion: {{ .group }}/{{ .version }}
     kind: {{ .kind }}
     {{- end }}
     name: {{ include "cluster.resource.name" $ }}
-  {{- if .Values.internal.paused }}
+  {{- if .Values.providerIntegration.paused }}
   paused: true
   {{- end -}}
 {{- end }}

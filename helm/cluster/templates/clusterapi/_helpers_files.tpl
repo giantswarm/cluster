@@ -17,8 +17,8 @@
 {{- end }}
 
 {{- define "cluster.internal.kubeadm.files.systemd" }}
-{{- if and $.Values.internal.kubeadmConfig $.Values.internal.kubeadmConfig.systemd }}
-{{- if and $.Values.internal.kubeadmConfig $.Values.internal.kubeadmConfig.systemd.timesyncd }}
+{{- if and $.Values.providerIntegration.kubeadmConfig $.Values.providerIntegration.kubeadmConfig.systemd }}
+{{- if and $.Values.providerIntegration.kubeadmConfig $.Values.providerIntegration.kubeadmConfig.systemd.timesyncd }}
 - path: /etc/systemd/timesyncd.conf
   permissions: "0644"
   encoding: base64
@@ -48,12 +48,12 @@
 {{- end }}
 
 {{- define "cluster.internal.kubeadm.files.kubelet" }}
-{{- if and $.Values.internal.kubeadmConfig $.Values.internal.kubeadmConfig.kubelet }}
+{{- if and $.Values.providerIntegration.kubeadmConfig $.Values.providerIntegration.kubeadmConfig.kubelet }}
 - path: /opt/kubelet-config.sh
   permissions: "0700"
   encoding: base64
   content: {{ tpl ($.Files.Get "files/opt/kubelet-config.sh") . | b64enc }}
-{{- if $.Values.internal.kubeadmConfig.kubelet.gracefulNodeShutdown }}
+{{- if $.Values.providerIntegration.kubeadmConfig.kubelet.gracefulNodeShutdown }}
 - path: /etc/systemd/logind.conf.d/zzz-kubelet-graceful-shutdown.conf
   permissions: "0700"
   encoding: base64
@@ -72,7 +72,7 @@
   permissions: "0644"
   encoding: base64
   content: {{ tpl ($.Files.Get "files/etc/systemd/http-proxy.conf") $ | b64enc }}
-{{- if $.Values.internal.teleport.enabled }}
+{{- if $.Values.providerIntegration.teleport.enabled }}
 - path: /etc/systemd/system/teleport.service.d/http-proxy.conf
   permissions: "0644"
   encoding: base64
@@ -86,7 +86,7 @@ The secret `-teleport-join-token` is created by the teleport-operator in cluster
 and is used to join the node to the teleport cluster.
 */}}
 {{- define "cluster.internal.kubeadm.files.teleport" }}
-{{- if $.Values.internal.teleport.enabled }}
+{{- if $.Values.providerIntegration.teleport.enabled }}
 - path: /etc/teleport-join-token
   permissions: "0644"
   contentFrom:
@@ -105,7 +105,7 @@ and is used to join the node to the teleport cluster.
 {{- end }}
 
 {{- define "cluster.internal.kubeadm.files.custom" }}
-{{- if $.Values.internal.kubeadmConfig.files }}
-{{ toYaml $.Values.internal.kubeadmConfig.files }}
+{{- if $.Values.providerIntegration.kubeadmConfig.files }}
+{{ toYaml $.Values.providerIntegration.kubeadmConfig.files }}
 {{- end }}
 {{- end }}

@@ -1,7 +1,7 @@
 {{/*
     Template cluster.internal.bastion.kubeadm.preKubeadmCommands defines extra commands to run
     on bastion nodes before kubeadm runs. It includes prefedined commands and custom commands
-    specified in Helm values field .Values.internal.bastion.kubeadmConfig.preKubeadmCommands.
+    specified in Helm values field .Values.providerIntegration.bastion.kubeadmConfig.preKubeadmCommands.
 */}}
 {{- define "cluster.internal.bastion.kubeadm.preKubeadmCommands" }}
 {{- include "cluster.internal.kubeadm.preKubeadmCommands.flatcar" $ }}
@@ -10,8 +10,8 @@
 {{- end }}
 
 {{- define "cluster.internal.bastion.kubeadm.preKubeadmCommands.custom" }}
-{{- if $.Values.internal.bastion.kubeadmConfig }}
-{{- range $command := $.Values.internal.bastion.kubeadmConfig.preKubeadmCommands }}
+{{- if $.Values.providerIntegration.bastion.kubeadmConfig }}
+{{- range $command := $.Values.providerIntegration.bastion.kubeadmConfig.preKubeadmCommands }}
 - {{ $command }}
 {{- end }}
 {{- end }}

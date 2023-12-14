@@ -1,5 +1,5 @@
-{{- if $.Values.internal.resourcesApi.controlPlaneResourceEnabled }}
-{{- if $.Values.internal.resourcesApi.machineHealthCheckResourceEnabled }}
+{{- if $.Values.providerIntegration.resourcesApi.controlPlaneResourceEnabled }}
+{{- if $.Values.providerIntegration.resourcesApi.machineHealthCheckResourceEnabled }}
 {{- if $.Values.global.controlPlane.machineHealthCheck.enabled }}
 apiVersion: cluster.x-k8s.io/v1beta1
 kind: MachineHealthCheck

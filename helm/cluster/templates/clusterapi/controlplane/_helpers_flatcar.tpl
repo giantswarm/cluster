@@ -13,28 +13,28 @@ containerLinuxConfig:
 {{- end }}
 
 {{- define "cluster.internal.controlPlane.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units" }}
-{{- if ((((($.Values.internal.kubeadmConfig).ignition).containerLinuxConfig).additionalConfig).systemd).units }}
-{{- include "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units" $.Values.internal.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units }}
+{{- if ((((($.Values.providerIntegration.kubeadmConfig).ignition).containerLinuxConfig).additionalConfig).systemd).units }}
+{{- include "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units" $.Values.providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units }}
 {{- end }}
-{{- if (((((($.Values.internal.controlPlane).kubeadmConfig).ignition).containerLinuxConfig).additionalConfig).systemd).units }}
-{{- include "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units" $.Values.internal.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units }}
+{{- if (((((($.Values.providerIntegration.controlPlane).kubeadmConfig).ignition).containerLinuxConfig).additionalConfig).systemd).units }}
+{{- include "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units" $.Values.providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units }}
 {{- end }}
 {{- end }}
 
 {{- define "cluster.internal.controlPlane.kubeadm.ignition.containerLinuxConfig.additionalConfig.storage.filesystems" }}
-{{- if ((((($.Values.internal.kubeadmConfig).ignition).containerLinuxConfig).additionalConfig).storage).filesystems }}
-{{- include "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.storage.filesystems" $.Values.internal.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.storage.filesystems }}
+{{- if ((((($.Values.providerIntegration.kubeadmConfig).ignition).containerLinuxConfig).additionalConfig).storage).filesystems }}
+{{- include "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.storage.filesystems" $.Values.providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.storage.filesystems }}
 {{- end }}
-{{- if (((((($.Values.internal.controlPlane).kubeadmConfig).ignition).containerLinuxConfig).additionalConfig).storage).filesystems }}
-{{- include "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.storage.filesystems" $.Values.internal.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.storage.filesystems }}
+{{- if (((((($.Values.providerIntegration.controlPlane).kubeadmConfig).ignition).containerLinuxConfig).additionalConfig).storage).filesystems }}
+{{- include "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.storage.filesystems" $.Values.providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.storage.filesystems }}
 {{- end }}
 {{- end }}
 
 {{- define "cluster.internal.controlPlane.kubeadm.ignition.containerLinuxConfig.additionalConfig.storage.directories" }}
-{{- if ((((($.Values.internal.kubeadmConfig).ignition).containerLinuxConfig).additionalConfig).storage).directories }}
-{{- include "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.storage.directories" $.Values.internal.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.storage.directories }}
+{{- if ((((($.Values.providerIntegration.kubeadmConfig).ignition).containerLinuxConfig).additionalConfig).storage).directories }}
+{{- include "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.storage.directories" $.Values.providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.storage.directories }}
 {{- end }}
-{{- if (((((($.Values.internal.controlPlane).kubeadmConfig).ignition).containerLinuxConfig).additionalConfig).storage).directories }}
-{{- include "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.storage.directories" $.Values.internal.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.storage.directories }}
+{{- if (((((($.Values.providerIntegration.controlPlane).kubeadmConfig).ignition).containerLinuxConfig).additionalConfig).storage).directories }}
+{{- include "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.storage.directories" $.Values.providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.storage.directories }}
 {{- end }}
 {{- end }}

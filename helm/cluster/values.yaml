@@ -31,7 +31,7 @@ global:
     replicas: 3
   metadata:
     servicePriority: highest
-internal:
+providerIntegration:
   bastion:
     kubeadmConfig:
       ignition:
@@ -81,6 +81,7 @@ internal:
     bastionResourceEnabled: true
     clusterResourceEnabled: true
     controlPlaneResourceEnabled: true
+    infrastructureCluster: {}
     machineHealthCheckResourceEnabled: true
     machinePoolResourcesEnabled: true
   teleport:
@@ -94,6 +95,3 @@ internal:
           additionalConfig:
             storage: {}
             systemd: {}
-providerChartIntegration:
-  resourcesApi:
-    infrastructureCluster: {}

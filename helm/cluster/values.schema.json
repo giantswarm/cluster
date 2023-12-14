@@ -997,9 +997,10 @@
                 }
             }
         },
-        "internal": {
+        "providerIntegration": {
             "type": "object",
-            "title": "Internal",
+            "title": "Provider integration",
+            "description": "Provider-specific properties that can be set by cluster-$provider chart in order to render correct templates for the provider.",
             "required": [
                 "connectivity",
                 "components",
@@ -1481,10 +1482,12 @@
                     "required": [
                         "clusterResourceEnabled",
                         "controlPlaneResourceEnabled",
+                        "infrastructureCluster",
                         "machinePoolResourcesEnabled",
                         "machineHealthCheckResourceEnabled",
                         "bastionResourceEnabled"
                     ],
+                    "additionalProperties": false,
                     "properties": {
                         "bastion": {
                             "type": "object",
@@ -1518,6 +1521,9 @@
                             "title": "Control plane resource enabled",
                             "description": "Flag that indicates if the control plane resource is enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.",
                             "default": true
+                        },
+                        "infrastructureCluster": {
+                            "$ref": "#/$defs/infrastructureCluster"
                         },
                         "machineHealthCheckResourceEnabled": {
                             "type": "boolean",
@@ -1617,28 +1623,6 @@
                                     "$ref": "#/$defs/preKubeadmCommands"
                                 }
                             }
-                        }
-                    }
-                }
-            }
-        },
-        "providerChartIntegration": {
-            "type": "object",
-            "title": "Provider chart integration",
-            "description": "Provider-specific properties that must be set by cluster-$provider chart in order to render correct templates for the provider.",
-            "additionalProperties": false,
-            "properties": {
-                "resourcesApi": {
-                    "type": "object",
-                    "title": "Resources API",
-                    "description": "Group, version and kind configuration that is required and used by a specific Cluster API provider.",
-                    "required": [
-                        "infrastructureCluster"
-                    ],
-                    "additionalProperties": false,
-                    "properties": {
-                        "infrastructureCluster": {
-                            "$ref": "#/$defs/infrastructureCluster"
                         }
                     }
                 }
