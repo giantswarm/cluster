@@ -329,7 +329,8 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.kubeadmConfig.preKubeadmCommands` | **Pre-kubeadm commands** - Extra commands to run before kubeadm runs.|**Type:** `array`<br/>|
 | `providerIntegration.kubeadmConfig.preKubeadmCommands[*]` |**None**|**Type:** `string`<br/>|
 | `providerIntegration.kubernetesVersion` | **Kubernetes version**|**Type:** `string`<br/>**Example:** `"1.24.7"`<br/>**Default:** `"1.24.10"`|
-| `providerIntegration.paused` | **Paused**|**Type:** `boolean`<br/>**Default:** `false`|
+| `providerIntegration.pauseProperties` | **Pause properties** - A map of property names and their values that will affect setting pause annotation|**Type:** `object`<br/>|
+| `providerIntegration.pauseProperties.*` |**None**|**Types:** `string, number, integer, boolean`<br/>|
 | `providerIntegration.resourcesApi` | **Resources API** - Group, version and kind configuration that is required and used by a specific Cluster API provider.|**Type:** `object`<br/>|
 | `providerIntegration.resourcesApi.bastion` | **Bastion** - Configuration of bastion resources API and names.|**Type:** `object`<br/>|
 | `providerIntegration.resourcesApi.bastion.infrastructureMachineTemplate` | **Infrastructure Machine template** - Group, version and kind of provider-specific infrastructure Machine template resource.|**Type:** `object`<br/>|
@@ -346,6 +347,7 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.resourcesApi.infrastructureCluster.version` | **API version**|**Type:** `string`<br/>**Examples:** `"v1alpha1", "v1beta1", "v1beta2", "v1", "v2"`<br/>|
 | `providerIntegration.resourcesApi.machineHealthCheckResourceEnabled` | **MachineHealthCheck resource enabled** - Flag that indicates if the MachineHealthCheck resource is enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.|**Type:** `boolean`<br/>**Default:** `true`|
 | `providerIntegration.resourcesApi.machinePoolResourcesEnabled` | **Machine pool resources enabled** - Flag that indicates if the machine pool resources are enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.|**Type:** `boolean`<br/>**Default:** `true`|
+| `providerIntegration.resourcesApi.nodePoolKind` | **Node pool kind** - Specifies which resource kind is used for node pools.|**Type:** `string`<br/>|
 | `providerIntegration.teleport` | **Teleport**|**Type:** `object`<br/>|
 | `providerIntegration.teleport.enabled` | **Enable teleport**|**Type:** `boolean`<br/>**Default:** `false`|
 | `providerIntegration.teleport.proxyAddr` | **Teleport proxy address**|**Type:** `string`<br/>**Default:** `"test.teleport.giantswarm.io:443"`|

@@ -68,3 +68,26 @@ Where `data` is the data to hash and `global` is the top level scope.
 {{- if .salt }}{{ $salt = .salt}}{{end}}
 {{- (printf "%s%s" $data $salt) | quote | sha1sum | trunc 8 }}
 {{- end -}}
+
+{{/* Function that gets a Helm value based on its path */}}
+{{- define "cluster.values.get" -}}
+{{- $propertyPath := .path }}
+{{- $pathParts := split "." $propertyPath }}
+{{- $propertyValue := .Values }}
+{{- range $pathPart := $pathParts }}
+{{- $propertyValue = get $propertyValue $pathPart }}
+{{- end }}
+{{ $propertyValue }}
+{{- end }}
+
+{{/* Function that checks if a Helm value from a path is equal to a specified value */}}
+{{- define "cluster.values.equal" -}}
+{{- $propertyPath := .path }}
+{{- $pathParts := split "." $propertyPath }}
+{{- $propertyValue := .Values }}
+{{- range $pathPart := $pathParts }}
+{{- $propertyValue = get $propertyValue $pathPart }}
+{{- end }}
+{{- $testValue := .testValue }}
+{{ eq $propertyValue $testValue }}
+{{- end }}

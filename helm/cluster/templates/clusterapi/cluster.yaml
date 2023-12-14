@@ -34,7 +34,13 @@ spec:
     kind: {{ .kind }}
     {{- end }}
     name: {{ include "cluster.resource.name" $ }}
-  {{- if .Values.providerIntegration.paused }}
+  {{- $paused := false }}
+  {{- range $propertyPath, $propertyPauseValue := .Values.providerIntegration.pauseProperties }}
+  {{- $propertyValue := (include "cluster.values.get" (dict "Values" $.Values "path" $propertyPath)) | trim }}
+  {{- $triggersPause := (include "cluster.values.equal" (dict "Values" $.Values "path" $propertyPath "testValue" $propertyPauseValue )) | trim }}
+  {{- $paused = or $paused (eq $triggersPause "true") }}
+  {{- end }}
+  {{- if $paused }}
   paused: true
-  {{- end -}}
+  {{- end }}
 {{- end }}

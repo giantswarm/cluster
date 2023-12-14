@@ -12,6 +12,7 @@ global:
       robots-need-this-in-the-cluster: "eW91IGNhbm5vdCByZWFkIHRoaXMsIGJ1dCByb2JvdHMgY2FuCg=="
   connectivity:
     baseDomain: example.gigantic.io
+    vpcMode: private
     proxy:
       enabled: true
       httpProxy: http://proxy.giantswarm.io
@@ -273,7 +274,8 @@ providerIntegration:
     - echo "hello all nodes after kubeadm"
     - echo "all cluster nodes after kubeadm"
   kubernetesVersion: 1.24.10
-  paused: false
+  pauseProperties:
+    global.connectivity.vpcMode: private
   resourcesApi:
     clusterResourceEnabled: true
     controlPlaneResourceEnabled: true

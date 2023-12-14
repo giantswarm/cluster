@@ -1006,7 +1006,6 @@
                 "components",
                 "controlPlane",
                 "kubernetesVersion",
-                "paused",
                 "resourcesApi"
             ],
             "additionalProperties": false,
@@ -1470,10 +1469,18 @@
                     ],
                     "default": "1.24.10"
                 },
-                "paused": {
-                    "type": "boolean",
-                    "title": "Paused",
-                    "default": false
+                "pauseProperties": {
+                    "type": "object",
+                    "title": "Pause properties",
+                    "description": "A map of property names and their values that will affect setting pause annotation",
+                    "additionalProperties": {
+                        "type": [
+                            "string",
+                            "number",
+                            "integer",
+                            "boolean"
+                        ]
+                    }
                 },
                 "resourcesApi": {
                     "type": "object",
@@ -1482,12 +1489,12 @@
                     "required": [
                         "clusterResourceEnabled",
                         "controlPlaneResourceEnabled",
-                        "infrastructureCluster",
                         "machinePoolResourcesEnabled",
                         "machineHealthCheckResourceEnabled",
-                        "bastionResourceEnabled"
+                        "bastionResourceEnabled",
+                        "infrastructureCluster",
+                        "nodePoolKind"
                     ],
-                    "additionalProperties": false,
                     "properties": {
                         "bastion": {
                             "type": "object",
@@ -1536,39 +1543,36 @@
                             "title": "Machine pool resources enabled",
                             "description": "Flag that indicates if the machine pool resources are enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.",
                             "default": true
+                        },
+                        "nodePoolKind": {
+                            "type": "string",
+                            "title": "Node pool kind",
+                            "description": "Specifies which resource kind is used for node pools.",
+                            "enum": [
+                                "MachineDeployment",
+                                "MachinePool"
+                            ]
                         }
                     },
-                    "oneOf": [
-                        {
-                            "required": [
-                                "infrastructureMachinePool",
-                                "nodePoolKind"
-                            ],
-                            "properties": {
-                                "infrastructureMachinePool": {
-                                    "$ref": "#/$defs/infrastructureMachinePool"
-                                },
-                                "nodePoolKind": {
-                                    "const": "MachinePool"
-                                }
-                            }
-                        },
-                        {
-                            "required": [
-                                "nodePoolKind"
-                            ],
-                            "properties": {
-                                "nodePoolKind": {
-                                    "const": "MachineDeployment"
-                                }
-                            },
-                            "not": {
-                                "required": [
-                                    "infrastructureMachinePool"
-                                ]
+                    "unevaluatedProperties": false,
+                    "if": {
+                        "type": "object",
+                        "properties": {
+                            "nodePoolKind": {
+                                "const": "MachinePool"
                             }
                         }
-                    ]
+                    },
+                    "then": {
+                        "required": [
+                            "infrastructureMachinePool"
+                        ],
+                        "properties": {
+                            "infrastructureMachinePool": {
+                                "$ref": "#/$defs/infrastructureMachinePool"
+                            }
+                        }
+                    }
                 },
                 "teleport": {
                     "type": "object",
