@@ -75,8 +75,6 @@ providerIntegration:
           systemd: {}
   kubernetesVersion: 1.24.10
   resourcesApi:
-    bastion:
-      infrastructureMachineTemplate: {}
     bastionResourceEnabled: true
     clusterResourceEnabled: true
     controlPlaneResourceEnabled: true

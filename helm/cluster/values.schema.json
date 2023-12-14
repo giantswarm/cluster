@@ -1497,25 +1497,9 @@
                         "machinePoolResourcesEnabled",
                         "machineHealthCheckResourceEnabled",
                         "bastionResourceEnabled",
-                        "infrastructureCluster",
-                        "nodePoolKind"
+                        "infrastructureCluster"
                     ],
                     "properties": {
-                        "bastion": {
-                            "type": "object",
-                            "title": "Bastion",
-                            "description": "Configuration of bastion resources API and names.",
-                            "properties": {
-                                "infrastructureMachineTemplate": {
-                                    "$ref": "#/$defs/infrastructureMachineTemplate"
-                                },
-                                "infrastructureMachineTemplateSpecTemplateName": {
-                                    "type": "string",
-                                    "title": "Infrastructure Machine template spec template name",
-                                    "description": "The name of Helm template that renders Infrastructure Machine template spec."
-                                }
-                            }
-                        },
                         "bastionResourceEnabled": {
                             "type": "boolean",
                             "title": "Bastion resource enabled",
@@ -1548,36 +1532,89 @@
                             "title": "Machine pool resources enabled",
                             "description": "Flag that indicates if the machine pool resources are enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.",
                             "default": true
+                        }
+                    },
+                    "allOf": [
+                        {
+                            "if": {
+                                "type": "object",
+                                "properties": {
+                                    "machinePoolResourcesEnabled": {
+                                        "const": true
+                                    }
+                                }
+                            },
+                            "then": {
+                                "required": [
+                                    "nodePoolKind"
+                                ],
+                                "properties": {
+                                    "nodePoolKind": {
+                                        "type": "string",
+                                        "title": "Node pool kind",
+                                        "description": "Specifies which resource kind is used for node pools.",
+                                        "enum": [
+                                            "MachineDeployment",
+                                            "MachinePool"
+                                        ]
+                                    }
+                                }
+                            }
                         },
-                        "nodePoolKind": {
-                            "type": "string",
-                            "title": "Node pool kind",
-                            "description": "Specifies which resource kind is used for node pools.",
-                            "enum": [
-                                "MachineDeployment",
-                                "MachinePool"
-                            ]
-                        }
-                    },
-                    "unevaluatedProperties": false,
-                    "if": {
-                        "type": "object",
-                        "properties": {
-                            "nodePoolKind": {
-                                "const": "MachinePool"
+                        {
+                            "if": {
+                                "type": "object",
+                                "properties": {
+                                    "nodePoolKind": {
+                                        "const": "MachinePool"
+                                    }
+                                }
+                            },
+                            "then": {
+                                "required": [
+                                    "infrastructureMachinePool"
+                                ],
+                                "properties": {
+                                    "infrastructureMachinePool": {
+                                        "$ref": "#/$defs/infrastructureMachinePool"
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "if": {
+                                "type": "object",
+                                "properties": {
+                                    "bastionResourceEnabled": {
+                                        "const": true
+                                    }
+                                }
+                            },
+                            "then": {
+                                "required": [
+                                    "bastion"
+                                ],
+                                "properties": {
+                                    "bastion": {
+                                        "type": "object",
+                                        "title": "Bastion",
+                                        "description": "Configuration of bastion resources API and names.",
+                                        "properties": {
+                                            "infrastructureMachineTemplate": {
+                                                "$ref": "#/$defs/infrastructureMachineTemplate"
+                                            },
+                                            "infrastructureMachineTemplateSpecTemplateName": {
+                                                "type": "string",
+                                                "title": "Infrastructure Machine template spec template name",
+                                                "description": "The name of Helm template that renders Infrastructure Machine template spec."
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
-                    },
-                    "then": {
-                        "required": [
-                            "infrastructureMachinePool"
-                        ],
-                        "properties": {
-                            "infrastructureMachinePool": {
-                                "$ref": "#/$defs/infrastructureMachinePool"
-                            }
-                        }
-                    }
+                    ],
+                    "unevaluatedProperties": false
                 },
                 "teleport": {
                     "type": "object",

@@ -177,6 +177,7 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.strict` | **Strict** - It controls if AdditionalConfig should be strictly parsed. If so, warnings are treated as errors.|**Type:** `boolean`<br/>|
 | `providerIntegration.bastion.kubeadmConfig.preKubeadmCommands` | **Pre-kubeadm commands** - Extra commands to run before kubeadm runs.|**Type:** `array`<br/>|
 | `providerIntegration.bastion.kubeadmConfig.preKubeadmCommands[*]` |**None**|**Type:** `string`<br/>|
+| `providerIntegration.clusterLabelsTemplateName` | **Cluster labels template name** - The name of the template that renders provider-specific labels for the Cluster resource|**Type:** `string`<br/>|
 | `providerIntegration.components` | **Components** - Internal configuration of various components that form the Kubernetes cluster.|**Type:** `object`<br/>|
 | `providerIntegration.components.containerd` | **Containerd** - Configuration of containerd.|**Type:** `object`<br/>|
 | `providerIntegration.components.containerd.sandboxContainerImage` | **Kubectl image**|**Type:** `object`<br/>|
@@ -332,12 +333,6 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.pauseProperties` | **Pause properties** - A map of property names and their values that will affect setting pause annotation|**Type:** `object`<br/>|
 | `providerIntegration.pauseProperties.*` |**None**|**Types:** `string, number, integer, boolean`<br/>|
 | `providerIntegration.resourcesApi` | **Resources API** - Group, version and kind configuration that is required and used by a specific Cluster API provider.|**Type:** `object`<br/>|
-| `providerIntegration.resourcesApi.bastion` | **Bastion** - Configuration of bastion resources API and names.|**Type:** `object`<br/>|
-| `providerIntegration.resourcesApi.bastion.infrastructureMachineTemplate` | **Infrastructure Machine template** - Group, version and kind of provider-specific infrastructure Machine template resource.|**Type:** `object`<br/>|
-| `providerIntegration.resourcesApi.bastion.infrastructureMachineTemplate.group` | **API group**|**Type:** `string`<br/>**Example:** `"infrastructure.cluster.x-k8s.io"`<br/>|
-| `providerIntegration.resourcesApi.bastion.infrastructureMachineTemplate.kind` | **API kind**|**Type:** `string`<br/>**Examples:** `"AWSMachineTemplate", "AzureMachineTemplate"`<br/>|
-| `providerIntegration.resourcesApi.bastion.infrastructureMachineTemplate.version` | **API version**|**Type:** `string`<br/>**Examples:** `"v1alpha1", "v1beta1", "v1beta2", "v1", "v2"`<br/>|
-| `providerIntegration.resourcesApi.bastion.infrastructureMachineTemplateSpecTemplateName` | **Infrastructure Machine template spec template name** - The name of Helm template that renders Infrastructure Machine template spec.|**Type:** `string`<br/>|
 | `providerIntegration.resourcesApi.bastionResourceEnabled` | **Bastion resource enabled** - Flag that indicates if the Bastion resource is enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.|**Type:** `boolean`<br/>**Default:** `true`|
 | `providerIntegration.resourcesApi.clusterResourceEnabled` | **Cluster resource enabled** - Flag that indicates if the Cluster resource is enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.|**Type:** `boolean`<br/>**Default:** `true`|
 | `providerIntegration.resourcesApi.controlPlaneResourceEnabled` | **Control plane resource enabled** - Flag that indicates if the control plane resource is enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.|**Type:** `boolean`<br/>**Default:** `true`|
@@ -347,7 +342,6 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.resourcesApi.infrastructureCluster.version` | **API version**|**Type:** `string`<br/>**Examples:** `"v1alpha1", "v1beta1", "v1beta2", "v1", "v2"`<br/>|
 | `providerIntegration.resourcesApi.machineHealthCheckResourceEnabled` | **MachineHealthCheck resource enabled** - Flag that indicates if the MachineHealthCheck resource is enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.|**Type:** `boolean`<br/>**Default:** `true`|
 | `providerIntegration.resourcesApi.machinePoolResourcesEnabled` | **Machine pool resources enabled** - Flag that indicates if the machine pool resources are enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.|**Type:** `boolean`<br/>**Default:** `true`|
-| `providerIntegration.resourcesApi.nodePoolKind` | **Node pool kind** - Specifies which resource kind is used for node pools.|**Type:** `string`<br/>|
 | `providerIntegration.teleport` | **Teleport**|**Type:** `object`<br/>|
 | `providerIntegration.teleport.enabled` | **Enable teleport**|**Type:** `boolean`<br/>**Default:** `false`|
 | `providerIntegration.teleport.proxyAddr` | **Teleport proxy address**|**Type:** `string`<br/>**Default:** `"test.teleport.giantswarm.io:443"`|
