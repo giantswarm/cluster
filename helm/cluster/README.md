@@ -177,7 +177,7 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.strict` | **Strict** - It controls if AdditionalConfig should be strictly parsed. If so, warnings are treated as errors.|**Type:** `boolean`<br/>|
 | `providerIntegration.bastion.kubeadmConfig.preKubeadmCommands` | **Pre-kubeadm commands** - Extra commands to run before kubeadm runs.|**Type:** `array`<br/>|
 | `providerIntegration.bastion.kubeadmConfig.preKubeadmCommands[*]` |**None**|**Type:** `string`<br/>|
-| `providerIntegration.clusterLabelsTemplateName` | **Cluster labels template name** - The name of the template that renders provider-specific labels for the Cluster resource|**Type:** `string`<br/>|
+| `providerIntegration.clusterAnnotationsTemplateName` | **Cluster annotations template name** - The name of the template that renders provider-specific annotations for the Cluster resource|**Type:** `string`<br/>|
 | `providerIntegration.components` | **Components** - Internal configuration of various components that form the Kubernetes cluster.|**Type:** `object`<br/>|
 | `providerIntegration.components.containerd` | **Containerd** - Configuration of containerd.|**Type:** `object`<br/>|
 | `providerIntegration.components.containerd.sandboxContainerImage` | **Kubectl image**|**Type:** `object`<br/>|
