@@ -4,6 +4,7 @@ global:
     name: awesome
     organization: giantswarm
     description: "Awesome Giant Swarm cluster"
+    preventDeletion: true
     labels:
       some-cluster-label: label-1
       another-cluster-label: label-2

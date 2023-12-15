@@ -100,6 +100,7 @@ Properties within the `.global.metadata` object
 | `global.metadata.labels.PATTERN` | **Label**|**Type:** `string`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-zA-Z0-9/\._-]+$`<br/>**Value pattern:** `^[a-zA-Z0-9\._-]+$`<br/>|
 | `global.metadata.name` | **Cluster name** - Unique identifier, cannot be changed after creation.|**Type:** `string`<br/>|
 | `global.metadata.organization` | **Organization** - The name of organization that owns the cluster.|**Type:** `string`<br/>|
+| `global.metadata.preventDeletion` | **Prevent cluster deletion** - Setting this to true will set giantswarm.io/prevent-deletion label to true, which will block cluster deletion.|**Type:** `boolean`<br/>**Default:** `false`|
 | `global.metadata.servicePriority` | **Service priority** - The relative importance of this cluster.|**Type:** `string`<br/>**Default:** `"highest"`|
 
 ### Node pools

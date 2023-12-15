@@ -30,6 +30,7 @@ global:
     oidc: {}
     replicas: 3
   metadata:
+    preventDeletion: false
     servicePriority: highest
 providerIntegration:
   bastion:

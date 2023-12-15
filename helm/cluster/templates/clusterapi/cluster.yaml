@@ -11,8 +11,9 @@ metadata:
     {{- end }}
     {{- include "cluster.annotations.custom" $ | indent 4 }}
   labels:
-    {{- include "cluster.labels.common" $ | nindent 4 }}
     cluster-apps-operator.giantswarm.io/watching: ""
+    {{- include "cluster.labels.common" $ | nindent 4 }}
+    {{- include "cluster.labels.preventDeletion" $ | indent 4 }}
     {{- include "cluster.labels.custom" $ | indent 4 }}
   name: {{ include "cluster.resource.name" $ }}
   namespace: {{ .Release.Namespace }}

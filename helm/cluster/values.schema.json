@@ -894,6 +894,12 @@
                             "description": "The name of organization that owns the cluster.",
                             "readOnly": true
                         },
+                        "preventDeletion": {
+                            "type": "boolean",
+                            "title": "Prevent cluster deletion",
+                            "description": "Setting this to true will set giantswarm.io/prevent-deletion label to true, which will block cluster deletion.",
+                            "default": false
+                        },
                         "servicePriority": {
                             "type": "string",
                             "title": "Service priority",

@@ -40,6 +40,12 @@ cluster.x-k8s.io/watch-filter: capi
 helm.sh/chart: {{ include "cluster.chart.nameAndVersion" $ | quote }}
 {{- end -}}
 
+{{- define "cluster.labels.preventDeletion" }}
+{{- if $.Values.global.metadata.preventDeletion }}
+giantswarm.io/prevent-deletion: "true"
+{{- end }}
+{{- end }}
+
 {{- define "cluster.labels.custom" }}
 {{- if .Values.global.metadata.labels }}
 {{- range $key, $val := .Values.global.metadata.labels }}
