@@ -1031,10 +1031,10 @@
                         }
                     }
                 },
-                "clusterLabelsTemplateName": {
+                "clusterAnnotationsTemplateName": {
                     "type": "string",
-                    "title": "Cluster labels template name",
-                    "description": "The name of the template that renders provider-specific labels for the Cluster resource"
+                    "title": "Cluster annotations template name",
+                    "description": "The name of the template that renders provider-specific annotations for the Cluster resource"
                 },
                 "components": {
                     "type": "object",

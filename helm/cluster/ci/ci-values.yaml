@@ -79,7 +79,7 @@ providerIntegration:
                     # Contents goes here
       preKubeadmCommands:
       - sleep infinity
-  clusterLabelsTemplateName: "cluster.test.providerIntegration.connectivity.labels"
+  clusterAnnotationsTemplateName: "cluster.test.providerIntegration.connectivity.annotations"
   controlPlane:
     kubeadmConfig:
       clusterConfiguration:
