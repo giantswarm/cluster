@@ -6,14 +6,14 @@ metadata:
     {{- with $.Values.global.metadata.description }}
     cluster.giantswarm.io/description: "{{ . }}"
     {{- end }}
+    {{- if .Values.providerIntegration.clusterAnnotationsTemplateName }}
+    {{- include .Values.providerIntegration.clusterAnnotationsTemplateName $ | indent 4 }}
+    {{- end }}
     {{- include "cluster.annotations.custom" $ | indent 4 }}
   labels:
     {{- include "cluster.labels.common" $ | nindent 4 }}
     cluster-apps-operator.giantswarm.io/watching: ""
     {{- include "cluster.labels.custom" $ | indent 4 }}
-    {{- if .Values.providerIntegration.clusterLabelsTemplateName }}
-    {{- include .Values.providerIntegration.clusterLabelsTemplateName . | indent 4 }}
-    {{- end }}
   name: {{ include "cluster.resource.name" $ }}
   namespace: {{ .Release.Namespace }}
 spec:
