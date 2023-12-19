@@ -2,9 +2,9 @@
 containerLinuxConfig:
   additionalConfig: |
     systemd:
-      {{- if (((((($.Values.internal.bastion).kubeadmConfig).ignition).containerLinuxConfig).additionalConfig).systemd).units }}
+      {{- if (((((($.Values.providerIntegration.bastion).kubeadmConfig).ignition).containerLinuxConfig).additionalConfig).systemd).units }}
       units:
-      {{- include "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units" $.Values.internal.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units | indent 6 }}
+      {{- include "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units" $.Values.providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units | indent 6 }}
       {{- else }}
       units: []
       {{- end }}

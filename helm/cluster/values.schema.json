@@ -604,7 +604,6 @@
                         "baseDomain",
                         "network"
                     ],
-                    "additionalProperties": false,
                     "properties": {
                         "baseDomain": {
                             "type": "string",
@@ -633,7 +632,6 @@
                                 "pods",
                                 "services"
                             ],
-                            "additionalProperties": false,
                             "properties": {
                                 "pods": {
                                     "type": "object",
@@ -641,7 +639,6 @@
                                     "required": [
                                         "cidrBlocks"
                                     ],
-                                    "additionalProperties": false,
                                     "properties": {
                                         "cidrBlocks": {
                                             "type": "array",
@@ -668,7 +665,6 @@
                                     "required": [
                                         "cidrBlocks"
                                     ],
-                                    "additionalProperties": false,
                                     "properties": {
                                         "cidrBlocks": {
                                             "type": "array",
@@ -698,7 +694,6 @@
                             "required": [
                                 "enabled"
                             ],
-                            "additionalProperties": false,
                             "properties": {
                                 "enabled": {
                                     "type": "boolean",
@@ -717,7 +712,6 @@
                                 "noProxy": {
                                     "type": "object",
                                     "title": "No proxy",
-                                    "additionalProperties": false,
                                     "properties": {
                                         "addresses": {
                                             "type": "array",
@@ -850,12 +844,10 @@
                     "type": "object",
                     "title": "Metadata",
                     "required": [
-                        "description",
                         "name",
                         "organization",
                         "servicePriority"
                     ],
-                    "additionalProperties": false,
                     "properties": {
                         "description": {
                             "type": "string",
@@ -901,6 +893,12 @@
                             "title": "Organization",
                             "description": "The name of organization that owns the cluster.",
                             "readOnly": true
+                        },
+                        "preventDeletion": {
+                            "type": "boolean",
+                            "title": "Prevent cluster deletion",
+                            "description": "Setting this to true will set giantswarm.io/prevent-deletion label to true, which will block cluster deletion.",
+                            "default": false
                         },
                         "servicePriority": {
                             "type": "string",
@@ -1005,15 +1003,15 @@
                 }
             }
         },
-        "internal": {
+        "providerIntegration": {
             "type": "object",
-            "title": "Internal",
+            "title": "Provider integration",
+            "description": "Provider-specific properties that can be set by cluster-$provider chart in order to render correct templates for the provider.",
             "required": [
                 "connectivity",
                 "components",
                 "controlPlane",
                 "kubernetesVersion",
-                "paused",
                 "resourcesApi"
             ],
             "additionalProperties": false,
@@ -1038,6 +1036,11 @@
                             }
                         }
                     }
+                },
+                "clusterAnnotationsTemplateName": {
+                    "type": "string",
+                    "title": "Cluster annotations template name",
+                    "description": "The name of the template that renders provider-specific annotations for the Cluster resource"
                 },
                 "components": {
                     "type": "object",
@@ -1477,39 +1480,32 @@
                     ],
                     "default": "1.24.10"
                 },
-                "paused": {
-                    "type": "boolean",
-                    "title": "Paused",
-                    "default": false
+                "pauseProperties": {
+                    "type": "object",
+                    "title": "Pause properties",
+                    "description": "A map of property names and their values that will affect setting pause annotation",
+                    "additionalProperties": {
+                        "type": [
+                            "string",
+                            "number",
+                            "integer",
+                            "boolean"
+                        ]
+                    }
                 },
                 "resourcesApi": {
                     "type": "object",
                     "title": "Resources API",
                     "description": "Group, version and kind configuration that is required and used by a specific Cluster API provider.",
                     "required": [
-                        "infrastructureCluster",
                         "clusterResourceEnabled",
                         "controlPlaneResourceEnabled",
                         "machinePoolResourcesEnabled",
                         "machineHealthCheckResourceEnabled",
-                        "bastionResourceEnabled"
+                        "bastionResourceEnabled",
+                        "infrastructureCluster"
                     ],
                     "properties": {
-                        "bastion": {
-                            "type": "object",
-                            "title": "Bastion",
-                            "description": "Configuration of bastion resources API and names.",
-                            "properties": {
-                                "infrastructureMachineTemplate": {
-                                    "$ref": "#/$defs/infrastructureMachineTemplate"
-                                },
-                                "infrastructureMachineTemplateSpecTemplateName": {
-                                    "type": "string",
-                                    "title": "Infrastructure Machine template spec template name",
-                                    "description": "The name of Helm template that renders Infrastructure Machine template spec."
-                                }
-                            }
-                        },
                         "bastionResourceEnabled": {
                             "type": "boolean",
                             "title": "Bastion resource enabled",
@@ -1544,37 +1540,90 @@
                             "default": true
                         }
                     },
-                    "oneOf": [
+                    "allOf": [
                         {
-                            "required": [
-                                "infrastructureMachinePool",
-                                "nodePoolKind"
-                            ],
-                            "properties": {
-                                "infrastructureMachinePool": {
-                                    "$ref": "#/$defs/infrastructureMachinePool"
-                                },
-                                "nodePoolKind": {
-                                    "const": "MachinePool"
+                            "if": {
+                                "type": "object",
+                                "properties": {
+                                    "machinePoolResourcesEnabled": {
+                                        "const": true
+                                    }
+                                }
+                            },
+                            "then": {
+                                "required": [
+                                    "nodePoolKind"
+                                ],
+                                "properties": {
+                                    "nodePoolKind": {
+                                        "type": "string",
+                                        "title": "Node pool kind",
+                                        "description": "Specifies which resource kind is used for node pools.",
+                                        "enum": [
+                                            "MachineDeployment",
+                                            "MachinePool"
+                                        ]
+                                    }
                                 }
                             }
                         },
                         {
-                            "required": [
-                                "nodePoolKind"
-                            ],
-                            "properties": {
-                                "nodePoolKind": {
-                                    "const": "MachineDeployment"
+                            "if": {
+                                "type": "object",
+                                "properties": {
+                                    "machinePoolResourcesEnabled": {
+                                        "const": true
+                                    },
+                                    "nodePoolKind": {
+                                        "const": "MachinePool"
+                                    }
                                 }
                             },
-                            "not": {
+                            "then": {
                                 "required": [
                                     "infrastructureMachinePool"
-                                ]
+                                ],
+                                "properties": {
+                                    "infrastructureMachinePool": {
+                                        "$ref": "#/$defs/infrastructureMachinePool"
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "if": {
+                                "type": "object",
+                                "properties": {
+                                    "bastionResourceEnabled": {
+                                        "const": true
+                                    }
+                                }
+                            },
+                            "then": {
+                                "required": [
+                                    "bastion"
+                                ],
+                                "properties": {
+                                    "bastion": {
+                                        "type": "object",
+                                        "title": "Bastion",
+                                        "description": "Configuration of bastion resources API and names.",
+                                        "properties": {
+                                            "infrastructureMachineTemplate": {
+                                                "$ref": "#/$defs/infrastructureMachineTemplate"
+                                            },
+                                            "infrastructureMachineTemplateSpecTemplateName": {
+                                                "type": "string",
+                                                "title": "Infrastructure Machine template spec template name",
+                                                "description": "The name of Helm template that renders Infrastructure Machine template spec."
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
-                    ]
+                    ],
+                    "unevaluatedProperties": false
                 },
                 "teleport": {
                     "type": "object",

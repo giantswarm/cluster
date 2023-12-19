@@ -30,8 +30,9 @@ global:
     oidc: {}
     replicas: 3
   metadata:
+    preventDeletion: false
     servicePriority: highest
-internal:
+providerIntegration:
   bastion:
     kubeadmConfig:
       ignition:
@@ -74,10 +75,7 @@ internal:
           storage: {}
           systemd: {}
   kubernetesVersion: 1.24.10
-  paused: false
   resourcesApi:
-    bastion:
-      infrastructureMachineTemplate: {}
     bastionResourceEnabled: true
     clusterResourceEnabled: true
     controlPlaneResourceEnabled: true

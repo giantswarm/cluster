@@ -3,7 +3,7 @@ local:
   extraArgs:
     listen-metrics-urls: "http://0.0.0.0:2381"
     quota-backend-bytes: "8589934592"
-    {{- with $etcdConfig := (($.Values.internal.controlPlane.kubeadmConfig).clusterConfiguration).etcd }}
+    {{- with $etcdConfig := (($.Values.providerIntegration.controlPlane.kubeadmConfig).clusterConfiguration).etcd }}
     {{- if $etcdConfig.initialCluster }}
     initial-cluster: {{ $etcdConfig.initialCluster | quote }}
     {{- end }}

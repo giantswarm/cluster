@@ -1,4 +1,4 @@
-{{- if $.Values.internal.resourcesApi.bastionResourceEnabled }}
+{{- if $.Values.providerIntegration.resourcesApi.bastionResourceEnabled }}
 {{- if .Values.global.connectivity.bastion.enabled }}
 apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
 kind: KubeadmConfigTemplate
@@ -10,7 +10,7 @@ metadata:
     cluster.x-k8s.io/role: bastion
     {{- include "cluster.labels.common" $ | nindent 4 }}
     {{- include "cluster.labels.custom" $ | indent 4 }}
-  name: {{ include "cluster.resource.name" $ }}-bastion-{{ include "cluster.data.hash" (dict "data" (include "cluster.internal.bastion.kubeadmconfigtemplate.spec" $) "salt" $.Values.internal.hashSalt) }}
+  name: {{ include "cluster.resource.name" $ }}-bastion-{{ include "cluster.data.hash" (dict "data" (include "cluster.internal.bastion.kubeadmconfigtemplate.spec" $) "salt" $.Values.providerIntegration.hashSalt) }}
   namespace: {{ $.Release.Namespace }}
 spec:
   template:

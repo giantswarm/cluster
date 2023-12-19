@@ -40,6 +40,12 @@ cluster.x-k8s.io/watch-filter: capi
 helm.sh/chart: {{ include "cluster.chart.nameAndVersion" $ | quote }}
 {{- end -}}
 
+{{- define "cluster.labels.preventDeletion" }}
+{{- if $.Values.global.metadata.preventDeletion }}
+giantswarm.io/prevent-deletion: "true"
+{{- end }}
+{{- end }}
+
 {{- define "cluster.labels.custom" }}
 {{- if .Values.global.metadata.labels }}
 {{- range $key, $val := .Values.global.metadata.labels }}
@@ -59,7 +65,7 @@ helm.sh/chart: {{ include "cluster.chart.nameAndVersion" $ | quote }}
 {{/*
 Hash function based on data provided
 Expects two arguments (as a `dict`) E.g.
-  {{ include "hash" (dict "data" . "salt" .Values.internal.hasSalt) }}
+  {{ include "hash" (dict "data" . "salt" .Values.providerIntegration.hasSalt) }}
 Where `data` is the data to hash and `global` is the top level scope.
 */}}
 {{- define "cluster.data.hash" -}}
@@ -68,3 +74,26 @@ Where `data` is the data to hash and `global` is the top level scope.
 {{- if .salt }}{{ $salt = .salt}}{{end}}
 {{- (printf "%s%s" $data $salt) | quote | sha1sum | trunc 8 }}
 {{- end -}}
+
+{{/* Function that gets a Helm value based on its path */}}
+{{- define "cluster.values.get" -}}
+{{- $propertyPath := .path }}
+{{- $pathParts := split "." $propertyPath }}
+{{- $propertyValue := .Values }}
+{{- range $pathPart := $pathParts }}
+{{- $propertyValue = get $propertyValue $pathPart }}
+{{- end }}
+{{ $propertyValue }}
+{{- end }}
+
+{{/* Function that checks if a Helm value from a path is equal to a specified value */}}
+{{- define "cluster.values.equal" -}}
+{{- $propertyPath := .path }}
+{{- $pathParts := split "." $propertyPath }}
+{{- $propertyValue := .Values }}
+{{- range $pathPart := $pathParts }}
+{{- $propertyValue = get $propertyValue $pathPart }}
+{{- end }}
+{{- $testValue := .testValue }}
+{{ eq $propertyValue $testValue }}
+{{- end }}

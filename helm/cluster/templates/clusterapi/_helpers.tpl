@@ -34,3 +34,9 @@
 - some.noproxy.address.giantswarm.io
 - another.noproxy.address.giantswarm.io
 {{- end }}
+
+{{- define "cluster.test.providerIntegration.connectivity.annotations" }}
+network-topology.giantswarm.io/mode: None
+network-topology.giantswarm.io/transit-gateway: abc-123
+network-topology.giantswarm.io/prefix-list: "foo,bar"
+{{- end }}

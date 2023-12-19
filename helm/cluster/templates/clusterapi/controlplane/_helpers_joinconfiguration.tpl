@@ -2,7 +2,7 @@
 discovery: {}
 controlPlane:
   localAPIEndpoint:
-    bindPort: {{ $.Values.internal.controlPlane.kubeadmConfig.localAPIEndpoint.bindPort }}
+    bindPort: {{ $.Values.providerIntegration.controlPlane.kubeadmConfig.localAPIEndpoint.bindPort }}
 nodeRegistration:
   kubeletExtraArgs:
     cloud-provider: external

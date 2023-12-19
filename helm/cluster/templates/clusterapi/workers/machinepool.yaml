@@ -1,5 +1,5 @@
-{{- if $.Values.internal.resourcesApi.machinePoolResourcesEnabled }}
-{{- if eq $.Values.internal.resourcesApi.nodePoolKind "MachinePool" }}
+{{- if $.Values.providerIntegration.resourcesApi.machinePoolResourcesEnabled }}
+{{- if eq $.Values.providerIntegration.resourcesApi.nodePoolKind "MachinePool" }}
 {{- range $nodePoolName, $nodePoolConfig := $.Values.global.nodePools }}
 apiVersion: cluster.x-k8s.io/v1beta1
 kind: MachinePool
@@ -37,10 +37,10 @@ spec:
           name: {{ include "cluster.resource.name" $ }}-{{ $nodePoolName }}
       clusterName: {{ include "cluster.resource.name" $ }}
       infrastructureRef:
-        apiVersion: {{ $.Values.internal.resourcesApi.infrastructureMachinePool.group }}/{{ $.Values.internal.resourcesApi.infrastructureMachinePool.version }}
-        kind: {{ $.Values.internal.resourcesApi.infrastructureMachinePool.kind }}
+        apiVersion: {{ $.Values.providerIntegration.resourcesApi.infrastructureMachinePool.group }}/{{ $.Values.providerIntegration.resourcesApi.infrastructureMachinePool.version }}
+        kind: {{ $.Values.providerIntegration.resourcesApi.infrastructureMachinePool.kind }}
         name: {{ include "cluster.resource.name" $ }}-{{ $nodePoolName }}
-      version: {{ $.Values.internal.kubernetesVersion }}
+      version: {{ $.Values.providerIntegration.kubernetesVersion }}
 ---
 {{- end }}
 {{- end }}

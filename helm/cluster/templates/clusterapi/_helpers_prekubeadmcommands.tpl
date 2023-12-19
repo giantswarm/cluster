@@ -1,7 +1,7 @@
 {{/*
     Template cluster.internal.kubeadm.preKubeadmCommands defines common extra commands to run on all
     (control plane and workers) nodes before kubeadm runs. It includes prefedined commands and
-    custom commands specified in Helm values field .Values.internal.kubeadmConfig.preKubeadmCommands.
+    custom commands specified in Helm values field .Values.providerIntegration.kubeadmConfig.preKubeadmCommands.
 */}}
 {{- define "cluster.internal.kubeadm.preKubeadmCommands" }}
 {{- include "cluster.internal.kubeadm.preKubeadmCommands.flatcar" $ }}
@@ -31,8 +31,8 @@
 {{- end }}
 
 {{- define "cluster.internal.kubeadm.preKubeadmCommands.custom" }}
-{{- if $.Values.internal.kubeadmConfig }}
-{{- range $command := $.Values.internal.kubeadmConfig.preKubeadmCommands }}
+{{- if $.Values.providerIntegration.kubeadmConfig }}
+{{- range $command := $.Values.providerIntegration.kubeadmConfig.preKubeadmCommands }}
 - {{ $command }}
 {{- end }}
 {{- end }}

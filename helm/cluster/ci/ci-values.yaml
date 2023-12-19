@@ -4,6 +4,7 @@ global:
     name: awesome
     organization: giantswarm
     description: "Awesome Giant Swarm cluster"
+    preventDeletion: true
     labels:
       some-cluster-label: label-1
       another-cluster-label: label-2
@@ -12,6 +13,7 @@ global:
       robots-need-this-in-the-cluster: "eW91IGNhbm5vdCByZWFkIHRoaXMsIGJ1dCByb2JvdHMgY2FuCg=="
   connectivity:
     baseDomain: example.gigantic.io
+    vpcMode: private
     proxy:
       enabled: true
       httpProxy: http://proxy.giantswarm.io
@@ -59,7 +61,7 @@ global:
             username: giantswarm
             password: super_secret_password
         - endpoint: giantswarm.azurecr.io
-internal:
+providerIntegration:
   bastion:
     kubeadmConfig:
       ignition:
@@ -78,6 +80,7 @@ internal:
                     # Contents goes here
       preKubeadmCommands:
       - sleep infinity
+  clusterAnnotationsTemplateName: "cluster.test.providerIntegration.connectivity.annotations"
   controlPlane:
     kubeadmConfig:
       clusterConfiguration:
@@ -273,18 +276,19 @@ internal:
     - echo "hello all nodes after kubeadm"
     - echo "all cluster nodes after kubeadm"
   kubernetesVersion: 1.24.10
-  paused: false
+  pauseProperties:
+    global.connectivity.vpcMode: private
   resourcesApi:
     clusterResourceEnabled: true
     controlPlaneResourceEnabled: true
     machinePoolResourcesEnabled: true
     machineHealthCheckResourceEnabled: true
     bastionResourceEnabled: true
-    nodePoolKind: MachinePool
     infrastructureCluster:
       group: infrastructure.cluster.x-k8s.io
       version: v1beta1
       kind: AWSCluster
+    nodePoolKind: MachinePool
     infrastructureMachinePool:
       group: infrastructure.cluster.x-k8s.io
       version: v1beta1

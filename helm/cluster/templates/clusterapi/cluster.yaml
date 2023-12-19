@@ -1,4 +1,4 @@
-{{- if $.Values.internal.resourcesApi.clusterResourceEnabled }}
+{{- if $.Values.providerIntegration.resourcesApi.clusterResourceEnabled }}
 apiVersion: cluster.x-k8s.io/v1beta1
 kind: Cluster
 metadata:
@@ -6,14 +6,15 @@ metadata:
     {{- with $.Values.global.metadata.description }}
     cluster.giantswarm.io/description: "{{ . }}"
     {{- end }}
+    {{- if .Values.providerIntegration.clusterAnnotationsTemplateName }}
+    {{- include .Values.providerIntegration.clusterAnnotationsTemplateName $ | indent 4 }}
+    {{- end }}
+    {{- include "cluster.annotations.custom" $ | indent 4 }}
   labels:
-    {{- include "cluster.labels.common" $ | nindent 4 }}
     cluster-apps-operator.giantswarm.io/watching: ""
-    {{- if $.Values.global.metadata.labels }}
-    {{- range $key, $val := $.Values.global.metadata.labels }}
-    {{ $key }}: {{ $val | quote }}
-    {{- end }}
-    {{- end }}
+    {{- include "cluster.labels.common" $ | nindent 4 }}
+    {{- include "cluster.labels.preventDeletion" $ | indent 4 }}
+    {{- include "cluster.labels.custom" $ | indent 4 }}
   name: {{ include "cluster.resource.name" $ }}
   namespace: {{ .Release.Namespace }}
 spec:
@@ -25,14 +26,22 @@ spec:
       cidrBlocks:
       {{- toYaml $.Values.global.connectivity.network.pods.cidrBlocks | nindent 8 }}
   controlPlaneRef:
-    apiVersion: {{ .Values.internal.controlPlane.resources.controlPlane.api.group }}/{{ .Values.internal.controlPlane.resources.controlPlane.api.version }}
-    kind: {{ .Values.internal.controlPlane.resources.controlPlane.api.kind }}
+    apiVersion: {{ .Values.providerIntegration.controlPlane.resources.controlPlane.api.group }}/{{ .Values.providerIntegration.controlPlane.resources.controlPlane.api.version }}
+    kind: {{ .Values.providerIntegration.controlPlane.resources.controlPlane.api.kind }}
     name: {{ include "cluster.resource.name" $ }}
   infrastructureRef:
-    apiVersion: {{ .Values.internal.resourcesApi.infrastructureCluster.group }}/{{ .Values.internal.resourcesApi.infrastructureCluster.version }}
-    kind: {{ .Values.internal.resourcesApi.infrastructureCluster.kind }}
+    {{- with .Values.providerIntegration.resourcesApi.infrastructureCluster }}
+    apiVersion: {{ .group }}/{{ .version }}
+    kind: {{ .kind }}
+    {{- end }}
     name: {{ include "cluster.resource.name" $ }}
-  {{- if .Values.internal.paused }}
+  {{- $paused := false }}
+  {{- range $propertyPath, $propertyPauseValue := .Values.providerIntegration.pauseProperties }}
+  {{- $propertyValue := (include "cluster.values.get" (dict "Values" $.Values "path" $propertyPath)) | trim }}
+  {{- $triggersPause := (include "cluster.values.equal" (dict "Values" $.Values "path" $propertyPath "testValue" $propertyPauseValue )) | trim }}
+  {{- $paused = or $paused (eq $triggersPause "true") }}
+  {{- end }}
+  {{- if $paused }}
   paused: true
-  {{- end -}}
+  {{- end }}
 {{- end }}
