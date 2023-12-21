@@ -28,7 +28,7 @@ room for such suffix.
 Common labels
 */}}
 {{- define "cluster.labels.common" -}}
-app: {{ include "cluster.chart.name" . | quote }}
+app: "cluster-{{ .Values.providerIntegration.provider }}"
 app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
 app.kubernetes.io/version: {{ .Chart.Version | quote }}
 application.giantswarm.io/team: {{ index .Chart.Annotations "application.giantswarm.io/team" | quote }}

@@ -62,6 +62,7 @@ global:
             password: super_secret_password
         - endpoint: giantswarm.azurecr.io
 providerIntegration:
+  provider: aws
   bastion:
     kubeadmConfig:
       ignition:
