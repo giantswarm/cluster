@@ -28,16 +28,22 @@ room for such suffix.
 Common labels
 */}}
 {{- define "cluster.labels.common" -}}
+# deprecated: "app: cluster-{{ .Values.providerIntegration.provider }}" label is deprecated and it will be removed after upgrading
+# to Kubernetes 1.25. We still need it here because existing ClusterResourceSet selectors.
+# need this label on the Cluster resource
 app: "cluster-{{ .Values.providerIntegration.provider }}"
-app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+app.kubernetes.io/name: {{ include "cluster.chart.name" $ | quote }}
 app.kubernetes.io/version: {{ .Chart.Version | quote }}
+app.kubernetes.io/part-of: "cluster-{{ .Values.providerIntegration.provider }}"
+app.kubernetes.io/instance: {{ .Release.Name | quote }}
+app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+helm.sh/chart: {{ include "cluster.chart.nameAndVersion" $ | quote }}
 application.giantswarm.io/team: {{ index .Chart.Annotations "application.giantswarm.io/team" | quote }}
 giantswarm.io/cluster: {{ include "cluster.resource.name" . | quote }}
 giantswarm.io/organization: {{ required "You must provide an existing organization name in .global.metadata.organization" .Values.global.metadata.organization | quote }}
 giantswarm.io/service-priority: {{ .Values.global.metadata.servicePriority }}
 cluster.x-k8s.io/cluster-name: {{ include "cluster.resource.name" $ | quote }}
 cluster.x-k8s.io/watch-filter: capi
-helm.sh/chart: {{ include "cluster.chart.nameAndVersion" $ | quote }}
 {{- end -}}
 
 {{- define "cluster.labels.preventDeletion" }}
