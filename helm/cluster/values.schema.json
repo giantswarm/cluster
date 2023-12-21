@@ -1012,6 +1012,7 @@
                 "components",
                 "controlPlane",
                 "kubernetesVersion",
+                "provider",
                 "resourcesApi"
             ],
             "additionalProperties": false,
@@ -1492,6 +1493,11 @@
                             "boolean"
                         ]
                     }
+                },
+                "provider": {
+                    "type": "string",
+                    "title": "Provider",
+                    "description": "The name of the Cluster API provider. The name here must match the name of the provider in cluster-<provider> app name."
                 },
                 "resourcesApi": {
                     "type": "object",

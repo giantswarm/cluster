@@ -13,5 +13,8 @@ generate-schema: ensure-schema-gen ## Generate the values.schema.json file from 
 
 .PHONY: template
 template: ## Output the rendered Helm template
-	@cd helm/cluster && \
-		helm template -f ci/ci-values.yaml --debug .
+	$(eval CHART_DIR := "helm/cluster")
+	$(eval CI_FILE := "ci/ci-values.yaml")
+	$(eval HELM_RELEASE_NAME := $(shell yq .global.metadata.name ${CHART_DIR}/${CI_FILE}))
+	@cd ${CHART_DIR} && \
+		helm template -f ${CI_FILE} --debug ${HELM_RELEASE_NAME} .

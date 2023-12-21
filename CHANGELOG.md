@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add Helm value for specifying the provider name.
+- Render `app: cluster-<provider>` label instead of `app: cluster` label.
+
 ## [0.1.0] - 2023-12-19
 
 ### Added
