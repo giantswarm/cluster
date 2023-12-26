@@ -29,8 +29,8 @@ Common labels
 */}}
 {{- define "cluster.labels.common" -}}
 # deprecated: "app: cluster-{{ .Values.providerIntegration.provider }}" label is deprecated and it will be removed after upgrading
-# to Kubernetes 1.25. We still need it here because existing ClusterResourceSet selectors.
-# need this label on the Cluster resource
+# to Kubernetes 1.25. We still need it here because existing ClusterResourceSet selectors
+# need this label on the Cluster resource.
 app: "cluster-{{ .Values.providerIntegration.provider }}"
 app.kubernetes.io/name: {{ include "cluster.chart.name" $ | quote }}
 app.kubernetes.io/version: {{ .Chart.Version | quote }}
