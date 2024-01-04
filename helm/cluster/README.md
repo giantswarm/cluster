@@ -88,6 +88,15 @@ Configuration of the control plane.
 | `global.controlPlane.oidc.usernameClaim` | **Username claim**|**Type:** `string`<br/>|
 | `global.controlPlane.replicas` | **Replicas** - The number of control plane nodes.|**Type:** `integer`<br/>**Default:** `3`|
 
+### Internal
+Properties within the `.internal` top-level object
+For Giant Swarm internal use only, not stable, or not supported by UIs.
+
+| **Property** | **Description** | **More Details** |
+| :----------- | :-------------- | :--------------- |
+| `internal.advancedConfiguration` | **Advanced configuration** - Advanced configuration of cluster components, to be configured by Giant Swarm staff only.|**Type:** `object`<br/>|
+| `internal.advancedConfiguration.cgroupsv1` | **CGroups v1** - Force use of CGroups v1 for whole cluster.|**Type:** `boolean`<br/>**Default:** `false`|
+
 ### Metadata
 Properties within the `.global.metadata` object
 

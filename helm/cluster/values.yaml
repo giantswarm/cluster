@@ -32,6 +32,9 @@ global:
   metadata:
     preventDeletion: false
     servicePriority: highest
+internal:
+  advancedConfiguration:
+    cgroupsv1: false
 providerIntegration:
   bastion:
     kubeadmConfig:

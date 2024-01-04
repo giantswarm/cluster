@@ -1,6 +1,7 @@
 {{- define "cluster.internal.kubeadm.files" }}
 {{- include "cluster.internal.kubeadm.files.sysctl" $ }}
 {{- include "cluster.internal.kubeadm.files.systemd" $ }}
+{{- include "cluster.internal.kubeadm.files.cgroupv1" $ }}
 {{- include "cluster.internal.kubeadm.files.ssh" $ }}
 {{- include "cluster.internal.kubeadm.files.cri" $ }}
 {{- include "cluster.internal.kubeadm.files.kubelet" $ }}
@@ -24,6 +25,14 @@
   encoding: base64
   content: {{ tpl ($.Files.Get "files/etc/systemd/timesyncd.conf") . | b64enc }}
 {{- end }}
+{{- end }}
+{{- end }}
+
+{{- define "cluster.internal.kubeadm.files.cgroupv1" }}
+{{- if $.Values.internal.advancedConfiguration.cgroupsv1 }}
+- path: /etc/flatcar-cgroupv1
+  filesystem: root
+  permissions: "0444"
 {{- end }}
 {{- end }}
 
