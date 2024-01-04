@@ -61,6 +61,9 @@ global:
             username: giantswarm
             password: super_secret_password
         - endpoint: giantswarm.azurecr.io
+internal:
+  advancedConfiguration:
+    cgroupsv1: true
 providerIntegration:
   provider: aws
   bastion:
