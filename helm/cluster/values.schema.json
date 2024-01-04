@@ -917,8 +917,9 @@
                 "nodePools": {
                     "type": "object",
                     "title": "Node pools",
+                    "additionalProperties": false,
                     "patternProperties": {
-                        "^[a-z0-9]{5,10}$": {
+                        "^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$": {
                             "type": "object",
                             "title": "Node pool",
                             "properties": {

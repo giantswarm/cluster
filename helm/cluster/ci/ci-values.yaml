@@ -48,7 +48,7 @@ global:
       - key: supernodepool
         value: hello
         effect: NoSchedule
-    rt5y7:
+    verybignodepool-1234:
       replicas: 100
       nodeLabels:
         workload-type: robots
