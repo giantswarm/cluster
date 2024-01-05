@@ -12,8 +12,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Enable using cgroupv1 (ported from https://github.com/giantswarm/cluster-aws/pull/410).
+
+### Changed
+
 - Support longer node pool names and allow dashes (ported from https://github.com/giantswarm/cluster-aws/pull/429).
 - Use KubeletConfiguration file instead of a bash script (ported from https://github.com/giantswarm/cluster-aws/pull/427).
+- Update kubernetes version to v1.24.16.
 
 ## [0.1.2] - 2023-12-26
 
