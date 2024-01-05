@@ -57,18 +57,14 @@
 {{- end }}
 
 {{- define "cluster.internal.kubeadm.files.kubelet" }}
-{{- if and $.Values.providerIntegration.kubeadmConfig $.Values.providerIntegration.kubeadmConfig.kubelet }}
-- path: /opt/kubelet-config.sh
+- path: /etc/kubelet-configuration.yaml
   permissions: "0700"
   encoding: base64
-  content: {{ tpl ($.Files.Get "files/opt/kubelet-config.sh") . | b64enc }}
-{{- if $.Values.providerIntegration.kubeadmConfig.kubelet.gracefulNodeShutdown }}
+  content: {{ tpl ($.Files.Get "files/etc/kubelet-configuration.yaml") . | b64enc }}
 - path: /etc/systemd/logind.conf.d/zzz-kubelet-graceful-shutdown.conf
   permissions: "0700"
   encoding: base64
   content: {{ $.Files.Get "files/etc/systemd/logind.conf.d/zzz-kubelet-graceful-shutdown.conf" | b64enc }}
-{{- end }}
-{{- end }}
 {{- end }}
 
 {{- define "cluster.internal.kubeadm.files.proxy" }}

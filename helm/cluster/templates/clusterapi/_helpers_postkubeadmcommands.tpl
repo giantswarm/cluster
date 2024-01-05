@@ -4,12 +4,7 @@
     commands specified in Helm values field .Values.providerIntegration.kubeadmConfig.postKubeadmCommands.
 */}}
 {{- define "cluster.internal.kubeadm.postKubeadmCommands" }}
-{{- include "cluster.internal.kubeadm.postKubeadmCommands.kubelet" $ }}
 {{- include "cluster.internal.kubeadm.postKubeadmCommands.custom" $ }}
-{{- end }}
-
-{{- define "cluster.internal.kubeadm.postKubeadmCommands.kubelet" }}
-- /bin/sh /opt/kubelet-config.sh
 {{- end }}
 
 {{- define "cluster.internal.kubeadm.postKubeadmCommands.custom" }}
