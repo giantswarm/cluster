@@ -17,7 +17,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Support longer node pool names and allow dashes (ported from https://github.com/giantswarm/cluster-aws/pull/429).
 - Use KubeletConfiguration file instead of a bash script (ported from https://github.com/giantswarm/cluster-aws/pull/427).
-- Update kubernetes version to v1.24.16.
+- Update kubernetes version to 1.24.16.
+- Enable Teleport by default.
+- Update Teleport version to 14.1.3.
 
 ## [0.1.2] - 2023-12-26
 
