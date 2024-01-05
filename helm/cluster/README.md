@@ -194,7 +194,6 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.components.containerd.sandboxContainerImage.name` | **Repository**|**Type:** `string`<br/>**Default:** `"giantswarm/pause"`|
 | `providerIntegration.components.containerd.sandboxContainerImage.registry` | **Registry**|**Type:** `string`<br/>**Default:** `"quay.io"`|
 | `providerIntegration.components.containerd.sandboxContainerImage.tag` | **Tag**|**Type:** `string`<br/>**Default:** `"3.9"`|
-| `providerIntegration.components.kubelet` | **Kubelet** - Kubelet configuration that is used on all nodes.||
 | `providerIntegration.components.systemd` | **systemd**||
 | `providerIntegration.connectivity` | **Connectivity** - Internal connectivity configuration.|**Type:** `object`<br/>|
 | `providerIntegration.connectivity.sshSsoPublicKey` | **SSH public key for single sign-on**|**Type:** `string`<br/>**Default:** `"ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM4cvZ01fLmO9cJbWUj7sfF+NhECgy+Cl0bazSrZX7sU vault-ca@vault.operations.giantswarm.io"`|

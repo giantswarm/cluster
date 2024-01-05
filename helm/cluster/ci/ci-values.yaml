@@ -200,10 +200,6 @@ providerIntegration:
         kind: AWSMachineTemplate
       infrastructureMachineTemplateSpecTemplateName: "cluster.internal.test.controlPlane.machineTemplate.spec"
   components:
-    kubelet:
-      gracefulNodeShutdown:
-        shutdownGracePeriod: 5m
-        shutdownGracePeriodCriticalPods: 1m
     systemd:
       timesyncd:
         npt:

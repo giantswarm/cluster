@@ -1114,40 +1114,6 @@
                                 }
                             }
                         },
-                        "kubelet": {
-                            "title": "Kubelet",
-                            "description": "Kubelet configuration that is used on all nodes.",
-                            "default": null,
-                            "oneOf": [
-                                {
-                                    "type": "null"
-                                },
-                                {
-                                    "type": "object",
-                                    "additionalProperties": false,
-                                    "properties": {
-                                        "gracefulNodeShutdown": {
-                                            "type": "object",
-                                            "title": "Graceful node shut down",
-                                            "description": "It enables kubelet to gracefully evict pods during a node shutdown. It is enabled by default in Kubernetes 1.21.",
-                                            "additionalProperties": false,
-                                            "properties": {
-                                                "shutdownGracePeriod": {
-                                                    "type": "string",
-                                                    "title": "Shutdown grace period",
-                                                    "description": "Specifies the total duration that the node should delay the shutdown by. This is the total grace period for pod termination for both regular and critical pods."
-                                                },
-                                                "shutdownGracePeriodCriticalPods": {
-                                                    "type": "string",
-                                                    "title": "Shutdown grace period for critical pods",
-                                                    "description": "Specifies the duration used to terminate critical pods during a node shutdown. This should be less than shutdownGracePeriod."
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            ]
-                        },
                         "systemd": {
                             "title": "systemd",
                             "default": null,
