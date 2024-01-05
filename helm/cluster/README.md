@@ -353,9 +353,9 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.resourcesApi.machineHealthCheckResourceEnabled` | **MachineHealthCheck resource enabled** - Flag that indicates if the MachineHealthCheck resource is enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.|**Type:** `boolean`<br/>**Default:** `true`|
 | `providerIntegration.resourcesApi.machinePoolResourcesEnabled` | **Machine pool resources enabled** - Flag that indicates if the machine pool resources are enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.|**Type:** `boolean`<br/>**Default:** `true`|
 | `providerIntegration.teleport` | **Teleport**|**Type:** `object`<br/>|
-| `providerIntegration.teleport.enabled` | **Enable teleport**|**Type:** `boolean`<br/>**Default:** `false`|
-| `providerIntegration.teleport.proxyAddr` | **Teleport proxy address**|**Type:** `string`<br/>**Default:** `"test.teleport.giantswarm.io:443"`|
-| `providerIntegration.teleport.version` | **Teleport version**|**Type:** `string`<br/>**Default:** `"13.3.8"`|
+| `providerIntegration.teleport.enabled` | **Enable teleport**|**Type:** `boolean`<br/>**Default:** `true`|
+| `providerIntegration.teleport.proxyAddr` | **Teleport proxy address**|**Type:** `string`<br/>**Default:** `"teleport.giantswarm.io:443"`|
+| `providerIntegration.teleport.version` | **Teleport version**|**Type:** `string`<br/>**Default:** `"14.1.3"`|
 | `providerIntegration.workers` | **Internal workers configuration**|**Type:** `object`<br/>|
 | `providerIntegration.workers.kubeadmConfig` | **Kubeadm config** - Configuration of workers nodes.|**Type:** `object`<br/>|
 | `providerIntegration.workers.kubeadmConfig.files` | **Files** - These are the files that are included on worker nodes.|**Type:** `array`<br/>|
