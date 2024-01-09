@@ -140,7 +140,7 @@
                                 "storage": {
                                     "type": "object",
                                     "title": "Storage",
-                                    "description": "It describes the desired state of the system’s storage devices.",
+                                    "description": "It describes the desired state of the system\u2019s storage devices.",
                                     "properties": {
                                         "directories": {
                                             "type": "array",
@@ -179,7 +179,7 @@
                                                     "mode": {
                                                         "type": "integer",
                                                         "title": "Mode",
-                                                        "description": "The directory’s permission mode."
+                                                        "description": "The directory\u2019s permission mode."
                                                     },
                                                     "overwrite": {
                                                         "type": "boolean",
@@ -194,7 +194,7 @@
                                                     "user": {
                                                         "type": "object",
                                                         "title": "User",
-                                                        "description": "It specifies the directory’s owner.",
+                                                        "description": "It specifies the directory\u2019s owner.",
                                                         "properties": {
                                                             "id": {
                                                                 "type": "integer",
@@ -214,11 +214,11 @@
                                         "filesystems": {
                                             "type": "array",
                                             "title": "File systems",
-                                            "description": "The list of filesystems to be configured and/or used in the “files” section. Either “mount” or “path” needs to be specified.",
+                                            "description": "The list of filesystems to be configured and/or used in the \u201cfiles\u201d section. Either \u201cmount\u201d or \u201cpath\u201d needs to be specified.",
                                             "items": {
                                                 "type": "object",
                                                 "title": "File system",
-                                                "description": "The filesystem to be configured and/or used in the “files” section. Either “mount” or “path” needs to be specified.",
+                                                "description": "The filesystem to be configured and/or used in the \u201cfiles\u201d section. Either \u201cmount\u201d or \u201cpath\u201d needs to be specified.",
                                                 "properties": {
                                                     "mount": {
                                                         "type": "object",
@@ -267,19 +267,19 @@
                                                             "wipeFilesystem": {
                                                                 "type": "boolean",
                                                                 "title": "Wipe filesystem",
-                                                                "description": "Whether or not to wipe the device before filesystem creation, see Ignition’s documentation on filesystems for more information https://github.com/coreos/ignition/blob/main/docs/operator-notes.md#filesystem-reuse-semantics."
+                                                                "description": "Whether or not to wipe the device before filesystem creation, see Ignition\u2019s documentation on filesystems for more information https://github.com/coreos/ignition/blob/main/docs/operator-notes.md#filesystem-reuse-semantics."
                                                             }
                                                         }
                                                     },
                                                     "name": {
                                                         "type": "string",
                                                         "title": "Name",
-                                                        "description": "The identifier for the filesystem, internal to Ignition. This is only required if the filesystem needs to be referenced in the “files” section."
+                                                        "description": "The identifier for the filesystem, internal to Ignition. This is only required if the filesystem needs to be referenced in the \u201cfiles\u201d section."
                                                     },
                                                     "path": {
                                                         "type": "string",
                                                         "title": "Path",
-                                                        "description": "The mount-point of the filesystem. A non-null entry indicates that the filesystem has already been mounted by the system at the specified path. This is really only useful for “/sysroot”."
+                                                        "description": "The mount-point of the filesystem. A non-null entry indicates that the filesystem has already been mounted by the system at the specified path. This is really only useful for \u201c/sysroot\u201d."
                                                     }
                                                 }
                                             }
@@ -540,7 +540,7 @@
                             "name": {
                                 "type": "string",
                                 "title": "Name",
-                                "description": "The name of the drop-in. This must be suffixed with “.conf”",
+                                "description": "The name of the drop-in. This must be suffixed with \u201c.conf\u201d",
                                 "pattern": "^.+\\.conf$"
                             }
                         }
@@ -559,7 +559,7 @@
                 "name": {
                     "type": "string",
                     "title": "Name",
-                    "description": "The name of the unit. This must be suffixed with a valid unit type (e.g. “thing.service”)."
+                    "description": "The name of the unit. This must be suffixed with a valid unit type (e.g. \u201cthing.service\u201d)."
                 }
             }
         }
@@ -792,6 +792,14 @@
                         "replicas"
                     ],
                     "properties": {
+                        "apiServerPort": {
+                            "type": "integer",
+                            "title": "API server port",
+                            "description": "The public facing API server Load Balancer port.",
+                            "default": 6443,
+                            "minimum": 0,
+                            "maximum": 65535
+                        },
                         "customNodeTaints": {
                             "$ref": "#/$defs/customNodeTaints"
                         },
@@ -931,6 +939,7 @@
                             }
                         },
                         "name": {
+
                             "type": "string",
                             "title": "Cluster name",
                             "description": "Unique identifier, cannot be changed after creation.",
@@ -1268,6 +1277,7 @@
                                                 "additionalAdmissionPlugins": {
                                                     "type": "array",
                                                     "title": "Additional admission plugins",
+
                                                     "description": "A list of plugins to enable, in addition to the default ones that include DefaultStorageClass, DefaultTolerationSeconds, LimitRanger, MutatingAdmissionWebhook, NamespaceLifecycle, PersistentVolumeClaimResize, Priority, ResourceQuota, ServiceAccount and ValidatingAdmissionWebhook.",
                                                     "items": {
                                                         "type": "string",
@@ -1750,3 +1760,4 @@
         }
     }
 }
+
