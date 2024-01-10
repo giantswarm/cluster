@@ -12,6 +12,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Enable using cgroupv1 (ported from https://github.com/giantswarm/cluster-aws/pull/410).
+- Add systemd unit for OS hardening (ported from cluster-aws).
+- Add systemd units for preventing in-place Flatcar OS updates (ported from cluster-aws).
+- Add systemd unit for configuring kubeadm service (ported from cluster-aws).
+- Add systemd unit for configuring containerd service (ported from cluster-aws).
+- Add systemd unit for configuring audit-rules service (ported from cluster-aws).
 
 ### Changed
 
