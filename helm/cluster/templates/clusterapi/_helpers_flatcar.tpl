@@ -104,7 +104,7 @@
     ExecStart=/usr/sbin/sysctl -p /etc/sysctl.d/hardening.conf
     [Install]
     WantedBy=multi-user.target
-{{-/*
+{{- /*
   Mask Flatcar's update-engine and locksmithd services, which are ussed for OS
   upgrades (update-engine is responsible for downloading and applying the
   updates, and locksmithd is the default reboot manager).
