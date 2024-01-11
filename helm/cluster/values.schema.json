@@ -455,9 +455,71 @@
             "additionalProperties": false,
             "properties": {
                 "contents": {
-                    "type": "string",
+                    "type": "object",
                     "title": "Contents",
-                    "description": "The contents of the unit."
+                    "description": "The contents of the unit.",
+                    "properties": {
+                        "install": {
+                            "type": "object",
+                            "title": "Install",
+                            "description": "Configuration of the [Install] section.",
+                            "additionalProperties": false,
+                            "properties": {
+                                "wantedBy": {
+                                    "type": "array",
+                                    "title": "WantedBy",
+                                    "description": "Units with (weak) requirement dependencies on this unit.",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        },
+                        "mount": {
+                            "type": "object",
+                            "title": "Mount",
+                            "description": "Configuration of the [Mount] section.",
+                            "additionalProperties": false,
+                            "properties": {
+                                "type": {
+                                    "type": "string",
+                                    "title": "Type",
+                                    "description": "A file system type to mount."
+                                },
+                                "what": {
+                                    "type": "string",
+                                    "title": "What",
+                                    "description": "An absolute path of a device node, file or other resource to mount."
+                                },
+                                "where": {
+                                    "type": "string",
+                                    "title": "Where",
+                                    "description": "An absolute path of a file or directory for the mount point; in particular, the destination cannot be a symbolic link."
+                                }
+                            }
+                        },
+                        "unit": {
+                            "type": "object",
+                            "title": "Unit",
+                            "description": "Configuration of the [Unit] section.",
+                            "required": [
+                                "description"
+                            ],
+                            "additionalProperties": false,
+                            "properties": {
+                                "description": {
+                                    "type": "string",
+                                    "title": "Description",
+                                    "description": "systemd unit description."
+                                },
+                                "defaultDependencies": {
+                                    "type": "boolean",
+                                    "title": "DefaultDependencies",
+                                    "description": "Flag that indicates if this systemd unit should have the default systemd unit dependencies."
+                                }
+                            }
+                        }
+                    }
                 },
                 "dropins": {
                     "type": "array",

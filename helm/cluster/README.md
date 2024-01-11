@@ -176,7 +176,17 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd` | **systemd** - It describes the desired state of the systemd units.|**Type:** `object`<br/>|
 | `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units` | **Units**|**Type:** `array`<br/>|
 | `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*]` | **systemd unit**|**Type:** `object`<br/>|
-| `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents` | **Contents** - The contents of the unit.|**Type:** `string`<br/>|
+| `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents` | **Contents** - The contents of the unit.|**Type:** `object`<br/>|
+| `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.install` | **Install** - Configuration of the [Install] section.|**Type:** `object`<br/>|
+| `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.install.wantedBy` | **WantedBy** - Units with (weak) requirement dependencies on this unit.|**Type:** `array`<br/>|
+| `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.install.wantedBy[*]` |**None**|**Type:** `string`<br/>|
+| `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.mount` | **Mount** - Configuration of the [Mount] section.|**Type:** `object`<br/>|
+| `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.mount.type` | **Type** - A file system type to mount.|**Type:** `string`<br/>|
+| `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.mount.what` | **What** - An absolute path of a device node, file or other resource to mount.|**Type:** `string`<br/>|
+| `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.mount.where` | **Where** - An absolute path of a file or directory for the mount point; in particular, the destination cannot be a symbolic link.|**Type:** `string`<br/>|
+| `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit` | **Unit** - Configuration of the [Unit] section.|**Type:** `object`<br/>|
+| `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.defaultDependencies` | **DefaultDependencies** - Flag that indicates if this systemd unit should have the default systemd unit dependencies.|**Type:** `boolean`<br/>|
+| `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.description` | **Description** - systemd unit description.|**Type:** `string`<br/>|
 | `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].dropins` | **Unit drop-ins** - The list of drop-ins for the unit|**Type:** `array`<br/>|
 | `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].dropins[*]` | **Unit drop-in**|**Type:** `object`<br/>|
 | `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].dropins[*].contents` | **Contents** - The contents of the drop-in.|**Type:** `string`<br/>|
@@ -258,7 +268,17 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd` | **systemd** - It describes the desired state of the systemd units.|**Type:** `object`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units` | **Units**|**Type:** `array`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*]` | **systemd unit**|**Type:** `object`<br/>|
-| `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents` | **Contents** - The contents of the unit.|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents` | **Contents** - The contents of the unit.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.install` | **Install** - Configuration of the [Install] section.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.install.wantedBy` | **WantedBy** - Units with (weak) requirement dependencies on this unit.|**Type:** `array`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.install.wantedBy[*]` |**None**|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.mount` | **Mount** - Configuration of the [Mount] section.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.mount.type` | **Type** - A file system type to mount.|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.mount.what` | **What** - An absolute path of a device node, file or other resource to mount.|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.mount.where` | **Where** - An absolute path of a file or directory for the mount point; in particular, the destination cannot be a symbolic link.|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit` | **Unit** - Configuration of the [Unit] section.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.defaultDependencies` | **DefaultDependencies** - Flag that indicates if this systemd unit should have the default systemd unit dependencies.|**Type:** `boolean`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.description` | **Description** - systemd unit description.|**Type:** `string`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].dropins` | **Unit drop-ins** - The list of drop-ins for the unit|**Type:** `array`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].dropins[*]` | **Unit drop-in**|**Type:** `object`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].dropins[*].contents` | **Contents** - The contents of the drop-in.|**Type:** `string`<br/>|
@@ -325,7 +345,17 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd` | **systemd** - It describes the desired state of the systemd units.|**Type:** `object`<br/>|
 | `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units` | **Units**|**Type:** `array`<br/>|
 | `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*]` | **systemd unit**|**Type:** `object`<br/>|
-| `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents` | **Contents** - The contents of the unit.|**Type:** `string`<br/>|
+| `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents` | **Contents** - The contents of the unit.|**Type:** `object`<br/>|
+| `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.install` | **Install** - Configuration of the [Install] section.|**Type:** `object`<br/>|
+| `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.install.wantedBy` | **WantedBy** - Units with (weak) requirement dependencies on this unit.|**Type:** `array`<br/>|
+| `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.install.wantedBy[*]` |**None**|**Type:** `string`<br/>|
+| `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.mount` | **Mount** - Configuration of the [Mount] section.|**Type:** `object`<br/>|
+| `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.mount.type` | **Type** - A file system type to mount.|**Type:** `string`<br/>|
+| `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.mount.what` | **What** - An absolute path of a device node, file or other resource to mount.|**Type:** `string`<br/>|
+| `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.mount.where` | **Where** - An absolute path of a file or directory for the mount point; in particular, the destination cannot be a symbolic link.|**Type:** `string`<br/>|
+| `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit` | **Unit** - Configuration of the [Unit] section.|**Type:** `object`<br/>|
+| `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.defaultDependencies` | **DefaultDependencies** - Flag that indicates if this systemd unit should have the default systemd unit dependencies.|**Type:** `boolean`<br/>|
+| `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.description` | **Description** - systemd unit description.|**Type:** `string`<br/>|
 | `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].dropins` | **Unit drop-ins** - The list of drop-ins for the unit|**Type:** `array`<br/>|
 | `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].dropins[*]` | **Unit drop-in**|**Type:** `object`<br/>|
 | `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].dropins[*].contents` | **Contents** - The contents of the drop-in.|**Type:** `string`<br/>|
@@ -397,7 +427,17 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd` | **systemd** - It describes the desired state of the systemd units.|**Type:** `object`<br/>|
 | `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units` | **Units**|**Type:** `array`<br/>|
 | `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*]` | **systemd unit**|**Type:** `object`<br/>|
-| `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents` | **Contents** - The contents of the unit.|**Type:** `string`<br/>|
+| `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents` | **Contents** - The contents of the unit.|**Type:** `object`<br/>|
+| `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.install` | **Install** - Configuration of the [Install] section.|**Type:** `object`<br/>|
+| `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.install.wantedBy` | **WantedBy** - Units with (weak) requirement dependencies on this unit.|**Type:** `array`<br/>|
+| `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.install.wantedBy[*]` |**None**|**Type:** `string`<br/>|
+| `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.mount` | **Mount** - Configuration of the [Mount] section.|**Type:** `object`<br/>|
+| `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.mount.type` | **Type** - A file system type to mount.|**Type:** `string`<br/>|
+| `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.mount.what` | **What** - An absolute path of a device node, file or other resource to mount.|**Type:** `string`<br/>|
+| `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.mount.where` | **Where** - An absolute path of a file or directory for the mount point; in particular, the destination cannot be a symbolic link.|**Type:** `string`<br/>|
+| `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit` | **Unit** - Configuration of the [Unit] section.|**Type:** `object`<br/>|
+| `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.defaultDependencies` | **DefaultDependencies** - Flag that indicates if this systemd unit should have the default systemd unit dependencies.|**Type:** `boolean`<br/>|
+| `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.description` | **Description** - systemd unit description.|**Type:** `string`<br/>|
 | `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].dropins` | **Unit drop-ins** - The list of drop-ins for the unit|**Type:** `array`<br/>|
 | `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].dropins[*]` | **Unit drop-in**|**Type:** `object`<br/>|
 | `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].dropins[*].contents` | **Contents** - The contents of the drop-in.|**Type:** `string`<br/>|

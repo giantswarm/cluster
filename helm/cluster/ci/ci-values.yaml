@@ -76,8 +76,9 @@ providerIntegration:
               - name: example1-bastion.service
                 enabled: false
                 mask: false
-                contents: |
-                  # Contents goes here
+                contents:
+                  unit:
+                    description: "Bastion example 1"
                 dropins:
                 - name: hello-bastion.conf
                   contents: |
@@ -132,21 +133,23 @@ providerIntegration:
           additionalConfig:
             systemd:
               units:
-              - name: example1-control-plane.service
-                enabled: false
+              - name: var-lib-etcd.mount
+                enabled: true
                 mask: false
-                contents: |
-                  # Contents goes here
-                dropins:
-                - name: hello.conf
-                  contents: |
-                    # Contents goes here
+                contents:
+                  unit:
+                    description: etcd volume
+                    defaultDependencies: false
+                  install:
+                    wantedBy:
+                    - local-fs-pre.target
+                  mount:
+                    what: /dev/disk/by-label/etcd
+                    where: /var/lib/etcd
+                    type: xfs
               - name: example2-control-plane.service
                 enabled: false
                 mask: false
-                contents: |
-                  # Multi-line
-                  # contents goes here
                 dropins:
                 - name: hello1-control-plane.conf
                   contents: |
@@ -218,34 +221,37 @@ providerIntegration:
         additionalConfig:
           systemd:
             units:
-            - name: kubeadm.service
-              dropins:
-              - name: 10-flatcar.conf
-                contents: |
-                  [Unit]
-                  # kubeadm must run after coreos-metadata populated /run/metadata directory.
-                  Requires=coreos-metadata.service
-                  After=coreos-metadata.service
-                  [Service]
-                  # Ensure kubeadm service has access to kubeadm binary in /opt/bin on Flatcar.
-                  Environment=PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/opt/bin
-                  # To make metadata environment variables available for pre-kubeadm commands.
-                  EnvironmentFile=/run/metadata/*
-            - name: example1.service
-              enabled: false
+            - name: var-lib-kubelet.mount
+              enabled: true
               mask: false
-              contents: |
-                # Contents goes here
-              dropins:
-              - name: hello.conf
-                contents: |
-                  # Contents goes here
+              contents:
+                unit:
+                  description: kubelet volume
+                  defaultDependencies: false
+                install:
+                  wantedBy:
+                  - local-fs-pre.target
+                mount:
+                  what: /dev/disk/by-label/kubelet
+                  where: /var/lib/kubelet
+                  type: xfs
+            - name: var-lib-containerd.mount
+              enabled: true
+              mask: false
+              contents:
+                unit:
+                  description: containerd volume
+                  defaultDependencies: false
+                install:
+                  wantedBy:
+                  - local-fs-pre.target
+                mount:
+                  what: /dev/disk/by-label/containerd
+                  where: /var/lib/containerd
+                  type: xfs
             - name: example2.service
               enabled: false
               mask: false
-              contents: |
-                # Multi-line
-                # contents goes here
               dropins:
               - name: hello1.conf
                 contents: |
@@ -315,21 +321,23 @@ providerIntegration:
           additionalConfig:
             systemd:
               units:
-              - name: example1-workers.service
-                enabled: false
+              - name: var-lib-workload.mount
+                enabled: true
                 mask: false
-                contents: |
-                  # Contents goes here
-                dropins:
-                - name: hello.conf
-                  contents: |
-                    # Contents goes here
+                contents:
+                  unit:
+                    description: workload volume
+                    defaultDependencies: false
+                  install:
+                    wantedBy:
+                    - local-fs-pre.target
+                  mount:
+                    what: /dev/disk/by-label/workload
+                    where: /var/lib/workload
+                    type: xfs
               - name: example2-workers.service
                 enabled: false
                 mask: false
-                contents: |
-                  # Multi-line
-                  # contents goes here
                 dropins:
                 - name: hello1-workers.conf
                   contents: |

@@ -15,7 +15,27 @@
   {{- end }}
   {{- if .contents }}
   contents: |
-    {{- .contents | trim | nindent 4 }}
+    {{- if .contents.unit }}
+    [Unit]
+    Description={{ .contents.unit.description }}
+    {{- if hasKey .contents.unit "defaultDependencies" }}
+    DefaultDependencies={{ if .contents.unit.defaultDependencies }}yes{{ else }}no{{ end }}
+    {{- end }}
+    {{- end }}
+    {{- if .contents.install }}
+    [Install]
+    {{- range $wantedBy := .contents.install.wantedBy }}
+    WantedBy={{ $wantedBy }}
+    {{- end }}
+    {{- end }}
+    {{- if .contents.mount }}
+    [Mount]
+    What={{ .contents.mount.what }}
+    Where={{ .contents.mount.where }}
+    {{- if .contents.mount.type }}
+    Type={{ .contents.mount.type }}
+    {{- end }}
+    {{- end }}
   {{- end }}
   {{- if .dropins }}
   dropins:
