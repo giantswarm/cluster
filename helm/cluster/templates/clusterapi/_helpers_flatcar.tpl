@@ -22,18 +22,18 @@
     DefaultDependencies={{ if .contents.unit.defaultDependencies }}yes{{ else }}no{{ end }}
     {{- end }}
     {{- end }}
-    {{- if .contents.install }}
-    [Install]
-    {{- range $wantedBy := .contents.install.wantedBy }}
-    WantedBy={{ $wantedBy }}
-    {{- end }}
-    {{- end }}
     {{- if .contents.mount }}
     [Mount]
     What={{ .contents.mount.what }}
     Where={{ .contents.mount.where }}
     {{- if .contents.mount.type }}
     Type={{ .contents.mount.type }}
+    {{- end }}
+    {{- end }}
+    {{- if .contents.install }}
+    [Install]
+    {{- range $wantedBy := .contents.install.wantedBy }}
+    WantedBy={{ $wantedBy }}
     {{- end }}
     {{- end }}
   {{- end }}
