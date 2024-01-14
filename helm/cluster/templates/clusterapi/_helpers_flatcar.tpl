@@ -57,7 +57,7 @@
   mount:
     device: {{ .mount.device }}
     format: {{ .mount.format }}
-    {{- if hasKey . "wipeFilesystem" }}
+    {{- if hasKey .mount "wipeFilesystem" }}
     wipeFilesystem: {{ .mount.wipeFilesystem }}
     {{- end }}
     {{- if .mount.label }}
