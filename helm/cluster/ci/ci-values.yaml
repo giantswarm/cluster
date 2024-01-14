@@ -273,8 +273,6 @@ providerIntegration:
               group:
                 id: 23456
                 name: giantswarm
-            - path: /var/lib/kubelet
-              mode: 750
     preKubeadmCommands:
     - echo "hello all nodes before kubeadm"
     - echo "all cluster nodes before kubeadm"

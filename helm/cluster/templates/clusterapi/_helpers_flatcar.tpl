@@ -194,3 +194,14 @@
     WantedBy=multi-user.target
 {{- end }}
 {{- end }}
+
+{{/* Default directories on all nodes */}}
+{{- define "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.storage.directorties.default" }}
+{{- include "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.storage.directorties.kubernetes" $ }}
+{{- end }}
+
+{{/* Kubernetes components directories on all nodes */}}
+{{- define "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.storage.directorties.kubernetes" }}
+- path: /var/lib/kubelet
+  mode: 0750
+{{- end }}

@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add systemd unit for configuring containerd service (ported from cluster-aws).
 - Add systemd unit for configuring audit-rules service (ported from cluster-aws).
 - Add missing kubelet configuration to align it with vintage config (ported from https://github.com/giantswarm/cluster-aws/pull/468).
+- Add /var/lib/kubelet as a default directory on all nodes. 
 
 ### Changed
 
