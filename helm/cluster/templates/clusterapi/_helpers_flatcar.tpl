@@ -1,7 +1,7 @@
 {{- define "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units.default" }}
 {{- include "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units.os" $ }}
-{{- include "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units.kubernetes" $ }}
 {{- include "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units.teleport" $ }}
+{{- include "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units.kubernetes" $ }}
 {{- end }}
 
 {{- define "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units" }}
@@ -183,7 +183,6 @@
     [Unit]
     Description=Teleport Service
     After=network.target
-
     [Service]
     Type=simple
     Restart=on-failure
@@ -191,7 +190,6 @@
     ExecReload=/bin/kill -HUP $MAINPID
     PIDFile=/run/teleport.pid
     LimitNOFILE=524288
-
     [Install]
     WantedBy=multi-user.target
 {{- end }}
