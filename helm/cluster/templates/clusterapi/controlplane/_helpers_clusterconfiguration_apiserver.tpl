@@ -47,6 +47,7 @@ extraArgs:
   service-account-issuer: "{{ include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.serviceAccountIssuer" $ }}"
   {{- end }}
   service-account-lookup: "true"
+  service-cluster-ip-range: {{ .Values.global.connectivity.network.services.cidrBlocks | first }}
   tls-cipher-suites: {{ include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.tlsCipherSuites" $ }}
   {{- range $argName, $argValue := ((($.Values.providerIntegration.controlPlane.kubeadmConfig).clusterConfiguration).apiServer).extraArgs }}
   {{ $argName }}: {{ if kindIs "string" $argValue }}{{ $argValue | quote }}{{ else }}{{ $argValue }}{{ end }}
