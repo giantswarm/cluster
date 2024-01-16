@@ -1291,7 +1291,8 @@
                             "type": "integer"
 =======
                             "type": "integer",
-                            "title": "The public facing API server Load Balancer port.",
+                            "title": "API server port",
+                            "description": "The public facing API server Load Balancer port.",
                             "default": 6443
                         },
                         "customNodeTaints": {
