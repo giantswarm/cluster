@@ -772,23 +772,9 @@
                                     "description": "To be passed to the HTTPS_PROXY environment variable in all hosts."
                                 },
                                 "noProxy": {
-                                    "type": "object",
+                                    "type": "string",
                                     "title": "No proxy",
-                                    "properties": {
-                                        "addresses": {
-                                            "type": "array",
-                                            "title": "Addresses",
-                                            "description": "To be passed to the NO_PROXY environment variable in all hosts.",
-                                            "items": {
-                                                "type": "string"
-                                            }
-                                        },
-                                        "addressesTemplate": {
-                                            "type": "string",
-                                            "title": "Addresses template",
-                                            "description": "Name of Helm template that renders a YAML array with NO_PROXY addresses."
-                                        }
-                                    }
+                                    "description": "Comma-separated addresses to be passed to the NO_PROXY environment variable in all hosts."
                                 }
                             },
                             "default": {
@@ -1213,11 +1199,34 @@
                     "type": "object",
                     "title": "Connectivity",
                     "description": "Internal connectivity configuration.",
-                    "required": [
-                        "sshSsoPublicKey"
-                    ],
                     "additionalProperties": false,
                     "properties": {
+                        "proxy": {
+                            "type": "object",
+                            "title": "Proxy",
+                            "description": "Whether/how outgoing traffic is routed through proxy servers.",
+                            "properties": {
+                                "noProxy": {
+                                    "type": "object",
+                                    "title": "No proxy",
+                                    "properties": {
+                                        "addresses": {
+                                            "type": "array",
+                                            "title": "Addresses",
+                                            "description": "To be passed to the NO_PROXY environment variable in all hosts.",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "addressesTemplate": {
+                                            "type": "string",
+                                            "title": "Addresses template",
+                                            "description": "Name of Helm template that renders a YAML array with NO_PROXY addresses."
+                                        }
+                                    }
+                                }
+                            }
+                        },
                         "sshSsoPublicKey": {
                             "type": "string",
                             "title": "SSH public key for single sign-on",

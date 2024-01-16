@@ -58,10 +58,7 @@ Configuration of connectivity and networking options.
 | `global.connectivity.proxy.enabled` | **Enable**|**Type:** `boolean`<br/>|
 | `global.connectivity.proxy.httpProxy` | **HTTP proxy** - To be passed to the HTTP_PROXY environment variable in all hosts.|**Type:** `string`<br/>|
 | `global.connectivity.proxy.httpsProxy` | **HTTPS proxy** - To be passed to the HTTPS_PROXY environment variable in all hosts.|**Type:** `string`<br/>|
-| `global.connectivity.proxy.noProxy` | **No proxy**|**Type:** `object`<br/>|
-| `global.connectivity.proxy.noProxy.addresses` | **Addresses** - To be passed to the NO_PROXY environment variable in all hosts.|**Type:** `array`<br/>|
-| `global.connectivity.proxy.noProxy.addressesTemplate` | **Addresses template** - Name of Helm template that renders a YAML array with NO_PROXY addresses.|**Type:** `string`<br/>|
-| `global.connectivity.proxy.noProxy.addresses[*]` |**None**|**Type:** `string`<br/>|
+| `global.connectivity.proxy.noProxy` | **No proxy** - Comma-separated addresses to be passed to the NO_PROXY environment variable in all hosts.|**Type:** `string`<br/>|
 
 ### Control plane
 Properties within the `.global.controlPlane` object
@@ -206,6 +203,11 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.components.containerd.sandboxContainerImage.tag` | **Tag**|**Type:** `string`<br/>**Default:** `"3.9"`|
 | `providerIntegration.components.systemd` | **systemd**||
 | `providerIntegration.connectivity` | **Connectivity** - Internal connectivity configuration.|**Type:** `object`<br/>|
+| `providerIntegration.connectivity.proxy` | **Proxy** - Whether/how outgoing traffic is routed through proxy servers.|**Type:** `object`<br/>|
+| `providerIntegration.connectivity.proxy.noProxy` | **No proxy**|**Type:** `object`<br/>|
+| `providerIntegration.connectivity.proxy.noProxy.addresses` | **Addresses** - To be passed to the NO_PROXY environment variable in all hosts.|**Type:** `array`<br/>|
+| `providerIntegration.connectivity.proxy.noProxy.addressesTemplate` | **Addresses template** - Name of Helm template that renders a YAML array with NO_PROXY addresses.|**Type:** `string`<br/>|
+| `providerIntegration.connectivity.proxy.noProxy.addresses[*]` |**None**|**Type:** `string`<br/>|
 | `providerIntegration.connectivity.sshSsoPublicKey` | **SSH public key for single sign-on**|**Type:** `string`<br/>**Default:** `"ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM4cvZ01fLmO9cJbWUj7sfF+NhECgy+Cl0bazSrZX7sU vault-ca@vault.operations.giantswarm.io"`|
 | `providerIntegration.controlPlane` | **Internal control plane configuration**|**Type:** `object`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig` | **Kubeadm config** - Configuration of control plane nodes.|**Type:** `object`<br/>|

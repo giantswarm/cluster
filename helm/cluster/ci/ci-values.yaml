@@ -18,11 +18,7 @@ global:
       enabled: true
       httpProxy: http://proxy.giantswarm.io
       httpsProxy: https://proxy.giantswarm.io
-      noProxy:
-        addresses:
-        - elb.amazonaws.com
-        - 169.254.169.254
-        addressesTemplate: "cluster.test.internal.kubeadm.proxy.anotherNoProxyList"
+      noProxy: "proxy1.example.com,proxy2.example.com"
   controlPlane:
     customNodeTaints:
     - key: you
@@ -86,6 +82,13 @@ providerIntegration:
       preKubeadmCommands:
       - sleep infinity
   clusterAnnotationsTemplateName: "cluster.test.providerIntegration.connectivity.annotations"
+  connectivity:
+    proxy:
+      noProxy:
+        addresses:
+        - elb.amazonaws.com
+        - 169.254.169.254
+        addressesTemplate: "cluster.test.internal.kubeadm.proxy.anotherNoProxyList"
   controlPlane:
     kubeadmConfig:
       clusterConfiguration:
