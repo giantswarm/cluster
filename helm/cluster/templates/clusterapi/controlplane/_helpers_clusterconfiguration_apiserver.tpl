@@ -52,6 +52,22 @@ extraArgs:
   {{- range $argName, $argValue := ((($.Values.providerIntegration.controlPlane.kubeadmConfig).clusterConfiguration).apiServer).extraArgs }}
   {{ $argName }}: {{ if kindIs "string" $argValue }}{{ $argValue | quote }}{{ else }}{{ $argValue }}{{ end }}
   {{- end }}
+extraVolumes:
+- name: auditlog
+  hostPath: /var/log/apiserver
+  mountPath: /var/log/apiserver
+  readOnly: false
+  pathType: DirectoryOrCreate
+- name: policies
+  hostPath: /etc/kubernetes/policies
+  mountPath: /etc/kubernetes/policies
+  readOnly: false
+  pathType: DirectoryOrCreate
+- name: encryption
+  hostPath: /etc/kubernetes/encryption
+  mountPath: /etc/kubernetes/encryption
+  readOnly: false
+  pathType: DirectoryOrCreate
 {{- end }}
 
 {{- define "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.apiAudiences" }}
