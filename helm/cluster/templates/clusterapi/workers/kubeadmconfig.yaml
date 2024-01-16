@@ -36,8 +36,11 @@ spec:
   postKubeadmCommands:
   {{- $postKubeadmCommands | indent 2 }}
   {{- end }}
+  {{- $users := include "cluster.internal.kubeadm.users" $ }}
+  {{- if $users }}
   users:
-  {{- include "cluster.internal.kubeadm.users" $ | indent 2 }}
+  {{- $users | indent 2 }}
+  {{- end }}
   files:
   {{- include "cluster.internal.workers.kubeadm.files" $ | indent 2 }}
 ---

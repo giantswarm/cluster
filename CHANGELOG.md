@@ -30,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Enable Teleport by default.
 - Update Teleport version to 14.1.3.
 - Change JSON schema for systemd unit contents from string to object with explicitly defined fields.
+- Render all SSH config conditionally behind a bastion flag.
 
 ## [0.1.2] - 2023-12-26
 

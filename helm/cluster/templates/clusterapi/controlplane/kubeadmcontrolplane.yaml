@@ -52,8 +52,11 @@ spec:
     postKubeadmCommands:
     {{- $postKubeadmCommands | indent 4 }}
     {{- end }}
+    {{- $users := include "cluster.internal.kubeadm.users" $ }}
+    {{- if $users }}
     users:
-    {{- include "cluster.internal.kubeadm.users" $ | indent 4 }}
+    {{- $users | indent 4 }}
+    {{- end }}
   replicas: {{ .Values.global.controlPlane.replicas }}
   version: v{{ trimPrefix "v" .Values.providerIntegration.kubernetesVersion }}
 {{- end }}

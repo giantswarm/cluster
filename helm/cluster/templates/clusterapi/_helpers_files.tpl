@@ -37,6 +37,8 @@
 {{- end }}
 
 {{- define "cluster.internal.kubeadm.files.ssh" }}
+{{- if $.Values.providerIntegration.resourcesApi.bastionResourceEnabled }}
+{{- if .Values.global.connectivity.bastion.enabled }}
 - path: /etc/ssh/trusted-user-ca-keys.pem
   permissions: "0600"
   encoding: base64
@@ -45,6 +47,8 @@
   permissions: "0600"
   encoding: base64
   content: {{ $.Files.Get "files/etc/ssh/sshd_config" | b64enc }}
+{{- end }}
+{{- end }}
 {{- end }}
 
 {{- define "cluster.internal.kubeadm.files.cri" }}

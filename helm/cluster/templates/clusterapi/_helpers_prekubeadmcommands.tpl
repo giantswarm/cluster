@@ -18,7 +18,11 @@
 {{- end }}
 
 {{- define "cluster.internal.kubeadm.preKubeadmCommands.ssh" }}
+{{- if $.Values.providerIntegration.resourcesApi.bastionResourceEnabled }}
+{{- if .Values.global.connectivity.bastion.enabled }}
 - systemctl restart sshd
+{{- end }}
+{{- end }}
 {{- end }}
 
 {{- define "cluster.internal.kubeadm.preKubeadmCommands.proxy" }}
