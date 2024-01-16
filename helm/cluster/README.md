@@ -66,6 +66,7 @@ Configuration of the control plane.
 
 | **Property** | **Description** | **More Details** |
 | :----------- | :-------------- | :--------------- |
+| `global.controlPlane.apiServerPort` | **The public facing API server Load Balancer port.**|**Type:** `integer`<br/>|
 | `global.controlPlane.customNodeTaints` | **Custom node taints**|**Type:** `array`<br/>|
 | `global.controlPlane.customNodeTaints[*]` |**None**|**Type:** `object`<br/>|
 | `global.controlPlane.customNodeTaints[*].effect` | **Effect**|**Type:** `string`<br/>|

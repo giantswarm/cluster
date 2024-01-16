@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add `global.controlPlane.apiServerPort` value, configuring the Load Balancer port for the API
+
 ## [0.2.0] - 2024-01-17
 
 ### Added
