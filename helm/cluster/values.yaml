@@ -33,6 +33,8 @@ global:
   metadata:
     preventDeletion: false
     servicePriority: highest
+  podSecurityStandards:
+    enforced: false
 internal:
   advancedConfiguration:
     cgroupsv1: false
