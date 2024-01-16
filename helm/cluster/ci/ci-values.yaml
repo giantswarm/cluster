@@ -205,7 +205,7 @@ providerIntegration:
   components:
     systemd:
       timesyncd:
-        npt:
+        ntp:
         - 169.254.169.123
   hashSalt: salty-1
   kubeadmConfig:

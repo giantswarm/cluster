@@ -18,13 +18,11 @@
 {{- end }}
 
 {{- define "cluster.internal.kubeadm.files.systemd" }}
-{{- if and $.Values.providerIntegration.kubeadmConfig $.Values.providerIntegration.kubeadmConfig.systemd }}
-{{- if and $.Values.providerIntegration.kubeadmConfig $.Values.providerIntegration.kubeadmConfig.systemd.timesyncd }}
+{{- if ($.Values.providerIntegration.kubeadmConfig.systemd).timesyncd }}
 - path: /etc/systemd/timesyncd.conf
   permissions: "0644"
   encoding: base64
   content: {{ tpl ($.Files.Get "files/etc/systemd/timesyncd.conf") . | b64enc }}
-{{- end }}
 {{- end }}
 {{- end }}
 

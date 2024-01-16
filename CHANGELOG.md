@@ -32,6 +32,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Change JSON schema for systemd unit contents from string to object with explicitly defined fields.
 - Render all SSH config conditionally behind a bastion flag.
 
+### Fixed
+- Fixed rendering of timesyncd configuration.
+
 ## [0.1.2] - 2023-12-26
 
 ### Fixed
