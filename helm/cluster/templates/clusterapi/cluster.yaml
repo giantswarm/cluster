@@ -19,6 +19,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
 spec:
   clusterNetwork:
+    apiServerPort: {{ .Values.global.controlPlane.apiServerPort }}
     services:
       cidrBlocks:
       {{- toYaml $.Values.global.connectivity.network.services.cidrBlocks | nindent 8 }}

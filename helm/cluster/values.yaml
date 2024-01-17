@@ -21,6 +21,7 @@ global:
     proxy:
       enabled: false
   controlPlane:
+    apiServerPort: 6443
     machineHealthCheck:
       enabled: true
       maxUnhealthy: 40%

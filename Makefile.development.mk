@@ -3,7 +3,7 @@
 ##@ Generate
 
 ensure-schema-gen:
-	@helm schema-gen --help &>/dev/null || helm plugin install https://github.com/mihaisee/helm-schema-gen.git
+	@helm schema-gen --help >/dev/null || helm plugin install https://github.com/mihaisee/helm-schema-gen.git
 
 ##@ Build
 
