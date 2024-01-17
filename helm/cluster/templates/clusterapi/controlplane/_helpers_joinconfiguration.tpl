@@ -5,6 +5,9 @@ controlPlane:
     bindPort: {{ $.Values.providerIntegration.controlPlane.kubeadmConfig.localAPIEndpoint.bindPort }}
 nodeRegistration:
   kubeletExtraArgs:
+    {{- if $.Values.internal.advancedConfiguration.cgroupsv1 }}
+    cgroup-driver: cgroupfs
+    {{- end }}
     cloud-provider: external
     feature-gates: CronJobTimeZone=true
   name: ${COREOS_EC2_HOSTNAME}

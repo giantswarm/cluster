@@ -16,13 +16,20 @@
 {{- range $podsCidrBlock := $.Values.global.connectivity.network.pods.cidrBlocks }}
 {{- $noProxyList = append $noProxyList $podsCidrBlock -}}
 {{- end }}
-{{- /* Add custom NO_PROXY values */}}
-{{- range $noProxyAddress := $.Values.global.connectivity.proxy.noProxy.addresses }}
+{{- /* Add provider-specific NO_PROXY values */}}
+{{- range $noProxyAddress := $.Values.providerIntegration.connectivity.proxy.noProxy.addresses }}
 {{- $noProxyList = append $noProxyList $noProxyAddress -}}
 {{- end }}
-{{- /* Add custom NO_PROXY values from template */}}
-{{- if $.Values.global.connectivity.proxy.noProxy.addressesTemplate }}
-{{- range $noProxyAddress := include $.Values.global.connectivity.proxy.noProxy.addressesTemplate $ | fromYamlArray }}
+{{- /* Add provider-specific NO_PROXY values from template */}}
+{{- if $.Values.providerIntegration.connectivity.proxy.noProxy.addressesTemplate }}
+{{- range $noProxyAddress := include $.Values.providerIntegration.connectivity.proxy.noProxy.addressesTemplate $ | fromYamlArray }}
+{{- $noProxyList = append $noProxyList $noProxyAddress -}}
+{{- end }}
+{{- end }}
+{{- /* Add custom NO_PROXY values */}}
+{{- if $.Values.global.connectivity.proxy.noProxy }}
+{{- $customNoProxy := split "," $.Values.global.connectivity.proxy.noProxy }}
+{{- range $noProxyAddress := $customNoProxy }}
 {{- $noProxyList = append $noProxyList $noProxyAddress -}}
 {{- end }}
 {{- end }}

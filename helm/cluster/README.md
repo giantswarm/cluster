@@ -58,10 +58,7 @@ Configuration of connectivity and networking options.
 | `global.connectivity.proxy.enabled` | **Enable**|**Type:** `boolean`<br/>|
 | `global.connectivity.proxy.httpProxy` | **HTTP proxy** - To be passed to the HTTP_PROXY environment variable in all hosts.|**Type:** `string`<br/>|
 | `global.connectivity.proxy.httpsProxy` | **HTTPS proxy** - To be passed to the HTTPS_PROXY environment variable in all hosts.|**Type:** `string`<br/>|
-| `global.connectivity.proxy.noProxy` | **No proxy**|**Type:** `object`<br/>|
-| `global.connectivity.proxy.noProxy.addresses` | **Addresses** - To be passed to the NO_PROXY environment variable in all hosts.|**Type:** `array`<br/>|
-| `global.connectivity.proxy.noProxy.addressesTemplate` | **Addresses template** - Name of Helm template that renders a YAML array with NO_PROXY addresses.|**Type:** `string`<br/>|
-| `global.connectivity.proxy.noProxy.addresses[*]` |**None**|**Type:** `string`<br/>|
+| `global.connectivity.proxy.noProxy` | **No proxy** - Comma-separated addresses to be passed to the NO_PROXY environment variable in all hosts.|**Type:** `string`<br/>|
 
 ### Control plane
 Properties within the `.global.controlPlane` object
@@ -88,6 +85,15 @@ Configuration of the control plane.
 | `global.controlPlane.oidc.usernameClaim` | **Username claim**|**Type:** `string`<br/>|
 | `global.controlPlane.replicas` | **Replicas** - The number of control plane nodes.|**Type:** `integer`<br/>**Default:** `3`|
 
+### Internal
+Properties within the `.internal` top-level object
+For Giant Swarm internal use only, not stable, or not supported by UIs.
+
+| **Property** | **Description** | **More Details** |
+| :----------- | :-------------- | :--------------- |
+| `internal.advancedConfiguration` | **Advanced configuration** - Advanced configuration of cluster components, to be configured by Giant Swarm staff only.|**Type:** `object`<br/>|
+| `internal.advancedConfiguration.cgroupsv1` | **CGroups v1** - Force use of CGroups v1 for whole cluster.|**Type:** `boolean`<br/>**Default:** `false`|
+
 ### Metadata
 Properties within the `.global.metadata` object
 
@@ -108,19 +114,19 @@ Properties within the `.global.nodePools` object
 
 | **Property** | **Description** | **More Details** |
 | :----------- | :-------------- | :--------------- |
-| `global.nodePools.PATTERN` | **Node pool**|**Type:** `object`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9]{5,10}$`<br/>|
-| `global.nodePools.PATTERN.annotations` | **Annotations** - These annotations are added to all Kubernetes resources defining this node pool.|**Type:** `object`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9]{5,10}$`<br/>|
-| `global.nodePools.PATTERN.annotations.PATTERN_2` | **Annotation**|**Type:** `string`<br/>**Key patterns:**<br/>`PATTERN`=`^[a-z0-9]{5,10}$`<br/>`PATTERN_2`=`^([a-zA-Z0-9\.-]{1,253}/)?[a-zA-Z0-9\._-]{1,63}$`<br/>|
-| `global.nodePools.PATTERN.labels` | **Labels** - These labels are added to all Kubernetes resources defining this node pool.|**Type:** `object`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9]{5,10}$`<br/>|
-| `global.nodePools.PATTERN.labels.PATTERN_2` | **Label**|**Type:** `string`<br/>**Key patterns:**<br/>`PATTERN`=`^[a-z0-9]{5,10}$`<br/>`PATTERN_2`=`^[a-zA-Z0-9/\._-]+$`<br/>**Value pattern:** `^[a-zA-Z0-9\._-]+$`<br/>|
-| `global.nodePools.PATTERN.nodeLabels` | **Node labels** - Labels that are passed to kubelet argument 'node-labels'.|**Type:** `object`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9]{5,10}$`<br/>|
-| `global.nodePools.PATTERN.nodeLabels.*` |**None**|**Type:** `string`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9]{5,10}$`<br/>|
-| `global.nodePools.PATTERN.nodeTaints` | **Custom node taints**|**Type:** `array`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9]{5,10}$`<br/>|
-| `global.nodePools.PATTERN.nodeTaints[*]` |**None**|**Type:** `object`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9]{5,10}$`<br/>|
-| `global.nodePools.PATTERN.nodeTaints[*].effect` | **Effect**|**Type:** `string`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9]{5,10}$`<br/>|
-| `global.nodePools.PATTERN.nodeTaints[*].key` | **Key**|**Type:** `string`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9]{5,10}$`<br/>|
-| `global.nodePools.PATTERN.nodeTaints[*].value` | **Value**|**Type:** `string`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9]{5,10}$`<br/>|
-| `global.nodePools.PATTERN.replicas` | **Replicas** - The number of node pool nodes.|**Type:** `integer`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9]{5,10}$`<br/>|
+| `global.nodePools.PATTERN` | **Node pool**|**Type:** `object`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
+| `global.nodePools.PATTERN.annotations` | **Annotations** - These annotations are added to all Kubernetes resources defining this node pool.|**Type:** `object`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
+| `global.nodePools.PATTERN.annotations.PATTERN_2` | **Annotation**|**Type:** `string`<br/>**Key patterns:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>`PATTERN_2`=`^([a-zA-Z0-9\.-]{1,253}/)?[a-zA-Z0-9\._-]{1,63}$`<br/>|
+| `global.nodePools.PATTERN.labels` | **Labels** - These labels are added to all Kubernetes resources defining this node pool.|**Type:** `object`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
+| `global.nodePools.PATTERN.labels.PATTERN_2` | **Label**|**Type:** `string`<br/>**Key patterns:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>`PATTERN_2`=`^[a-zA-Z0-9/\._-]+$`<br/>**Value pattern:** `^[a-zA-Z0-9\._-]+$`<br/>|
+| `global.nodePools.PATTERN.nodeLabels` | **Node labels** - Labels that are passed to kubelet argument 'node-labels'.|**Type:** `object`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
+| `global.nodePools.PATTERN.nodeLabels.*` |**None**|**Type:** `string`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
+| `global.nodePools.PATTERN.nodeTaints` | **Custom node taints**|**Type:** `array`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
+| `global.nodePools.PATTERN.nodeTaints[*]` |**None**|**Type:** `object`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
+| `global.nodePools.PATTERN.nodeTaints[*].effect` | **Effect**|**Type:** `string`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
+| `global.nodePools.PATTERN.nodeTaints[*].key` | **Key**|**Type:** `string`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
+| `global.nodePools.PATTERN.nodeTaints[*].value` | **Value**|**Type:** `string`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
+| `global.nodePools.PATTERN.replicas` | **Replicas** - The number of node pool nodes.|**Type:** `integer`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
 
 ### Other global
 
@@ -167,7 +173,17 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd` | **systemd** - It describes the desired state of the systemd units.|**Type:** `object`<br/>|
 | `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units` | **Units**|**Type:** `array`<br/>|
 | `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*]` | **systemd unit**|**Type:** `object`<br/>|
-| `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents` | **Contents** - The contents of the unit.|**Type:** `string`<br/>|
+| `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents` | **Contents** - The contents of the unit.|**Type:** `object`<br/>|
+| `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.install` | **Install** - Configuration of the [Install] section.|**Type:** `object`<br/>|
+| `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.install.wantedBy` | **WantedBy** - Units with (weak) requirement dependencies on this unit.|**Type:** `array`<br/>|
+| `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.install.wantedBy[*]` |**None**|**Type:** `string`<br/>|
+| `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.mount` | **Mount** - Configuration of the [Mount] section.|**Type:** `object`<br/>|
+| `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.mount.type` | **Type** - A file system type to mount.|**Type:** `string`<br/>|
+| `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.mount.what` | **What** - An absolute path of a device node, file or other resource to mount.|**Type:** `string`<br/>|
+| `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.mount.where` | **Where** - An absolute path of a file or directory for the mount point; in particular, the destination cannot be a symbolic link.|**Type:** `string`<br/>|
+| `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit` | **Unit** - Configuration of the [Unit] section.|**Type:** `object`<br/>|
+| `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.defaultDependencies` | **DefaultDependencies** - Flag that indicates if this systemd unit should have the default systemd unit dependencies.|**Type:** `boolean`<br/>|
+| `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.description` | **Description** - systemd unit description.|**Type:** `string`<br/>|
 | `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].dropins` | **Unit drop-ins** - The list of drop-ins for the unit|**Type:** `array`<br/>|
 | `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].dropins[*]` | **Unit drop-in**|**Type:** `object`<br/>|
 | `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].dropins[*].contents` | **Contents** - The contents of the drop-in.|**Type:** `string`<br/>|
@@ -185,9 +201,13 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.components.containerd.sandboxContainerImage.name` | **Repository**|**Type:** `string`<br/>**Default:** `"giantswarm/pause"`|
 | `providerIntegration.components.containerd.sandboxContainerImage.registry` | **Registry**|**Type:** `string`<br/>**Default:** `"quay.io"`|
 | `providerIntegration.components.containerd.sandboxContainerImage.tag` | **Tag**|**Type:** `string`<br/>**Default:** `"3.9"`|
-| `providerIntegration.components.kubelet` | **Kubelet** - Kubelet configuration that is used on all nodes.||
 | `providerIntegration.components.systemd` | **systemd**||
 | `providerIntegration.connectivity` | **Connectivity** - Internal connectivity configuration.|**Type:** `object`<br/>|
+| `providerIntegration.connectivity.proxy` | **Proxy** - Whether/how outgoing traffic is routed through proxy servers.|**Type:** `object`<br/>|
+| `providerIntegration.connectivity.proxy.noProxy` | **No proxy**|**Type:** `object`<br/>|
+| `providerIntegration.connectivity.proxy.noProxy.addresses` | **Addresses** - To be passed to the NO_PROXY environment variable in all hosts.|**Type:** `array`<br/>|
+| `providerIntegration.connectivity.proxy.noProxy.addressesTemplate` | **Addresses template** - Name of Helm template that renders a YAML array with NO_PROXY addresses.|**Type:** `string`<br/>|
+| `providerIntegration.connectivity.proxy.noProxy.addresses[*]` |**None**|**Type:** `string`<br/>|
 | `providerIntegration.connectivity.sshSsoPublicKey` | **SSH public key for single sign-on**|**Type:** `string`<br/>**Default:** `"ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM4cvZ01fLmO9cJbWUj7sfF+NhECgy+Cl0bazSrZX7sU vault-ca@vault.operations.giantswarm.io"`|
 | `providerIntegration.controlPlane` | **Internal control plane configuration**|**Type:** `object`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig` | **Kubeadm config** - Configuration of control plane nodes.|**Type:** `object`<br/>|
@@ -250,7 +270,17 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd` | **systemd** - It describes the desired state of the systemd units.|**Type:** `object`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units` | **Units**|**Type:** `array`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*]` | **systemd unit**|**Type:** `object`<br/>|
-| `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents` | **Contents** - The contents of the unit.|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents` | **Contents** - The contents of the unit.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.install` | **Install** - Configuration of the [Install] section.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.install.wantedBy` | **WantedBy** - Units with (weak) requirement dependencies on this unit.|**Type:** `array`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.install.wantedBy[*]` |**None**|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.mount` | **Mount** - Configuration of the [Mount] section.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.mount.type` | **Type** - A file system type to mount.|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.mount.what` | **What** - An absolute path of a device node, file or other resource to mount.|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.mount.where` | **Where** - An absolute path of a file or directory for the mount point; in particular, the destination cannot be a symbolic link.|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit` | **Unit** - Configuration of the [Unit] section.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.defaultDependencies` | **DefaultDependencies** - Flag that indicates if this systemd unit should have the default systemd unit dependencies.|**Type:** `boolean`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.description` | **Description** - systemd unit description.|**Type:** `string`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].dropins` | **Unit drop-ins** - The list of drop-ins for the unit|**Type:** `array`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].dropins[*]` | **Unit drop-in**|**Type:** `object`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].dropins[*].contents` | **Contents** - The contents of the drop-in.|**Type:** `string`<br/>|
@@ -317,7 +347,17 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd` | **systemd** - It describes the desired state of the systemd units.|**Type:** `object`<br/>|
 | `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units` | **Units**|**Type:** `array`<br/>|
 | `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*]` | **systemd unit**|**Type:** `object`<br/>|
-| `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents` | **Contents** - The contents of the unit.|**Type:** `string`<br/>|
+| `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents` | **Contents** - The contents of the unit.|**Type:** `object`<br/>|
+| `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.install` | **Install** - Configuration of the [Install] section.|**Type:** `object`<br/>|
+| `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.install.wantedBy` | **WantedBy** - Units with (weak) requirement dependencies on this unit.|**Type:** `array`<br/>|
+| `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.install.wantedBy[*]` |**None**|**Type:** `string`<br/>|
+| `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.mount` | **Mount** - Configuration of the [Mount] section.|**Type:** `object`<br/>|
+| `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.mount.type` | **Type** - A file system type to mount.|**Type:** `string`<br/>|
+| `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.mount.what` | **What** - An absolute path of a device node, file or other resource to mount.|**Type:** `string`<br/>|
+| `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.mount.where` | **Where** - An absolute path of a file or directory for the mount point; in particular, the destination cannot be a symbolic link.|**Type:** `string`<br/>|
+| `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit` | **Unit** - Configuration of the [Unit] section.|**Type:** `object`<br/>|
+| `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.defaultDependencies` | **DefaultDependencies** - Flag that indicates if this systemd unit should have the default systemd unit dependencies.|**Type:** `boolean`<br/>|
+| `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.description` | **Description** - systemd unit description.|**Type:** `string`<br/>|
 | `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].dropins` | **Unit drop-ins** - The list of drop-ins for the unit|**Type:** `array`<br/>|
 | `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].dropins[*]` | **Unit drop-in**|**Type:** `object`<br/>|
 | `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].dropins[*].contents` | **Contents** - The contents of the drop-in.|**Type:** `string`<br/>|
@@ -330,7 +370,7 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.kubeadmConfig.postKubeadmCommands[*]` |**None**|**Type:** `string`<br/>|
 | `providerIntegration.kubeadmConfig.preKubeadmCommands` | **Pre-kubeadm commands** - Extra commands to run before kubeadm runs.|**Type:** `array`<br/>|
 | `providerIntegration.kubeadmConfig.preKubeadmCommands[*]` |**None**|**Type:** `string`<br/>|
-| `providerIntegration.kubernetesVersion` | **Kubernetes version**|**Type:** `string`<br/>**Example:** `"1.24.7"`<br/>**Default:** `"1.24.10"`|
+| `providerIntegration.kubernetesVersion` | **Kubernetes version**|**Type:** `string`<br/>**Default:** `"1.24.16"`|
 | `providerIntegration.pauseProperties` | **Pause properties** - A map of property names and their values that will affect setting pause annotation|**Type:** `object`<br/>|
 | `providerIntegration.pauseProperties.*` |**None**|**Types:** `string, number, integer, boolean`<br/>|
 | `providerIntegration.provider` | **Provider** - The name of the Cluster API provider. The name here must match the name of the provider in cluster-<provider> app name.|**Type:** `string`<br/>|
@@ -345,9 +385,9 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.resourcesApi.machineHealthCheckResourceEnabled` | **MachineHealthCheck resource enabled** - Flag that indicates if the MachineHealthCheck resource is enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.|**Type:** `boolean`<br/>**Default:** `true`|
 | `providerIntegration.resourcesApi.machinePoolResourcesEnabled` | **Machine pool resources enabled** - Flag that indicates if the machine pool resources are enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.|**Type:** `boolean`<br/>**Default:** `true`|
 | `providerIntegration.teleport` | **Teleport**|**Type:** `object`<br/>|
-| `providerIntegration.teleport.enabled` | **Enable teleport**|**Type:** `boolean`<br/>**Default:** `false`|
-| `providerIntegration.teleport.proxyAddr` | **Teleport proxy address**|**Type:** `string`<br/>**Default:** `"test.teleport.giantswarm.io:443"`|
-| `providerIntegration.teleport.version` | **Teleport version**|**Type:** `string`<br/>**Default:** `"13.3.8"`|
+| `providerIntegration.teleport.enabled` | **Enable teleport**|**Type:** `boolean`<br/>**Default:** `true`|
+| `providerIntegration.teleport.proxyAddr` | **Teleport proxy address**|**Type:** `string`<br/>**Default:** `"teleport.giantswarm.io:443"`|
+| `providerIntegration.teleport.version` | **Teleport version**|**Type:** `string`<br/>**Default:** `"14.1.3"`|
 | `providerIntegration.workers` | **Internal workers configuration**|**Type:** `object`<br/>|
 | `providerIntegration.workers.kubeadmConfig` | **Kubeadm config** - Configuration of workers nodes.|**Type:** `object`<br/>|
 | `providerIntegration.workers.kubeadmConfig.files` | **Files** - These are the files that are included on worker nodes.|**Type:** `array`<br/>|
@@ -389,7 +429,17 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd` | **systemd** - It describes the desired state of the systemd units.|**Type:** `object`<br/>|
 | `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units` | **Units**|**Type:** `array`<br/>|
 | `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*]` | **systemd unit**|**Type:** `object`<br/>|
-| `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents` | **Contents** - The contents of the unit.|**Type:** `string`<br/>|
+| `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents` | **Contents** - The contents of the unit.|**Type:** `object`<br/>|
+| `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.install` | **Install** - Configuration of the [Install] section.|**Type:** `object`<br/>|
+| `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.install.wantedBy` | **WantedBy** - Units with (weak) requirement dependencies on this unit.|**Type:** `array`<br/>|
+| `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.install.wantedBy[*]` |**None**|**Type:** `string`<br/>|
+| `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.mount` | **Mount** - Configuration of the [Mount] section.|**Type:** `object`<br/>|
+| `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.mount.type` | **Type** - A file system type to mount.|**Type:** `string`<br/>|
+| `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.mount.what` | **What** - An absolute path of a device node, file or other resource to mount.|**Type:** `string`<br/>|
+| `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.mount.where` | **Where** - An absolute path of a file or directory for the mount point; in particular, the destination cannot be a symbolic link.|**Type:** `string`<br/>|
+| `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit` | **Unit** - Configuration of the [Unit] section.|**Type:** `object`<br/>|
+| `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.defaultDependencies` | **DefaultDependencies** - Flag that indicates if this systemd unit should have the default systemd unit dependencies.|**Type:** `boolean`<br/>|
+| `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.description` | **Description** - systemd unit description.|**Type:** `string`<br/>|
 | `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].dropins` | **Unit drop-ins** - The list of drop-ins for the unit|**Type:** `array`<br/>|
 | `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].dropins[*]` | **Unit drop-in**|**Type:** `object`<br/>|
 | `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].dropins[*].contents` | **Contents** - The contents of the drop-in.|**Type:** `string`<br/>|

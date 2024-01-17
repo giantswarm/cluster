@@ -18,11 +18,7 @@ global:
       enabled: true
       httpProxy: http://proxy.giantswarm.io
       httpsProxy: https://proxy.giantswarm.io
-      noProxy:
-        addresses:
-        - elb.amazonaws.com
-        - 169.254.169.254
-        addressesTemplate: "cluster.test.internal.kubeadm.proxy.anotherNoProxyList"
+      noProxy: "proxy1.example.com,proxy2.example.com"
   controlPlane:
     customNodeTaints:
     - key: you
@@ -48,7 +44,7 @@ global:
       - key: supernodepool
         value: hello
         effect: NoSchedule
-    rt5y7:
+    verybignodepool-1234:
       replicas: 100
       nodeLabels:
         workload-type: robots
@@ -61,6 +57,9 @@ global:
             username: giantswarm
             password: super_secret_password
         - endpoint: giantswarm.azurecr.io
+internal:
+  advancedConfiguration:
+    cgroupsv1: true
 providerIntegration:
   provider: aws
   bastion:
@@ -73,8 +72,9 @@ providerIntegration:
               - name: example1-bastion.service
                 enabled: false
                 mask: false
-                contents: |
-                  # Contents goes here
+                contents:
+                  unit:
+                    description: "Bastion example 1"
                 dropins:
                 - name: hello-bastion.conf
                   contents: |
@@ -82,6 +82,13 @@ providerIntegration:
       preKubeadmCommands:
       - sleep infinity
   clusterAnnotationsTemplateName: "cluster.test.providerIntegration.connectivity.annotations"
+  connectivity:
+    proxy:
+      noProxy:
+        addresses:
+        - elb.amazonaws.com
+        - 169.254.169.254
+        addressesTemplate: "cluster.test.internal.kubeadm.proxy.anotherNoProxyList"
   controlPlane:
     kubeadmConfig:
       clusterConfiguration:
@@ -129,21 +136,23 @@ providerIntegration:
           additionalConfig:
             systemd:
               units:
-              - name: example1-control-plane.service
-                enabled: false
+              - name: var-lib-etcd.mount
+                enabled: true
                 mask: false
-                contents: |
-                  # Contents goes here
-                dropins:
-                - name: hello.conf
-                  contents: |
-                    # Contents goes here
+                contents:
+                  unit:
+                    description: etcd volume
+                    defaultDependencies: false
+                  install:
+                    wantedBy:
+                    - local-fs-pre.target
+                  mount:
+                    what: /dev/disk/by-label/etcd
+                    where: /var/lib/etcd
+                    type: xfs
               - name: example2-control-plane.service
                 enabled: false
                 mask: false
-                contents: |
-                  # Multi-line
-                  # contents goes here
                 dropins:
                 - name: hello1-control-plane.conf
                   contents: |
@@ -197,13 +206,9 @@ providerIntegration:
         kind: AWSMachineTemplate
       infrastructureMachineTemplateSpecTemplateName: "cluster.internal.test.controlPlane.machineTemplate.spec"
   components:
-    kubelet:
-      gracefulNodeShutdown:
-        shutdownGracePeriod: 5m
-        shutdownGracePeriodCriticalPods: 1m
     systemd:
       timesyncd:
-        npt:
+        ntp:
         - 169.254.169.123
   hashSalt: salty-1
   kubeadmConfig:
@@ -219,34 +224,37 @@ providerIntegration:
         additionalConfig:
           systemd:
             units:
-            - name: kubeadm.service
-              dropins:
-              - name: 10-flatcar.conf
-                contents: |
-                  [Unit]
-                  # kubeadm must run after coreos-metadata populated /run/metadata directory.
-                  Requires=coreos-metadata.service
-                  After=coreos-metadata.service
-                  [Service]
-                  # Ensure kubeadm service has access to kubeadm binary in /opt/bin on Flatcar.
-                  Environment=PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/opt/bin
-                  # To make metadata environment variables available for pre-kubeadm commands.
-                  EnvironmentFile=/run/metadata/*
-            - name: example1.service
-              enabled: false
+            - name: var-lib-kubelet.mount
+              enabled: true
               mask: false
-              contents: |
-                # Contents goes here
-              dropins:
-              - name: hello.conf
-                contents: |
-                  # Contents goes here
+              contents:
+                unit:
+                  description: kubelet volume
+                  defaultDependencies: false
+                install:
+                  wantedBy:
+                  - local-fs-pre.target
+                mount:
+                  what: /dev/disk/by-label/kubelet
+                  where: /var/lib/kubelet
+                  type: xfs
+            - name: var-lib-containerd.mount
+              enabled: true
+              mask: false
+              contents:
+                unit:
+                  description: containerd volume
+                  defaultDependencies: false
+                install:
+                  wantedBy:
+                  - local-fs-pre.target
+                mount:
+                  what: /dev/disk/by-label/containerd
+                  where: /var/lib/containerd
+                  type: xfs
             - name: example2.service
               enabled: false
               mask: false
-              contents: |
-                # Multi-line
-                # contents goes here
               dropins:
               - name: hello1.conf
                 contents: |
@@ -268,8 +276,6 @@ providerIntegration:
               group:
                 id: 23456
                 name: giantswarm
-            - path: /var/lib/kubelet
-              mode: 750
     preKubeadmCommands:
     - echo "hello all nodes before kubeadm"
     - echo "all cluster nodes before kubeadm"
@@ -316,21 +322,23 @@ providerIntegration:
           additionalConfig:
             systemd:
               units:
-              - name: example1-workers.service
-                enabled: false
+              - name: var-lib-workload.mount
+                enabled: true
                 mask: false
-                contents: |
-                  # Contents goes here
-                dropins:
-                - name: hello.conf
-                  contents: |
-                    # Contents goes here
+                contents:
+                  unit:
+                    description: workload volume
+                    defaultDependencies: false
+                  install:
+                    wantedBy:
+                    - local-fs-pre.target
+                  mount:
+                    what: /dev/disk/by-label/workload
+                    where: /var/lib/workload
+                    type: xfs
               - name: example2-workers.service
                 enabled: false
                 mask: false
-                contents: |
-                  # Multi-line
-                  # contents goes here
                 dropins:
                 - name: hello1-workers.conf
                   contents: |

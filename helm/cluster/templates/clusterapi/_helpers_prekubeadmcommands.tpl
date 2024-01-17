@@ -13,10 +13,16 @@
 {{- define "cluster.internal.kubeadm.preKubeadmCommands.flatcar" }}
 - envsubst < /etc/kubeadm.yml > /etc/kubeadm.yml.tmp
 - mv /etc/kubeadm.yml.tmp /etc/kubeadm.yml
+- echo "---" >> /etc/kubeadm.yml
+- cat /etc/kubelet-configuration.yaml >> /etc/kubeadm.yml
 {{- end }}
 
 {{- define "cluster.internal.kubeadm.preKubeadmCommands.ssh" }}
+{{- if $.Values.providerIntegration.resourcesApi.bastionResourceEnabled }}
+{{- if .Values.global.connectivity.bastion.enabled }}
 - systemctl restart sshd
+{{- end }}
+{{- end }}
 {{- end }}
 
 {{- define "cluster.internal.kubeadm.preKubeadmCommands.proxy" }}

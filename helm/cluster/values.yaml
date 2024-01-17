@@ -32,6 +32,9 @@ global:
   metadata:
     preventDeletion: false
     servicePriority: highest
+internal:
+  advancedConfiguration:
+    cgroupsv1: false
 providerIntegration:
   bastion:
     kubeadmConfig:
@@ -47,6 +50,8 @@ providerIntegration:
         registry: quay.io
         tag: "3.9"
   connectivity:
+    proxy:
+      noProxy: {}
     sshSsoPublicKey: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM4cvZ01fLmO9cJbWUj7sfF+NhECgy+Cl0bazSrZX7sU vault-ca@vault.operations.giantswarm.io
   controlPlane:
     kubeadmConfig:
@@ -74,7 +79,7 @@ providerIntegration:
         additionalConfig:
           storage: {}
           systemd: {}
-  kubernetesVersion: 1.24.10
+  kubernetesVersion: 1.24.16
   resourcesApi:
     bastionResourceEnabled: true
     clusterResourceEnabled: true
@@ -83,9 +88,9 @@ providerIntegration:
     machineHealthCheckResourceEnabled: true
     machinePoolResourcesEnabled: true
   teleport:
-    enabled: false
-    proxyAddr: test.teleport.giantswarm.io:443
-    version: 13.3.8
+    enabled: true
+    proxyAddr: teleport.giantswarm.io:443
+    version: 14.1.3
   workers:
     kubeadmConfig:
       ignition:

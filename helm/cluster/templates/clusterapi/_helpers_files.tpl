@@ -1,6 +1,7 @@
 {{- define "cluster.internal.kubeadm.files" }}
 {{- include "cluster.internal.kubeadm.files.sysctl" $ }}
 {{- include "cluster.internal.kubeadm.files.systemd" $ }}
+{{- include "cluster.internal.kubeadm.files.cgroupv1" $ }}
 {{- include "cluster.internal.kubeadm.files.ssh" $ }}
 {{- include "cluster.internal.kubeadm.files.cri" $ }}
 {{- include "cluster.internal.kubeadm.files.kubelet" $ }}
@@ -17,17 +18,25 @@
 {{- end }}
 
 {{- define "cluster.internal.kubeadm.files.systemd" }}
-{{- if and $.Values.providerIntegration.kubeadmConfig $.Values.providerIntegration.kubeadmConfig.systemd }}
-{{- if and $.Values.providerIntegration.kubeadmConfig $.Values.providerIntegration.kubeadmConfig.systemd.timesyncd }}
+{{- if ($.Values.providerIntegration.components.systemd).timesyncd }}
 - path: /etc/systemd/timesyncd.conf
   permissions: "0644"
   encoding: base64
   content: {{ tpl ($.Files.Get "files/etc/systemd/timesyncd.conf") . | b64enc }}
 {{- end }}
 {{- end }}
+
+{{- define "cluster.internal.kubeadm.files.cgroupv1" }}
+{{- if $.Values.internal.advancedConfiguration.cgroupsv1 }}
+- path: /etc/flatcar-cgroupv1
+  filesystem: root
+  permissions: "0444"
+{{- end }}
 {{- end }}
 
 {{- define "cluster.internal.kubeadm.files.ssh" }}
+{{- if $.Values.providerIntegration.resourcesApi.bastionResourceEnabled }}
+{{- if .Values.global.connectivity.bastion.enabled }}
 - path: /etc/ssh/trusted-user-ca-keys.pem
   permissions: "0600"
   encoding: base64
@@ -36,6 +45,8 @@
   permissions: "0600"
   encoding: base64
   content: {{ $.Files.Get "files/etc/ssh/sshd_config" | b64enc }}
+{{- end }}
+{{- end }}
 {{- end }}
 
 {{- define "cluster.internal.kubeadm.files.cri" }}
@@ -48,18 +59,14 @@
 {{- end }}
 
 {{- define "cluster.internal.kubeadm.files.kubelet" }}
-{{- if and $.Values.providerIntegration.kubeadmConfig $.Values.providerIntegration.kubeadmConfig.kubelet }}
-- path: /opt/kubelet-config.sh
+- path: /etc/kubelet-configuration.yaml
   permissions: "0700"
   encoding: base64
-  content: {{ tpl ($.Files.Get "files/opt/kubelet-config.sh") . | b64enc }}
-{{- if $.Values.providerIntegration.kubeadmConfig.kubelet.gracefulNodeShutdown }}
+  content: {{ tpl ($.Files.Get "files/etc/kubelet-configuration.yaml") . | b64enc }}
 - path: /etc/systemd/logind.conf.d/zzz-kubelet-graceful-shutdown.conf
   permissions: "0700"
   encoding: base64
   content: {{ $.Files.Get "files/etc/systemd/logind.conf.d/zzz-kubelet-graceful-shutdown.conf" | b64enc }}
-{{- end }}
-{{- end }}
 {{- end }}
 
 {{- define "cluster.internal.kubeadm.files.proxy" }}

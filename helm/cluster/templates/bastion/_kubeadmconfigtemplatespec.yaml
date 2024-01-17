@@ -6,6 +6,9 @@ preKubeadmCommands:
 {{- include "cluster.internal.bastion.kubeadm.preKubeadmCommands" $ }}
 files:
 {{- include "cluster.internal.bastion.kubeadm.files" $ }}
+{{- $users := include "cluster.internal.kubeadm.users" $ }}
+{{- if $users }}
 users:
-{{- include "cluster.internal.kubeadm.users" $ }}
+{{- $users }}
+{{- end }}
 {{- end }}

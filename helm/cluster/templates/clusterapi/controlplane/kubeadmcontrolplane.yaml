@@ -4,11 +4,7 @@ kind: KubeadmControlPlane
 metadata:
   annotations:
     "helm.sh/resource-policy": keep
-    {{- if $.Values.global.metadata.annotations }}
-    {{- range $key, $val := $.Values.global.metadata.annotations }}
-    {{ $key }}: {{ $val | quote }}
-    {{- end }}
-    {{- end }}
+    {{- include "cluster.annotations.custom" $ | indent 4 }}
   labels:
     {{- include "cluster.labels.common" $ | nindent 4 }}
     {{- include "cluster.labels.custom" $ | indent 4 }}
@@ -51,10 +47,16 @@ spec:
     {{- include "cluster.internal.controlPlane.kubeadm.files" $ | indent 4 }}
     preKubeadmCommands:
     {{- include "cluster.internal.controlPlane.kubeadm.preKubeadmCommands" $ | indent 4 }}
+    {{- $postKubeadmCommands := include "cluster.internal.controlPlane.kubeadm.postKubeadmCommands" $ }}
+    {{- if $postKubeadmCommands }}
     postKubeadmCommands:
-    {{- include "cluster.internal.controlPlane.kubeadm.postKubeadmCommands" $ | indent 4 }}
+    {{- $postKubeadmCommands | indent 4 }}
+    {{- end }}
+    {{- $users := include "cluster.internal.kubeadm.users" $ }}
+    {{- if $users }}
     users:
-    {{- include "cluster.internal.kubeadm.users" $ | indent 4 }}
+    {{- $users | indent 4 }}
+    {{- end }}
   replicas: {{ .Values.global.controlPlane.replicas }}
   version: v{{ trimPrefix "v" .Values.providerIntegration.kubernetesVersion }}
 {{- end }}

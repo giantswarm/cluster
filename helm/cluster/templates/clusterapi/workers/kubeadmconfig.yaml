@@ -31,10 +31,16 @@ spec:
     {{- include "cluster.internal.workers.kubeadm.joinConfiguration" (dict "Values" $.Values "Release" $.Release "nodePool" (dict "name" $nodePoolName "config" $nodePoolConfig)) | indent 4 }}
   preKubeadmCommands:
   {{- include "cluster.internal.workers.kubeadm.preKubeadmCommands" $ | indent 2 }}
+  {{- $postKubeadmCommands := include "cluster.internal.workers.kubeadm.postKubeadmCommands" $ }}
+  {{- if $postKubeadmCommands }}
   postKubeadmCommands:
-  {{- include "cluster.internal.workers.kubeadm.postKubeadmCommands" $ | indent 2 }}
+  {{- $postKubeadmCommands | indent 2 }}
+  {{- end }}
+  {{- $users := include "cluster.internal.kubeadm.users" $ }}
+  {{- if $users }}
   users:
-  {{- include "cluster.internal.kubeadm.users" $ | indent 2 }}
+  {{- $users | indent 2 }}
+  {{- end }}
   files:
   {{- include "cluster.internal.workers.kubeadm.files" $ | indent 2 }}
 ---
