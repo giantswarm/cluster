@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add systemd unit and script to compute fairness values for k8s API server in controlplane.
+
 ## [0.2.1] - 2024-01-17
 
 ### Added

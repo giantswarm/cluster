@@ -20,6 +20,18 @@ containerLinuxConfig:
 {{- if (((((($.Values.providerIntegration.controlPlane).kubeadmConfig).ignition).containerLinuxConfig).additionalConfig).systemd).units }}
 {{- include "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units" $.Values.providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units }}
 {{- end }}
+- name: setup-apiserver-environment.service
+  enabled: true
+  contents: |
+    [Unit]
+    Description=Setup environment for kubeadm apiserver
+    Before=kubeadm.service
+    [Service]
+    Type=oneshot
+    TimeoutStartSec=0
+    ExecStart=/opt/bin/setup-apiserver-environment.sh
+    [Install]
+    WantedBy=multi-user.target
 {{- end }}
 
 {{- define "cluster.internal.controlPlane.kubeadm.ignition.containerLinuxConfig.additionalConfig.storage.filesystems" }}
