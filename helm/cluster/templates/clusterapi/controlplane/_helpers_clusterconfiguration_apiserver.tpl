@@ -12,7 +12,7 @@ certSANs:
     TODO: this should be aligned with alerts, i.e. time here should be less than the time after
           which we alert for API server replica being down.
 */}}
-timeoutForControlPlane: 20min
+timeoutForControlPlane: 20m
 extraArgs:
   {{- if .Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.apiAudiences }}
   api-audiences: {{ include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.apiAudiences" $ | trim | quote }}
