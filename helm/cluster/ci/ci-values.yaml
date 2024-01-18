@@ -85,10 +85,10 @@ providerIntegration:
   connectivity:
     proxy:
       noProxy:
-        addresses:
+        value:
         - elb.amazonaws.com
         - 169.254.169.254
-        addressesTemplate: "cluster.test.internal.kubeadm.proxy.anotherNoProxyList"
+        templateName: "cluster.test.internal.kubeadm.proxy.anotherNoProxyList"
   controlPlane:
     kubeadmConfig:
       clusterConfiguration:
