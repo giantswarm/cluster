@@ -1290,21 +1290,42 @@
                                                             "type": "null"
                                                         },
                                                         {
-                                                            "type": "string"
-                                                        },
-                                                        {
                                                             "type": "object",
-                                                            "required": [
-                                                                "templateName"
-                                                            ],
                                                             "additionalProperties": false,
                                                             "properties": {
                                                                 "templateName": {
                                                                     "type": "string",
                                                                     "title": "Template name",
                                                                     "description": "The name of the Helm template which renders the 'api-audiences' value"
+                                                                },
+                                                                "value": {
+                                                                    "type": "string",
+                                                                    "title": "Value",
+                                                                    "description": "Static value for api-audiences."
                                                                 }
-                                                            }
+                                                            },
+                                                            "oneOf": [
+                                                                {
+                                                                    "required": [
+                                                                        "templateName"
+                                                                    ],
+                                                                    "not": {
+                                                                        "required": [
+                                                                            "value"
+                                                                        ]
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "required": [
+                                                                        "value"
+                                                                    ],
+                                                                    "not": {
+                                                                        "required": [
+                                                                            "templateName"
+                                                                        ]
+                                                                    }
+                                                                }
+                                                            ]
                                                         }
                                                     ]
                                                 },
