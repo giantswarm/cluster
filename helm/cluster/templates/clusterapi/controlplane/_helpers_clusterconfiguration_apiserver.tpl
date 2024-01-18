@@ -135,6 +135,9 @@ api-audiences-example.giantswarm.io
 
 {{- define "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.featureGates" }}
 {{- $featureGates := list -}}
+{{- if semverCompare "<1.25-0" .Values.internal.kubernetesVersion -}}
+{{- $featureGates = append $featureGates "TTLAfterFinished=true" -}}
+{{- end -}}
 {{- range $featureGate := $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.featureGates }}
 {{- $featureGates = append $featureGates (printf "%s=%t" $featureGate.name $featureGate.enabled) -}}
 {{- end }}
