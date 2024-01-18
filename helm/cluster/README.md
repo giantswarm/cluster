@@ -66,7 +66,7 @@ Configuration of the control plane.
 
 | **Property** | **Description** | **More Details** |
 | :----------- | :-------------- | :--------------- |
-| `global.controlPlane.apiServerPort` | **API server port** - The public facing API server Load Balancer port.|**Type:** `integer`<br/>**Default:** `6443`|
+| `global.controlPlane.apiServerPort` | **API server port** - The API server Load Balancer port. This option sets the Spec.ClusterNetwork.APIServerPort field on the Cluster CR. In CAPI this field isn't used currently. It is instead used in providers. In CAPA this sets only the public facing port of the Load Balancer. In CAPZ both the public facing and the destination port are set to this value. CAPV and CAPVCD do not use it.|**Type:** `integer`<br/>**Default:** `6443`|
 | `global.controlPlane.customNodeTaints` | **Custom node taints**|**Type:** `array`<br/>|
 | `global.controlPlane.customNodeTaints[*]` |**None**|**Type:** `object`<br/>|
 | `global.controlPlane.customNodeTaints[*].effect` | **Effect**|**Type:** `string`<br/>|
