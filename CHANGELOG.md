@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Align API for properties that can be set as pre-defined static values and/or via templates.
+
 ## [0.2.1] - 2024-01-17
 
 ### Added

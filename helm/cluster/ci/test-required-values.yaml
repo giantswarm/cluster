@@ -1,0 +1,26 @@
+global:
+  metadata:
+    name: awesome
+    organization: giantswarm
+  connectivity:
+    baseDomain: example.gigantic.io
+providerIntegration:
+  provider: aws
+  resourcesApi:
+    bastionResourceEnabled: false
+    clusterResourceEnabled: true
+    controlPlaneResourceEnabled: true
+    infrastructureCluster:
+      group: infrastructure.cluster.x-k8s.io
+      kind: GiantCluster
+      version: v1beta1
+    machineHealthCheckResourceEnabled: false
+    machinePoolResourcesEnabled: false
+    nodePoolKind: MachinePool
+  controlPlane:
+    resources:
+      infrastructureMachineTemplate:
+        group: infrastructure.cluster.x-k8s.io
+        kind: GiantMachineTemplate
+        version: v1beta1
+      infrastructureMachineTemplateSpecTemplateName: cluster.internal.test.controlPlane.machineTemplate.spec

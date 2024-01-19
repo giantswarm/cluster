@@ -17,12 +17,12 @@
 {{- $noProxyList = append $noProxyList $podsCidrBlock -}}
 {{- end }}
 {{- /* Add provider-specific NO_PROXY values */}}
-{{- range $noProxyAddress := $.Values.providerIntegration.connectivity.proxy.noProxy.addresses }}
+{{- range $noProxyAddress := $.Values.providerIntegration.connectivity.proxy.noProxy.value }}
 {{- $noProxyList = append $noProxyList $noProxyAddress -}}
 {{- end }}
 {{- /* Add provider-specific NO_PROXY values from template */}}
-{{- if $.Values.providerIntegration.connectivity.proxy.noProxy.addressesTemplate }}
-{{- range $noProxyAddress := include $.Values.providerIntegration.connectivity.proxy.noProxy.addressesTemplate $ | fromYamlArray }}
+{{- if $.Values.providerIntegration.connectivity.proxy.noProxy.templateName }}
+{{- range $noProxyAddress := include $.Values.providerIntegration.connectivity.proxy.noProxy.templateName $ | fromYamlArray }}
 {{- $noProxyList = append $noProxyList $noProxyAddress -}}
 {{- end }}
 {{- end }}
