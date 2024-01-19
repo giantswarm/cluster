@@ -62,6 +62,11 @@ internal:
     cgroupsv1: true
     controlPlane:
       apiServer:
+        extraArgs:
+          allow-privileged: false
+          authorization-webhook-version: v1beta1
+          delete-collection-workers: 2
+          min-request-timeout: 600
         extraCertificateSANs:
         - this-is-extra-cert-san.giantswarm.io
         - another-extra-cert-san.giantswarm.io
@@ -104,11 +109,6 @@ providerIntegration:
           apiAudiences:
             templateName: "cluster.test.kubeadmControlPlane.kubeadmConfigSpec.clusterConfiguration.apiServer.apiAudiences"
           etcdPrefix: giantswarm.io
-          extraArgs:
-            allow-privileged: false
-            authorization-webhook-version: v1beta1
-            delete-collection-workers: 2
-            min-request-timeout: 600
           featureGates:
           - name: CronJobTimeZone
             enabled: true

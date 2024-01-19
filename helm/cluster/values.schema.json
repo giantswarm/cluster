@@ -1090,10 +1090,15 @@
                                     "title": "API server",
                                     "description": "Advanced configuration of API server.",
                                     "properties": {
+                                        "extraArgs": {
+                                            "type": "object",
+                                            "title": "Extra CLI args",
+                                            "description": "A map with the additional CLI flags that are appended to the default flags. Use with caution, as there is no validation for these values, so you can set incorrect or duplicate flags."
+                                        },
                                         "extraCertificateSANs": {
                                             "type": "array",
                                             "title": "Extra certificate SANs",
-                                            "description": "The additional certificate SANs that are appended to the default SANs.",
+                                            "description": "The additional certificate SANs that are appended to the default SANs. Use with caution, as there is no validation for these values, so you can set incorrect or duplicate certificates.",
                                             "items": {
                                                 "type": "string",
                                                 "title": "Extra certificate SAN"
@@ -1356,10 +1361,6 @@
                                                 "etcdPrefix": {
                                                     "type": "string",
                                                     "title": "etcd prefix"
-                                                },
-                                                "extraArgs": {
-                                                    "type": "object",
-                                                    "title": "Extra args"
                                                 },
                                                 "featureGates": {
                                                     "type": "array",
