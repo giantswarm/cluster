@@ -96,6 +96,7 @@ For Giant Swarm internal use only, not stable, or not supported by UIs.
 | `internal.advancedConfiguration.cgroupsv1` | **CGroups v1** - Force use of CGroups v1 for whole cluster.|**Type:** `boolean`<br/>**Default:** `false`|
 | `internal.advancedConfiguration.controlPlane` | **Control plane** - Advanced configuration of control plane components.|**Type:** `object`<br/>|
 | `internal.advancedConfiguration.controlPlane.apiServer` | **API server** - Advanced configuration of API server.|**Type:** `object`<br/>|
+| `internal.advancedConfiguration.controlPlane.apiServer.bindPort` | **Bind port** - Kubernetes API bind port used for API server pod.|**Type:** `integer`<br/>|
 | `internal.advancedConfiguration.controlPlane.apiServer.etcdPrefix` | **etcd prefix** - The prefix to prepend to all resource paths in etcd. If nothing is specified, the API server uses '/registry' prefix by default.|**Type:** `string`<br/>|
 | `internal.advancedConfiguration.controlPlane.apiServer.extraArgs` | **Extra CLI args** - A map with the additional CLI flags that are appended to the default flags. Use with caution, as there is no validation for these values, so you can set incorrect or duplicate flags.|**Type:** `object`<br/>|
 | `internal.advancedConfiguration.controlPlane.apiServer.extraCertificateSANs` | **Extra certificate SANs** - The additional certificate SANs that are appended to the default SANs. Use with caution, as there is no validation for these values, so you can set incorrect or duplicate certificates.|**Type:** `array`<br/>|
@@ -292,8 +293,6 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].mask` | **Masked?** - Whether or not the service shall be masked. When true, the service is masked by symlinking it to /dev/null.|**Type:** `boolean`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].name` | **Name** - The name of the unit. This must be suffixed with a valid unit type (e.g. “thing.service”).|**Type:** `string`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.strict` | **Strict** - It controls if AdditionalConfig should be strictly parsed. If so, warnings are treated as errors.|**Type:** `boolean`<br/>|
-| `providerIntegration.controlPlane.kubeadmConfig.localAPIEndpoint` | **Local API endpoint**|**Type:** `object`<br/>|
-| `providerIntegration.controlPlane.kubeadmConfig.localAPIEndpoint.bindPort` | **Bind port** - Kubernetes API bind port used for API server pod.|**Type:** `integer`<br/>**Default:** `6443`|
 | `providerIntegration.controlPlane.kubeadmConfig.postKubeadmCommands` | **Post-kubeadm commands** - Extra commands to run after kubeadm runs.|**Type:** `array`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.postKubeadmCommands[*]` |**None**|**Type:** `string`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.preKubeadmCommands` | **Pre-kubeadm commands** - Extra commands to run before kubeadm runs.|**Type:** `array`<br/>|

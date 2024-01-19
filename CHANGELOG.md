@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Move API server `extraCertificateSANs` Helm value to `.Values.internal.advancedConfiguration.controlPlane.apiServer`.
 - Move API server `extraArgs` Helm value to `.Values.internal.advancedConfiguration.controlPlane.apiServer`.
 - Move API server `etcdPrefix` Helm value to `.Values.internal.advancedConfiguration.controlPlane.apiServer`.
+- Move API server `bindPort` Helm value to `.Values.internal.advancedConfiguration.controlPlane.apiServer`.
 
 ## [0.2.1] - 2024-01-17
 
