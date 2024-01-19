@@ -2,7 +2,7 @@
 discovery: {}
 controlPlane:
   localAPIEndpoint:
-    bindPort: {{ $.Values.providerIntegration.controlPlane.kubeadmConfig.localAPIEndpoint.bindPort }}
+    bindPort: {{ $.Values.internal.advancedConfiguration.controlPlane.apiServer.bindPort | default 6443 }}
 nodeRegistration:
   kubeletExtraArgs:
     {{- if $.Values.internal.advancedConfiguration.cgroupsv1 }}
