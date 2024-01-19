@@ -26,7 +26,7 @@
 {{- define "cluster.connectivity.proxy.noProxy" }}
 {{- $global := .global }}
 {{- $metadata := $global.metadata }}
-{{- $connectivity := $global.connectivity }}=
+{{- $connectivity := $global.connectivity }}
 {{- $providerIntegration := .providerIntegration }}
 {{- /* Static NO_PROXY values */}}
 {{- $noProxyList := list
