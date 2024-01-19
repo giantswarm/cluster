@@ -1079,6 +1079,29 @@
                             "title": "CGroups v1",
                             "description": "Force use of CGroups v1 for whole cluster.",
                             "default": false
+                        },
+                        "controlPlane": {
+                            "type": "object",
+                            "title": "Control plane",
+                            "description": "Advanced configuration of control plane components.",
+                            "properties": {
+                                "apiServer": {
+                                    "type": "object",
+                                    "title": "API server",
+                                    "description": "Advanced configuration of API server.",
+                                    "properties": {
+                                        "extraCertificateSANs": {
+                                            "type": "array",
+                                            "title": "Extra certificate SANs",
+                                            "description": "The additional certificate SANs that are appended to the default SANs.",
+                                            "items": {
+                                                "type": "string",
+                                                "title": "Extra certificate SAN"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -1337,15 +1360,6 @@
                                                 "extraArgs": {
                                                     "type": "object",
                                                     "title": "Extra args"
-                                                },
-                                                "extraCertificateSANs": {
-                                                    "type": "array",
-                                                    "title": "Extra certificate SANs",
-                                                    "description": "The additional certificate SANs that are appended to the default SANs.",
-                                                    "items": {
-                                                        "type": "string",
-                                                        "title": "Extra certificate SAN"
-                                                    }
                                                 },
                                                 "featureGates": {
                                                     "type": "array",

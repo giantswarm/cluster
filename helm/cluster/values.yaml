@@ -36,6 +36,8 @@ global:
 internal:
   advancedConfiguration:
     cgroupsv1: false
+    controlPlane:
+      apiServer: {}
 providerIntegration:
   bastion:
     kubeadmConfig:

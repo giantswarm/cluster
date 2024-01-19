@@ -4,8 +4,8 @@ certSANs:
 - 127.0.0.1
 - "api.{{ include "cluster.resource.name" $ }}.{{ required "The baseDomain value is required" $.Values.global.connectivity.baseDomain }}"
 - "apiserver.{{ include "cluster.resource.name" $ }}.{{ required "The baseDomain value is required" $.Values.global.connectivity.baseDomain }}"
-{{- if $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.extraCertificateSANs }}
-{{ toYaml $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.extraCertificateSANs }}
+{{- if $.Values.internal.advancedConfiguration.controlPlane.apiServer.extraCertificateSANs }}
+{{ toYaml $.Values.internal.advancedConfiguration.controlPlane.apiServer.extraCertificateSANs }}
 {{- end }}
 {{- /*
     Timeout for the API server to appear.
