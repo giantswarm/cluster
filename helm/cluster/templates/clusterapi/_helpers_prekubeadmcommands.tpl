@@ -29,10 +29,10 @@
 {{- if and $.Values.global.connectivity.proxy $.Values.global.connectivity.proxy.enabled }}
 - export HTTP_PROXY={{ $.Values.global.connectivity.proxy.httpProxy }}
 - export HTTPS_PROXY={{ $.Values.global.connectivity.proxy.httpsProxy }}
-- export NO_PROXY="{{ include "cluster.internal.kubeadm.proxy.noProxyList" $ }}"
+- export NO_PROXY="{{ include "cluster.connectivity.proxy.noProxy" (dict "global" $.Values.global "providerIntegration" $.Values.providerIntegration) }}"
 - export http_proxy={{ $.Values.global.connectivity.proxy.httpProxy }}
 - export https_proxy={{ $.Values.global.connectivity.proxy.httpsProxy }}
-- export no_proxy="{{ include "cluster.internal.kubeadm.proxy.noProxyList" $ }}"
+- export no_proxy="{{ include "cluster.connectivity.proxy.noProxy" (dict "global" $.Values.global "providerIntegration" $.Values.providerIntegration) }}"
 {{- end }}
 {{- end }}
 
