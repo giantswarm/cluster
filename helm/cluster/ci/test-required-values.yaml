@@ -5,6 +5,7 @@ global:
   connectivity:
     baseDomain: example.gigantic.io
 providerIntegration:
+  provider: aws
   resourcesApi:
     bastionResourceEnabled: false
     clusterResourceEnabled: true
