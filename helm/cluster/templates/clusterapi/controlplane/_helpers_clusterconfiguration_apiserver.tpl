@@ -25,8 +25,8 @@ extraArgs:
   cloud-provider: external
   enable-admission-plugins: {{ include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.enableAdmissionPlugins" $ }}
   encryption-provider-config: /etc/kubernetes/encryption/config.yaml
-  {{- if $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.etcdPrefix }}
-  etcd-prefix: {{ $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.etcdPrefix }}
+  {{- if $.Values.internal.advancedConfiguration.controlPlane.apiServer.etcdPrefix }}
+  etcd-prefix: {{ $.Values.internal.advancedConfiguration.controlPlane.apiServer.etcdPrefix }}
   {{- end }}
   {{- if .Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.featureGates }}
   feature-gates: {{ include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.featureGates" $ }}

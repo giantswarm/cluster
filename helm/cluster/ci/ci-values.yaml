@@ -62,6 +62,7 @@ internal:
     cgroupsv1: true
     controlPlane:
       apiServer:
+        etcdPrefix: giantswarm.io
         extraArgs:
           allow-privileged: false
           authorization-webhook-version: v1beta1
@@ -108,7 +109,6 @@ providerIntegration:
           - PodSecurityPolicy
           apiAudiences:
             templateName: "cluster.test.kubeadmControlPlane.kubeadmConfigSpec.clusterConfiguration.apiServer.apiAudiences"
-          etcdPrefix: giantswarm.io
           featureGates:
           - name: CronJobTimeZone
             enabled: true

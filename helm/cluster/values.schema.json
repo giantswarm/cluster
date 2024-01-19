@@ -1090,6 +1090,11 @@
                                     "title": "API server",
                                     "description": "Advanced configuration of API server.",
                                     "properties": {
+                                        "etcdPrefix": {
+                                            "type": "string",
+                                            "title": "etcd prefix",
+                                            "description": "The prefix to prepend to all resource paths in etcd. If nothing is specified, the API server uses '/registry' prefix by default."
+                                        },
                                         "extraArgs": {
                                             "type": "object",
                                             "title": "Extra CLI args",
@@ -1357,10 +1362,6 @@
                                                             ]
                                                         }
                                                     ]
-                                                },
-                                                "etcdPrefix": {
-                                                    "type": "string",
-                                                    "title": "etcd prefix"
                                                 },
                                                 "featureGates": {
                                                     "type": "array",
