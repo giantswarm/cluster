@@ -1,0 +1,2 @@
+# CI needs at least one test-<something>-values.yaml file
+global: {}
