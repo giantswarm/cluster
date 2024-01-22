@@ -73,14 +73,14 @@ internal:
         - this-is-extra-cert-san.giantswarm.io
         - another-extra-cert-san.giantswarm.io
       files:
-      - path: /etc/hello/control-plane/node/stuff.yaml
+      - path: /etc/custom/control-plane/node/file.yaml
         permissions: "0644"
         contentFrom:
           secret:
             name: cluster-super-secret-control-plane
             key: node-stuff
     files:
-    - path: /etc/hello/any/node/stuff.yaml
+    - path: /etc/custom/node/file.yaml
       permissions: "0644"
       contentFrom:
         secret:
@@ -88,7 +88,7 @@ internal:
           key: node-stuff
     workers:
       files:
-      - path: /etc/hello/worker/node/stuff.yaml
+      - path: /etc/custom/worker/node/file.yaml
         permissions: "0644"
         contentFrom:
           secret:
@@ -150,7 +150,7 @@ providerIntegration:
           experimental:
             peerSkipClientSanVerification: true
       files:
-      - path: /etc/hello/control-plane/aws/node/stuff.yaml
+      - path: /etc/aws/control-plane/node/file.yaml
         permissions: "0644"
         contentFrom:
           secret:
@@ -238,7 +238,7 @@ providerIntegration:
   hashSalt: salty-1
   kubeadmConfig:
     files:
-    - path: /etc/hello/any/aws/node/stuff.yaml
+    - path: /etc/aws/node/file.yaml
       permissions: "0644"
       contentFrom:
         secret:
@@ -336,7 +336,7 @@ providerIntegration:
   workers:
     kubeadmConfig:
       files:
-      - path: /etc/hello/worker/aws/node/stuff.yaml
+      - path: /etc/aws/worker/node/file.yaml
         permissions: "0644"
         contentFrom:
           secret:
