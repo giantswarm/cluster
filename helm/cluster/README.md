@@ -66,7 +66,7 @@ Configuration of the control plane.
 
 | **Property** | **Description** | **More Details** |
 | :----------- | :-------------- | :--------------- |
-| `global.controlPlane.apiServerPort` | **API server port** - The public facing API server Load Balancer port.|**Type:** `integer`<br/>**Default:** `6443`|
+| `global.controlPlane.apiServerPort` | **API server port** - The API server Load Balancer port. This option sets the Spec.ClusterNetwork.APIServerPort field on the Cluster CR. In CAPI this field isn't used currently. It is instead used in providers. In CAPA this sets only the public facing port of the Load Balancer. In CAPZ both the public facing and the destination port are set to this value. CAPV and CAPVCD do not use it.|**Type:** `integer`<br/>**Default:** `6443`|
 | `global.controlPlane.customNodeTaints` | **Custom node taints**|**Type:** `array`<br/>|
 | `global.controlPlane.customNodeTaints[*]` |**None**|**Type:** `object`<br/>|
 | `global.controlPlane.customNodeTaints[*].effect` | **Effect**|**Type:** `string`<br/>|
@@ -205,10 +205,10 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.components.systemd` | **systemd**||
 | `providerIntegration.connectivity` | **Connectivity** - Internal connectivity configuration.|**Type:** `object`<br/>|
 | `providerIntegration.connectivity.proxy` | **Proxy** - Whether/how outgoing traffic is routed through proxy servers.|**Type:** `object`<br/>|
-| `providerIntegration.connectivity.proxy.noProxy` | **No proxy**|**Type:** `object`<br/>|
-| `providerIntegration.connectivity.proxy.noProxy.addresses` | **Addresses** - To be passed to the NO_PROXY environment variable in all hosts.|**Type:** `array`<br/>|
-| `providerIntegration.connectivity.proxy.noProxy.addressesTemplate` | **Addresses template** - Name of Helm template that renders a YAML array with NO_PROXY addresses.|**Type:** `string`<br/>|
-| `providerIntegration.connectivity.proxy.noProxy.addresses[*]` |**None**|**Type:** `string`<br/>|
+| `providerIntegration.connectivity.proxy.noProxy` | **No proxy** - To be passed to the NO_PROXY environment variable in all hosts.|**Type:** `object`<br/>|
+| `providerIntegration.connectivity.proxy.noProxy.templateName` | **Template name** - Name of Helm template that renders a YAML array with NO_PROXY addresses.|**Type:** `string`<br/>|
+| `providerIntegration.connectivity.proxy.noProxy.value` | **Value** - Pre-defined static NO_PROXY values.|**Type:** `array`<br/>|
+| `providerIntegration.connectivity.proxy.noProxy.value[*]` |**None**|**Type:** `string`<br/>|
 | `providerIntegration.connectivity.sshSsoPublicKey` | **SSH public key for single sign-on**|**Type:** `string`<br/>**Default:** `"ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM4cvZ01fLmO9cJbWUj7sfF+NhECgy+Cl0bazSrZX7sU vault-ca@vault.operations.giantswarm.io"`|
 | `providerIntegration.controlPlane` | **Internal control plane configuration**|**Type:** `object`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig` | **Kubeadm config** - Configuration of control plane nodes.|**Type:** `object`<br/>|

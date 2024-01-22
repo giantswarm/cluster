@@ -13,6 +13,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Add systemd unit and script to compute fairness values for k8s API server in controlplane.
 
+### Changed
+
+- Align API for properties that can be set as pre-defined static values and/or via templates.
+- Improve NO_PROXY template: rename to cluster.connectivity.proxy.noProxy, make it public and usable from other charts.
+
 ## [0.2.1] - 2024-01-17
 
 ### Added
