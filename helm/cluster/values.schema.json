@@ -1121,7 +1121,7 @@
                                 "files": {
                                     "type": "array",
                                     "title": "Files",
-                                    "description": "These are the files that are included on control plane nodes.",
+                                    "description": "Custom cluster-specific files that are deployed to control plane nodes.",
                                     "items": {
                                         "$ref": "#/$defs/fileFromSecret"
                                     }
@@ -1131,7 +1131,7 @@
                         "files": {
                             "type": "array",
                             "title": "Files",
-                            "description": "These are the files that are included on all the nodes.",
+                            "description": "Custom cluster-specific files that are deployed to all nodes.",
                             "items": {
                                 "$ref": "#/$defs/fileFromSecret"
                             }
@@ -1144,7 +1144,7 @@
                                 "files": {
                                     "type": "array",
                                     "title": "Files",
-                                    "description": "These are the files that are included on worker nodes.",
+                                    "description": "Custom cluster-specific files that are deployed to worker nodes.",
                                     "items": {
                                         "$ref": "#/$defs/fileFromSecret"
                                     }
@@ -1514,7 +1514,7 @@
                                 "files": {
                                     "type": "array",
                                     "title": "Files",
-                                    "description": "These are the files that are included on control plane nodes.",
+                                    "description": "Provider-specific files that are deployed to control plane nodes. They are specified in the cluster-<provider> apps.",
                                     "items": {
                                         "$ref": "#/$defs/fileFromSecret"
                                     }
@@ -1587,7 +1587,7 @@
                         "files": {
                             "type": "array",
                             "title": "Files",
-                            "description": "These are the files that are included on control plane nodes.",
+                            "description": "Provider-specific files that are deployed to all nodes. They are specified in the cluster-<provider> apps.",
                             "items": {
                                 "$ref": "#/$defs/fileFromSecret"
                             }
@@ -1796,7 +1796,7 @@
                                 "files": {
                                     "type": "array",
                                     "title": "Files",
-                                    "description": "These are the files that are included on worker nodes.",
+                                    "description": "Provider-specific files that are deployed to worker nodes. They are specified in the cluster-<provider> apps.",
                                     "items": {
                                         "$ref": "#/$defs/fileFromSecret"
                                     }

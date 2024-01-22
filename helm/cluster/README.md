@@ -101,7 +101,7 @@ For Giant Swarm internal use only, not stable, or not supported by UIs.
 | `internal.advancedConfiguration.controlPlane.apiServer.extraArgs` | **Extra CLI args** - A map with the additional CLI flags that are appended to the default flags. Use with caution, as there is no validation for these values, so you can set incorrect or duplicate flags.|**Type:** `object`<br/>|
 | `internal.advancedConfiguration.controlPlane.apiServer.extraCertificateSANs` | **Extra certificate SANs** - The additional certificate SANs that are appended to the default SANs. Use with caution, as there is no validation for these values, so you can set incorrect or duplicate certificates.|**Type:** `array`<br/>|
 | `internal.advancedConfiguration.controlPlane.apiServer.extraCertificateSANs[*]` | **Extra certificate SAN**|**Type:** `string`<br/>|
-| `internal.advancedConfiguration.controlPlane.files` | **Files** - These are the files that are included on control plane nodes.|**Type:** `array`<br/>|
+| `internal.advancedConfiguration.controlPlane.files` | **Files** - Custom cluster-specific files that are deployed to control plane nodes.|**Type:** `array`<br/>|
 | `internal.advancedConfiguration.controlPlane.files[*]` | **File from secret** - It defines a file with content in a Secret|**Type:** `object`<br/>|
 | `internal.advancedConfiguration.controlPlane.files[*].contentFrom` | **Content from** - It specifies where the file content is coming from.|**Type:** `object`<br/>|
 | `internal.advancedConfiguration.controlPlane.files[*].contentFrom.secret` | **Secret** - Kubernetes Secret resource with the file content.|**Type:** `object`<br/>|
@@ -109,7 +109,7 @@ For Giant Swarm internal use only, not stable, or not supported by UIs.
 | `internal.advancedConfiguration.controlPlane.files[*].contentFrom.secret.name` | **Name** - Name of the Secret resource.|**Type:** `string`<br/>|
 | `internal.advancedConfiguration.controlPlane.files[*].path` | **Path** - File path on the node.|**Type:** `string`<br/>|
 | `internal.advancedConfiguration.controlPlane.files[*].permissions` | **Permissions** - File permissions in form 0644|**Type:** `string`<br/>**Default:** `"0644"`|
-| `internal.advancedConfiguration.files` | **Files** - These are the files that are included on all the nodes.|**Type:** `array`<br/>|
+| `internal.advancedConfiguration.files` | **Files** - Custom cluster-specific files that are deployed to all nodes.|**Type:** `array`<br/>|
 | `internal.advancedConfiguration.files[*]` | **File from secret** - It defines a file with content in a Secret|**Type:** `object`<br/>|
 | `internal.advancedConfiguration.files[*].contentFrom` | **Content from** - It specifies where the file content is coming from.|**Type:** `object`<br/>|
 | `internal.advancedConfiguration.files[*].contentFrom.secret` | **Secret** - Kubernetes Secret resource with the file content.|**Type:** `object`<br/>|
@@ -118,7 +118,7 @@ For Giant Swarm internal use only, not stable, or not supported by UIs.
 | `internal.advancedConfiguration.files[*].path` | **Path** - File path on the node.|**Type:** `string`<br/>|
 | `internal.advancedConfiguration.files[*].permissions` | **Permissions** - File permissions in form 0644|**Type:** `string`<br/>**Default:** `"0644"`|
 | `internal.advancedConfiguration.workers` | **Workers** - Advanced configuration of worker nodes.|**Type:** `object`<br/>|
-| `internal.advancedConfiguration.workers.files` | **Files** - These are the files that are included on worker nodes.|**Type:** `array`<br/>|
+| `internal.advancedConfiguration.workers.files` | **Files** - Custom cluster-specific files that are deployed to worker nodes.|**Type:** `array`<br/>|
 | `internal.advancedConfiguration.workers.files[*]` | **File from secret** - It defines a file with content in a Secret|**Type:** `object`<br/>|
 | `internal.advancedConfiguration.workers.files[*].contentFrom` | **Content from** - It specifies where the file content is coming from.|**Type:** `object`<br/>|
 | `internal.advancedConfiguration.workers.files[*].contentFrom.secret` | **Secret** - Kubernetes Secret resource with the file content.|**Type:** `object`<br/>|
@@ -260,7 +260,7 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.etcd.extraArgs` | **Extra args**|**Type:** `object`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.etcd.initialCluster` | **Initial cluster** - Initial cluster configuration for bootstrapping.|**Type:** `string`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.etcd.initialClusterState` | **Initial cluster state**|**Type:** `string`<br/>|
-| `providerIntegration.controlPlane.kubeadmConfig.files` | **Files** - These are the files that are included on control plane nodes.|**Type:** `array`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.files` | **Files** - Provider-specific files that are deployed to control plane nodes. They are specified in the cluster-<provider> apps.|**Type:** `array`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.files[*]` | **File from secret** - It defines a file with content in a Secret|**Type:** `object`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.files[*].contentFrom` | **Content from** - It specifies where the file content is coming from.|**Type:** `object`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.files[*].contentFrom.secret` | **Secret** - Kubernetes Secret resource with the file content.|**Type:** `object`<br/>|
@@ -335,7 +335,7 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.controlPlane.resources.infrastructureMachineTemplateSpecTemplateName` | **Infrastructure Machine template spec template name** - The name of Helm template that renders Infrastructure Machine template spec.|**Type:** `string`<br/>|
 | `providerIntegration.hashSalt` | **Hash salt** - If specified, this token is used as a salt to the hash suffix of some resource names. Can be used to force-recreate some resources.|**Type:** `string`<br/>|
 | `providerIntegration.kubeadmConfig` | **Kubeadm config** - Common kubeadm config for all nodes, including both control plane and workers.|**Type:** `object`<br/>|
-| `providerIntegration.kubeadmConfig.files` | **Files** - These are the files that are included on control plane nodes.|**Type:** `array`<br/>|
+| `providerIntegration.kubeadmConfig.files` | **Files** - Provider-specific files that are deployed to all nodes. They are specified in the cluster-<provider> apps.|**Type:** `array`<br/>|
 | `providerIntegration.kubeadmConfig.files[*]` | **File from secret** - It defines a file with content in a Secret|**Type:** `object`<br/>|
 | `providerIntegration.kubeadmConfig.files[*].contentFrom` | **Content from** - It specifies where the file content is coming from.|**Type:** `object`<br/>|
 | `providerIntegration.kubeadmConfig.files[*].contentFrom.secret` | **Secret** - Kubernetes Secret resource with the file content.|**Type:** `object`<br/>|
@@ -417,7 +417,7 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.teleport.version` | **Teleport version**|**Type:** `string`<br/>**Default:** `"14.1.3"`|
 | `providerIntegration.workers` | **Provider-specific workers configuration**|**Type:** `object`<br/>|
 | `providerIntegration.workers.kubeadmConfig` | **Kubeadm config** - Configuration of workers nodes.|**Type:** `object`<br/>|
-| `providerIntegration.workers.kubeadmConfig.files` | **Files** - These are the files that are included on worker nodes.|**Type:** `array`<br/>|
+| `providerIntegration.workers.kubeadmConfig.files` | **Files** - Provider-specific files that are deployed to worker nodes. They are specified in the cluster-<provider> apps.|**Type:** `array`<br/>|
 | `providerIntegration.workers.kubeadmConfig.files[*]` | **File from secret** - It defines a file with content in a Secret|**Type:** `object`<br/>|
 | `providerIntegration.workers.kubeadmConfig.files[*].contentFrom` | **Content from** - It specifies where the file content is coming from.|**Type:** `object`<br/>|
 | `providerIntegration.workers.kubeadmConfig.files[*].contentFrom.secret` | **Secret** - Kubernetes Secret resource with the file content.|**Type:** `object`<br/>|

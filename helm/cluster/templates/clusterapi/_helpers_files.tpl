@@ -7,6 +7,7 @@
 {{- include "cluster.internal.kubeadm.files.kubelet" $ }}
 {{- include "cluster.internal.kubeadm.files.proxy" $ }}
 {{- include "cluster.internal.kubeadm.files.teleport" $ }}
+{{- include "cluster.internal.kubeadm.files.provider" $ }}
 {{- include "cluster.internal.kubeadm.files.custom" $ }}
 {{- end }}
 
@@ -111,6 +112,14 @@ and is used to join the node to the teleport cluster.
 {{- end }}
 {{- end }}
 
+{{/* Provider-specific files for all nodes */}}
+{{- define "cluster.internal.kubeadm.files.provider" }}
+{{- if $.Values.providerIntegration.kubeadmConfig.files }}
+{{ toYaml $.Values.providerIntegration.kubeadmConfig.files }}
+{{- end }}
+{{- end }}
+
+{{/* Custom cluster-specific files for all nodes */}}
 {{- define "cluster.internal.kubeadm.files.custom" }}
 {{- if $.Values.internal.advancedConfiguration.files }}
 {{ toYaml $.Values.internal.advancedConfiguration.files }}
