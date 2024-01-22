@@ -51,7 +51,8 @@
 {{- end }}
 {{- /* Add provider-specific NO_PROXY values from template */}}
 {{- if $providerIntegration.connectivity.proxy.noProxy.templateName }}
-{{- range $noProxyAddress := include $providerIntegration.connectivity.proxy.noProxy.templateName $ | fromYamlArray }}
+{{- $values := dict "global" $global }}
+{{- range $noProxyAddress := include $providerIntegration.connectivity.proxy.noProxy.templateName (dict "Values" $values) | fromYamlArray }}
 {{- $noProxyList = append $noProxyList $noProxyAddress -}}
 {{- end }}
 {{- end }}
@@ -67,7 +68,7 @@
 {{- end }}
 
 {{- define "cluster.test.internal.kubeadm.proxy.anotherNoProxyList" }}
-- some.noproxy.address.giantswarm.io
+- some.noproxy.{{ $.Values.global.metadata.name }}.{{ $.Values.global.connectivity.baseDomain }}
 - another.noproxy.address.giantswarm.io
 {{- end }}
 

@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Fix "cluster.connectivity.proxy.noProxy" template to correctly render values from specified template.
+
 ## [0.3.0] - 2024-01-22
 
 ### Changed
