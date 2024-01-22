@@ -117,7 +117,7 @@ For Giant Swarm internal use only, not stable, or not supported by UIs.
 | `internal.advancedConfiguration.files[*].contentFrom.secret.name` | **Name** - Name of the Secret resource.|**Type:** `string`<br/>|
 | `internal.advancedConfiguration.files[*].path` | **Path** - File path on the node.|**Type:** `string`<br/>|
 | `internal.advancedConfiguration.files[*].permissions` | **Permissions** - File permissions in form 0644|**Type:** `string`<br/>**Default:** `"0644"`|
-| `internal.advancedConfiguration.workers` | **Workers** - Advanced configuration of worker nodes|**Type:** `object`<br/>|
+| `internal.advancedConfiguration.workers` | **Workers** - Advanced configuration of worker nodes.|**Type:** `object`<br/>|
 | `internal.advancedConfiguration.workers.files` | **Files** - These are the files that are included on worker nodes.|**Type:** `array`<br/>|
 | `internal.advancedConfiguration.workers.files[*]` | **File from secret** - It defines a file with content in a Secret|**Type:** `object`<br/>|
 | `internal.advancedConfiguration.workers.files[*].contentFrom` | **Content from** - It specifies where the file content is coming from.|**Type:** `object`<br/>|
