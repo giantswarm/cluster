@@ -9,6 +9,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add custom `files` config for all nodes to Helm value to `.Values.internal.advancedConfiguration`.
+- Add custom control plane `files` config to Helm value to `.Values.internal.advancedConfiguration.controlPlane`.
+- Add custom worker `files` config to Helm value to `.Values.internal.advancedConfiguration.workers`.
+
+### Changed
+
+- Move API server `extraCertificateSANs` Helm value to `.Values.internal.advancedConfiguration.controlPlane.apiServer`.
+- Move API server `extraArgs` Helm value to `.Values.internal.advancedConfiguration.controlPlane.apiServer`.
+- Move API server `etcdPrefix` Helm value to `.Values.internal.advancedConfiguration.controlPlane.apiServer`.
+- Move API server `bindPort` Helm value to `.Values.internal.advancedConfiguration.controlPlane.apiServer`.
+
 ## [0.3.1] - 2024-01-23
 
 ### Fixed
@@ -21,13 +34,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Align API for properties that can be set as pre-defined static values and/or via templates.
 - Improve NO_PROXY template: rename to cluster.connectivity.proxy.noProxy, make it public and usable from other charts.
-- Move API server `extraCertificateSANs` Helm value to `.Values.internal.advancedConfiguration.controlPlane.apiServer`.
-- Move API server `extraArgs` Helm value to `.Values.internal.advancedConfiguration.controlPlane.apiServer`.
-- Move API server `etcdPrefix` Helm value to `.Values.internal.advancedConfiguration.controlPlane.apiServer`.
-- Move API server `bindPort` Helm value to `.Values.internal.advancedConfiguration.controlPlane.apiServer`.
-- Move `files` config for all nodes to Helm value to `.Values.internal.advancedConfiguration`.
-- Move control plane `files` config to Helm value to `.Values.internal.advancedConfiguration.controlPlane`.
-- Move worker `files` config to Helm value to `.Values.internal.advancedConfiguration.workers`.
 
 ## [0.2.1] - 2024-01-17
 
