@@ -1117,6 +1117,14 @@
                                             }
                                         }
                                     }
+                                },
+                                "files": {
+                                    "type": "array",
+                                    "title": "Files",
+                                    "description": "These are the files that are included on control plane nodes.",
+                                    "items": {
+                                        "$ref": "#/$defs/fileFromSecret"
+                                    }
                                 }
                             }
                         },
@@ -1486,14 +1494,6 @@
                                                 }
                                             }
                                         }
-                                    }
-                                },
-                                "files": {
-                                    "type": "array",
-                                    "title": "Files",
-                                    "description": "These are the files that are included on control plane nodes.",
-                                    "items": {
-                                        "$ref": "#/$defs/fileFromSecret"
                                     }
                                 },
                                 "ignition": {

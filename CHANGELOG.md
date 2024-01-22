@@ -25,7 +25,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Move API server `extraArgs` Helm value to `.Values.internal.advancedConfiguration.controlPlane.apiServer`.
 - Move API server `etcdPrefix` Helm value to `.Values.internal.advancedConfiguration.controlPlane.apiServer`.
 - Move API server `bindPort` Helm value to `.Values.internal.advancedConfiguration.controlPlane.apiServer`.
-- Move `files` for all nodes to Helm value to `.Values.internal.advancedConfiguration`.
+- Move `files` config for all nodes to Helm value to `.Values.internal.advancedConfiguration`.
+- Move control plane `files` config to Helm value to `.Values.internal.advancedConfiguration.controlPlane`.
 
 ## [0.2.1] - 2024-01-17
 

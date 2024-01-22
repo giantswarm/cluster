@@ -72,6 +72,13 @@ internal:
         extraCertificateSANs:
         - this-is-extra-cert-san.giantswarm.io
         - another-extra-cert-san.giantswarm.io
+      files:
+      - path: /etc/hello/control-plane/node/stuff.yaml
+        permissions: "0644"
+        contentFrom:
+          secret:
+            name: cluster-super-secret-control-plane
+            key: node-stuff
     files:
     - path: /etc/hello/any/node/stuff.yaml
       permissions: "0644"
@@ -134,13 +141,6 @@ providerIntegration:
             snapshot-count: 50000
           experimental:
             peerSkipClientSanVerification: true
-      files:
-      - path: /etc/hello/control-plane/node/stuff.yaml
-        permissions: "0644"
-        contentFrom:
-          secret:
-            name: cluster-super-secret-control-plane
-            key: node-stuff
       ignition:
         containerLinuxConfig:
           additionalConfig:

@@ -24,7 +24,7 @@
 {{- end }}
 
 {{- define "cluster.internal.controlPlane.kubeadm.files.custom" }}
-{{- if $.Values.providerIntegration.controlPlane.kubeadmConfig.files }}
-{{ toYaml $.Values.providerIntegration.controlPlane.kubeadmConfig.files }}
+{{- if $.Values.internal.advancedConfiguration.controlPlane.files }}
+{{ toYaml $.Values.internal.advancedConfiguration.controlPlane.files }}
 {{- end }}
 {{- end }}
