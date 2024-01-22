@@ -86,6 +86,14 @@ internal:
         secret:
           name: cluster-super-secret
           key: node-stuff
+    workers:
+      files:
+      - path: /etc/hello/worker/node/stuff.yaml
+        permissions: "0644"
+        contentFrom:
+          secret:
+            name: cluster-super-secret-worker
+            key: node-stuff
 providerIntegration:
   provider: aws
   bastion:
@@ -313,13 +321,6 @@ providerIntegration:
     enabled: true
   workers:
     kubeadmConfig:
-      files:
-      - path: /etc/hello/worker/node/stuff.yaml
-        permissions: "0644"
-        contentFrom:
-          secret:
-            name: cluster-super-secret-worker
-            key: node-stuff
       ignition:
         containerLinuxConfig:
           additionalConfig:

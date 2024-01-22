@@ -38,6 +38,7 @@ internal:
     cgroupsv1: false
     controlPlane:
       apiServer: {}
+    workers: {}
 providerIntegration:
   bastion:
     kubeadmConfig:

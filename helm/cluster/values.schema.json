@@ -1135,6 +1135,21 @@
                             "items": {
                                 "$ref": "#/$defs/fileFromSecret"
                             }
+                        },
+                        "workers": {
+                            "type": "object",
+                            "title": "Workers",
+                            "description": "Advanced configuration of worker nodes.",
+                            "properties": {
+                                "files": {
+                                    "type": "array",
+                                    "title": "Files",
+                                    "description": "These are the files that are included on worker nodes.",
+                                    "items": {
+                                        "$ref": "#/$defs/fileFromSecret"
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -1762,14 +1777,6 @@
                             ],
                             "additionalProperties": false,
                             "properties": {
-                                "files": {
-                                    "type": "array",
-                                    "title": "Files",
-                                    "description": "These are the files that are included on worker nodes.",
-                                    "items": {
-                                        "$ref": "#/$defs/fileFromSecret"
-                                    }
-                                },
                                 "ignition": {
                                     "$ref": "#/$defs/ignition"
                                 },

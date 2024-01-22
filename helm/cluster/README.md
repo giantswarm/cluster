@@ -117,6 +117,15 @@ For Giant Swarm internal use only, not stable, or not supported by UIs.
 | `internal.advancedConfiguration.files[*].contentFrom.secret.name` | **Name** - Name of the Secret resource.|**Type:** `string`<br/>|
 | `internal.advancedConfiguration.files[*].path` | **Path** - File path on the node.|**Type:** `string`<br/>|
 | `internal.advancedConfiguration.files[*].permissions` | **Permissions** - File permissions in form 0644|**Type:** `string`<br/>**Default:** `"0644"`|
+| `internal.advancedConfiguration.workers` | **Workers** - Advanced configuration of worker nodes|**Type:** `object`<br/>|
+| `internal.advancedConfiguration.workers.files` | **Files** - These are the files that are included on worker nodes.|**Type:** `array`<br/>|
+| `internal.advancedConfiguration.workers.files[*]` | **File from secret** - It defines a file with content in a Secret|**Type:** `object`<br/>|
+| `internal.advancedConfiguration.workers.files[*].contentFrom` | **Content from** - It specifies where the file content is coming from.|**Type:** `object`<br/>|
+| `internal.advancedConfiguration.workers.files[*].contentFrom.secret` | **Secret** - Kubernetes Secret resource with the file content.|**Type:** `object`<br/>|
+| `internal.advancedConfiguration.workers.files[*].contentFrom.secret.key` | **Key** - Secret key where the file content is.|**Type:** `string`<br/>|
+| `internal.advancedConfiguration.workers.files[*].contentFrom.secret.name` | **Name** - Name of the Secret resource.|**Type:** `string`<br/>|
+| `internal.advancedConfiguration.workers.files[*].path` | **Path** - File path on the node.|**Type:** `string`<br/>|
+| `internal.advancedConfiguration.workers.files[*].permissions` | **Permissions** - File permissions in form 0644|**Type:** `string`<br/>**Default:** `"0644"`|
 
 ### Metadata
 Properties within the `.global.metadata` object
@@ -392,14 +401,6 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.teleport.version` | **Teleport version**|**Type:** `string`<br/>**Default:** `"14.1.3"`|
 | `providerIntegration.workers` | **Internal workers configuration**|**Type:** `object`<br/>|
 | `providerIntegration.workers.kubeadmConfig` | **Kubeadm config** - Configuration of workers nodes.|**Type:** `object`<br/>|
-| `providerIntegration.workers.kubeadmConfig.files` | **Files** - These are the files that are included on worker nodes.|**Type:** `array`<br/>|
-| `providerIntegration.workers.kubeadmConfig.files[*]` | **File from secret** - It defines a file with content in a Secret|**Type:** `object`<br/>|
-| `providerIntegration.workers.kubeadmConfig.files[*].contentFrom` | **Content from** - It specifies where the file content is coming from.|**Type:** `object`<br/>|
-| `providerIntegration.workers.kubeadmConfig.files[*].contentFrom.secret` | **Secret** - Kubernetes Secret resource with the file content.|**Type:** `object`<br/>|
-| `providerIntegration.workers.kubeadmConfig.files[*].contentFrom.secret.key` | **Key** - Secret key where the file content is.|**Type:** `string`<br/>|
-| `providerIntegration.workers.kubeadmConfig.files[*].contentFrom.secret.name` | **Name** - Name of the Secret resource.|**Type:** `string`<br/>|
-| `providerIntegration.workers.kubeadmConfig.files[*].path` | **Path** - File path on the node.|**Type:** `string`<br/>|
-| `providerIntegration.workers.kubeadmConfig.files[*].permissions` | **Permissions** - File permissions in form 0644|**Type:** `string`<br/>**Default:** `"0644"`|
 | `providerIntegration.workers.kubeadmConfig.ignition` | **Ignition** - Ignition-specific configuration.|**Type:** `object`<br/>|
 | `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig` | **Container Linux configuration**|**Type:** `object`<br/>|
 | `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig` | **Additional config** - Additional configuration to be merged with the Ignition. More info: https://coreos.github.io/ignition/operator-notes/#config-merging.|**Type:** `object`<br/>|
