@@ -149,6 +149,13 @@ providerIntegration:
             snapshot-count: 50000
           experimental:
             peerSkipClientSanVerification: true
+      files:
+      - path: /etc/hello/control-plane/aws/node/stuff.yaml
+        permissions: "0644"
+        contentFrom:
+          secret:
+            name: cluster-super-secret-control-plane
+            key: node-stuff
       ignition:
         containerLinuxConfig:
           additionalConfig:
@@ -230,6 +237,13 @@ providerIntegration:
         - 169.254.169.123
   hashSalt: salty-1
   kubeadmConfig:
+    files:
+    - path: /etc/hello/any/aws/node/stuff.yaml
+      permissions: "0644"
+      contentFrom:
+        secret:
+          name: cluster-super-secret
+          key: node-stuff
     ignition:
       containerLinuxConfig:
         additionalConfig:
@@ -321,6 +335,13 @@ providerIntegration:
     enabled: true
   workers:
     kubeadmConfig:
+      files:
+      - path: /etc/hello/worker/aws/node/stuff.yaml
+        permissions: "0644"
+        contentFrom:
+          secret:
+            name: cluster-super-secret-worker
+            key: node-stuff
       ignition:
         containerLinuxConfig:
           additionalConfig:

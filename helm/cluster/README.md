@@ -242,7 +242,7 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.connectivity.proxy.noProxy.value` | **Value** - Pre-defined static NO_PROXY values.|**Type:** `array`<br/>|
 | `providerIntegration.connectivity.proxy.noProxy.value[*]` |**None**|**Type:** `string`<br/>|
 | `providerIntegration.connectivity.sshSsoPublicKey` | **SSH public key for single sign-on**|**Type:** `string`<br/>**Default:** `"ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM4cvZ01fLmO9cJbWUj7sfF+NhECgy+Cl0bazSrZX7sU vault-ca@vault.operations.giantswarm.io"`|
-| `providerIntegration.controlPlane` | **Internal control plane configuration**|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane` | **Provider-specific control plane configuration**|**Type:** `object`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig` | **Kubeadm config** - Configuration of control plane nodes.|**Type:** `object`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration` | **Cluster configuration** - Configuration of Kubernetes components.|**Type:** `object`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer` | **API server** - Configuration of API server.|**Type:** `object`<br/>**Default:** `{}`|
@@ -260,6 +260,14 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.etcd.extraArgs` | **Extra args**|**Type:** `object`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.etcd.initialCluster` | **Initial cluster** - Initial cluster configuration for bootstrapping.|**Type:** `string`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.etcd.initialClusterState` | **Initial cluster state**|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.files` | **Files** - These are the files that are included on control plane nodes.|**Type:** `array`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.files[*]` | **File from secret** - It defines a file with content in a Secret|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.files[*].contentFrom` | **Content from** - It specifies where the file content is coming from.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.files[*].contentFrom.secret` | **Secret** - Kubernetes Secret resource with the file content.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.files[*].contentFrom.secret.key` | **Key** - Secret key where the file content is.|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.files[*].contentFrom.secret.name` | **Name** - Name of the Secret resource.|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.files[*].path` | **Path** - File path on the node.|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.files[*].permissions` | **Permissions** - File permissions in form 0644|**Type:** `string`<br/>**Default:** `"0644"`|
 | `providerIntegration.controlPlane.kubeadmConfig.ignition` | **Ignition** - Ignition-specific configuration.|**Type:** `object`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig` | **Container Linux configuration**|**Type:** `object`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig` | **Additional config** - Additional configuration to be merged with the Ignition. More info: https://coreos.github.io/ignition/operator-notes/#config-merging.|**Type:** `object`<br/>|
@@ -327,6 +335,14 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.controlPlane.resources.infrastructureMachineTemplateSpecTemplateName` | **Infrastructure Machine template spec template name** - The name of Helm template that renders Infrastructure Machine template spec.|**Type:** `string`<br/>|
 | `providerIntegration.hashSalt` | **Hash salt** - If specified, this token is used as a salt to the hash suffix of some resource names. Can be used to force-recreate some resources.|**Type:** `string`<br/>|
 | `providerIntegration.kubeadmConfig` | **Kubeadm config** - Common kubeadm config for all nodes, including both control plane and workers.|**Type:** `object`<br/>|
+| `providerIntegration.kubeadmConfig.files` | **Files** - These are the files that are included on control plane nodes.|**Type:** `array`<br/>|
+| `providerIntegration.kubeadmConfig.files[*]` | **File from secret** - It defines a file with content in a Secret|**Type:** `object`<br/>|
+| `providerIntegration.kubeadmConfig.files[*].contentFrom` | **Content from** - It specifies where the file content is coming from.|**Type:** `object`<br/>|
+| `providerIntegration.kubeadmConfig.files[*].contentFrom.secret` | **Secret** - Kubernetes Secret resource with the file content.|**Type:** `object`<br/>|
+| `providerIntegration.kubeadmConfig.files[*].contentFrom.secret.key` | **Key** - Secret key where the file content is.|**Type:** `string`<br/>|
+| `providerIntegration.kubeadmConfig.files[*].contentFrom.secret.name` | **Name** - Name of the Secret resource.|**Type:** `string`<br/>|
+| `providerIntegration.kubeadmConfig.files[*].path` | **Path** - File path on the node.|**Type:** `string`<br/>|
+| `providerIntegration.kubeadmConfig.files[*].permissions` | **Permissions** - File permissions in form 0644|**Type:** `string`<br/>**Default:** `"0644"`|
 | `providerIntegration.kubeadmConfig.ignition` | **Ignition** - Ignition-specific configuration.|**Type:** `object`<br/>|
 | `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig` | **Container Linux configuration**|**Type:** `object`<br/>|
 | `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig` | **Additional config** - Additional configuration to be merged with the Ignition. More info: https://coreos.github.io/ignition/operator-notes/#config-merging.|**Type:** `object`<br/>|
@@ -399,8 +415,16 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.teleport.enabled` | **Enable teleport**|**Type:** `boolean`<br/>**Default:** `true`|
 | `providerIntegration.teleport.proxyAddr` | **Teleport proxy address**|**Type:** `string`<br/>**Default:** `"teleport.giantswarm.io:443"`|
 | `providerIntegration.teleport.version` | **Teleport version**|**Type:** `string`<br/>**Default:** `"14.1.3"`|
-| `providerIntegration.workers` | **Internal workers configuration**|**Type:** `object`<br/>|
+| `providerIntegration.workers` | **Provider-specific workers configuration**|**Type:** `object`<br/>|
 | `providerIntegration.workers.kubeadmConfig` | **Kubeadm config** - Configuration of workers nodes.|**Type:** `object`<br/>|
+| `providerIntegration.workers.kubeadmConfig.files` | **Files** - These are the files that are included on worker nodes.|**Type:** `array`<br/>|
+| `providerIntegration.workers.kubeadmConfig.files[*]` | **File from secret** - It defines a file with content in a Secret|**Type:** `object`<br/>|
+| `providerIntegration.workers.kubeadmConfig.files[*].contentFrom` | **Content from** - It specifies where the file content is coming from.|**Type:** `object`<br/>|
+| `providerIntegration.workers.kubeadmConfig.files[*].contentFrom.secret` | **Secret** - Kubernetes Secret resource with the file content.|**Type:** `object`<br/>|
+| `providerIntegration.workers.kubeadmConfig.files[*].contentFrom.secret.key` | **Key** - Secret key where the file content is.|**Type:** `string`<br/>|
+| `providerIntegration.workers.kubeadmConfig.files[*].contentFrom.secret.name` | **Name** - Name of the Secret resource.|**Type:** `string`<br/>|
+| `providerIntegration.workers.kubeadmConfig.files[*].path` | **Path** - File path on the node.|**Type:** `string`<br/>|
+| `providerIntegration.workers.kubeadmConfig.files[*].permissions` | **Permissions** - File permissions in form 0644|**Type:** `string`<br/>**Default:** `"0644"`|
 | `providerIntegration.workers.kubeadmConfig.ignition` | **Ignition** - Ignition-specific configuration.|**Type:** `object`<br/>|
 | `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig` | **Container Linux configuration**|**Type:** `object`<br/>|
 | `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig` | **Additional config** - Additional configuration to be merged with the Ignition. More info: https://coreos.github.io/ignition/operator-notes/#config-merging.|**Type:** `object`<br/>|

@@ -1316,7 +1316,7 @@
                 },
                 "controlPlane": {
                     "type": "object",
-                    "title": "Internal control plane configuration",
+                    "title": "Provider-specific control plane configuration",
                     "required": [
                         "kubeadmConfig",
                         "resources"
@@ -1511,6 +1511,14 @@
                                         }
                                     }
                                 },
+                                "files": {
+                                    "type": "array",
+                                    "title": "Files",
+                                    "description": "These are the files that are included on control plane nodes.",
+                                    "items": {
+                                        "$ref": "#/$defs/fileFromSecret"
+                                    }
+                                },
                                 "ignition": {
                                     "$ref": "#/$defs/ignition"
                                 },
@@ -1576,6 +1584,14 @@
                     "description": "Common kubeadm config for all nodes, including both control plane and workers.",
                     "additionalProperties": false,
                     "properties": {
+                        "files": {
+                            "type": "array",
+                            "title": "Files",
+                            "description": "These are the files that are included on control plane nodes.",
+                            "items": {
+                                "$ref": "#/$defs/fileFromSecret"
+                            }
+                        },
                         "ignition": {
                             "$ref": "#/$defs/ignition"
                         },
@@ -1765,7 +1781,7 @@
                 },
                 "workers": {
                     "type": "object",
-                    "title": "Internal workers configuration",
+                    "title": "Provider-specific workers configuration",
                     "additionalProperties": false,
                     "properties": {
                         "kubeadmConfig": {
@@ -1777,6 +1793,14 @@
                             ],
                             "additionalProperties": false,
                             "properties": {
+                                "files": {
+                                    "type": "array",
+                                    "title": "Files",
+                                    "description": "These are the files that are included on worker nodes.",
+                                    "items": {
+                                        "$ref": "#/$defs/fileFromSecret"
+                                    }
+                                },
                                 "ignition": {
                                     "$ref": "#/$defs/ignition"
                                 },
