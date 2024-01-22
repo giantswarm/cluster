@@ -11,9 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Add custom `files` config for all nodes to Helm value to `.Values.internal.advancedConfiguration`.
-- Add custom control plane `files` config to Helm value to `.Values.internal.advancedConfiguration.controlPlane`.
-- Add custom worker `files` config to Helm value to `.Values.internal.advancedConfiguration.workers`.
+- Add custom `files` config to Helm value to `.Values.internal.advancedConfiguration`.
+- Add custom `preKubeadmCommands` config to Helm value to `.Values.internal.advancedConfiguration`.
+- Add custom `postKubeadmCommands` config to Helm value to `.Values.internal.advancedConfiguration`.
 
 ### Changed
 

@@ -109,6 +109,10 @@ For Giant Swarm internal use only, not stable, or not supported by UIs.
 | `internal.advancedConfiguration.controlPlane.files[*].contentFrom.secret.name` | **Name** - Name of the Secret resource.|**Type:** `string`<br/>|
 | `internal.advancedConfiguration.controlPlane.files[*].path` | **Path** - File path on the node.|**Type:** `string`<br/>|
 | `internal.advancedConfiguration.controlPlane.files[*].permissions` | **Permissions** - File permissions in form 0644|**Type:** `string`<br/>**Default:** `"0644"`|
+| `internal.advancedConfiguration.controlPlane.postKubeadmCommands` | **Post-kubeadm commands** - Extra commands to run after kubeadm runs.|**Type:** `array`<br/>|
+| `internal.advancedConfiguration.controlPlane.postKubeadmCommands[*]` |**None**|**Type:** `string`<br/>|
+| `internal.advancedConfiguration.controlPlane.preKubeadmCommands` | **Pre-kubeadm commands** - Extra commands to run before kubeadm runs.|**Type:** `array`<br/>|
+| `internal.advancedConfiguration.controlPlane.preKubeadmCommands[*]` |**None**|**Type:** `string`<br/>|
 | `internal.advancedConfiguration.files` | **Files** - Custom cluster-specific files that are deployed to all nodes.|**Type:** `array`<br/>|
 | `internal.advancedConfiguration.files[*]` | **File from secret** - It defines a file with content in a Secret|**Type:** `object`<br/>|
 | `internal.advancedConfiguration.files[*].contentFrom` | **Content from** - It specifies where the file content is coming from.|**Type:** `object`<br/>|
@@ -117,6 +121,10 @@ For Giant Swarm internal use only, not stable, or not supported by UIs.
 | `internal.advancedConfiguration.files[*].contentFrom.secret.name` | **Name** - Name of the Secret resource.|**Type:** `string`<br/>|
 | `internal.advancedConfiguration.files[*].path` | **Path** - File path on the node.|**Type:** `string`<br/>|
 | `internal.advancedConfiguration.files[*].permissions` | **Permissions** - File permissions in form 0644|**Type:** `string`<br/>**Default:** `"0644"`|
+| `internal.advancedConfiguration.postKubeadmCommands` | **Post-kubeadm commands** - Extra commands to run after kubeadm runs.|**Type:** `array`<br/>|
+| `internal.advancedConfiguration.postKubeadmCommands[*]` |**None**|**Type:** `string`<br/>|
+| `internal.advancedConfiguration.preKubeadmCommands` | **Pre-kubeadm commands** - Extra commands to run before kubeadm runs.|**Type:** `array`<br/>|
+| `internal.advancedConfiguration.preKubeadmCommands[*]` |**None**|**Type:** `string`<br/>|
 | `internal.advancedConfiguration.workers` | **Workers** - Advanced configuration of worker nodes.|**Type:** `object`<br/>|
 | `internal.advancedConfiguration.workers.files` | **Files** - Custom cluster-specific files that are deployed to worker nodes.|**Type:** `array`<br/>|
 | `internal.advancedConfiguration.workers.files[*]` | **File from secret** - It defines a file with content in a Secret|**Type:** `object`<br/>|
@@ -126,6 +134,10 @@ For Giant Swarm internal use only, not stable, or not supported by UIs.
 | `internal.advancedConfiguration.workers.files[*].contentFrom.secret.name` | **Name** - Name of the Secret resource.|**Type:** `string`<br/>|
 | `internal.advancedConfiguration.workers.files[*].path` | **Path** - File path on the node.|**Type:** `string`<br/>|
 | `internal.advancedConfiguration.workers.files[*].permissions` | **Permissions** - File permissions in form 0644|**Type:** `string`<br/>**Default:** `"0644"`|
+| `internal.advancedConfiguration.workers.postKubeadmCommands` | **Post-kubeadm commands** - Extra commands to run after kubeadm runs.|**Type:** `array`<br/>|
+| `internal.advancedConfiguration.workers.postKubeadmCommands[*]` |**None**|**Type:** `string`<br/>|
+| `internal.advancedConfiguration.workers.preKubeadmCommands` | **Pre-kubeadm commands** - Extra commands to run before kubeadm runs.|**Type:** `array`<br/>|
+| `internal.advancedConfiguration.workers.preKubeadmCommands[*]` |**None**|**Type:** `string`<br/>|
 
 ### Metadata
 Properties within the `.global.metadata` object
@@ -334,7 +346,7 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.controlPlane.resources.infrastructureMachineTemplate.version` | **API version**|**Type:** `string`<br/>**Examples:** `"v1alpha1", "v1beta1", "v1beta2", "v1", "v2"`<br/>|
 | `providerIntegration.controlPlane.resources.infrastructureMachineTemplateSpecTemplateName` | **Infrastructure Machine template spec template name** - The name of Helm template that renders Infrastructure Machine template spec.|**Type:** `string`<br/>|
 | `providerIntegration.hashSalt` | **Hash salt** - If specified, this token is used as a salt to the hash suffix of some resource names. Can be used to force-recreate some resources.|**Type:** `string`<br/>|
-| `providerIntegration.kubeadmConfig` | **Kubeadm config** - Common kubeadm config for all nodes, including both control plane and workers.|**Type:** `object`<br/>|
+| `providerIntegration.kubeadmConfig` | **Provider-specific kubeadm config** - Provider-specific kubeadm config that is common for all nodes, including both control plane and workers.|**Type:** `object`<br/>|
 | `providerIntegration.kubeadmConfig.files` | **Files** - Provider-specific files that are deployed to all nodes. They are specified in the cluster-<provider> apps.|**Type:** `array`<br/>|
 | `providerIntegration.kubeadmConfig.files[*]` | **File from secret** - It defines a file with content in a Secret|**Type:** `object`<br/>|
 | `providerIntegration.kubeadmConfig.files[*].contentFrom` | **Content from** - It specifies where the file content is coming from.|**Type:** `object`<br/>|

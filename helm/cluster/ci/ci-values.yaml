@@ -79,6 +79,10 @@ internal:
           secret:
             name: cluster-super-secret-control-plane
             key: node-stuff
+      preKubeadmCommands:
+      - echo "custom control plane command before kubeadm"
+      postKubeadmCommands:
+      - echo "custom control plane command after kubeadm"
     files:
     - path: /etc/custom/node/file.yaml
       permissions: "0644"
@@ -86,6 +90,10 @@ internal:
         secret:
           name: cluster-super-secret
           key: node-stuff
+    preKubeadmCommands:
+    - echo "custom nodes command before kubeadm"
+    postKubeadmCommands:
+    - echo "custom nodes command after kubeadm"
     workers:
       files:
       - path: /etc/custom/worker/node/file.yaml
@@ -94,6 +102,10 @@ internal:
           secret:
             name: cluster-super-secret-worker
             key: node-stuff
+      preKubeadmCommands:
+      - echo "custom workers command before kubeadm"
+      postKubeadmCommands:
+      - echo "custom workers command after kubeadm"
 providerIntegration:
   provider: aws
   bastion:
@@ -219,11 +231,9 @@ providerIntegration:
                   id: 23456
                   name: giantswarm
       preKubeadmCommands:
-      - echo "hello control plane before kubeadm"
-      - echo "cluster control plane before kubeadm"
+      - echo "aws control plane command before kubeadm"
       postKubeadmCommands:
-      - echo "hello control plane after kubeadm"
-      - echo "cluster control plane after kubeadm"
+      - echo "aws control plane command after kubeadm"
     resources:
       infrastructureMachineTemplate:
         group: infrastructure.cluster.x-k8s.io
@@ -302,11 +312,9 @@ providerIntegration:
                 id: 23456
                 name: giantswarm
     preKubeadmCommands:
-    - echo "hello all nodes before kubeadm"
-    - echo "all cluster nodes before kubeadm"
+    - echo "aws nodes command before kubeadm"
     postKubeadmCommands:
-    - echo "hello all nodes after kubeadm"
-    - echo "all cluster nodes after kubeadm"
+    - echo "aws nodes command after kubeadm"
   kubernetesVersion: 1.24.10
   pauseProperties:
     global.connectivity.vpcMode: private
@@ -386,8 +394,6 @@ providerIntegration:
                   id: 23456
                   name: giantswarm
       preKubeadmCommands:
-      - echo "hello workers before kubeadm"
-      - echo "cluster workers before kubeadm"
+      - echo "aws workers command before kubeadm"
       postKubeadmCommands:
-      - echo "hello workers after kubeadm"
-      - echo "cluster workers after kubeadm"
+      - echo "aws workers command after kubeadm"

@@ -1125,6 +1125,12 @@
                                     "items": {
                                         "$ref": "#/$defs/fileFromSecret"
                                     }
+                                },
+                                "postKubeadmCommands": {
+                                    "$ref": "#/$defs/postKubeadmCommands"
+                                },
+                                "preKubeadmCommands": {
+                                    "$ref": "#/$defs/preKubeadmCommands"
                                 }
                             }
                         },
@@ -1135,6 +1141,12 @@
                             "items": {
                                 "$ref": "#/$defs/fileFromSecret"
                             }
+                        },
+                        "postKubeadmCommands": {
+                            "$ref": "#/$defs/postKubeadmCommands"
+                        },
+                        "preKubeadmCommands": {
+                            "$ref": "#/$defs/preKubeadmCommands"
                         },
                         "workers": {
                             "type": "object",
@@ -1148,6 +1160,12 @@
                                     "items": {
                                         "$ref": "#/$defs/fileFromSecret"
                                     }
+                                },
+                                "postKubeadmCommands": {
+                                    "$ref": "#/$defs/postKubeadmCommands"
+                                },
+                                "preKubeadmCommands": {
+                                    "$ref": "#/$defs/preKubeadmCommands"
                                 }
                             }
                         }
@@ -1580,8 +1598,8 @@
                 },
                 "kubeadmConfig": {
                     "type": "object",
-                    "title": "Kubeadm config",
-                    "description": "Common kubeadm config for all nodes, including both control plane and workers.",
+                    "title": "Provider-specific kubeadm config",
+                    "description": "Provider-specific kubeadm config that is common for all nodes, including both control plane and workers.",
                     "additionalProperties": false,
                     "properties": {
                         "files": {
