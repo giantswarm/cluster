@@ -72,6 +72,13 @@ internal:
         extraCertificateSANs:
         - this-is-extra-cert-san.giantswarm.io
         - another-extra-cert-san.giantswarm.io
+    files:
+    - path: /etc/hello/any/node/stuff.yaml
+      permissions: "0644"
+      contentFrom:
+        secret:
+          name: cluster-super-secret
+          key: node-stuff
 providerIntegration:
   provider: aws
   bastion:
@@ -215,13 +222,6 @@ providerIntegration:
         - 169.254.169.123
   hashSalt: salty-1
   kubeadmConfig:
-    files:
-    - path: /etc/hello/any/node/stuff.yaml
-      permissions: "0644"
-      contentFrom:
-        secret:
-          name: cluster-super-secret
-          key: node-stuff
     ignition:
       containerLinuxConfig:
         additionalConfig:

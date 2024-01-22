@@ -112,7 +112,7 @@ and is used to join the node to the teleport cluster.
 {{- end }}
 
 {{- define "cluster.internal.kubeadm.files.custom" }}
-{{- if $.Values.providerIntegration.kubeadmConfig.files }}
-{{ toYaml $.Values.providerIntegration.kubeadmConfig.files }}
+{{- if $.Values.internal.advancedConfiguration.files }}
+{{ toYaml $.Values.internal.advancedConfiguration.files }}
 {{- end }}
 {{- end }}

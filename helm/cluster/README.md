@@ -101,6 +101,14 @@ For Giant Swarm internal use only, not stable, or not supported by UIs.
 | `internal.advancedConfiguration.controlPlane.apiServer.extraArgs` | **Extra CLI args** - A map with the additional CLI flags that are appended to the default flags. Use with caution, as there is no validation for these values, so you can set incorrect or duplicate flags.|**Type:** `object`<br/>|
 | `internal.advancedConfiguration.controlPlane.apiServer.extraCertificateSANs` | **Extra certificate SANs** - The additional certificate SANs that are appended to the default SANs. Use with caution, as there is no validation for these values, so you can set incorrect or duplicate certificates.|**Type:** `array`<br/>|
 | `internal.advancedConfiguration.controlPlane.apiServer.extraCertificateSANs[*]` | **Extra certificate SAN**|**Type:** `string`<br/>|
+| `internal.advancedConfiguration.files` | **Files** - These are the files that are included on all the nodes.|**Type:** `array`<br/>|
+| `internal.advancedConfiguration.files[*]` | **File from secret** - It defines a file with content in a Secret|**Type:** `object`<br/>|
+| `internal.advancedConfiguration.files[*].contentFrom` | **Content from** - It specifies where the file content is coming from.|**Type:** `object`<br/>|
+| `internal.advancedConfiguration.files[*].contentFrom.secret` | **Secret** - Kubernetes Secret resource with the file content.|**Type:** `object`<br/>|
+| `internal.advancedConfiguration.files[*].contentFrom.secret.key` | **Key** - Secret key where the file content is.|**Type:** `string`<br/>|
+| `internal.advancedConfiguration.files[*].contentFrom.secret.name` | **Name** - Name of the Secret resource.|**Type:** `string`<br/>|
+| `internal.advancedConfiguration.files[*].path` | **Path** - File path on the node.|**Type:** `string`<br/>|
+| `internal.advancedConfiguration.files[*].permissions` | **Permissions** - File permissions in form 0644|**Type:** `string`<br/>**Default:** `"0644"`|
 
 ### Metadata
 Properties within the `.global.metadata` object
@@ -310,14 +318,6 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.controlPlane.resources.infrastructureMachineTemplateSpecTemplateName` | **Infrastructure Machine template spec template name** - The name of Helm template that renders Infrastructure Machine template spec.|**Type:** `string`<br/>|
 | `providerIntegration.hashSalt` | **Hash salt** - If specified, this token is used as a salt to the hash suffix of some resource names. Can be used to force-recreate some resources.|**Type:** `string`<br/>|
 | `providerIntegration.kubeadmConfig` | **Kubeadm config** - Common kubeadm config for all nodes, including both control plane and workers.|**Type:** `object`<br/>|
-| `providerIntegration.kubeadmConfig.files` | **Files** - These are the files that are included on all the nodes.|**Type:** `array`<br/>|
-| `providerIntegration.kubeadmConfig.files[*]` | **File from secret** - It defines a file with content in a Secret|**Type:** `object`<br/>|
-| `providerIntegration.kubeadmConfig.files[*].contentFrom` | **Content from** - It specifies where the file content is coming from.|**Type:** `object`<br/>|
-| `providerIntegration.kubeadmConfig.files[*].contentFrom.secret` | **Secret** - Kubernetes Secret resource with the file content.|**Type:** `object`<br/>|
-| `providerIntegration.kubeadmConfig.files[*].contentFrom.secret.key` | **Key** - Secret key where the file content is.|**Type:** `string`<br/>|
-| `providerIntegration.kubeadmConfig.files[*].contentFrom.secret.name` | **Name** - Name of the Secret resource.|**Type:** `string`<br/>|
-| `providerIntegration.kubeadmConfig.files[*].path` | **Path** - File path on the node.|**Type:** `string`<br/>|
-| `providerIntegration.kubeadmConfig.files[*].permissions` | **Permissions** - File permissions in form 0644|**Type:** `string`<br/>**Default:** `"0644"`|
 | `providerIntegration.kubeadmConfig.ignition` | **Ignition** - Ignition-specific configuration.|**Type:** `object`<br/>|
 | `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig` | **Container Linux configuration**|**Type:** `object`<br/>|
 | `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig` | **Additional config** - Additional configuration to be merged with the Ignition. More info: https://coreos.github.io/ignition/operator-notes/#config-merging.|**Type:** `object`<br/>|

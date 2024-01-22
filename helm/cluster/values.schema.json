@@ -1119,6 +1119,14 @@
                                     }
                                 }
                             }
+                        },
+                        "files": {
+                            "type": "array",
+                            "title": "Files",
+                            "description": "These are the files that are included on all the nodes.",
+                            "items": {
+                                "$ref": "#/$defs/fileFromSecret"
+                            }
                         }
                     }
                 }
@@ -1553,14 +1561,6 @@
                     "description": "Common kubeadm config for all nodes, including both control plane and workers.",
                     "additionalProperties": false,
                     "properties": {
-                        "files": {
-                            "type": "array",
-                            "title": "Files",
-                            "description": "These are the files that are included on all the nodes.",
-                            "items": {
-                                "$ref": "#/$defs/fileFromSecret"
-                            }
-                        },
                         "ignition": {
                             "$ref": "#/$defs/ignition"
                         },
