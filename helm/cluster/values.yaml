@@ -38,6 +38,8 @@ internal:
     cgroupsv1: false
     controlPlane:
       apiServer: {}
+      etcd:
+        experimental: {}
     workers: {}
 providerIntegration:
   bastion:
@@ -61,8 +63,6 @@ providerIntegration:
     kubeadmConfig:
       clusterConfiguration:
         apiServer: {}
-        etcd:
-          experimental: {}
       ignition:
         containerLinuxConfig:
           additionalConfig:

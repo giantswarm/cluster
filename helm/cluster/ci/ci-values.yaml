@@ -72,6 +72,14 @@ internal:
         extraCertificateSANs:
         - this-is-extra-cert-san.giantswarm.io
         - another-extra-cert-san.giantswarm.io
+      etcd:
+        initialCluster: "default=http://localhost:2380"
+        initialClusterState: "existing"
+        extraArgs:
+          max-snapshots: 3
+          snapshot-count: 50000
+        experimental:
+          peerSkipClientSanVerification: true
       files:
       - path: /etc/custom/control-plane/node/file.yaml
         permissions: "0644"
@@ -153,14 +161,6 @@ providerIntegration:
             enabled: true
           serviceAccountIssuer:
             clusterDomainPrefix: irsa
-        etcd:
-          initialCluster: "default=http://localhost:2380"
-          initialClusterState: "existing"
-          extraArgs:
-            max-snapshots: 3
-            snapshot-count: 50000
-          experimental:
-            peerSkipClientSanVerification: true
       files:
       - path: /etc/aws/control-plane/node/file.yaml
         permissions: "0644"

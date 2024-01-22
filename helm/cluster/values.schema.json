@@ -1118,6 +1118,42 @@
                                         }
                                     }
                                 },
+                                "etcd": {
+                                    "type": "object",
+                                    "title": "etcd",
+                                    "description": "Configuration of etcd",
+                                    "additionalProperties": false,
+                                    "properties": {
+                                        "experimental": {
+                                            "type": "object",
+                                            "title": "Experimental",
+                                            "properties": {
+                                                "peerSkipClientSanVerification": {
+                                                    "type": "boolean",
+                                                    "title": "Peer skip client SAN verification",
+                                                    "description": "Skip verification of SAN field in client certificate for peer connections."
+                                                }
+                                            }
+                                        },
+                                        "extraArgs": {
+                                            "type": "object",
+                                            "title": "Extra args"
+                                        },
+                                        "initialCluster": {
+                                            "type": "string",
+                                            "title": "Initial cluster",
+                                            "description": "Initial cluster configuration for bootstrapping."
+                                        },
+                                        "initialClusterState": {
+                                            "type": "string",
+                                            "title": "Initial cluster state",
+                                            "enum": [
+                                                "new",
+                                                "existing"
+                                            ]
+                                        }
+                                    }
+                                },
                                 "files": {
                                     "type": "array",
                                     "title": "Files",
@@ -1490,42 +1526,6 @@
                                                 }
                                             },
                                             "default": {}
-                                        },
-                                        "etcd": {
-                                            "type": "object",
-                                            "title": "etcd",
-                                            "description": "Configuration of etcd",
-                                            "additionalProperties": false,
-                                            "properties": {
-                                                "experimental": {
-                                                    "type": "object",
-                                                    "title": "Experimental",
-                                                    "properties": {
-                                                        "peerSkipClientSanVerification": {
-                                                            "type": "boolean",
-                                                            "title": "Peer skip client SAN verification",
-                                                            "description": "Skip verification of SAN field in client certificate for peer connections."
-                                                        }
-                                                    }
-                                                },
-                                                "extraArgs": {
-                                                    "type": "object",
-                                                    "title": "Extra args"
-                                                },
-                                                "initialCluster": {
-                                                    "type": "string",
-                                                    "title": "Initial cluster",
-                                                    "description": "Initial cluster configuration for bootstrapping."
-                                                },
-                                                "initialClusterState": {
-                                                    "type": "string",
-                                                    "title": "Initial cluster state",
-                                                    "enum": [
-                                                        "new",
-                                                        "existing"
-                                                    ]
-                                                }
-                                            }
                                         }
                                     }
                                 },

@@ -101,6 +101,12 @@ For Giant Swarm internal use only, not stable, or not supported by UIs.
 | `internal.advancedConfiguration.controlPlane.apiServer.extraArgs` | **Extra CLI args** - A map with the additional CLI flags that are appended to the default flags. Use with caution, as there is no validation for these values, so you can set incorrect or duplicate flags.|**Type:** `object`<br/>|
 | `internal.advancedConfiguration.controlPlane.apiServer.extraCertificateSANs` | **Extra certificate SANs** - The additional certificate SANs that are appended to the default SANs. Use with caution, as there is no validation for these values, so you can set incorrect or duplicate certificates.|**Type:** `array`<br/>|
 | `internal.advancedConfiguration.controlPlane.apiServer.extraCertificateSANs[*]` | **Extra certificate SAN**|**Type:** `string`<br/>|
+| `internal.advancedConfiguration.controlPlane.etcd` | **etcd** - Configuration of etcd|**Type:** `object`<br/>|
+| `internal.advancedConfiguration.controlPlane.etcd.experimental` | **Experimental**|**Type:** `object`<br/>|
+| `internal.advancedConfiguration.controlPlane.etcd.experimental.peerSkipClientSanVerification` | **Peer skip client SAN verification** - Skip verification of SAN field in client certificate for peer connections.|**Type:** `boolean`<br/>|
+| `internal.advancedConfiguration.controlPlane.etcd.extraArgs` | **Extra args**|**Type:** `object`<br/>|
+| `internal.advancedConfiguration.controlPlane.etcd.initialCluster` | **Initial cluster** - Initial cluster configuration for bootstrapping.|**Type:** `string`<br/>|
+| `internal.advancedConfiguration.controlPlane.etcd.initialClusterState` | **Initial cluster state**|**Type:** `string`<br/>|
 | `internal.advancedConfiguration.controlPlane.files` | **Files** - Custom cluster-specific files that are deployed to control plane nodes.|**Type:** `array`<br/>|
 | `internal.advancedConfiguration.controlPlane.files[*]` | **File from secret** - It defines a file with content in a Secret|**Type:** `object`<br/>|
 | `internal.advancedConfiguration.controlPlane.files[*].contentFrom` | **Content from** - It specifies where the file content is coming from.|**Type:** `object`<br/>|
@@ -266,12 +272,6 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.featureGates[*].enabled` | **Enabled**|**Type:** `boolean`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.featureGates[*].name` | **Name**|**Type:** `string`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuer` | **Service account issuer** - Configuration of the identifier of the service account token issuer. You must specify either URL or clusterDomainPrefix (only one, not both).||
-| `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.etcd` | **etcd** - Configuration of etcd|**Type:** `object`<br/>|
-| `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.etcd.experimental` | **Experimental**|**Type:** `object`<br/>|
-| `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.etcd.experimental.peerSkipClientSanVerification` | **Peer skip client SAN verification** - Skip verification of SAN field in client certificate for peer connections.|**Type:** `boolean`<br/>|
-| `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.etcd.extraArgs` | **Extra args**|**Type:** `object`<br/>|
-| `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.etcd.initialCluster` | **Initial cluster** - Initial cluster configuration for bootstrapping.|**Type:** `string`<br/>|
-| `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.etcd.initialClusterState` | **Initial cluster state**|**Type:** `string`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.files` | **Files** - Provider-specific files that are deployed to control plane nodes. They are specified in the cluster-<provider> apps.|**Type:** `array`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.files[*]` | **File from secret** - It defines a file with content in a Secret|**Type:** `object`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.files[*].contentFrom` | **Content from** - It specifies where the file content is coming from.|**Type:** `object`<br/>|
