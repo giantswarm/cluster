@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Add systemd unit and script to compute fairness values for k8s API server in controlplane.
 
+## [0.3.0] - 2024-01-22
+
 ### Changed
 
 - Align API for properties that can be set as pre-defined static values and/or via templates.
@@ -126,7 +128,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Update and clean up the template repo.
 
-[Unreleased]: https://github.com/giantswarm/cluster/compare/v0.2.1...HEAD
+[Unreleased]: https://github.com/giantswarm/cluster/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/giantswarm/cluster/compare/v0.2.1...v0.3.0
 [0.2.1]: https://github.com/giantswarm/cluster/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/giantswarm/cluster/compare/v0.1.2...v0.2.0
 [0.1.2]: https://github.com/giantswarm/cluster/compare/v0.1.1...v0.1.2
