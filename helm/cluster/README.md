@@ -94,6 +94,14 @@ For Giant Swarm internal use only, not stable, or not supported by UIs.
 | :----------- | :-------------- | :--------------- |
 | `internal.advancedConfiguration` | **Advanced configuration** - Advanced configuration of cluster components, to be configured by Giant Swarm staff only.|**Type:** `object`<br/>|
 | `internal.advancedConfiguration.cgroupsv1` | **CGroups v1** - Force use of CGroups v1 for whole cluster.|**Type:** `boolean`<br/>**Default:** `false`|
+| `internal.advancedConfiguration.kubelet` | **Kubelet configuration** - Kubelet configuration settings for the whole cluster.|**Type:** `object`<br/>|
+| `internal.advancedConfiguration.kubelet.kubeReserved` | **Kube reserved resources configuration** - Resources configuration for Kubernetes system services.|**Type:** `object`<br/>|
+| `internal.advancedConfiguration.kubelet.kubeReserved.cpu` | **Kube reserved CPU** - CPU reserved for Kubernetes system services.|**Type:** `string`<br/>**Default:** `"350m"`|
+| `internal.advancedConfiguration.kubelet.kubeReserved.ephemeral-storage` | **Kube reserved ephemeral storage** - Ephemeral storage reserved for kubernetes system services.|**Type:** `string`<br/>**Default:** `"1024Mi"`|
+| `internal.advancedConfiguration.kubelet.kubeReserved.memory` | **Kube reserved memory** - Memory reserved for kubernetes system services.|**Type:** `string`<br/>**Default:** `"1280Mi"`|
+| `internal.advancedConfiguration.kubelet.systemReserved` | **System reserved resources** - Resources configuration for non-kubernetes system services.|**Type:** `object`<br/>|
+| `internal.advancedConfiguration.kubelet.systemReserved.cpu` | **System reserved CPU** - CPU reserved for system processes.|**Type:** `string`<br/>**Default:** `"250m"`|
+| `internal.advancedConfiguration.kubelet.systemReserved.memory` | **System reserved memory** - Memory reserved for system processes.|**Type:** `string`<br/>**Default:** `"384Mi"`|
 
 ### Metadata
 Properties within the `.global.metadata` object

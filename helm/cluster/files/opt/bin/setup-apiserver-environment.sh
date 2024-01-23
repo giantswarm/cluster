@@ -11,9 +11,12 @@ declare -i memory
 cpus=$((cpus*1000))
 
 # subtract dedicated millicores (see 'systemReserved' and 'kubeReserved' fields in the kubelet config file)
-cpus=$((cpus-600))
+sysreserved=$(echo {{ $.Values.internal.advancedConfiguration.kubelet.systemReserved.cpu | quote }} | tr -dc '0-9' )
+kubereserved=$( echo {{ $.Values.internal.advancedConfiguration.kubelet.kubeReserved.cpu | quote }} | tr -dc '0-9')
+reserved=$((sysreserved + kubereserved))
+cpus=$((cpus-reserved))
 
-# we dedicate 3/4 of all millicores to the api server
+# we dedicate 3/4 of all non-reserved millicores to the api server
 dedicated=$((cpus * 3 / 4))
 
 # for every core we have dedicated to api server we allow 200 requests for fairness.

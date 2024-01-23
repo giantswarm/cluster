@@ -36,6 +36,14 @@ global:
 internal:
   advancedConfiguration:
     cgroupsv1: false
+    kubelet:
+      kubeReserved:
+        cpu: 350m
+        ephemeral-storage: 1024Mi
+        memory: 1280Mi
+      systemReserved:
+        cpu: 250m
+        memory: 384Mi
 providerIntegration:
   bastion:
     kubeadmConfig:
