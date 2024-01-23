@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add custom `preKubeadmCommands` config to Helm value to `.Values.internal.advancedConfiguration`.
 - Add custom `postKubeadmCommands` config to Helm value to `.Values.internal.advancedConfiguration`.
 - Add systemd unit and script to compute fairness values for k8s API server in controlplane.
+- Add internal.advancedConfiguration.kubelet to configure system and k8s reserved resources. 
 
 ### Changed
 
