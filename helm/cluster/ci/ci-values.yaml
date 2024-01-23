@@ -118,7 +118,7 @@ internal:
       systemReserved:
         cpu: 250m
         memory: 1280Mi
-        ephemeral-storage: 1024Mi
+        ephemeralStorage: 1024Mi
       kubeReserved:
         cpu: 350m
         memory: 384Mi

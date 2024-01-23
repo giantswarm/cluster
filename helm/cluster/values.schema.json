@@ -1194,7 +1194,7 @@
                                             "description": "CPU reserved for Kubernetes system services.",
                                             "default": "350m"
                                         },
-                                        "ephemeral-storage": {
+                                        "ephemeralStorage": {
                                             "type": "string",
                                             "title": "Kube reserved ephemeral storage",
                                             "description": "Ephemeral storage reserved for kubernetes system services.",

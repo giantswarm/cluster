@@ -14,7 +14,7 @@ evictionMaxPodGracePeriod: 60
 kubeReserved:
   cpu: {{ $.Values.internal.advancedConfiguration.kubelet.kubeReserved.cpu }}
   memory: {{ $.Values.internal.advancedConfiguration.kubelet.kubeReserved.memory }}
-  ephemeral-storage: {{ $.Values.internal.advancedConfiguration.kubelet.kubeReserved.ephemeral-storage }}
+  ephemeral-storage: {{ $.Values.internal.advancedConfiguration.kubelet.kubeReserved.ephemeralStorage }}
 kubeReservedCgroup: /kubereserved.slice
 protectKernelDefaults: true
 systemReserved:

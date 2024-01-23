@@ -11,8 +11,8 @@ declare -i memory
 cpus=$((cpus*1000))
 
 # subtract dedicated millicores (see 'systemReserved' and 'kubeReserved' fields in the kubelet config file)
-sysreserved=$(echo {{ $.Values.internal.advancedConfiguration.kubelet.systemReserved.cpu | quote }} | tr -dc '0-9' )
-kubereserved=$( echo {{ $.Values.internal.advancedConfiguration.kubelet.kubeReserved.cpu | quote }} | tr -dc '0-9')
+sysreserved=$(echo {{ $.Values.internal.advancedConfiguration.kubelet.systemReserved.cpu | quote }} | tr -dc '0-9')
+kubereserved=$(echo {{ $.Values.internal.advancedConfiguration.kubelet.kubeReserved.cpu | quote }} | tr -dc '0-9')
 reserved=$((sysreserved + kubereserved))
 cpus=$((cpus-reserved))
 
