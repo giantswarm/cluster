@@ -94,6 +94,56 @@ For Giant Swarm internal use only, not stable, or not supported by UIs.
 | :----------- | :-------------- | :--------------- |
 | `internal.advancedConfiguration` | **Advanced configuration** - Advanced configuration of cluster components, to be configured by Giant Swarm staff only.|**Type:** `object`<br/>|
 | `internal.advancedConfiguration.cgroupsv1` | **CGroups v1** - Force use of CGroups v1 for whole cluster.|**Type:** `boolean`<br/>**Default:** `false`|
+| `internal.advancedConfiguration.controlPlane` | **Control plane** - Advanced configuration of control plane components.|**Type:** `object`<br/>|
+| `internal.advancedConfiguration.controlPlane.apiServer` | **API server** - Advanced configuration of API server.|**Type:** `object`<br/>|
+| `internal.advancedConfiguration.controlPlane.apiServer.bindPort` | **Bind port** - Kubernetes API bind port used for API server pod.|**Type:** `integer`<br/>|
+| `internal.advancedConfiguration.controlPlane.apiServer.etcdPrefix` | **etcd prefix** - The prefix to prepend to all resource paths in etcd. If nothing is specified, the API server uses '/registry' prefix by default.|**Type:** `string`<br/>|
+| `internal.advancedConfiguration.controlPlane.apiServer.extraArgs` | **Extra CLI args** - A map with the additional CLI flags that are appended to the default flags. Use with caution, as there is no validation for these values, so you can set incorrect or duplicate flags.|**Type:** `object`<br/>|
+| `internal.advancedConfiguration.controlPlane.apiServer.extraCertificateSANs` | **Extra certificate SANs** - The additional certificate SANs that are appended to the default SANs. Use with caution, as there is no validation for these values, so you can set incorrect or duplicate certificates.|**Type:** `array`<br/>|
+| `internal.advancedConfiguration.controlPlane.apiServer.extraCertificateSANs[*]` | **Extra certificate SAN**|**Type:** `string`<br/>|
+| `internal.advancedConfiguration.controlPlane.etcd` | **etcd** - Configuration of etcd|**Type:** `object`<br/>|
+| `internal.advancedConfiguration.controlPlane.etcd.experimental` | **Experimental**|**Type:** `object`<br/>|
+| `internal.advancedConfiguration.controlPlane.etcd.experimental.peerSkipClientSanVerification` | **Peer skip client SAN verification** - Skip verification of SAN field in client certificate for peer connections.|**Type:** `boolean`<br/>|
+| `internal.advancedConfiguration.controlPlane.etcd.extraArgs` | **Extra args**|**Type:** `object`<br/>|
+| `internal.advancedConfiguration.controlPlane.etcd.initialCluster` | **Initial cluster** - Initial cluster configuration for bootstrapping.|**Type:** `string`<br/>|
+| `internal.advancedConfiguration.controlPlane.etcd.initialClusterState` | **Initial cluster state**|**Type:** `string`<br/>|
+| `internal.advancedConfiguration.controlPlane.files` | **Files** - Custom cluster-specific files that are deployed to control plane nodes.|**Type:** `array`<br/>|
+| `internal.advancedConfiguration.controlPlane.files[*]` | **File from secret** - It defines a file with content in a Secret|**Type:** `object`<br/>|
+| `internal.advancedConfiguration.controlPlane.files[*].contentFrom` | **Content from** - It specifies where the file content is coming from.|**Type:** `object`<br/>|
+| `internal.advancedConfiguration.controlPlane.files[*].contentFrom.secret` | **Secret** - Kubernetes Secret resource with the file content.|**Type:** `object`<br/>|
+| `internal.advancedConfiguration.controlPlane.files[*].contentFrom.secret.key` | **Key** - Secret key where the file content is.|**Type:** `string`<br/>|
+| `internal.advancedConfiguration.controlPlane.files[*].contentFrom.secret.name` | **Name** - Name of the Secret resource.|**Type:** `string`<br/>|
+| `internal.advancedConfiguration.controlPlane.files[*].path` | **Path** - File path on the node.|**Type:** `string`<br/>|
+| `internal.advancedConfiguration.controlPlane.files[*].permissions` | **Permissions** - File permissions in form 0644|**Type:** `string`<br/>**Default:** `"0644"`|
+| `internal.advancedConfiguration.controlPlane.postKubeadmCommands` | **Post-kubeadm commands** - Extra commands to run after kubeadm runs.|**Type:** `array`<br/>|
+| `internal.advancedConfiguration.controlPlane.postKubeadmCommands[*]` |**None**|**Type:** `string`<br/>|
+| `internal.advancedConfiguration.controlPlane.preKubeadmCommands` | **Pre-kubeadm commands** - Extra commands to run before kubeadm runs.|**Type:** `array`<br/>|
+| `internal.advancedConfiguration.controlPlane.preKubeadmCommands[*]` |**None**|**Type:** `string`<br/>|
+| `internal.advancedConfiguration.files` | **Files** - Custom cluster-specific files that are deployed to all nodes.|**Type:** `array`<br/>|
+| `internal.advancedConfiguration.files[*]` | **File from secret** - It defines a file with content in a Secret|**Type:** `object`<br/>|
+| `internal.advancedConfiguration.files[*].contentFrom` | **Content from** - It specifies where the file content is coming from.|**Type:** `object`<br/>|
+| `internal.advancedConfiguration.files[*].contentFrom.secret` | **Secret** - Kubernetes Secret resource with the file content.|**Type:** `object`<br/>|
+| `internal.advancedConfiguration.files[*].contentFrom.secret.key` | **Key** - Secret key where the file content is.|**Type:** `string`<br/>|
+| `internal.advancedConfiguration.files[*].contentFrom.secret.name` | **Name** - Name of the Secret resource.|**Type:** `string`<br/>|
+| `internal.advancedConfiguration.files[*].path` | **Path** - File path on the node.|**Type:** `string`<br/>|
+| `internal.advancedConfiguration.files[*].permissions` | **Permissions** - File permissions in form 0644|**Type:** `string`<br/>**Default:** `"0644"`|
+| `internal.advancedConfiguration.postKubeadmCommands` | **Post-kubeadm commands** - Extra commands to run after kubeadm runs.|**Type:** `array`<br/>|
+| `internal.advancedConfiguration.postKubeadmCommands[*]` |**None**|**Type:** `string`<br/>|
+| `internal.advancedConfiguration.preKubeadmCommands` | **Pre-kubeadm commands** - Extra commands to run before kubeadm runs.|**Type:** `array`<br/>|
+| `internal.advancedConfiguration.preKubeadmCommands[*]` |**None**|**Type:** `string`<br/>|
+| `internal.advancedConfiguration.workers` | **Workers** - Advanced configuration of worker nodes.|**Type:** `object`<br/>|
+| `internal.advancedConfiguration.workers.files` | **Files** - Custom cluster-specific files that are deployed to worker nodes.|**Type:** `array`<br/>|
+| `internal.advancedConfiguration.workers.files[*]` | **File from secret** - It defines a file with content in a Secret|**Type:** `object`<br/>|
+| `internal.advancedConfiguration.workers.files[*].contentFrom` | **Content from** - It specifies where the file content is coming from.|**Type:** `object`<br/>|
+| `internal.advancedConfiguration.workers.files[*].contentFrom.secret` | **Secret** - Kubernetes Secret resource with the file content.|**Type:** `object`<br/>|
+| `internal.advancedConfiguration.workers.files[*].contentFrom.secret.key` | **Key** - Secret key where the file content is.|**Type:** `string`<br/>|
+| `internal.advancedConfiguration.workers.files[*].contentFrom.secret.name` | **Name** - Name of the Secret resource.|**Type:** `string`<br/>|
+| `internal.advancedConfiguration.workers.files[*].path` | **Path** - File path on the node.|**Type:** `string`<br/>|
+| `internal.advancedConfiguration.workers.files[*].permissions` | **Permissions** - File permissions in form 0644|**Type:** `string`<br/>**Default:** `"0644"`|
+| `internal.advancedConfiguration.workers.postKubeadmCommands` | **Post-kubeadm commands** - Extra commands to run after kubeadm runs.|**Type:** `array`<br/>|
+| `internal.advancedConfiguration.workers.postKubeadmCommands[*]` |**None**|**Type:** `string`<br/>|
+| `internal.advancedConfiguration.workers.preKubeadmCommands` | **Pre-kubeadm commands** - Extra commands to run before kubeadm runs.|**Type:** `array`<br/>|
+| `internal.advancedConfiguration.workers.preKubeadmCommands[*]` |**None**|**Type:** `string`<br/>|
 
 ### Metadata
 Properties within the `.global.metadata` object
@@ -210,29 +260,19 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.connectivity.proxy.noProxy.value` | **Value** - Pre-defined static NO_PROXY values.|**Type:** `array`<br/>|
 | `providerIntegration.connectivity.proxy.noProxy.value[*]` |**None**|**Type:** `string`<br/>|
 | `providerIntegration.connectivity.sshSsoPublicKey` | **SSH public key for single sign-on**|**Type:** `string`<br/>**Default:** `"ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM4cvZ01fLmO9cJbWUj7sfF+NhECgy+Cl0bazSrZX7sU vault-ca@vault.operations.giantswarm.io"`|
-| `providerIntegration.controlPlane` | **Internal control plane configuration**|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane` | **Provider-specific control plane configuration**|**Type:** `object`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig` | **Kubeadm config** - Configuration of control plane nodes.|**Type:** `object`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration` | **Cluster configuration** - Configuration of Kubernetes components.|**Type:** `object`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer` | **API server** - Configuration of API server.|**Type:** `object`<br/>**Default:** `{}`|
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.additionalAdmissionPlugins` | **Additional admission plugins** - A list of plugins to enable, in addition to the default ones that include DefaultStorageClass, DefaultTolerationSeconds, LimitRanger, MutatingAdmissionWebhook, NamespaceLifecycle, PersistentVolumeClaimResize, Priority, ResourceQuota, ServiceAccount and ValidatingAdmissionWebhook.|**Type:** `array`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.additionalAdmissionPlugins[*]` | **Additional admission plugin**|**Type:** `string`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.apiAudiences` | **API audiences** - Identifiers of the API. The service account token authenticator will validate that tokens used against the API are bound to at least one of these audiences. If the --service-account-issuer flag is configured and this flag is not, 'api-audiences' field defaults to a single element list containing the issuer URL.||
-| `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.etcdPrefix` | **etcd prefix**|**Type:** `string`<br/>|
-| `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.extraArgs` | **Extra args**|**Type:** `object`<br/>|
-| `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.extraCertificateSANs` | **Extra certificate SANs** - The additional certificate SANs that are appended to the default SANs.|**Type:** `array`<br/>|
-| `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.extraCertificateSANs[*]` | **Extra certificate SAN**|**Type:** `string`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.featureGates` | **Feature gates**|**Type:** `array`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.featureGates[*]` | **Feature gate**|**Type:** `object`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.featureGates[*].enabled` | **Enabled**|**Type:** `boolean`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.featureGates[*].name` | **Name**|**Type:** `string`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuer` | **Service account issuer** - Configuration of the identifier of the service account token issuer. You must specify either URL or clusterDomainPrefix (only one, not both).||
-| `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.etcd` | **etcd** - Configuration of etcd|**Type:** `object`<br/>|
-| `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.etcd.experimental` | **Experimental**|**Type:** `object`<br/>|
-| `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.etcd.experimental.peerSkipClientSanVerification` | **Peer skip client SAN verification** - Skip verification of SAN field in client certificate for peer connections.|**Type:** `boolean`<br/>|
-| `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.etcd.extraArgs` | **Extra args**|**Type:** `object`<br/>|
-| `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.etcd.initialCluster` | **Initial cluster** - Initial cluster configuration for bootstrapping.|**Type:** `string`<br/>|
-| `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.etcd.initialClusterState` | **Initial cluster state**|**Type:** `string`<br/>|
-| `providerIntegration.controlPlane.kubeadmConfig.files` | **Files** - These are the files that are included on control plane nodes.|**Type:** `array`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.files` | **Files** - Provider-specific files that are deployed to control plane nodes. They are specified in the cluster-<provider> apps.|**Type:** `array`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.files[*]` | **File from secret** - It defines a file with content in a Secret|**Type:** `object`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.files[*].contentFrom` | **Content from** - It specifies where the file content is coming from.|**Type:** `object`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.files[*].contentFrom.secret` | **Secret** - Kubernetes Secret resource with the file content.|**Type:** `object`<br/>|
@@ -290,8 +330,6 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].mask` | **Masked?** - Whether or not the service shall be masked. When true, the service is masked by symlinking it to /dev/null.|**Type:** `boolean`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].name` | **Name** - The name of the unit. This must be suffixed with a valid unit type (e.g. “thing.service”).|**Type:** `string`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.strict` | **Strict** - It controls if AdditionalConfig should be strictly parsed. If so, warnings are treated as errors.|**Type:** `boolean`<br/>|
-| `providerIntegration.controlPlane.kubeadmConfig.localAPIEndpoint` | **Local API endpoint**|**Type:** `object`<br/>|
-| `providerIntegration.controlPlane.kubeadmConfig.localAPIEndpoint.bindPort` | **Bind port** - Kubernetes API bind port used for API server pod.|**Type:** `integer`<br/>**Default:** `6443`|
 | `providerIntegration.controlPlane.kubeadmConfig.postKubeadmCommands` | **Post-kubeadm commands** - Extra commands to run after kubeadm runs.|**Type:** `array`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.postKubeadmCommands[*]` |**None**|**Type:** `string`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.preKubeadmCommands` | **Pre-kubeadm commands** - Extra commands to run before kubeadm runs.|**Type:** `array`<br/>|
@@ -308,8 +346,8 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.controlPlane.resources.infrastructureMachineTemplate.version` | **API version**|**Type:** `string`<br/>**Examples:** `"v1alpha1", "v1beta1", "v1beta2", "v1", "v2"`<br/>|
 | `providerIntegration.controlPlane.resources.infrastructureMachineTemplateSpecTemplateName` | **Infrastructure Machine template spec template name** - The name of Helm template that renders Infrastructure Machine template spec.|**Type:** `string`<br/>|
 | `providerIntegration.hashSalt` | **Hash salt** - If specified, this token is used as a salt to the hash suffix of some resource names. Can be used to force-recreate some resources.|**Type:** `string`<br/>|
-| `providerIntegration.kubeadmConfig` | **Kubeadm config** - Common kubeadm config for all nodes, including both control plane and workers.|**Type:** `object`<br/>|
-| `providerIntegration.kubeadmConfig.files` | **Files** - These are the files that are included on all the nodes.|**Type:** `array`<br/>|
+| `providerIntegration.kubeadmConfig` | **Provider-specific kubeadm config** - Provider-specific kubeadm config that is common for all nodes, including both control plane and workers.|**Type:** `object`<br/>|
+| `providerIntegration.kubeadmConfig.files` | **Files** - Provider-specific files that are deployed to all nodes. They are specified in the cluster-<provider> apps.|**Type:** `array`<br/>|
 | `providerIntegration.kubeadmConfig.files[*]` | **File from secret** - It defines a file with content in a Secret|**Type:** `object`<br/>|
 | `providerIntegration.kubeadmConfig.files[*].contentFrom` | **Content from** - It specifies where the file content is coming from.|**Type:** `object`<br/>|
 | `providerIntegration.kubeadmConfig.files[*].contentFrom.secret` | **Secret** - Kubernetes Secret resource with the file content.|**Type:** `object`<br/>|
@@ -389,9 +427,9 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.teleport.enabled` | **Enable teleport**|**Type:** `boolean`<br/>**Default:** `true`|
 | `providerIntegration.teleport.proxyAddr` | **Teleport proxy address**|**Type:** `string`<br/>**Default:** `"teleport.giantswarm.io:443"`|
 | `providerIntegration.teleport.version` | **Teleport version**|**Type:** `string`<br/>**Default:** `"14.1.3"`|
-| `providerIntegration.workers` | **Internal workers configuration**|**Type:** `object`<br/>|
+| `providerIntegration.workers` | **Provider-specific workers configuration**|**Type:** `object`<br/>|
 | `providerIntegration.workers.kubeadmConfig` | **Kubeadm config** - Configuration of workers nodes.|**Type:** `object`<br/>|
-| `providerIntegration.workers.kubeadmConfig.files` | **Files** - These are the files that are included on worker nodes.|**Type:** `array`<br/>|
+| `providerIntegration.workers.kubeadmConfig.files` | **Files** - Provider-specific files that are deployed to worker nodes. They are specified in the cluster-<provider> apps.|**Type:** `array`<br/>|
 | `providerIntegration.workers.kubeadmConfig.files[*]` | **File from secret** - It defines a file with content in a Secret|**Type:** `object`<br/>|
 | `providerIntegration.workers.kubeadmConfig.files[*].contentFrom` | **Content from** - It specifies where the file content is coming from.|**Type:** `object`<br/>|
 | `providerIntegration.workers.kubeadmConfig.files[*].contentFrom.secret` | **Secret** - Kubernetes Secret resource with the file content.|**Type:** `object`<br/>|

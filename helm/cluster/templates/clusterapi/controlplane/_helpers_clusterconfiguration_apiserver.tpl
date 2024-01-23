@@ -4,8 +4,8 @@ certSANs:
 - 127.0.0.1
 - "api.{{ include "cluster.resource.name" $ }}.{{ required "The baseDomain value is required" $.Values.global.connectivity.baseDomain }}"
 - "apiserver.{{ include "cluster.resource.name" $ }}.{{ required "The baseDomain value is required" $.Values.global.connectivity.baseDomain }}"
-{{- if $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.extraCertificateSANs }}
-{{ toYaml $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.extraCertificateSANs }}
+{{- if $.Values.internal.advancedConfiguration.controlPlane.apiServer.extraCertificateSANs }}
+{{ toYaml $.Values.internal.advancedConfiguration.controlPlane.apiServer.extraCertificateSANs }}
 {{- end }}
 {{- /*
     Timeout for the API server to appear.
@@ -25,8 +25,8 @@ extraArgs:
   cloud-provider: external
   enable-admission-plugins: {{ include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.enableAdmissionPlugins" $ }}
   encryption-provider-config: /etc/kubernetes/encryption/config.yaml
-  {{- if $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.etcdPrefix }}
-  etcd-prefix: {{ $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.etcdPrefix }}
+  {{- if $.Values.internal.advancedConfiguration.controlPlane.apiServer.etcdPrefix }}
+  etcd-prefix: {{ $.Values.internal.advancedConfiguration.controlPlane.apiServer.etcdPrefix }}
   {{- end }}
   {{- if .Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.featureGates }}
   feature-gates: {{ include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.featureGates" $ }}
@@ -49,7 +49,7 @@ extraArgs:
   service-account-lookup: "true"
   service-cluster-ip-range: {{ .Values.global.connectivity.network.services.cidrBlocks | first }}
   tls-cipher-suites: {{ include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.tlsCipherSuites" $ }}
-  {{- range $argName, $argValue := ((($.Values.providerIntegration.controlPlane.kubeadmConfig).clusterConfiguration).apiServer).extraArgs }}
+  {{- range $argName, $argValue := $.Values.internal.advancedConfiguration.controlPlane.apiServer.extraArgs }}
   {{ $argName }}: {{ if kindIs "string" $argValue }}{{ $argValue | quote }}{{ else }}{{ $argValue }}{{ end }}
   {{- end }}
 extraVolumes:

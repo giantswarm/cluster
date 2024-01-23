@@ -9,6 +9,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add custom `files` config to Helm value to `.Values.internal.advancedConfiguration`.
+- Add custom `preKubeadmCommands` config to Helm value to `.Values.internal.advancedConfiguration`.
+- Add custom `postKubeadmCommands` config to Helm value to `.Values.internal.advancedConfiguration`.
+
+### Changed
+
+- Move API server `extraCertificateSANs` Helm value to `.Values.internal.advancedConfiguration.controlPlane.apiServer`.
+- Move API server `extraArgs` Helm value to `.Values.internal.advancedConfiguration.controlPlane.apiServer`.
+- Move API server `etcdPrefix` Helm value to `.Values.internal.advancedConfiguration.controlPlane.apiServer`.
+- Move API server `bindPort` Helm value to `.Values.internal.advancedConfiguration.controlPlane.apiServer`.
+- Move advanced etcd config to `.Values.internal.advancedConfiguration.controlPlane.etcd`.
+
 ## [0.3.1] - 2024-01-23
 
 ### Fixed

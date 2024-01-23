@@ -1,12 +1,17 @@
 {{/*
-    Template cluster.internal.kubeadm.preKubeadmCommands defines common extra commands to run on all
-    (control plane and workers) nodes before kubeadm runs. It includes prefedined commands and
-    custom commands specified in Helm values field .Values.providerIntegration.kubeadmConfig.preKubeadmCommands.
+    Template cluster.internal.kubeadm.preKubeadmCommands defines common commands to run on all
+    (control plane and workers) nodes before kubeadm runs.
+
+    It includes:
+    - provider-independent commands defined in cluster chart,
+    - provider-specific commands specified in cluster-<provider> app,
+    - custom cluster-specific commands.
 */}}
 {{- define "cluster.internal.kubeadm.preKubeadmCommands" }}
 {{- include "cluster.internal.kubeadm.preKubeadmCommands.flatcar" $ }}
 {{- include "cluster.internal.kubeadm.preKubeadmCommands.ssh" $ }}
 {{- include "cluster.internal.kubeadm.preKubeadmCommands.proxy" $ }}
+{{- include "cluster.internal.kubeadm.preKubeadmCommands.provider" $ }}
 {{- include "cluster.internal.kubeadm.preKubeadmCommands.custom" $ }}
 {{- end }}
 
@@ -36,10 +41,16 @@
 {{- end }}
 {{- end }}
 
-{{- define "cluster.internal.kubeadm.preKubeadmCommands.custom" }}
-{{- if $.Values.providerIntegration.kubeadmConfig }}
+{{/* Provider-specific commands to run before kubeadm on all nodes */}}
+{{- define "cluster.internal.kubeadm.preKubeadmCommands.provider" }}
 {{- range $command := $.Values.providerIntegration.kubeadmConfig.preKubeadmCommands }}
 - {{ $command }}
 {{- end }}
+{{- end }}
+
+{{/* Custom cluster-specific commands to run before kubeadm on all nodes */}}
+{{- define "cluster.internal.kubeadm.preKubeadmCommands.custom" }}
+{{- range $command := $.Values.internal.advancedConfiguration.preKubeadmCommands }}
+- {{ $command }}
 {{- end }}
 {{- end }}

@@ -1,6 +1,7 @@
 {{- define "cluster.internal.controlPlane.kubeadm.files" }}
 {{- include "cluster.internal.kubeadm.files" $ }}
 {{- include "cluster.internal.kubeadm.files.kubernetes" $ }}
+{{- include "cluster.internal.controlPlane.kubeadm.files.provider" $ }}
 {{- include "cluster.internal.controlPlane.kubeadm.files.custom" $ }}
 {{- if $.Values.global.controlPlane.oidc.caPem }}
 - path: /etc/ssl/certs/oidc.pem
@@ -23,8 +24,16 @@
       key: encryption
 {{- end }}
 
-{{- define "cluster.internal.controlPlane.kubeadm.files.custom" }}
+{{/* Provider-specific files for control plane nodes */}}
+{{- define "cluster.internal.controlPlane.kubeadm.files.provider" }}
 {{- if $.Values.providerIntegration.controlPlane.kubeadmConfig.files }}
 {{ toYaml $.Values.providerIntegration.controlPlane.kubeadmConfig.files }}
+{{- end }}
+{{- end }}
+
+{{/* Custom cluster-specific files for control plane nodes */}}
+{{- define "cluster.internal.controlPlane.kubeadm.files.custom" }}
+{{- if $.Values.internal.advancedConfiguration.controlPlane.files }}
+{{ toYaml $.Values.internal.advancedConfiguration.controlPlane.files }}
 {{- end }}
 {{- end }}
