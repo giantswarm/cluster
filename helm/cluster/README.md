@@ -248,9 +248,9 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.clusterAnnotationsTemplateName` | **Cluster annotations template name** - The name of the template that renders provider-specific annotations for the Cluster resource|**Type:** `string`<br/>|
 | `providerIntegration.components` | **Components** - Internal configuration of various components that form the Kubernetes cluster.|**Type:** `object`<br/>|
 | `providerIntegration.components.containerd` | **Containerd** - Configuration of containerd.|**Type:** `object`<br/>|
-| `providerIntegration.components.containerd.sandboxContainerImage` | **Kubectl image**|**Type:** `object`<br/>|
+| `providerIntegration.components.containerd.sandboxContainerImage` | **Sandbox image** - The image used by sandbox / pause container|**Type:** `object`<br/>|
 | `providerIntegration.components.containerd.sandboxContainerImage.name` | **Repository**|**Type:** `string`<br/>**Default:** `"giantswarm/pause"`|
-| `providerIntegration.components.containerd.sandboxContainerImage.registry` | **Registry**|**Type:** `string`<br/>**Default:** `"quay.io"`|
+| `providerIntegration.components.containerd.sandboxContainerImage.registry` | **Registry**|**Type:** `string`<br/>**Default:** `"gsoci.azurecr.io"`|
 | `providerIntegration.components.containerd.sandboxContainerImage.tag` | **Tag**|**Type:** `string`<br/>**Default:** `"3.9"`|
 | `providerIntegration.components.systemd` | **systemd**||
 | `providerIntegration.connectivity` | **Connectivity** - Internal connectivity configuration.|**Type:** `object`<br/>|
