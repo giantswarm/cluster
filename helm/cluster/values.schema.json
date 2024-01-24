@@ -1152,11 +1152,11 @@
                                                 "existing"
                                             ]
                                         },
-                                        "quotaBackendBytes": {
-                                            "type": "string",
-                                            "title": "Quota backend bytes",
+                                        "quotaBackendBytesGiB": {
+                                            "type": "integer",
+                                            "title": "Quota backend bytes in GiB",
                                             "description": "Raise the etcd default backend bytes limit up to 16GiB.",
-                                            "default": "8589934592"
+                                            "default": 8
                                         }
                                     }
                                 },
