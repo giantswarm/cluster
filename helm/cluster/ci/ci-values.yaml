@@ -73,7 +73,7 @@ internal:
         - this-is-extra-cert-san.giantswarm.io
         - another-extra-cert-san.giantswarm.io
       etcd:
-        quotaBackendBytes: 34359738368
+        quotaBackendBytes: "34359738368"
         initialCluster: "default=http://localhost:2380"
         initialClusterState: "existing"
         extraArgs:
