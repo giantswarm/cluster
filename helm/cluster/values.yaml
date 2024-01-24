@@ -38,6 +38,11 @@ global:
 internal:
   advancedConfiguration:
     cgroupsv1: false
+    controlPlane:
+      apiServer: {}
+      etcd:
+        experimental: {}
+    workers: {}
 providerIntegration:
   bastion:
     kubeadmConfig:
@@ -60,15 +65,11 @@ providerIntegration:
     kubeadmConfig:
       clusterConfiguration:
         apiServer: {}
-        etcd:
-          experimental: {}
       ignition:
         containerLinuxConfig:
           additionalConfig:
             storage: {}
             systemd: {}
-      localAPIEndpoint:
-        bindPort: 6443
     resources:
       controlPlane:
         api:

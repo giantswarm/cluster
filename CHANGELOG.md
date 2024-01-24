@@ -9,6 +9,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add custom `files` config to Helm value to `.Values.internal.advancedConfiguration`.
+- Add custom `preKubeadmCommands` config to Helm value to `.Values.internal.advancedConfiguration`.
+- Add custom `postKubeadmCommands` config to Helm value to `.Values.internal.advancedConfiguration`.
+
+### Changed
+
+- Move API server `extraCertificateSANs` Helm value to `.Values.internal.advancedConfiguration.controlPlane.apiServer`.
+- Move API server `extraArgs` Helm value to `.Values.internal.advancedConfiguration.controlPlane.apiServer`.
+- Move API server `etcdPrefix` Helm value to `.Values.internal.advancedConfiguration.controlPlane.apiServer`.
+- Move API server `bindPort` Helm value to `.Values.internal.advancedConfiguration.controlPlane.apiServer`.
+- Move advanced etcd config to `.Values.internal.advancedConfiguration.controlPlane.etcd`.
+
+## [0.3.1] - 2024-01-23
+
+### Fixed
+
+- Fix "cluster.connectivity.proxy.noProxy" template to correctly render values from specified template.
+
+## [0.3.0] - 2024-01-22
+
 ### Changed
 
 - Align API for properties that can be set as pre-defined static values and/or via templates.
@@ -122,7 +144,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Update and clean up the template repo.
 
-[Unreleased]: https://github.com/giantswarm/cluster/compare/v0.2.1...HEAD
+[Unreleased]: https://github.com/giantswarm/cluster/compare/v0.3.1...HEAD
+[0.3.1]: https://github.com/giantswarm/cluster/compare/v0.3.0...v0.3.1
+[0.3.0]: https://github.com/giantswarm/cluster/compare/v0.2.1...v0.3.0
 [0.2.1]: https://github.com/giantswarm/cluster/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/giantswarm/cluster/compare/v0.1.2...v0.2.0
 [0.1.2]: https://github.com/giantswarm/cluster/compare/v0.1.1...v0.1.2
