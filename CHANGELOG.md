@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add custom `files` config to Helm value to `.Values.internal.advancedConfiguration`.
 - Add custom `preKubeadmCommands` config to Helm value to `.Values.internal.advancedConfiguration`.
 - Add custom `postKubeadmCommands` config to Helm value to `.Values.internal.advancedConfiguration`.
+- Add `global.podSecurityStandards.enforced` value which sets `policy.giantswarm.io/psp-status: disabled` label on the Cluster CR.
 
 ### Changed
 
