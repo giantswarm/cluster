@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add custom `files` config to Helm value to `.Values.internal.advancedConfiguration`.
 - Add custom `preKubeadmCommands` config to Helm value to `.Values.internal.advancedConfiguration`.
 - Add custom `postKubeadmCommands` config to Helm value to `.Values.internal.advancedConfiguration`.
+- Add `quotaBackendBytes` etcd config to Helm value `.Values.internal.advancedConfiguration.etcd`.
 
 ### Changed
 
