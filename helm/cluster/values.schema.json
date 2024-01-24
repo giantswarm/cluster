@@ -1057,6 +1057,17 @@
                             }
                         }
                     }
+                },
+                "podSecurityStandards": {
+                    "type": "object",
+                    "title": "Pod Security Standards",
+                    "properties": {
+                        "enforced": {
+                            "type": "boolean",
+                            "title": "Enforced",
+                            "default": false
+                        }
+                    }
                 }
             }
         },
