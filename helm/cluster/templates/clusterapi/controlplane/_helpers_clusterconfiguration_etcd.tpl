@@ -3,11 +3,7 @@ local:
   extraArgs:
     listen-metrics-urls: "http://0.0.0.0:2381"
     {{- with $etcdConfig := $.Values.internal.advancedConfiguration.controlPlane.etcd }}
-    {{- if gt (int $etcdConfig.quotaBackendBytesGiB) 16 }}
-    quota-backend-bytes: 17179869184
-    {{- else }}
     quota-backend-bytes: {{ mul $etcdConfig.quotaBackendBytesGiB 1024 1024 1024 }}
-    {{- end }}
     {{- if $etcdConfig.initialCluster }}
     initial-cluster: {{ $etcdConfig.initialCluster | quote }}
     {{- end }}
