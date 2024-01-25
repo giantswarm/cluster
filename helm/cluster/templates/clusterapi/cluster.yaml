@@ -15,6 +15,9 @@ metadata:
     {{- include "cluster.labels.common" $ | nindent 4 }}
     {{- include "cluster.labels.preventDeletion" $ | indent 4 }}
     {{- include "cluster.labels.custom" $ | indent 4 }}
+    {{- if .Values.global.podSecurityStandards.enforced }}
+    policy.giantswarm.io/psp-status: disabled
+    {{- end }}
   name: {{ include "cluster.resource.name" $ }}
   namespace: {{ .Release.Namespace }}
 spec:

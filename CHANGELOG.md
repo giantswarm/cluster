@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add `global.podSecurityStandards.enforced` value which sets `policy.giantswarm.io/psp-status: disabled` label on the Cluster CR.
+
 ## [0.5.0] - 2024-01-25
 
 ## [0.4.0] - 2024-01-24

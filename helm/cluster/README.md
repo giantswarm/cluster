@@ -186,6 +186,13 @@ Properties within the `.global.nodePools` object
 | :----------- | :-------------- | :--------------- |
 | `global.managementCluster` | **Management cluster** - Name of the Cluster API cluster managing this workload cluster.|**Type:** `string`<br/>|
 
+### Pod Security Standards
+Properties within the `.global.podSecurityStandards` object
+
+| **Property** | **Description** | **More Details** |
+| :----------- | :-------------- | :--------------- |
+| `global.podSecurityStandards.enforced` | **Enforced**|**Type:** `boolean`<br/>**Default:** `false`|
+
 ### Provider integration
 Properties within the `.providerIntegration` top-level object
 Provider-specific properties that can be set by cluster-$provider chart in order to render correct templates for the provider.
