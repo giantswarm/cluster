@@ -40,6 +40,7 @@ internal:
       apiServer: {}
       etcd:
         experimental: {}
+        quotaBackendBytesGiB: 8
     workers: {}
 providerIntegration:
   bastion:
