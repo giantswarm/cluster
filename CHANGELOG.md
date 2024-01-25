@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add `rolloutBefore` config to Helm value to `.Values.global.controlPlane` to enable support for automatic certificate renewal
+
 ## [0.7.1] - 2024-01-31
 
 ### Fixed
