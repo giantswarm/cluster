@@ -41,7 +41,6 @@ internal:
       etcd:
         experimental: {}
         quotaBackendBytesGiB: 8
-    workers: {}
     kubelet:
       kubeReserved:
         cpu: 350m
@@ -50,6 +49,7 @@ internal:
       systemReserved:
         cpu: 250m
         memory: 384Mi
+    workers: {}
 providerIntegration:
   bastion:
     kubeadmConfig:
