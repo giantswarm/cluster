@@ -789,7 +789,8 @@
                     "description": "Configuration of the control plane.",
                     "required": [
                         "machineHealthCheck",
-                        "replicas"
+                        "replicas",
+                        "rolloutBefore"
                     ],
                     "properties": {
                         "apiServerPort": {
@@ -888,6 +889,20 @@
                                 5
                             ],
                             "default": 3
+                        },
+                        "rolloutBefore": {
+                            "type": "object",
+                            "title": "Rollout Before",
+                            "description": "Rollout Before is a field to indicate a rollout should be performed if the specified criteria is met",
+                            "required": ["certificatesExpiryDays"],
+                            "properties": {
+                                "certificatesExpiryDays": {
+                                    "type": "integer",
+                                    "title": "Certificate expiry days",
+                                    "description": "Indicates a rollout needs to be performed if the certificates of the machine will expire within the specified days",
+                                    "default": 180
+                                }
+                            }
                         }
                     }
                 },

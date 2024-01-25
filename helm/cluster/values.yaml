@@ -30,6 +30,8 @@ global:
       unhealthyUnknownTimeout: 10m0s
     oidc: {}
     replicas: 3
+    rolloutBefore:
+      certificatesExpiryDays: 180
   metadata:
     preventDeletion: false
     servicePriority: highest
