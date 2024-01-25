@@ -107,6 +107,7 @@ For Giant Swarm internal use only, not stable, or not supported by UIs.
 | `internal.advancedConfiguration.controlPlane.etcd.extraArgs` | **Extra args**|**Type:** `object`<br/>|
 | `internal.advancedConfiguration.controlPlane.etcd.initialCluster` | **Initial cluster** - Initial cluster configuration for bootstrapping.|**Type:** `string`<br/>|
 | `internal.advancedConfiguration.controlPlane.etcd.initialClusterState` | **Initial cluster state**|**Type:** `string`<br/>|
+| `internal.advancedConfiguration.controlPlane.etcd.quotaBackendBytesGiB` | **Quota backend bytes in GiB** - Raise the etcd default backend bytes limit up to 16GiB.|**Type:** `integer`<br/>**Default:** `8`|
 | `internal.advancedConfiguration.controlPlane.files` | **Files** - Custom cluster-specific files that are deployed to control plane nodes.|**Type:** `array`<br/>|
 | `internal.advancedConfiguration.controlPlane.files[*]` | **File from secret** - It defines a file with content in a Secret|**Type:** `object`<br/>|
 | `internal.advancedConfiguration.controlPlane.files[*].contentFrom` | **Content from** - It specifies where the file content is coming from.|**Type:** `object`<br/>|
