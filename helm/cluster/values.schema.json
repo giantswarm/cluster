@@ -893,7 +893,7 @@
                         "rolloutBefore": {
                             "type": "object",
                             "title": "Rollout Before",
-                            "description": "Rollout Before is a field to indicate a rollout should be performed if the specified criteria is met",
+                            "description": "Rollout Before is a field to indicate a rollout should be performed if the specified criteria is met.",
                             "required": [
                                 "certificatesExpiryDays"
                             ],
@@ -901,7 +901,7 @@
                                 "certificatesExpiryDays": {
                                     "type": "integer",
                                     "title": "Certificate expiry days",
-                                    "description": "Indicates a rollout needs to be performed if the certificates of the machine will expire within the specified days",
+                                    "description": "Indicates a rollout needs to be performed if the certificates of the machine will expire within the specified days.",
                                     "default": 180
                                 }
                             }
