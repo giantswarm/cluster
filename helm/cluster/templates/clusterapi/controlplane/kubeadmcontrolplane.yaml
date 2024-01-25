@@ -57,8 +57,8 @@ spec:
     users:
     {{- $users | indent 4 }}
     {{- end }}
-  replicas: {{ .Values.global.controlPlane.replicas }}
+  replicas: {{ .Values.internal.advancedConfiguration.controlPlane.replicas }}
   rolloutBefore:
-    {{- toYaml $.Values.global.controlPlane.rolloutBefore | nindent 4 }}
+    {{- toYaml $.Values.internal.advancedConfiguration.controlPlane.rolloutBefore | nindent 4 }}
   version: v{{ trimPrefix "v" .Values.providerIntegration.kubernetesVersion }}
 {{- end }}

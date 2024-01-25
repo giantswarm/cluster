@@ -30,8 +30,6 @@ global:
       unhealthyUnknownTimeout: 10m0s
     oidc: {}
     replicas: 3
-    rolloutBefore:
-      certificatesExpiryDays: 180
   metadata:
     preventDeletion: false
     servicePriority: highest
@@ -45,6 +43,8 @@ internal:
       etcd:
         experimental: {}
         quotaBackendBytesGiB: 8
+      rolloutBefore:
+        certificatesExpiryDays: 180
     workers: {}
 providerIntegration:
   bastion:
