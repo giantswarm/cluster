@@ -894,7 +894,9 @@
                             "type": "object",
                             "title": "Rollout Before",
                             "description": "Rollout Before is a field to indicate a rollout should be performed if the specified criteria is met",
-                            "required": ["certificatesExpiryDays"],
+                            "required": [
+                                "certificatesExpiryDays"
+                            ],
                             "properties": {
                                 "certificatesExpiryDays": {
                                     "type": "integer",
