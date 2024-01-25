@@ -85,8 +85,8 @@ Configuration of the control plane.
 | `global.controlPlane.oidc.issuerUrl` | **Issuer URL** - Exact issuer URL that will be included in identity tokens.|**Type:** `string`<br/>|
 | `global.controlPlane.oidc.usernameClaim` | **Username claim**|**Type:** `string`<br/>|
 | `global.controlPlane.replicas` | **Replicas** - The number of control plane nodes.|**Type:** `integer`<br/>**Default:** `3`|
-| `global.controlPlane.rolloutBefore` | **Rollout Before** - Rollout Before is a field to indicate a rollout should be performed if the specified criteria is met|**Type:** `object`<br/>|
-| `global.controlPlane.rolloutBefore.certificatesExpiryDays` | **Certificate expiry days** - Indicates a rollout needs to be performed if the certificates of the machine will expire within the specified days|**Type:** `integer`<br/>**Default:** `180`|
+| `global.controlPlane.rolloutBefore` | **Rollout Before** - Rollout Before is a field to indicate a rollout should be performed if the specified criteria is met.|**Type:** `object`<br/>|
+| `global.controlPlane.rolloutBefore.certificatesExpiryDays` | **Certificate expiry days** - Indicates a rollout needs to be performed if the certificates of the machine will expire within the specified days.|**Type:** `integer`<br/>**Default:** `180`|
 
 ### Internal
 Properties within the `.internal` top-level object
