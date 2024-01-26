@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- Quote all etcd extra args, so they are correctly set as strings.
+
 ## [0.6.0] - 2024-01-25
 
 ### Added
@@ -17,6 +20,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.5.0] - 2024-01-25
 
+### Added
+- Add `quotaBackendBytesGiB` etcd config to Helm value `.Values.internal.advancedConfiguration.etcd`.
+
 ## [0.4.0] - 2024-01-24
 
 ### Added
@@ -24,7 +30,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add custom `files` config to Helm value to `.Values.internal.advancedConfiguration`.
 - Add custom `preKubeadmCommands` config to Helm value to `.Values.internal.advancedConfiguration`.
 - Add custom `postKubeadmCommands` config to Helm value to `.Values.internal.advancedConfiguration`.
-- Add `quotaBackendBytesGiB` etcd config to Helm value `.Values.internal.advancedConfiguration.etcd`.
 
 ### Changed
 
