@@ -1,7 +1,7 @@
 {{- define "cluster.internal.controlPlane.kubeadm.clusterConfiguration.etcd" }}
 local:
   extraArgs:
-    {{/*
+    {{- /*
       All extraArgs must be strings, as the extraArg object is a map[string]string so numbers
       and booleans must be quoted here.
     */}}
