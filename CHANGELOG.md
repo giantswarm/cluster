@@ -11,7 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Update Kubernetes version to 1.25.16.
+- Update Kubernetes version to v1.25.16.
+- Update CI values to remove features that do not exist anymore in Kubernetes v1.25.
 
 ## [0.6.1] - 2024-01-26
 
