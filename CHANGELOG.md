@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.0] - 2024-01-30
+
 ### Changed
 
 - Update Kubernetes version to v1.25.16.
@@ -177,7 +179,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Update and clean up the template repo.
 
-[Unreleased]: https://github.com/giantswarm/cluster/compare/v0.6.1...HEAD
+[Unreleased]: https://github.com/giantswarm/cluster/compare/v0.7.0...HEAD
+[0.7.0]: https://github.com/giantswarm/cluster/compare/v0.6.1...v0.7.0
 [0.6.1]: https://github.com/giantswarm/cluster/compare/v0.6.0...v0.6.1
 [0.6.0]: https://github.com/giantswarm/cluster/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/giantswarm/cluster/compare/v0.4.0...v0.5.0
