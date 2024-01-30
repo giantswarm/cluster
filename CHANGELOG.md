@@ -14,6 +14,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update Kubernetes version to v1.25.16.
 - Update CI values to remove features that do not exist anymore in Kubernetes v1.25.
 
+### Fixed
+
+- Remove labels from test Helm template for provider-specific machine template spec that is used in the CI.
+
 ## [0.6.1] - 2024-01-26
 
 ### Fixed
