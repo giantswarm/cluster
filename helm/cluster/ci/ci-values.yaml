@@ -158,7 +158,6 @@ providerIntegration:
         apiServer:
           additionalAdmissionPlugins:
           - AlwaysPullImages
-          - PodSecurityPolicy
           apiAudiences:
             templateName: "cluster.test.kubeadmControlPlane.kubeadmConfigSpec.clusterConfiguration.apiServer.apiAudiences"
           featureGates:
@@ -166,8 +165,6 @@ providerIntegration:
             enabled: true
           - name: DownwardAPIHugePages
             enabled: false
-          - name: TTLAfterFinished
-            enabled: true
           serviceAccountIssuer:
             clusterDomainPrefix: irsa
       files:
@@ -324,7 +321,7 @@ providerIntegration:
     - echo "aws nodes command before kubeadm"
     postKubeadmCommands:
     - echo "aws nodes command after kubeadm"
-  kubernetesVersion: 1.24.10
+  kubernetesVersion: 1.25.16
   pauseProperties:
     global.connectivity.vpcMode: private
   resourcesApi:
