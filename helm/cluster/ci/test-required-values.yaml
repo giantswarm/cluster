@@ -14,7 +14,7 @@ providerIntegration:
       group: infrastructure.cluster.x-k8s.io
       kind: GiantCluster
       version: v1beta1
-    machineHealthCheckResourceEnabled: false
+    machineHealthCheckResourceEnabled: true
     machinePoolResourcesEnabled: false
     nodePoolKind: MachinePool
   controlPlane:
