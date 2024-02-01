@@ -33,8 +33,8 @@ extraArgs:
   feature-gates: {{ include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.featureGates" $ }}
   {{- end }}
   kubelet-preferred-address-types: InternalIP
-  max-mutating-requests-inflight: ${MAX_MUTATING_REQUESTS_INFLIGHT}
-  max-requests-inflight: ${MAX_REQUESTS_INFLIGHT}
+  max-mutating-requests-inflight: "${MAX_MUTATING_REQUESTS_INFLIGHT}"
+  max-requests-inflight: "${MAX_REQUESTS_INFLIGHT}"
   {{- if $.Values.global.controlPlane.oidc.issuerUrl }}
   {{- if $.Values.global.controlPlane.oidc.caPem }}
   oidc-ca-file: /etc/ssl/certs/oidc.pem
