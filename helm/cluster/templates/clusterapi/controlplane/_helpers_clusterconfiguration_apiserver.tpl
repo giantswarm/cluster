@@ -24,7 +24,7 @@ extraArgs:
   audit-policy-file: /etc/kubernetes/policies/audit-policy.yaml
   cloud-provider: external
   enable-admission-plugins: {{ include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.enableAdmissionPlugins" $ }}
-  enable-priority-and-fairness: true
+  enable-priority-and-fairness: "true"
   encryption-provider-config: /etc/kubernetes/encryption/config.yaml
   {{- if $.Values.internal.advancedConfiguration.controlPlane.apiServer.etcdPrefix }}
   etcd-prefix: {{ $.Values.internal.advancedConfiguration.controlPlane.apiServer.etcdPrefix }}
