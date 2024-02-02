@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Add systemd unit and script to compute fairness values for k8s API server in controlplane.
 - Add internal.advancedConfiguration.kubelet to configure system and k8s reserved resources. 
+- Add `rolloutBefore` config to Helm value to `.Values.internal.advancedConfiguration.controlPlane` to enable support for automatic node rollout/certificate renewal
 
 ## [0.7.1] - 2024-01-31
 

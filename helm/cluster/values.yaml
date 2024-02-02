@@ -51,6 +51,8 @@ internal:
       systemReserved:
         cpu: 250m
         memory: 384Mi
+      rolloutBefore:
+        certificatesExpiryDays: 180
     workers: {}
 providerIntegration:
   bastion:

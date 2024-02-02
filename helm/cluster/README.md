@@ -120,6 +120,8 @@ For Giant Swarm internal use only, not stable, or not supported by UIs.
 | `internal.advancedConfiguration.controlPlane.postKubeadmCommands[*]` |**None**|**Type:** `string`<br/>|
 | `internal.advancedConfiguration.controlPlane.preKubeadmCommands` | **Pre-kubeadm commands** - Extra commands to run before kubeadm runs.|**Type:** `array`<br/>|
 | `internal.advancedConfiguration.controlPlane.preKubeadmCommands[*]` |**None**|**Type:** `string`<br/>|
+| `internal.advancedConfiguration.controlPlane.rolloutBefore` | **Rollout Before** - Rollout Before is a field to indicate a rollout should be performed if the specified criteria is met.|**Type:** `object`<br/>|
+| `internal.advancedConfiguration.controlPlane.rolloutBefore.certificatesExpiryDays` | **Certificate expiry days** - Indicates a rollout needs to be performed if the certificates of the machine will expire within the specified days.|**Type:** `integer`<br/>**Default:** `180`|
 | `internal.advancedConfiguration.files` | **Files** - Custom cluster-specific files that are deployed to all nodes.|**Type:** `array`<br/>|
 | `internal.advancedConfiguration.files[*]` | **File from secret** - It defines a file with content in a Secret|**Type:** `object`<br/>|
 | `internal.advancedConfiguration.files[*].contentFrom` | **Content from** - It specifies where the file content is coming from.|**Type:** `object`<br/>|
