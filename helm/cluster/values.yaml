@@ -43,6 +43,8 @@ internal:
       etcd:
         experimental: {}
         quotaBackendBytesGiB: 8
+      rolloutBefore:
+        certificatesExpiryDays: 180
     workers: {}
 providerIntegration:
   bastion:
