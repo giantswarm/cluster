@@ -22,6 +22,10 @@ providerIntegration:
     machineHealthCheckResourceEnabled: true
     machinePoolResourcesEnabled: true
     nodePoolKind: MachinePool
+    infrastructureMachinePool:
+      group: infrastructure.cluster.x-k8s.io
+      version: v1beta1
+      kind: GiantMachinePool
   controlPlane:
     resources:
       infrastructureMachineTemplate:
