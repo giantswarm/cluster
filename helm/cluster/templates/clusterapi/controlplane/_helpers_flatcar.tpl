@@ -30,7 +30,7 @@ containerLinuxConfig:
   contents: |
     [Unit]
     Description=Setup environment for kubeadm apiserver
-    Before=kubeadm.service
+    Before=containerd.service
     [Service]
     Type=oneshot
     TimeoutStartSec=0
