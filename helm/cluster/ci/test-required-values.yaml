@@ -4,6 +4,11 @@ global:
     organization: giantswarm
   connectivity:
     baseDomain: example.gigantic.io
+  nodePools:
+    def00:
+      replicas: 3
+    verybignodepool-1234:
+      replicas: 100
 providerIntegration:
   provider: aws
   resourcesApi:
@@ -15,7 +20,7 @@ providerIntegration:
       kind: GiantCluster
       version: v1beta1
     machineHealthCheckResourceEnabled: true
-    machinePoolResourcesEnabled: false
+    machinePoolResourcesEnabled: true
     nodePoolKind: MachinePool
   controlPlane:
     resources:
