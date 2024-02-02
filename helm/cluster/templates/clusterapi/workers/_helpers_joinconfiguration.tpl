@@ -17,16 +17,14 @@ nodeRegistration:
     feature-gates: CronJobTimeZone=true
     healthz-bind-address: 0.0.0.0
     node-ip: ${COREOS_EC2_IPV4_LOCAL}
-    node-labels: role=worker,giantswarm.io/machine-pool={{ include "cluster.resource.name" $ }}-{{ $machinePool.name }},{{- join "," $machinePool.config.nodeLabels }}
+    node-labels: role=worker,giantswarm.io/machine-pool={{ include "cluster.resource.name" $ }}-{{ $machinePool.name }},{{- join "," $machinePool.config.customNodeLabels }}
     v: "2"
-  {{- if $machinePool.config.nodeTaints }}
-  {{- if (gt (len $machinePool.config.nodeTaints) 0) }}
+  {{- if $machinePool.config.customNodeTaints }}
   taints:
-  {{- range $machinePool.config.nodeTaints }}
+  {{- range $machinePool.config.customNodeTaints }}
   - key: {{ .key | quote }}
     value: {{ .value | quote }}
     effect: {{ .effect | quote }}
-  {{- end }}
   {{- end }}
   {{- end }}
 {{- end }}

@@ -38,15 +38,15 @@ global:
         nodepool-workload-type: ai
       annotations:
         for-robots-in-nodepool: "cm9ib3RzIGFyZSBvcGVyYXRpbmcgb24gdGhpcyBub2RlIHBvb2wK"
-      nodeLabels:
+      customNodeLabels:
         workload-type: ai
-      nodeTaints:
+      customNodeTaints:
       - key: supernodepool
         value: hello
         effect: NoSchedule
     verybignodepool-1234:
       replicas: 100
-      nodeLabels:
+      customNodeLabels:
         workload-type: robots
   components:
     containerd:

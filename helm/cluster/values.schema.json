@@ -992,36 +992,7 @@
                                         }
                                     }
                                 },
-                                "labels": {
-                                    "type": "object",
-                                    "title": "Labels",
-                                    "description": "These labels are added to all Kubernetes resources defining this node pool.",
-                                    "additionalProperties": false,
-                                    "patternProperties": {
-                                        "^[a-zA-Z0-9/\\._-]+$": {
-                                            "type": "string",
-                                            "title": "Label",
-                                            "maxLength": 63,
-                                            "minLength": 0,
-                                            "pattern": "^[a-zA-Z0-9\\._-]+$"
-                                        }
-                                    }
-                                },
-                                "maxSize": {
-                                    "type": "integer",
-                                    "title": "Max size",
-                                    "description": "Maximum number of node pool nodes",
-                                    "maximum": 1000,
-                                    "minimum": 0
-                                },
-                                "minSize": {
-                                    "type": "integer",
-                                    "title": "Min size",
-                                    "description": "Minimum number of node pool nodes",
-                                    "maximum": 1000,
-                                    "minimum": 0
-                                },
-                                "nodeLabels": {
+                                "customNodeLabels": {
                                     "type": "object",
                                     "title": "Node labels",
                                     "description": "Labels that are passed to kubelet argument 'node-labels'.",
@@ -1029,7 +1000,7 @@
                                         "type": "string"
                                     }
                                 },
-                                "nodeTaints": {
+                                "customNodeTaints": {
                                     "type": "array",
                                     "title": "Custom node taints",
                                     "items": {
@@ -1060,6 +1031,35 @@
                                             }
                                         }
                                     }
+                                },
+                                "labels": {
+                                    "type": "object",
+                                    "title": "Labels",
+                                    "description": "These labels are added to all Kubernetes resources defining this node pool.",
+                                    "additionalProperties": false,
+                                    "patternProperties": {
+                                        "^[a-zA-Z0-9/\\._-]+$": {
+                                            "type": "string",
+                                            "title": "Label",
+                                            "maxLength": 63,
+                                            "minLength": 0,
+                                            "pattern": "^[a-zA-Z0-9\\._-]+$"
+                                        }
+                                    }
+                                },
+                                "maxSize": {
+                                    "type": "integer",
+                                    "title": "Max size",
+                                    "description": "Maximum number of node pool nodes",
+                                    "maximum": 1000,
+                                    "minimum": 0
+                                },
+                                "minSize": {
+                                    "type": "integer",
+                                    "title": "Min size",
+                                    "description": "Minimum number of node pool nodes",
+                                    "maximum": 1000,
+                                    "minimum": 0
                                 },
                                 "replicas": {
                                     "type": "integer",
