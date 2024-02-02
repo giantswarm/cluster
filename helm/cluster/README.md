@@ -181,6 +181,8 @@ Properties within the `.global.nodePools` object
 | `global.nodePools.PATTERN.annotations.PATTERN_2` | **Annotation**|**Type:** `string`<br/>**Key patterns:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>`PATTERN_2`=`^([a-zA-Z0-9\.-]{1,253}/)?[a-zA-Z0-9\._-]{1,63}$`<br/>|
 | `global.nodePools.PATTERN.labels` | **Labels** - These labels are added to all Kubernetes resources defining this node pool.|**Type:** `object`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
 | `global.nodePools.PATTERN.labels.PATTERN_2` | **Label**|**Type:** `string`<br/>**Key patterns:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>`PATTERN_2`=`^[a-zA-Z0-9/\._-]+$`<br/>**Value pattern:** `^[a-zA-Z0-9\._-]+$`<br/>|
+| `global.nodePools.PATTERN.maxSize` | **Max size** - Maximum number of node pool nodes|**Type:** `integer`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
+| `global.nodePools.PATTERN.minSize` | **Min size** - Minimum number of node pool nodes|**Type:** `integer`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
 | `global.nodePools.PATTERN.nodeLabels` | **Node labels** - Labels that are passed to kubelet argument 'node-labels'.|**Type:** `object`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
 | `global.nodePools.PATTERN.nodeLabels.*` |**None**|**Type:** `string`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
 | `global.nodePools.PATTERN.nodeTaints` | **Custom node taints**|**Type:** `array`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|

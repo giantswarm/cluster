@@ -1007,6 +1007,20 @@
                                         }
                                     }
                                 },
+                                "maxSize": {
+                                    "type": "integer",
+                                    "title": "Max size",
+                                    "description": "Maximum number of node pool nodes",
+                                    "maximum": 1000,
+                                    "minimum": 0
+                                },
+                                "minSize": {
+                                    "type": "integer",
+                                    "title": "Min size",
+                                    "description": "Minimum number of node pool nodes",
+                                    "maximum": 1000,
+                                    "minimum": 0
+                                },
                                 "nodeLabels": {
                                     "type": "object",
                                     "title": "Node labels",

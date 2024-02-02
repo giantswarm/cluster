@@ -6,7 +6,8 @@ global:
     baseDomain: example.gigantic.io
   nodePools:
     def00:
-      replicas: 3
+      minSize: 3
+      maxSize: 20
     verybignodepool-1234:
       replicas: 100
 providerIntegration:

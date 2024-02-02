@@ -27,7 +27,7 @@ metadata:
   namespace: {{ $.Release.Namespace }}
 spec:
   clusterName: {{ include "cluster.resource.name" $ }}
-  replicas: {{ $nodePoolConfig.replicas }}
+  replicas: {{ $nodePoolConfig.minSize | default $nodePoolConfig.replicas }}
   template:
     spec:
       bootstrap:
