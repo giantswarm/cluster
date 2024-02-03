@@ -21,8 +21,8 @@ dedicated=$((cpus * 3 / 4))
 
 # for every core we have dedicated to api server we allow 200 requests for fairness.
 # 1/3 of such number is for mutating requests, 2/3 are for all requests.
-echo "MAX_REQUESTS_INFLIGHT=$((dedicated / 1000 * 200 * 2 / 3))" >$env_file
-echo "MAX_MUTATING_REQUESTS_INFLIGHT=$((dedicated / 1000 * 200 * 1 / 3 ))" >>$env_file
+echo "MAX_REQUESTS_INFLIGHT='\""$((dedicated / 1000 * 200 * 2 / 3))"\"'" >$env_file
+echo "MAX_MUTATING_REQUESTS_INFLIGHT='\""$((dedicated / 1000 * 200 * 1 / 3 ))"\"'" >>$env_file
 echo "CPU_LIMIT=${dedicated}m" >>$env_file
 echo "MEMORY_LIMIT=$((memory * 3 / 4))Gi" >>$env_file
 
