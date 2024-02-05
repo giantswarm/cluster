@@ -7,6 +7,7 @@
 {{- include "cluster.internal.kubeadm.files.kubelet" $ }}
 {{- include "cluster.internal.kubeadm.files.proxy" $ }}
 {{- include "cluster.internal.kubeadm.files.teleport" $ }}
+{{- include "cluster.internal.kubeadm.files.auditrules" $ }}
 {{- include "cluster.internal.kubeadm.files.provider" $ }}
 {{- include "cluster.internal.kubeadm.files.custom" $ }}
 {{- end }}
@@ -110,6 +111,14 @@ and is used to join the node to the teleport cluster.
   encoding: base64
   content: {{ tpl ($.Files.Get "files/etc/teleport.yaml") . | b64enc }}
 {{- end }}
+{{- end }}
+
+{{/* Audit rules for all nodes */}}
+{{- define "cluster.internal.kubeadm.files.auditrules" }}
+- path: /etc/audit/rules.d/99-default.rules
+  permissions: "0640"
+  encoding: base64
+  content: {{ $.Files.Get "files/etc/audit/rules.d/99-default.rules" | b64enc }}
 {{- end }}
 
 {{/* Provider-specific files for all nodes */}}

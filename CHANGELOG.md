@@ -15,6 +15,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add internal.advancedConfiguration.kubelet to configure system and k8s reserved resources. 
 - Add `rolloutBefore` config to Helm value to `.Values.internal.advancedConfiguration.controlPlane` to enable support for automatic node rollout/certificate renewal
 
+### Changed
+
+- Overridden default audit rules as in Vintage clusters.
+
+
 ## [0.7.1] - 2024-01-31
 
 ### Fixed
