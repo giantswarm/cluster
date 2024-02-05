@@ -4,6 +4,7 @@ containerLinuxConfig:
     systemd:
       units:
       {{- include "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units.default" $ | indent 6 }}
+      {{- include "cluster.internal.controlPlane.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units.default" $ | indent 6 }}
       {{- include "cluster.internal.controlPlane.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units" $ | indent 6 }}
     storage:
       filesystems:
@@ -20,6 +21,22 @@ containerLinuxConfig:
 {{- if (((((($.Values.providerIntegration.controlPlane).kubeadmConfig).ignition).containerLinuxConfig).additionalConfig).systemd).units }}
 {{- include "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units" $.Values.providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units }}
 {{- end }}
+{{- end }}
+
+{{/* Default systemd units on control plane nodes */}}
+{{- define "cluster.internal.controlPlane.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units.default" }}
+- name: setup-apiserver-environment.service
+  enabled: true
+  contents: |
+    [Unit]
+    Description=Setup environment for kubeadm apiserver
+    Before=containerd.service
+    [Service]
+    Type=oneshot
+    TimeoutStartSec=0
+    ExecStart=/opt/bin/setup-apiserver-environment.sh
+    [Install]
+    WantedBy=multi-user.target
 {{- end }}
 
 {{- define "cluster.internal.controlPlane.kubeadm.ignition.containerLinuxConfig.additionalConfig.storage.filesystems" }}

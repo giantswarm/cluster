@@ -115,6 +115,14 @@ internal:
       - echo "custom workers command before kubeadm"
       postKubeadmCommands:
       - echo "custom workers command after kubeadm"
+    kubelet:
+      systemReserved:
+        cpu: 250m
+        memory: 1280Mi
+        ephemeralStorage: 1024Mi
+      kubeReserved:
+        cpu: 350m
+        memory: 384Mi
 providerIntegration:
   provider: aws
   bastion:

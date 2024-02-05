@@ -22,6 +22,10 @@
     secret:
       name: {{ include "cluster.resource.name" $ }}-encryption-provider-config
       key: encryption
+- path: /opt/bin/setup-apiserver-environment.sh
+  permissions: "0755"
+  encoding: base64
+  content: {{ tpl ($.Files.Get "files/opt/bin/setup-apiserver-environment.sh") . | b64enc }}
 {{- end }}
 
 {{/* Provider-specific files for control plane nodes */}}

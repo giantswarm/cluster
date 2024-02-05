@@ -1218,6 +1218,57 @@
                                 "$ref": "#/$defs/fileFromSecret"
                             }
                         },
+                        "kubelet": {
+                            "type": "object",
+                            "title": "Kubelet configuration",
+                            "description": "Kubelet configuration settings for the whole cluster.",
+                            "properties": {
+                                "kubeReserved": {
+                                    "type": "object",
+                                    "title": "Kube reserved resources configuration",
+                                    "description": "Resources configuration for Kubernetes system services.",
+                                    "properties": {
+                                        "cpu": {
+                                            "type": "string",
+                                            "title": "Kube reserved CPU",
+                                            "description": "CPU reserved for Kubernetes system services.",
+                                            "default": "350m"
+                                        },
+                                        "ephemeralStorage": {
+                                            "type": "string",
+                                            "title": "Kube reserved ephemeral storage",
+                                            "description": "Ephemeral storage reserved for kubernetes system services.",
+                                            "default": "1024Mi"
+                                        },
+                                        "memory": {
+                                            "type": "string",
+                                            "title": "Kube reserved memory",
+                                            "description": "Memory reserved for kubernetes system services.",
+                                            "default": "1280Mi"
+                                        }
+                                    }
+                                },
+                                "systemReserved": {
+                                    "type": "object",
+                                    "title": "System reserved resources",
+                                    "description": "Resources configuration for non-kubernetes system services.",
+                                    "properties": {
+                                        "cpu": {
+                                            "type": "string",
+                                            "title": "System reserved CPU",
+                                            "description": "CPU reserved for system processes.",
+                                            "default": "250m"
+                                        },
+                                        "memory": {
+                                            "type": "string",
+                                            "title": "System reserved memory",
+                                            "description": "Memory reserved for system processes.",
+                                            "default": "384Mi"
+                                        }
+                                    }
+                                }
+                            }
+                        },
                         "postKubeadmCommands": {
                             "$ref": "#/$defs/postKubeadmCommands"
                         },
