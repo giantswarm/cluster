@@ -1,6 +1,7 @@
 {{- if $.Values.providerIntegration.resourcesApi.machinePoolResourcesEnabled }}
 {{- if eq $.Values.providerIntegration.resourcesApi.nodePoolKind "MachinePool" }}
 {{- range $nodePoolName, $nodePoolConfig := $.Values.global.nodePools | default $.Values.providerIntegration.workers.defaultNodePools }}
+{{- $_ := set $ "nodePool" (dict "name" $nodePoolName "config" $nodePoolConfig) }}
 apiVersion: cluster.x-k8s.io/v1beta1
 kind: MachinePool
 metadata:
