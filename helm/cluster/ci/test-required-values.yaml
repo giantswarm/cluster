@@ -34,3 +34,10 @@ providerIntegration:
         kind: GiantMachineTemplate
         version: v1beta1
       infrastructureMachineTemplateSpecTemplateName: cluster.internal.test.controlPlane.machineTemplate.spec
+  workers:
+    defaultNodePools:
+      def00:
+        customNodeLabels:
+        - label=default
+        maxSize: 3
+        minSize: 3
