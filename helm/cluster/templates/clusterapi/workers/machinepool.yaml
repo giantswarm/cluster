@@ -1,11 +1,10 @@
 {{- if $.Values.providerIntegration.resourcesApi.machinePoolResourcesEnabled }}
 {{- if eq $.Values.providerIntegration.resourcesApi.nodePoolKind "MachinePool" }}
-{{- range $nodePoolName, $nodePoolConfig := $.Values.global.nodePools }}
+{{- range $nodePoolName, $nodePoolConfig := $.Values.global.nodePools | default $.Values.providerIntegration.workers.defaultNodePools }}
 apiVersion: cluster.x-k8s.io/v1beta1
 kind: MachinePool
 metadata:
   annotations:
-    helm.sh/resource-policy: keep
     machine-pool.giantswarm.io/name: {{ include "cluster.resource.name" $ }}-{{ $nodePoolName }}
     cluster.x-k8s.io/replicas-managed-by: "external-autoscaler"
     {{- include "cluster.annotations.custom" $ | indent 4 }}

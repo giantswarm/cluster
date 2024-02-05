@@ -39,7 +39,7 @@ global:
       annotations:
         for-robots-in-nodepool: "cm9ib3RzIGFyZSBvcGVyYXRpbmcgb24gdGhpcyBub2RlIHBvb2wK"
       customNodeLabels:
-        workload-type: ai
+      - workload-type=ai
       customNodeTaints:
       - key: supernodepool
         value: hello
@@ -47,7 +47,7 @@ global:
     verybignodepool-1234:
       replicas: 100
       customNodeLabels:
-        workload-type: robots
+      - workload-type=robots
   components:
     containerd:
       containerRegistries:
@@ -348,6 +348,12 @@ providerIntegration:
   teleport:
     enabled: true
   workers:
+    defaultNodePools:
+      def00:
+        customNodeLabels:
+        - label=default
+        maxSize: 3
+        minSize: 3
     kubeadmConfig:
       files:
       - path: /etc/aws/worker/node/file.yaml
