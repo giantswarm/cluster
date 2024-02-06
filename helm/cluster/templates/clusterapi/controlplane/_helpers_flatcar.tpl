@@ -37,6 +37,33 @@ containerLinuxConfig:
     ExecStart=/opt/bin/setup-apiserver-environment.sh
     [Install]
     WantedBy=multi-user.target
+- name: etcd3-defragmentation.service
+  enabled: false
+  contents: |
+    [Unit]
+    Description=etcd defragmentation job
+    After=containerd.service kubelet.service
+    Requires=containerd.service kubelet.service
+    [Service]
+    Type=oneshot
+    ExecStart=/bin/sh -c "crictl exec $(crictl ps --name=etcd -q) etcdctl \
+      --cacert=/etc/kubernetes/pki/etcd/ca.crt \
+      --cert=/etc/kubernetes/pki/etcd/peer.crt \
+      --key=/etc/kubernetes/pki/etcd/peer.key \
+      defrag \
+      --command-timeout=60s \
+      --dial-timeout=60s \
+      --keepalive-timeout=25s"
+- name: etcd3-defragmentation.timer
+  enabled: true
+  contents: |
+    [Unit]
+    Description=Execute etcd3-defragmentation hourly
+    [Timer]
+    OnCalendar=*-*-* *:53:40
+    Unit=etcd3-defragmentation.service
+    [Install]
+    WantedBy=multi-user.target
 {{- end }}
 
 {{- define "cluster.internal.controlPlane.kubeadm.ignition.containerLinuxConfig.additionalConfig.storage.filesystems" }}
