@@ -46,7 +46,7 @@ containerLinuxConfig:
     Requires=containerd.service kubelet.service
     [Service]
     Type=oneshot
-    ExecStart=/bin/sh -c "crictl exec $(crictl ps --name=etcd -q) etcdctl \
+    ExecStart=/bin/sh -c "crictl exec $(crictl ps --name=^etcd$ -q) etcdctl \
       --cacert=/etc/kubernetes/pki/etcd/ca.crt \
       --cert=/etc/kubernetes/pki/etcd/peer.crt \
       --key=/etc/kubernetes/pki/etcd/peer.key \
