@@ -3,6 +3,7 @@ containerLinuxConfig:
   additionalConfig: |
     systemd:
       units:
+      {{- $_ := set $ "nodeRole" "worker" }}
       {{- include "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units.default" $ | indent 6 }}
       {{- include "cluster.internal.workers.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units" $ | indent 6 }}
     storage:
