@@ -6,7 +6,7 @@
     .config: node pool config, a value from $.Values.global.nodepools map.
 */}}
 {{- define "cluster.internal.workers.kubeadm.joinConfiguration" }}
-{{- with $machinePool := .nodePool }}
+{{- with $nodePool := required "nodePool must be set" .nodePool }}
 nodeRegistration:
   name: ${COREOS_EC2_HOSTNAME}
   kubeletExtraArgs:
@@ -17,11 +17,11 @@ nodeRegistration:
     feature-gates: CronJobTimeZone=true
     healthz-bind-address: 0.0.0.0
     node-ip: ${COREOS_EC2_IPV4_LOCAL}
-    node-labels: role=worker,giantswarm.io/machine-pool={{ include "cluster.resource.name" $ }}-{{ $machinePool.name }},{{- join "," $machinePool.config.customNodeLabels }}
+    node-labels: role=worker,giantswarm.io/machine-pool={{ include "cluster.resource.name" $ }}-{{ $nodePool.name }},{{- join "," $nodePool.config.customNodeLabels }}
     v: "2"
-  {{- if $machinePool.config.customNodeTaints }}
+  {{- if $nodePool.config.customNodeTaints }}
   taints:
-  {{- range $machinePool.config.customNodeTaints }}
+  {{- range $nodePool.config.customNodeTaints }}
   - key: {{ .key | quote }}
     value: {{ .value | quote }}
     effect: {{ .effect | quote }}
