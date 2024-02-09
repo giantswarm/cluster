@@ -4,6 +4,12 @@ global:
     organization: giantswarm
   connectivity:
     baseDomain: example.gigantic.io
+  nodePools:
+    def00:
+      minSize: 3
+      maxSize: 20
+    verybignodepool-1234:
+      replicas: 100
 providerIntegration:
   provider: aws
   resourcesApi:
@@ -15,8 +21,12 @@ providerIntegration:
       kind: GiantCluster
       version: v1beta1
     machineHealthCheckResourceEnabled: true
-    machinePoolResourcesEnabled: false
+    machinePoolResourcesEnabled: true
     nodePoolKind: MachinePool
+    infrastructureMachinePool:
+      group: infrastructure.cluster.x-k8s.io
+      version: v1beta1
+      kind: GiantMachinePool
   controlPlane:
     resources:
       infrastructureMachineTemplate:
@@ -24,3 +34,10 @@ providerIntegration:
         kind: GiantMachineTemplate
         version: v1beta1
       infrastructureMachineTemplateSpecTemplateName: cluster.internal.test.controlPlane.machineTemplate.spec
+  workers:
+    defaultNodePools:
+      def00:
+        customNodeLabels:
+        - label=default
+        maxSize: 3
+        minSize: 3

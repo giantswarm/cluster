@@ -430,6 +430,102 @@
                 }
             }
         },
+        "nodePool": {
+            "type": "object",
+            "title": "Node pool",
+            "properties": {
+                "annotations": {
+                    "type": "object",
+                    "title": "Annotations",
+                    "description": "These annotations are added to all Kubernetes resources defining this node pool.",
+                    "additionalProperties": false,
+                    "patternProperties": {
+                        "^([a-zA-Z0-9\\.-]{1,253}/)?[a-zA-Z0-9\\._-]{1,63}$": {
+                            "type": "string",
+                            "title": "Annotation",
+                            "minLength": 1
+                        }
+                    }
+                },
+                "customNodeLabels": {
+                    "type": "array",
+                    "title": "Node labels. Deprecated: use nodeLabels instead.",
+                    "description": "Labels that are passed to kubelet argument 'node-labels'.",
+                    "items": {
+                        "type": "string",
+                        "title": "Label"
+                    }
+                },
+                "customNodeTaints": {
+                    "type": "array",
+                    "title": "Custom node taints. Deprecated: use nodeTaints instead.",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "effect",
+                            "key",
+                            "value"
+                        ],
+                        "additionalProperties": false,
+                        "properties": {
+                            "effect": {
+                                "type": "string",
+                                "title": "Effect",
+                                "enum": [
+                                    "NoSchedule",
+                                    "PreferNoSchedule",
+                                    "NoExecute"
+                                ]
+                            },
+                            "key": {
+                                "type": "string",
+                                "title": "Key"
+                            },
+                            "value": {
+                                "type": "string",
+                                "title": "Value"
+                            }
+                        }
+                    }
+                },
+                "labels": {
+                    "type": "object",
+                    "title": "Labels",
+                    "description": "These labels are added to all Kubernetes resources defining this node pool.",
+                    "additionalProperties": false,
+                    "patternProperties": {
+                        "^[a-zA-Z0-9/\\._-]+$": {
+                            "type": "string",
+                            "title": "Label",
+                            "maxLength": 63,
+                            "minLength": 0,
+                            "pattern": "^[a-zA-Z0-9\\._-]+$"
+                        }
+                    }
+                },
+                "maxSize": {
+                    "type": "integer",
+                    "title": "Max size",
+                    "description": "Maximum number of node pool nodes",
+                    "maximum": 1000,
+                    "minimum": 0
+                },
+                "minSize": {
+                    "type": "integer",
+                    "title": "Min size",
+                    "description": "Minimum number of node pool nodes",
+                    "maximum": 1000,
+                    "minimum": 0
+                },
+                "replicas": {
+                    "type": "integer",
+                    "title": "Replicas",
+                    "description": "The number of node pool nodes.",
+                    "maximum": 1000,
+                    "minimum": 0
+                }
+            }
+        },
         "postKubeadmCommands": {
             "type": "array",
             "title": "Post-kubeadm commands",
@@ -976,85 +1072,7 @@
                     "additionalProperties": false,
                     "patternProperties": {
                         "^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$": {
-                            "type": "object",
-                            "title": "Node pool",
-                            "properties": {
-                                "annotations": {
-                                    "type": "object",
-                                    "title": "Annotations",
-                                    "description": "These annotations are added to all Kubernetes resources defining this node pool.",
-                                    "additionalProperties": false,
-                                    "patternProperties": {
-                                        "^([a-zA-Z0-9\\.-]{1,253}/)?[a-zA-Z0-9\\._-]{1,63}$": {
-                                            "type": "string",
-                                            "title": "Annotation",
-                                            "minLength": 1
-                                        }
-                                    }
-                                },
-                                "labels": {
-                                    "type": "object",
-                                    "title": "Labels",
-                                    "description": "These labels are added to all Kubernetes resources defining this node pool.",
-                                    "additionalProperties": false,
-                                    "patternProperties": {
-                                        "^[a-zA-Z0-9/\\._-]+$": {
-                                            "type": "string",
-                                            "title": "Label",
-                                            "maxLength": 63,
-                                            "minLength": 0,
-                                            "pattern": "^[a-zA-Z0-9\\._-]+$"
-                                        }
-                                    }
-                                },
-                                "nodeLabels": {
-                                    "type": "object",
-                                    "title": "Node labels",
-                                    "description": "Labels that are passed to kubelet argument 'node-labels'.",
-                                    "additionalProperties": {
-                                        "type": "string"
-                                    }
-                                },
-                                "nodeTaints": {
-                                    "type": "array",
-                                    "title": "Custom node taints",
-                                    "items": {
-                                        "type": "object",
-                                        "required": [
-                                            "effect",
-                                            "key",
-                                            "value"
-                                        ],
-                                        "additionalProperties": false,
-                                        "properties": {
-                                            "effect": {
-                                                "type": "string",
-                                                "title": "Effect",
-                                                "enum": [
-                                                    "NoSchedule",
-                                                    "PreferNoSchedule",
-                                                    "NoExecute"
-                                                ]
-                                            },
-                                            "key": {
-                                                "type": "string",
-                                                "title": "Key"
-                                            },
-                                            "value": {
-                                                "type": "string",
-                                                "title": "Value"
-                                            }
-                                        }
-                                    }
-                                },
-                                "replicas": {
-                                    "type": "integer",
-                                    "title": "Replicas",
-                                    "description": "The number of node pool nodes.",
-                                    "maximum": 1000,
-                                    "minimum": 0
-                                }
-                            }
+                            "$ref": "#/$defs/nodePool"
                         }
                     }
                 },
@@ -1892,8 +1910,21 @@
                 "workers": {
                     "type": "object",
                     "title": "Provider-specific workers configuration",
+                    "required": [
+                        "defaultNodePools"
+                    ],
                     "additionalProperties": false,
                     "properties": {
+                        "defaultNodePools": {
+                            "type": "object",
+                            "title": "Default node pools",
+                            "additionalProperties": false,
+                            "patternProperties": {
+                                "^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$": {
+                                    "$ref": "#/$defs/nodePool"
+                                }
+                            }
+                        },
                         "kubeadmConfig": {
                             "type": "object",
                             "title": "Kubeadm config",
