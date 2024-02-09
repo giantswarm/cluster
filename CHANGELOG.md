@@ -20,6 +20,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Overridden default audit rules as in Vintage clusters.
 
+### Fixed
+
+- Fix MachinePool templates, so that AWSMachinePool correctly performs rolling updates (ported from https://github.com/giantswarm/cluster-aws/pull/457).
+
 ## [0.7.1] - 2024-01-31
 
 ### Fixed
