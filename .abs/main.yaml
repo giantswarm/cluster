@@ -1,7 +1,4 @@
-replace-app-version-with-git: true
+chart-dir: helm/cluster
 replace-chart-version-with-git: true
 generate-metadata: true
-chart-dir: ./helm/cluster
-destination: ./build
-ct-config: ./.circleci/ct-config.yaml
-catalog-base-url: http://localhost/
+catalog-base-url: https://giantswarm.github.io/cluster-catalog/
