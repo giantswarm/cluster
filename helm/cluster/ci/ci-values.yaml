@@ -58,12 +58,19 @@ global:
             password: super_secret_password
         - endpoint: giantswarm.azurecr.io
   apps:
+    coreDns:
+      values:
+        foo: bar
+      extraConfigs:
+      - name: my-coredns-extra-config
+        kind: ConfigMap
+        optional: false
     verticalPodAutoscalerCrd:
       values:
         commonLabels:
           foo: bar
       extraConfigs:
-      - name: my-extra-config
+      - name: my-vpa-crd-extra-config
         kind: ConfigMap
         optional: true
 internal:
@@ -349,6 +356,7 @@ providerIntegration:
       version: v1beta1
       kind: AWSMachinePool
     helmRepositoryResourcesEnabled: true
+    coreDnsHelmReleaseResourceEnabled: true
     verticalPodAutoscalerCrdHelmReleaseResourceEnabled: true
     bastion:
       infrastructureMachineTemplate:
