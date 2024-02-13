@@ -27,7 +27,8 @@ providerIntegration:
       group: infrastructure.cluster.x-k8s.io
       version: v1beta1
       kind: GiantMachinePool
-    verticalPodAutoscalerCrdHelmReleaseEnabled: true
+    helmRepositoryResourcesEnabled: true
+    verticalPodAutoscalerCrdHelmReleaseResourceEnabled: true
   controlPlane:
     resources:
       infrastructureMachineTemplate:

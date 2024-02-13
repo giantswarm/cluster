@@ -101,10 +101,11 @@ providerIntegration:
     bastionResourceEnabled: true
     clusterResourceEnabled: true
     controlPlaneResourceEnabled: true
+    helmRepositoryResourcesEnabled: false
     infrastructureCluster: {}
     machineHealthCheckResourceEnabled: true
     machinePoolResourcesEnabled: true
-    verticalPodAutoscalerCrdHelmReleaseEnabled: false
+    verticalPodAutoscalerCrdHelmReleaseResourceEnabled: false
   teleport:
     enabled: true
     proxyAddr: teleport.giantswarm.io:443

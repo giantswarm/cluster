@@ -1,0 +1,32 @@
+{{- if $.Values.providerIntegration.resourcesApi.helmRepositoryResourcesEnabled }}
+{{- $annotations := include "cluster.annotations.common.all" $ }}
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: {{ include "cluster.resource.name" $ }}-default
+  namespace: {{ $.Release.Namespace }}
+  {{- if $annotations }}
+  annotations:
+    {{- $annotations | indent 4 }}
+  {{- end }}
+  labels:
+    {{- include "cluster.labels.common.all" $ | indent 4 }}
+spec:
+  interval: 5m
+  url: https://giantswarm.github.io/default-catalog
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: {{ include "cluster.resource.name" $ }}-default-test
+  namespace: {{ $.Release.Namespace }}
+  {{- if $annotations }}
+  annotations:
+    {{- $annotations | indent 4 }}
+  {{- end }}
+  labels:
+    {{- include "cluster.labels.common.all" $ | indent 4 }}
+spec:
+  interval: 5m
+  url: https://giantswarm.github.io/default-test-catalog
+{{- end }}

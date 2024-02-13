@@ -348,7 +348,8 @@ providerIntegration:
       group: infrastructure.cluster.x-k8s.io
       version: v1beta1
       kind: AWSMachinePool
-    verticalPodAutoscalerCrdHelmReleaseEnabled: true
+    helmRepositoryResourcesEnabled: true
+    verticalPodAutoscalerCrdHelmReleaseResourceEnabled: true
     bastion:
       infrastructureMachineTemplate:
         group: infrastructure.cluster.x-k8s.io
