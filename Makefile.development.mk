@@ -18,8 +18,7 @@ endif
 template: ## Output the rendered Helm template
 	$(eval CHART_DIR := "helm/cluster")
 	$(eval HELM_RELEASE_NAME := $(shell yq .global.metadata.name ${CHART_DIR}/${CI_FILE}))
-	@cd ${CHART_DIR} && \
-		helm template -f ${CI_FILE} --debug ${HELM_RELEASE_NAME} .
+	@helm template ${HELM_RELEASE_NAME} ${CHART_DIR} --values ${CHART_DIR}/${CI_FILE} --debug
 
 .PHONY: generate
 generate: normalize-schema validate-schema generate-docs generate-values
