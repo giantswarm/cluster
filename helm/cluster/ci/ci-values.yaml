@@ -57,6 +57,15 @@ global:
             username: giantswarm
             password: super_secret_password
         - endpoint: giantswarm.azurecr.io
+  apps:
+    verticalPodAutoscalerCrd:
+      values:
+        commonLabels:
+          foo: bar
+      extraConfigs:
+      - name: my-extra-config
+        kind: ConfigMap
+        optional: true
 internal:
   advancedConfiguration:
     cgroupsv1: true
@@ -339,6 +348,7 @@ providerIntegration:
       group: infrastructure.cluster.x-k8s.io
       version: v1beta1
       kind: AWSMachinePool
+    verticalPodAutoscalerCrdHelmReleaseEnabled: true
     bastion:
       infrastructureMachineTemplate:
         group: infrastructure.cluster.x-k8s.io

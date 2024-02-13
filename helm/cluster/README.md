@@ -20,6 +20,20 @@ schemadocs generate helm/cluster/values.schema.json -o helm/cluster/README.md
 
 <!-- DOCS_START -->
 
+### Apps
+Properties within the `.global.apps` object
+Configuration of apps that are part of the cluster.
+
+| **Property** | **Description** | **More Details** |
+| :----------- | :-------------- | :--------------- |
+| `global.apps.verticalPodAutoscalerCrd` | **App** - Configuration of an default app that is part of the cluster.|**Type:** `object`<br/>|
+| `global.apps.verticalPodAutoscalerCrd.extraConfigs` | **Extra config maps or secrets** - Extra config maps or secrets that will be used to customize to the app. The desired values must be under configmap or secret key 'values'. The values are merged in the order given, with the later values overwriting earlier, and then inline values overwriting those. Resources must be in the same namespace as the cluster.|**Type:** `array`<br/>|
+| `global.apps.verticalPodAutoscalerCrd.extraConfigs[*]` | **Config map or secret**|**Type:** `object`<br/>|
+| `global.apps.verticalPodAutoscalerCrd.extraConfigs[*].kind` | **Kind** - Specifies whether the resource is a config map or a secret.|**Type:** `string`<br/>|
+| `global.apps.verticalPodAutoscalerCrd.extraConfigs[*].name` | **Name** - Name of the config map or secret. The object must exist in the same namespace as the cluster App.|**Type:** `string`<br/>|
+| `global.apps.verticalPodAutoscalerCrd.extraConfigs[*].optional` | **Optional** - Optional marks this ValuesReference as optional. When set, a not found error for the values reference is ignored, but any ValuesKey, TargetPath or transient error will still result in a reconciliation failure.|**Type:** `boolean`<br/>|
+| `global.apps.verticalPodAutoscalerCrd.values` | **Values** - Values to be passed to the app. Values will have higher priority than values from configmaps.|**Type:** `object`<br/>|
+
 ### Components
 Properties within the `.global.components` object
 Advanced configuration of components that are running on all nodes.
@@ -443,6 +457,7 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.resourcesApi.infrastructureCluster.version` | **API version**|**Type:** `string`<br/>**Examples:** `"v1alpha1", "v1beta1", "v1beta2", "v1", "v2"`<br/>|
 | `providerIntegration.resourcesApi.machineHealthCheckResourceEnabled` | **MachineHealthCheck resource enabled** - Flag that indicates if the MachineHealthCheck resource is enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.|**Type:** `boolean`<br/>**Default:** `true`|
 | `providerIntegration.resourcesApi.machinePoolResourcesEnabled` | **Machine pool resources enabled** - Flag that indicates if the machine pool resources are enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.|**Type:** `boolean`<br/>**Default:** `true`|
+| `providerIntegration.resourcesApi.verticalPodAutoscalerCrdHelmReleaseEnabled` | **vertical-pod-autoscaler-crd HelmRelease enabled** - Flag that indicates if the vertical-pod-autoscaler-crd HelmRelease is enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.|**Type:** `boolean`<br/>**Default:** `false`|
 | `providerIntegration.teleport` | **Teleport**|**Type:** `object`<br/>|
 | `providerIntegration.teleport.enabled` | **Enable teleport**|**Type:** `boolean`<br/>**Default:** `true`|
 | `providerIntegration.teleport.proxyAddr` | **Teleport proxy address**|**Type:** `string`<br/>**Default:** `"teleport.giantswarm.io:443"`|
