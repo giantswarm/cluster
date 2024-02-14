@@ -124,13 +124,29 @@ and is used to join the node to the teleport cluster.
 {{/* Provider-specific files for all nodes */}}
 {{- define "cluster.internal.kubeadm.files.provider" }}
 {{- if $.Values.providerIntegration.kubeadmConfig.files }}
-{{ toYaml $.Values.providerIntegration.kubeadmConfig.files }}
+{{ include "cluster.processFiles" (dict "files" $.Values.providerIntegration.kubeadmConfig.files "clusterName" (include "cluster.resource.name" $)) }}
 {{- end }}
 {{- end }}
 
 {{/* Custom cluster-specific files for all nodes */}}
 {{- define "cluster.internal.kubeadm.files.custom" }}
 {{- if $.Values.internal.advancedConfiguration.files }}
-{{ toYaml $.Values.internal.advancedConfiguration.files }}
+{{ include "cluster.processFiles" (dict "files" $.Values.internal.advancedConfiguration.files "clusterName" (include "cluster.resource.name" $)) }}
 {{- end }}
+{{- end }}
+
+{{- define "cluster.processFiles" }}
+{{- $clusterName := required "clusterName is required for cluster.processFiles function call" .clusterName }}
+{{- $outFiles := list }}
+{{- range $file := .files }}
+{{- if eq (default false (index $file "contentFrom" "secret" "prependClusterNameAsPrefix")) true }}
+{{- $secret := (index $file "contentFrom" "secret") }}
+{{- $secretName := (required "Secret name must be given" (index $secret "name")) }}
+{{- $_ := set $secret "name" (printf "%s-%s" $clusterName $secretName) }}
+{{- /* `prependClusterNameAsPrefix` is our own property, so remove it to make the dictionary CAPI-compatible */}}
+{{- $_ := unset $secret "prependClusterNameAsPrefix" }}
+{{- end }}
+{{- $outFiles = append $outFiles $file }}
+{{- end }}
+{{- toYaml $outFiles }}
 {{- end }}

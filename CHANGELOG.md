@@ -12,13 +12,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add default HelmRepositories (behind a flag which is disabled by default).
 - Add vertical-pod-autoscaler-crd HelmRelease (behind a flag which is disabled by default).
 - Add coredns HelmRelease (behind a flag which is disabled by default).
+- Support prepending cluster name to file secret name
 
 ## [0.8.0] - 2024-02-09
 
 ### Added
 
 - Add systemd unit and script to compute fairness values for k8s API server in controlplane.
-- Add internal.advancedConfiguration.kubelet to configure system and k8s reserved resources. 
+- Add internal.advancedConfiguration.kubelet to configure system and k8s reserved resources.
 - Add `rolloutBefore` config to Helm value to `.Values.internal.advancedConfiguration.controlPlane` to enable support for automatic node rollout/certificate renewal
 - Add systemd unit and timer for hourly etcd defragmentation.
 
@@ -149,7 +150,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Fixed containerd configuration for newer flatcar versions. 
+- Fixed containerd configuration for newer flatcar versions.
 
 ## [0.1.0] - 2023-12-19
 
