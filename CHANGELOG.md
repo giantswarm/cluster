@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Add default HelmRepositories (behind a flag which is disabled by default).
 - Add vertical-pod-autoscaler-crd HelmRelease (behind a flag which is disabled by default).
+- Add coredns HelmRelease (behind a flag which is disabled by default).
 
 ## [0.8.0] - 2024-02-09
 

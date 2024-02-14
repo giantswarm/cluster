@@ -2,6 +2,7 @@
 
 global:
   apps:
+    coreDns: {}
     verticalPodAutoscalerCrd: {}
   components:
     containerd:
@@ -101,6 +102,7 @@ providerIntegration:
     bastionResourceEnabled: true
     clusterResourceEnabled: true
     controlPlaneResourceEnabled: true
+    coreDnsHelmReleaseResourceEnabled: false
     helmRepositoryResourcesEnabled: false
     infrastructureCluster: {}
     machineHealthCheckResourceEnabled: true

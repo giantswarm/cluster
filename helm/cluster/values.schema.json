@@ -725,6 +725,12 @@
                     "description": "Configuration of apps that are part of the cluster.",
                     "additionalProperties": false,
                     "properties": {
+                        "coreDns": {
+                            "$ref": "#/$defs/app",
+                            "type": "object",
+                            "title": "CoreDNS",
+                            "description": "Configuration of coredns-app. For all available values see https://github.com/giantswarm/coredns-app."
+                        },
                         "verticalPodAutoscalerCrd": {
                             "$ref": "#/$defs/app",
                             "type": "object",
@@ -1842,6 +1848,12 @@
                             "title": "Control plane resource enabled",
                             "description": "Flag that indicates if the control plane resource is enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.",
                             "default": true
+                        },
+                        "coreDnsHelmReleaseResourceEnabled": {
+                            "type": "boolean",
+                            "title": "CoreDNS HelmRelease resource enabled",
+                            "description": "Flag that indicates if the CoreDNS HelmRelease is enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.",
+                            "default": false
                         },
                         "helmRepositoryResourcesEnabled": {
                             "type": "boolean",
