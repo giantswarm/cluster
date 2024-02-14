@@ -25,6 +25,24 @@ room for such suffix.
 {{- end -}}
 
 {{/*
+  Render all labels that are common for all resources.
+
+  Included labels:
+  - Common pre-defined labels from "cluster.labels.common" template,
+  - Custom labels specified in .Values.global.metadata.labels.
+*/}}
+{{- define "cluster.labels.common.all" }}
+{{ include "cluster.labels.common" $ }}
+{{- $labels := dict }}
+{{- if .Values.global.metadata.labels }}
+{{- $labels = .Values.global.metadata.labels }}
+{{- end }}
+{{- range $key, $val := $labels }}
+{{ $key }}: {{ $val | quote }}
+{{- end }}
+{{- end }}
+
+{{/*
 Common labels
 */}}
 {{- define "cluster.labels.common" -}}
@@ -57,6 +75,26 @@ giantswarm.io/prevent-deletion: "true"
 {{- range $key, $val := .Values.global.metadata.labels }}
 {{ $key }}: {{ $val | quote }}
 {{- end }}
+{{- end }}
+{{- end }}
+
+{{/*
+  Render all annotations that are common for all resources.
+
+  Included annotations:
+  - Custom annotations specified in .Values.global.metadata.annotations,
+  - cluster.giantswarm.io/description, if .Values.global.metadata.description is specified.
+*/}}
+{{- define "cluster.annotations.common.all" }}
+{{- $annotations := dict }}
+{{- if .Values.global.metadata.annotations }}
+{{- $annotations = .Values.global.metadata.annotations }}
+{{- end }}
+{{- if $.Values.global.metadata.description }}
+{{- $_ := set $annotations "cluster.giantswarm.io/description" $.Values.global.metadata.description }}
+{{- end }}
+{{- range $key, $val := $annotations }}
+{{ $key }}: {{ $val | quote }}
 {{- end }}
 {{- end }}
 
