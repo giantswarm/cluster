@@ -14,6 +14,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add coredns HelmRelease (behind a flag which is disabled by default).
 - Support prepending cluster name to file secret name
 
+### Changed
+
+- Set `--node-ip` kubelet argument also for joining control plane nodes. Other nodes already had this setting, and it is important if a node has multiple network interfaces (such as for Cilium ENI mode or AWS VPC CNI). Only the primary IP will be reported in the node status, resulting in `kubectl exec` and other tooling working correctly.
+
 ## [0.8.0] - 2024-02-09
 
 ### Added
