@@ -10,6 +10,7 @@ nodeRegistration:
     {{- end }}
     cloud-provider: external
     feature-gates: CronJobTimeZone=true
+    node-ip: ${COREOS_EC2_IPV4_LOCAL}
   name: ${COREOS_EC2_HOSTNAME}
   {{- if $.Values.global.controlPlane.customNodeTaints }}
   {{- if (gt (len $.Values.global.controlPlane.customNodeTaints) 0) }}
