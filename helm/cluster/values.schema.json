@@ -724,6 +724,14 @@
                     "title": "Apps",
                     "description": "Configuration of apps that are part of the cluster.",
                     "additionalProperties": false,
+                    "patternProperties": {
+                        "[a-z][a-zA-Z]+": {
+                            "$ref": "#/$defs/app",
+                            "type": "object",
+                            "title": "App configurations from parent chart",
+                            "description": "Not used in this chart. This is here to keep the schemas compatible."
+                        }
+                    },
                     "properties": {
                         "coreDns": {
                             "$ref": "#/$defs/app",
