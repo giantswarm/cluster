@@ -155,10 +155,6 @@
       Environment=PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/opt/bin
       # To make metadata environment variables available for pre-kubeadm commands.
       EnvironmentFile=/run/metadata/*
-      {{- if eq (lower $.nodeRole) "controlplane" }}
-      # Read environment variables for apiserver fairness configuration
-      EnvironmentFile=/etc/apiserver-environment
-      {{- end }}
 - name: containerd.service
   enabled: true
   contents: |
