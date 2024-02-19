@@ -139,7 +139,7 @@ and is used to join the node to the teleport cluster.
 {{- $clusterName := required "clusterName is required for cluster.processFiles function call" .clusterName }}
 {{- $outFiles := list }}
 {{- range $file := .files }}
-{{- if eq (default false (index $file "contentFrom" "secret" "prependClusterNameAsPrefix")) true }}
+{{- if default false (index $file "contentFrom" "secret" "prependClusterNameAsPrefix") }}
 {{- $secret := (index $file "contentFrom" "secret") }}
 {{- $secretName := (required "Secret name must be given" (index $secret "name")) }}
 {{- $_ := set $secret "name" (printf "%s-%s" $clusterName $secretName) }}
