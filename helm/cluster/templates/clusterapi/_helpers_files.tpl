@@ -124,19 +124,19 @@ and is used to join the node to the teleport cluster.
 {{/* Provider-specific files for all nodes */}}
 {{- define "cluster.internal.kubeadm.files.provider" }}
 {{- if $.Values.providerIntegration.kubeadmConfig.files }}
-{{ include "cluster.processFiles" (dict "files" $.Values.providerIntegration.kubeadmConfig.files "clusterName" (include "cluster.resource.name" $)) }}
+{{ include "cluster.internal.processFiles" (dict "files" $.Values.providerIntegration.kubeadmConfig.files "clusterName" (include "cluster.resource.name" $)) }}
 {{- end }}
 {{- end }}
 
 {{/* Custom cluster-specific files for all nodes */}}
 {{- define "cluster.internal.kubeadm.files.custom" }}
 {{- if $.Values.internal.advancedConfiguration.files }}
-{{ include "cluster.processFiles" (dict "files" $.Values.internal.advancedConfiguration.files "clusterName" (include "cluster.resource.name" $)) }}
+{{ include "cluster.internal.processFiles" (dict "files" $.Values.internal.advancedConfiguration.files "clusterName" (include "cluster.resource.name" $)) }}
 {{- end }}
 {{- end }}
 
-{{- define "cluster.processFiles" }}
-{{- $clusterName := required "clusterName is required for cluster.processFiles function call" .clusterName }}
+{{- define "cluster.internal.processFiles" }}
+{{- $clusterName := required "clusterName is required for cluster.internal.processFiles function call" .clusterName }}
 {{- $outFiles := list }}
 {{- range $file := .files }}
 {{- if default false (index $file "contentFrom" "secret" "prependClusterNameAsPrefix") }}

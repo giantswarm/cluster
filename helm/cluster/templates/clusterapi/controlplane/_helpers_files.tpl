@@ -31,13 +31,13 @@
 {{/* Provider-specific files for control plane nodes */}}
 {{- define "cluster.internal.controlPlane.kubeadm.files.provider" }}
 {{- if $.Values.providerIntegration.controlPlane.kubeadmConfig.files }}
-{{ include "cluster.processFiles" (dict "files" $.Values.providerIntegration.controlPlane.kubeadmConfig.files "clusterName" (include "cluster.resource.name" $)) }}
+{{ include "cluster.internal.processFiles" (dict "files" $.Values.providerIntegration.controlPlane.kubeadmConfig.files "clusterName" (include "cluster.resource.name" $)) }}
 {{- end }}
 {{- end }}
 
 {{/* Custom cluster-specific files for control plane nodes */}}
 {{- define "cluster.internal.controlPlane.kubeadm.files.custom" }}
 {{- if $.Values.internal.advancedConfiguration.controlPlane.files }}
-{{ include "cluster.processFiles" (dict "files" $.Values.internal.advancedConfiguration.controlPlane.files "clusterName" (include "cluster.resource.name" $)) }}
+{{ include "cluster.internal.processFiles" (dict "files" $.Values.internal.advancedConfiguration.controlPlane.files "clusterName" (include "cluster.resource.name" $)) }}
 {{- end }}
 {{- end }}
