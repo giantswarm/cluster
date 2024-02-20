@@ -130,6 +130,9 @@ For Giant Swarm internal use only, not stable, or not supported by UIs.
 | `internal.advancedConfiguration.cgroupsv1` | **CGroups v1** - Force use of CGroups v1 for whole cluster.|**Type:** `boolean`<br/>**Default:** `false`|
 | `internal.advancedConfiguration.controlPlane` | **Control plane** - Advanced configuration of control plane components.|**Type:** `object`<br/>|
 | `internal.advancedConfiguration.controlPlane.apiServer` | **API server** - Advanced configuration of API server.|**Type:** `object`<br/>|
+| `internal.advancedConfiguration.controlPlane.apiServer.auditPolicy` | **Audit policy** - Configuration of the audit policy.|**Type:** `object`<br/>|
+| `internal.advancedConfiguration.controlPlane.apiServer.auditPolicy.extraRules` | **Additional audit policy rules** - A list of additional audit policy rules.|**Type:** `array`<br/>|
+| `internal.advancedConfiguration.controlPlane.apiServer.auditPolicy.extraRules[*]` | **Additional audit policy rule**|**Type:** `object`<br/>|
 | `internal.advancedConfiguration.controlPlane.apiServer.bindPort` | **Bind port** - Kubernetes API bind port used for API server pod.|**Type:** `integer`<br/>|
 | `internal.advancedConfiguration.controlPlane.apiServer.enablePriorityAndFairness` | **Enable priority and fairness** - If true and the APIPriorityAndFairness feature gate is enabled, replace the max-in-flight handler with an enhanced one that queues and dispatches with priority and fairness.|**Type:** `boolean`<br/>**Default:** `false`|
 | `internal.advancedConfiguration.controlPlane.apiServer.etcdPrefix` | **etcd prefix** - The prefix to prepend to all resource paths in etcd. If nothing is specified, the API server uses '/registry' prefix by default.|**Type:** `string`<br/>|
