@@ -110,6 +110,11 @@
                                     "type": "string",
                                     "title": "Name",
                                     "description": "Name of the Secret resource."
+                                },
+                                "prependClusterNameAsPrefix": {
+                                    "type": "boolean",
+                                    "title": "Prepend cluster name as name prefix",
+                                    "description": "Prepend cluster name as name prefix in order to use a unique secret name."
                                 }
                             }
                         }
