@@ -52,6 +52,8 @@ internal:
       rolloutBefore:
         certificatesExpiryDays: 180
     kubelet:
+      containerLogMaxFiles: 0
+      containerLogMaxSize: ""
       kubeReserved:
         cpu: 350m
         ephemeralStorage: 1024Mi
