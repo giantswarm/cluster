@@ -17,8 +17,6 @@
 {{/* Default commands to run before kubeadm on control plane nodes */}}
 {{- define "cluster.internal.controlPlane.kubeadm.preKubeadmCommands.default" }}
 - /opt/bin/setup-apiserver-environment.sh
-- env $(cat /etc/apiserver-environment | xargs) envsubst < /etc/kubeadm.yml > /etc/kubeadm.yml.tmp
-- mv /etc/kubeadm.yml.tmp /etc/kubeadm.yml
 {{- end }}
 
 {{/* Provider-specific commands to run before kubeadm on control plane nodes */}}
