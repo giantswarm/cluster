@@ -1206,6 +1206,12 @@
                                             "maximum": 65535,
                                             "minimum": 0
                                         },
+                                        "enablePriorityAndFairness": {
+                                            "type": "boolean",
+                                            "title": "Enable priority and fairness",
+                                            "description": "If true and the APIPriorityAndFairness feature gate is enabled, replace the max-in-flight handler with an enhanced one that queues and dispatches with priority and fairness.",
+                                            "default": false
+                                        },
                                         "etcdPrefix": {
                                             "type": "string",
                                             "title": "etcd prefix",

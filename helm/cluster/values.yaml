@@ -42,7 +42,8 @@ internal:
   advancedConfiguration:
     cgroupsv1: false
     controlPlane:
-      apiServer: {}
+      apiServer:
+        enablePriorityAndFairness: false
       etcd:
         experimental: {}
         quotaBackendBytesGiB: 8
