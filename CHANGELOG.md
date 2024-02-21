@@ -36,10 +36,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Set `--node-ip` kubelet argument also for joining control plane nodes. Other nodes already had this setting, and it is important if a node has multiple network interfaces (such as for Cilium ENI mode or AWS VPC CNI). Only the primary IP will be reported in the node status, resulting in `kubectl exec` and other tooling working correctly.
 - Put API server priority and fairness configuration behind a flag that is disabled by default.
 
-### Changed
-
-- Moved apiserver environment generation from systemd service to controlplane prekubeadm commands.
-
 ## [0.8.0] - 2024-02-09
 
 ### Added
