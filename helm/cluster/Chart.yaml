@@ -1,12 +1,12 @@
 apiVersion: v2
 name: cluster
 type: application
-version: 0.8.0
+version: 0.9.0
 description: Giant Swarm cluster chart with provider-independent cluster resources
 icon: https://s.giantswarm.io/app-icons/giantswarm/1/dark.svg
 home: https://github.com/giantswarm/cluster
 sources:
-- https://github.com/giantswarm/cluster
+  - https://github.com/giantswarm/cluster
 annotations:
   application.giantswarm.io/app-type: cluster
   application.giantswarm.io/team: turtles
