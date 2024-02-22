@@ -591,6 +591,19 @@
                 "type": "string"
             }
         },
+        "providerIntegrationAppConfig": {
+            "type": "object",
+            "title": "Provider integration app config",
+            "description": "App config used to additionally configure an app for a specific provider",
+            "additionalProperties": false,
+            "properties": {
+                "configTemplateName": {
+                    "type": "string",
+                    "title": "Config template name",
+                    "description": "Name of the Helm template that has provider-specific app config. Provider-specific app config overrides provider-independent app config, while custom user config overrides both provider-independent and provider-specific default app config."
+                }
+            }
+        },
         "systemdUnit": {
             "type": "object",
             "title": "systemd unit",
@@ -738,6 +751,12 @@
                         }
                     },
                     "properties": {
+                        "cilium": {
+                            "$ref": "#/$defs/app",
+                            "type": "object",
+                            "title": "Cilium",
+                            "description": "Configuration of cilium-app. For all available values see https://github.com/giantswarm/cilium-app."
+                        },
                         "coreDns": {
                             "$ref": "#/$defs/app",
                             "type": "object",
@@ -1415,6 +1434,17 @@
             ],
             "additionalProperties": false,
             "properties": {
+                "apps": {
+                    "type": "object",
+                    "title": "Apps",
+                    "description": "Provider-specific config for apps.",
+                    "additionalProperties": false,
+                    "properties": {
+                        "cilium": {
+                            "$ref": "#/$defs/providerIntegrationAppConfig"
+                        }
+                    }
+                },
                 "bastion": {
                     "type": "object",
                     "title": "Internal bastion configuration",
@@ -1855,6 +1885,12 @@
                             "title": "Bastion resource enabled",
                             "description": "Flag that indicates if the Bastion resource is enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.",
                             "default": true
+                        },
+                        "ciliumHelmReleaseResourceEnabled": {
+                            "type": "boolean",
+                            "title": "Cilium HelmRelease resource enabled",
+                            "description": "Flag that indicates if the Cilium HelmRelease is enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.",
+                            "default": false
                         },
                         "clusterResourceEnabled": {
                             "type": "boolean",

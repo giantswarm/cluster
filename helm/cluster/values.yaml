@@ -2,6 +2,7 @@
 
 global:
   apps:
+    cilium: {}
     coreDns: {}
     verticalPodAutoscalerCrd: {}
   components:
@@ -59,6 +60,8 @@ internal:
         memory: 384Mi
     workers: {}
 providerIntegration:
+  apps:
+    cilium: {}
   bastion:
     kubeadmConfig:
       ignition:
@@ -101,6 +104,7 @@ providerIntegration:
   kubernetesVersion: 1.25.16
   resourcesApi:
     bastionResourceEnabled: true
+    ciliumHelmReleaseResourceEnabled: false
     clusterResourceEnabled: true
     controlPlaneResourceEnabled: true
     coreDnsHelmReleaseResourceEnabled: false

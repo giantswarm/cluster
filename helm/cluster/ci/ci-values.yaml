@@ -73,6 +73,8 @@ global:
       - name: my-vpa-crd-extra-config
         kind: ConfigMap
         optional: true
+  podSecurityStandards:
+    enforced: true
 internal:
   advancedConfiguration:
     cgroupsv1: true
@@ -140,6 +142,9 @@ internal:
         cpu: 350m
         memory: 384Mi
 providerIntegration:
+  apps:
+    cilium:
+      configTemplateName: "cluster.test.providerIntegration.apps.cilium.config"
   provider: aws
   bastion:
     kubeadmConfig:
@@ -356,6 +361,7 @@ providerIntegration:
       version: v1beta1
       kind: AWSMachinePool
     helmRepositoryResourcesEnabled: true
+    ciliumHelmReleaseResourceEnabled: true
     coreDnsHelmReleaseResourceEnabled: true
     verticalPodAutoscalerCrdHelmReleaseResourceEnabled: true
     bastion:
