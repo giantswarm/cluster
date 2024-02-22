@@ -1817,7 +1817,7 @@
                 "kubernetesVersion": {
                     "type": "string",
                     "title": "Kubernetes version",
-                    "default": "1.25.16"
+                    "default": "1.25.15"
                 },
                 "pauseProperties": {
                     "type": "object",

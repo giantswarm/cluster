@@ -98,7 +98,7 @@ providerIntegration:
         additionalConfig:
           storage: {}
           systemd: {}
-  kubernetesVersion: 1.25.16
+  kubernetesVersion: 1.25.15
   resourcesApi:
     bastionResourceEnabled: true
     clusterResourceEnabled: true
