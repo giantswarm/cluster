@@ -16,6 +16,7 @@ global:
       enabled: true
       replicas: 1
     network:
+      allowAllEgress: false
       pods:
         cidrBlocks:
           - 100.64.0.0/12
@@ -112,6 +113,7 @@ providerIntegration:
     infrastructureCluster: {}
     machineHealthCheckResourceEnabled: true
     machinePoolResourcesEnabled: true
+    networkPoliciesHelmReleaseResourceEnabled: false
     verticalPodAutoscalerCrdHelmReleaseResourceEnabled: false
   teleport:
     enabled: true
