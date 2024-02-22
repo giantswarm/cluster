@@ -26,4 +26,6 @@ nodeRegistration:
   {{- end }}
   {{- end }}
   {{- end }}
+patches:
+  directory: /etc/kubernetes/patches
 {{- end }}
