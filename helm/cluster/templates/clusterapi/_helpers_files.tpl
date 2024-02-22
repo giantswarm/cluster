@@ -61,10 +61,10 @@
 {{- end }}
 
 {{- define "cluster.internal.kubeadm.files.kubelet" }}
-- path: /etc/kubelet-configuration.yaml
-  permissions: "0700"
+- path: /etc/kubernetes/patches/kubeletconfiguration.yaml
+  permissions: "0644"
   encoding: base64
-  content: {{ tpl ($.Files.Get "files/etc/kubelet-configuration.yaml") . | b64enc }}
+  content: {{ tpl ($.Files.Get "files/etc/kubernetes/patches/kubeletconfiguration.yaml") . | b64enc }}
 - path: /etc/systemd/logind.conf.d/zzz-kubelet-graceful-shutdown.conf
   permissions: "0700"
   encoding: base64

@@ -27,5 +27,7 @@ nodeRegistration:
     effect: {{ .effect | quote }}
   {{- end }}
   {{- end }}
+patches:
+  directory: /etc/kubernetes/patches
 {{- end }}
 {{- end }}
