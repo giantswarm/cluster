@@ -13,3 +13,36 @@
     {{- end -}}
     {{- mustRegexReplaceAll `^(\d+\.\d+\.\d+).*$` $serviceCidrBlock "${1}.10" -}}
 {{- end -}}
+
+{{/* Test helper used only in the CI */}}
+{{- define "cluster.test.providerIntegration.apps.cilium.config" }}
+hubble:
+  relay:
+    tolerations:
+      - key: "node.cluster.x-k8s.io/uninitialized"
+        operator: "Exists"
+        effect: "NoSchedule"
+  ui:
+    tolerations:
+      - key: "node.cluster.x-k8s.io/uninitialized"
+        operator: "Exists"
+        effect: "NoSchedule"
+defaultPolicies:
+  enabled: false
+  remove: true
+
+  tolerations:
+    - effect: NoSchedule
+      operator: Exists
+    - effect: NoExecute
+      operator: Exists
+    - key: CriticalAddonsOnly
+      operator: Exists
+extraPolicies:
+  allowEgressToCoreDNS:
+    enabled: true
+  allowEgressToProxy:
+    enabled: {{ $.Values.global.connectivity.proxy.enabled }}
+    httpProxy: {{ $.Values.global.connectivity.proxy.httpProxy | quote }}
+    httpsProxy: {{ $.Values.global.connectivity.proxy.httpsProxy | quote }}
+{{- end }}

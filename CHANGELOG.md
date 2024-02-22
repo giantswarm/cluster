@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add cilium HelmRelease (behind a flag which is disabled by default).
+- Add network-policies HelmRelease and cluster-catalog HelmRepository (behind a flag which is disabled by default).
+
 ## [0.9.1] - 2024-02-22
 
 ### Changed
