@@ -80,6 +80,19 @@ internal:
     cgroupsv1: true
     controlPlane:
       apiServer:
+        auditPolicy:
+          extraRules:
+          - users:
+            - system:unsecured
+            verbs:
+            - get
+            resources:
+            - group: ""
+              resources:
+              - configmaps
+            namespaces:
+            - kube-system
+            level: Request
         bindPort: 6443
         etcdPrefix: giantswarm.io
         extraArgs:

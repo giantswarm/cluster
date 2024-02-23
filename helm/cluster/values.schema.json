@@ -1223,6 +1223,23 @@
                                     "title": "API server",
                                     "description": "Advanced configuration of API server.",
                                     "properties": {
+                                        "auditPolicy": {
+                                            "type": "object",
+                                            "title": "Audit policy",
+                                            "description": "Configuration of the audit policy.",
+                                            "additionalProperties": false,
+                                            "properties": {
+                                                "extraRules": {
+                                                    "type": "array",
+                                                    "title": "Additional audit policy rules",
+                                                    "description": "A list of additional audit policy rules.",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "title": "Additional audit policy rule"
+                                                    }
+                                                }
+                                            }
+                                        },
                                         "bindPort": {
                                             "type": "integer",
                                             "title": "Bind port",
