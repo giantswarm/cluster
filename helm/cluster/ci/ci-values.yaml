@@ -141,6 +141,8 @@ internal:
       kubeReserved:
         cpu: 350m
         memory: 384Mi
+      containerLogMaxSize: 30Mi
+      containerLogMaxFiles: 2
 providerIntegration:
   apps:
     cilium:

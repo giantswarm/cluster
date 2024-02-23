@@ -45,3 +45,9 @@ serializeImagePulls: false
 streamingConnectionIdleTimeout: 1h
 allowedUnsafeSysctls:
 - "net.*"
+{{- if $.Values.internal.advancedConfiguration.kubelet.containerLogMaxSize }}
+containerLogMaxSize: {{ $.Values.internal.advancedConfiguration.kubelet.containerLogMaxSize }}
+{{- end }}
+{{- if $.Values.internal.advancedConfiguration.kubelet.containerLogMaxFiles }}
+containerLogMaxFiles: {{ $.Values.internal.advancedConfiguration.kubelet.containerLogMaxFiles }}
+{{- end }}

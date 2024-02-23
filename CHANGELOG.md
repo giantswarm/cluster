@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add vertical-pod-autoscaler-crd HelmRelease (behind a flag which is disabled by default).
 - Add coredns HelmRelease (behind a flag which is disabled by default).
 - Support prepending cluster name to file secret name
+- Kubelet: Add `containerLogMaxSize` & `containerLogMaxFiles`. ([#92](https://github.com/giantswarm/cluster/pull/92))
 
 ### Changed
 

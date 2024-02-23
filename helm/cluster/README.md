@@ -168,6 +168,8 @@ For Giant Swarm internal use only, not stable, or not supported by UIs.
 | `internal.advancedConfiguration.files[*].path` | **Path** - File path on the node.|**Type:** `string`<br/>|
 | `internal.advancedConfiguration.files[*].permissions` | **Permissions** - File permissions in form 0644|**Type:** `string`<br/>**Default:** `"0644"`|
 | `internal.advancedConfiguration.kubelet` | **Kubelet configuration** - Kubelet configuration settings for the whole cluster.|**Type:** `object`<br/>|
+| `internal.advancedConfiguration.kubelet.containerLogMaxFiles` | **Maximum number of container log files** - Specifies the maximum number of container log files that can be present for a container.|**Type:** `integer`<br/>**Default:** `0`|
+| `internal.advancedConfiguration.kubelet.containerLogMaxSize` | **Maximum size of the container log** - Specifies the maximum size of the container log file before it is rotated. For example: "5Mi" or "256Ki".|**Type:** `string`<br/>**Default:** `""`|
 | `internal.advancedConfiguration.kubelet.kubeReserved` | **Kube reserved resources configuration** - Resources configuration for Kubernetes system services.|**Type:** `object`<br/>|
 | `internal.advancedConfiguration.kubelet.kubeReserved.cpu` | **Kube reserved CPU** - CPU reserved for Kubernetes system services.|**Type:** `string`<br/>**Default:** `"350m"`|
 | `internal.advancedConfiguration.kubelet.kubeReserved.ephemeralStorage` | **Kube reserved ephemeral storage** - Ephemeral storage reserved for kubernetes system services.|**Type:** `string`<br/>**Default:** `"1024Mi"`|
