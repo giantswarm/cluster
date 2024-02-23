@@ -591,6 +591,19 @@
                 "type": "string"
             }
         },
+        "providerIntegrationAppConfig": {
+            "type": "object",
+            "title": "Provider integration app config",
+            "description": "App config used to additionally configure an app for a specific provider",
+            "additionalProperties": false,
+            "properties": {
+                "configTemplateName": {
+                    "type": "string",
+                    "title": "Config template name",
+                    "description": "Name of the Helm template that has provider-specific app config. Provider-specific app config overrides provider-independent app config, while custom user config overrides both provider-independent and provider-specific default app config."
+                }
+            }
+        },
         "systemdUnit": {
             "type": "object",
             "title": "systemd unit",
@@ -738,6 +751,12 @@
                         }
                     },
                     "properties": {
+                        "cilium": {
+                            "$ref": "#/$defs/app",
+                            "type": "object",
+                            "title": "Cilium",
+                            "description": "Configuration of cilium-app. For all available values see https://github.com/giantswarm/cilium-app."
+                        },
                         "coreDns": {
                             "$ref": "#/$defs/app",
                             "type": "object",
@@ -868,6 +887,11 @@
                                 "services"
                             ],
                             "properties": {
+                                "allowAllEgress": {
+                                    "type": "boolean",
+                                    "title": "Allow all egress",
+                                    "default": false
+                                },
                                 "pods": {
                                     "type": "object",
                                     "title": "Pods",
@@ -1324,6 +1348,18 @@
                             "title": "Kubelet configuration",
                             "description": "Kubelet configuration settings for the whole cluster.",
                             "properties": {
+                                "containerLogMaxFiles": {
+                                    "type": "integer",
+                                    "title": "Maximum number of container log files",
+                                    "description": "Specifies the maximum number of container log files that can be present for a container.",
+                                    "default": 0
+                                },
+                                "containerLogMaxSize": {
+                                    "type": "string",
+                                    "title": "Maximum size of the container log",
+                                    "description": "Specifies the maximum size of the container log file before it is rotated. For example: \"5Mi\" or \"256Ki\".",
+                                    "default": ""
+                                },
                                 "kubeReserved": {
                                     "type": "object",
                                     "title": "Kube reserved resources configuration",
@@ -1415,6 +1451,17 @@
             ],
             "additionalProperties": false,
             "properties": {
+                "apps": {
+                    "type": "object",
+                    "title": "Apps",
+                    "description": "Provider-specific config for apps.",
+                    "additionalProperties": false,
+                    "properties": {
+                        "cilium": {
+                            "$ref": "#/$defs/providerIntegrationAppConfig"
+                        }
+                    }
+                },
                 "bastion": {
                     "type": "object",
                     "title": "Internal bastion configuration",
@@ -1856,6 +1903,12 @@
                             "description": "Flag that indicates if the Bastion resource is enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.",
                             "default": true
                         },
+                        "ciliumHelmReleaseResourceEnabled": {
+                            "type": "boolean",
+                            "title": "Cilium HelmRelease resource enabled",
+                            "description": "Flag that indicates if the Cilium HelmRelease is enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.",
+                            "default": false
+                        },
                         "clusterResourceEnabled": {
                             "type": "boolean",
                             "title": "Cluster resource enabled",
@@ -1894,6 +1947,12 @@
                             "title": "Machine pool resources enabled",
                             "description": "Flag that indicates if the machine pool resources are enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.",
                             "default": true
+                        },
+                        "networkPoliciesHelmReleaseResourceEnabled": {
+                            "type": "boolean",
+                            "title": "Network policies HelmRelease resource enabled",
+                            "description": "Flag that indicates if the network-policies HelmRelease is enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.",
+                            "default": false
                         },
                         "verticalPodAutoscalerCrdHelmReleaseResourceEnabled": {
                             "type": "boolean",
