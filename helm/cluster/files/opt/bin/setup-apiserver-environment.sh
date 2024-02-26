@@ -34,6 +34,6 @@ echo "MEMORY_LIMIT=$((memory * 3 / 4))Gi" >>$env_file
 echo "CPU_REQUEST=$((cpus / 3))m" >>$env_file
 echo "MEMORY_REQUEST=$((memory / 2))Gi" >>$env_file
 
-# update /etc/kubeadm.yml with fairness values in case they are there 
-sed -i -e "s/max-requests-inflight:.*/max-requests-inflight: \"${max_requests_inflight}\"/" /etc/kubeadm.yml
-sed -i -e "s/max-mutating-requests-inflight:.*/max-mutating-requests-inflight: \"${max_mutating_requests_inflight}\"/" /etc/kubeadm.yml
+# update settings in the patches 
+sed -i -e "s/${MAX_REQUESTS_INFLIGHT}/${max_requests_inflight}/" /etc/kubernetes/patches/kube-apiserver0+json.yaml
+sed -i -e "s/${MAX_MUTATING_REQUESTS_INFLIGHT}/${max_mutating_requests_inflight}/" /etc/kubernetes/patches/kube-apiserver0+json.yaml
