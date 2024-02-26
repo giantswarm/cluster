@@ -35,5 +35,5 @@ echo "CPU_REQUEST=$((cpus / 3))m" >>$env_file
 echo "MEMORY_REQUEST=$((memory / 2))Gi" >>$env_file
 
 # update settings in the patches 
-sed -i -e "s/${MAX_REQUESTS_INFLIGHT}/${max_requests_inflight}/" /etc/kubernetes/patches/kube-apiserver0+json.yaml
-sed -i -e "s/${MAX_MUTATING_REQUESTS_INFLIGHT}/${max_mutating_requests_inflight}/" /etc/kubernetes/patches/kube-apiserver0+json.yaml
+sed -i -e "s/MAX_REQUESTS_INFLIGHT/${max_requests_inflight}/" /etc/kubernetes/patches/kube-apiserver0+json.yaml
+sed -i -e "s/MAX_MUTATING_REQUESTS_INFLIGHT/${max_mutating_requests_inflight}/" /etc/kubernetes/patches/kube-apiserver0+json.yaml
