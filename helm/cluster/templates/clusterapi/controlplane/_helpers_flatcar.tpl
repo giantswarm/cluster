@@ -26,18 +26,6 @@ containerLinuxConfig:
 
 {{/* Default systemd units on control plane nodes */}}
 {{- define "cluster.internal.controlPlane.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units.default" }}
-- name: setup-apiserver-environment.service
-  enabled: true
-  contents: |
-    [Unit]
-    Description=Setup environment for kubeadm apiserver
-    Before=containerd.service
-    [Service]
-    Type=oneshot
-    TimeoutStartSec=0
-    ExecStart=/opt/bin/setup-apiserver-environment.sh
-    [Install]
-    WantedBy=multi-user.target
 - name: etcd3-defragmentation.service
   enabled: false
   contents: |

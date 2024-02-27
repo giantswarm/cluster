@@ -9,8 +9,16 @@
 */}}
 {{- define "cluster.internal.controlPlane.kubeadm.preKubeadmCommands" }}
 {{- include "cluster.internal.kubeadm.preKubeadmCommands" $ }}
+{{- include "cluster.internal.controlPlane.kubeadm.preKubeadmCommands.default" $ }}
 {{- include "cluster.internal.controlPlane.kubeadm.preKubeadmCommands.provider" $ }}
 {{- include "cluster.internal.controlPlane.kubeadm.preKubeadmCommands.custom" $ }}
+{{- end }}
+
+{{/* Default commands to run before kubeadm on control plane nodes */}}
+{{- define "cluster.internal.controlPlane.kubeadm.preKubeadmCommands.default" }}
+{{- if $.Values.internal.advancedConfiguration.controlPlane.apiServer.enablePriorityAndFairness }}
+- /opt/bin/configure-apiserver-fairness.sh
+{{- end }}
 {{- end }}
 
 {{/* Provider-specific commands to run before kubeadm on control plane nodes */}}
