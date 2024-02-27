@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Apply API Server fairness settings using patches.
+- Randomize etcd defragmentation start minute so they are staggered.
 
 ## [0.10.0] - 2024-02-22
 

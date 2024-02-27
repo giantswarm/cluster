@@ -49,7 +49,9 @@ containerLinuxConfig:
     [Unit]
     Description=Execute etcd3-defragmentation hourly
     [Timer]
-    OnCalendar=*-*-* *:53:40
+    OnCalendar=hourly
+    RandomizedDelaySec=55m
+    FixedRandomDelay=true
     Unit=etcd3-defragmentation.service
     [Install]
     WantedBy=multi-user.target
