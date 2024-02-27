@@ -16,7 +16,9 @@
 
 {{/* Default commands to run before kubeadm on control plane nodes */}}
 {{- define "cluster.internal.controlPlane.kubeadm.preKubeadmCommands.default" }}
-- /opt/bin/setup-apiserver-environment.sh
+{{- if $.Values.internal.advancedConfiguration.controlPlane.apiServer.enablePriorityAndFairness }}
+- /opt/bin/configure-apiserver-fairness.sh
+{{- end }}
 {{- end }}
 
 {{/* Provider-specific commands to run before kubeadm on control plane nodes */}}

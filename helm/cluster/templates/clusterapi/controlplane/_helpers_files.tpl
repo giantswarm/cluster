@@ -22,11 +22,11 @@
     secret:
       name: {{ include "cluster.resource.name" $ }}-encryption-provider-config
       key: encryption
-- path: /opt/bin/setup-apiserver-environment.sh
+{{- if $.Values.internal.advancedConfiguration.controlPlane.apiServer.enablePriorityAndFairness }}
+- path: /opt/bin/configure-apiserver-fairness.sh
   permissions: "0755"
   encoding: base64
-  content: {{ tpl ($.Files.Get "files/opt/bin/setup-apiserver-environment.sh") . | b64enc }}
-{{- if $.Values.internal.advancedConfiguration.controlPlane.apiServer.enablePriorityAndFairness }}
+  content: {{ tpl ($.Files.Get "files/opt/bin/configure-apiserver-fairness.sh") . | b64enc }}
 - path: /etc/kubernetes/patches/kube-apiserver0+json.yaml
   permissions: "0644"
   encoding: base64
