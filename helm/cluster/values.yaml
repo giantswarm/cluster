@@ -46,7 +46,7 @@ internal:
     controlPlane:
       apiServer:
         auditPolicy: {}
-        enablePriorityAndFairness: false
+        enablePriorityAndFairness: true
       etcd:
         experimental: {}
         quotaBackendBytesGiB: 8
