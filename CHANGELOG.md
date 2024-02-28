@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.11.0] - 2024-02-28
+
 ### Fixed
 
 - Fix order of preKubeadmCommands for CAPA migration, custom must be placed before provider commands.
@@ -238,7 +240,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Update and clean up the template repo.
 
-[Unreleased]: https://github.com/giantswarm/cluster/compare/v0.10.0...HEAD
+[Unreleased]: https://github.com/giantswarm/cluster/compare/v0.11.0...HEAD
+[0.11.0]: https://github.com/giantswarm/cluster/compare/v0.10.0...v0.11.0
 [0.10.0]: https://github.com/giantswarm/cluster/compare/v0.9.1...v0.10.0
 [0.9.1]: https://github.com/giantswarm/cluster/compare/v0.9.0...v0.9.1
 [0.9.0]: https://github.com/giantswarm/cluster/compare/v0.8.0...v0.9.0
