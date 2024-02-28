@@ -4,14 +4,17 @@
 
     It includes:
     - shared preKubeadmCommands that are executed on all nodes,
-    - provider-specific control plane commands specified in cluster-<provider> app,
     - custom cluster-specific control plane commands.
+    - provider-specific control plane commands specified in cluster-<provider> app,
+
+    For CAPA migration custom preKubeadmCommands have to be before provider-specific commands.
 */}}
+
 {{- define "cluster.internal.controlPlane.kubeadm.preKubeadmCommands" }}
 {{- include "cluster.internal.kubeadm.preKubeadmCommands" $ }}
 {{- include "cluster.internal.controlPlane.kubeadm.preKubeadmCommands.default" $ }}
-{{- include "cluster.internal.controlPlane.kubeadm.preKubeadmCommands.provider" $ }}
 {{- include "cluster.internal.controlPlane.kubeadm.preKubeadmCommands.custom" $ }}
+{{- include "cluster.internal.controlPlane.kubeadm.preKubeadmCommands.provider" $ }}
 {{- end }}
 
 {{/* Default commands to run before kubeadm on control plane nodes */}}

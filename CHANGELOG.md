@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Fix order of preKubeadmCommands for CAPA migration, custom must be placed before provider commands.
+
+### Changed
+
 - Apply API Server fairness settings using patches.
 - Randomize etcd defragmentation start minute so they are staggered.
 
