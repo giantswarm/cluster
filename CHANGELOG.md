@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Update cilium-app to v0.21.0 in order to support Cilium ENI mode for CAPA
+
 ## [0.11.1] - 2024-02-29
 
 ### Changed
