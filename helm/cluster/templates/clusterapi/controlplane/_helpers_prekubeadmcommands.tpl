@@ -7,13 +7,13 @@
     - custom cluster-specific control plane commands.
     - provider-specific control plane commands specified in cluster-<provider> app,
 
-    For CAPA migration custom preKubeadmCommands have to be before provider-specific commands.
+    For CAPA migration custom preKubeadmCommands have to be before any other commands.
 */}}
 
 {{- define "cluster.internal.controlPlane.kubeadm.preKubeadmCommands" }}
+{{- include "cluster.internal.controlPlane.kubeadm.preKubeadmCommands.custom" $ }}
 {{- include "cluster.internal.kubeadm.preKubeadmCommands" $ }}
 {{- include "cluster.internal.controlPlane.kubeadm.preKubeadmCommands.default" $ }}
-{{- include "cluster.internal.controlPlane.kubeadm.preKubeadmCommands.custom" $ }}
 {{- include "cluster.internal.controlPlane.kubeadm.preKubeadmCommands.provider" $ }}
 {{- end }}
 
