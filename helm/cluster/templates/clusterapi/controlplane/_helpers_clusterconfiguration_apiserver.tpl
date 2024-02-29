@@ -82,7 +82,7 @@ extraVolumes:
 {{- end }}
 
 {{- define "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.enableAdmissionPlugins" }}
-{{- $enabledAdmissionPlugins := list
+{{- $enableAdmissionPlugins := list
   "DefaultStorageClass"
   "DefaultTolerationSeconds"
   "LimitRanger"
@@ -93,10 +93,8 @@ extraVolumes:
   "ResourceQuota"
   "ServiceAccount"
   "ValidatingAdmissionWebhook" -}}
-{{- range $additionalAdmissionPlugin := $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.additionalAdmissionPlugins }}
-{{- $enabledAdmissionPlugins = append $enabledAdmissionPlugins $additionalAdmissionPlugin -}}
-{{- end }}
-{{- join "," (compact $enabledAdmissionPlugins) }}
+{{- $additionalAdmissionPlugins := $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.additionalAdmissionPlugins | default list }}
+{{- concat $enableAdmissionPlugins $additionalAdmissionPlugins | uniq | compact | join "," }}
 {{- end }}
 
 {{- define "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.serviceAccountIssuer" }}
