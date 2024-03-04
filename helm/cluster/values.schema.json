@@ -1232,6 +1232,9 @@
                                     "title": "API server",
                                     "description": "Advanced configuration of API server.",
                                     "properties": {
+                                        "additionalAdmissionPlugins": {
+                                            "$ref": "#/$defs/additionalAdmissionPlugins"
+                                        },
                                         "auditPolicy": {
                                             "type": "object",
                                             "title": "Audit policy",

@@ -80,6 +80,8 @@ internal:
     cgroupsv1: true
     controlPlane:
       apiServer:
+        additionalAdmissionPlugins:
+        - AlwaysPullImages
         auditPolicy:
           extraRules:
           - users:

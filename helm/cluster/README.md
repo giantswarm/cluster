@@ -130,6 +130,8 @@ For Giant Swarm internal use only, not stable, or not supported by UIs.
 | `internal.advancedConfiguration.cgroupsv1` | **CGroups v1** - Force use of CGroups v1 for whole cluster.|**Type:** `boolean`<br/>**Default:** `false`|
 | `internal.advancedConfiguration.controlPlane` | **Control plane** - Advanced configuration of control plane components.|**Type:** `object`<br/>|
 | `internal.advancedConfiguration.controlPlane.apiServer` | **API server** - Advanced configuration of API server.|**Type:** `object`<br/>|
+| `internal.advancedConfiguration.controlPlane.apiServer.additionalAdmissionPlugins` | **Additional admission plugins** - A list of plugins to enable, in addition to the default ones that include DefaultStorageClass, DefaultTolerationSeconds, LimitRanger, MutatingAdmissionWebhook, NamespaceLifecycle, PersistentVolumeClaimResize, Priority, ResourceQuota, ServiceAccount and ValidatingAdmissionWebhook.|**Type:** `array`<br/>|
+| `internal.advancedConfiguration.controlPlane.apiServer.additionalAdmissionPlugins[*]` | **Additional admission plugin**|**Type:** `string`<br/>|
 | `internal.advancedConfiguration.controlPlane.apiServer.auditPolicy` | **Audit policy** - Configuration of the audit policy.|**Type:** `object`<br/>|
 | `internal.advancedConfiguration.controlPlane.apiServer.auditPolicy.extraRules` | **Additional audit policy rules** - A list of additional audit policy rules.|**Type:** `array`<br/>|
 | `internal.advancedConfiguration.controlPlane.apiServer.auditPolicy.extraRules[*]` | **Additional audit policy rule**|**Type:** `object`<br/>|
