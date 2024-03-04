@@ -1,27 +1,30 @@
 {{- define "cluster.internal.controlPlane.kubeadm.files" }}
 {{- include "cluster.internal.kubeadm.files" $ }}
-{{- include "cluster.internal.kubeadm.files.kubernetes" $ }}
+{{- include "cluster.internal.controlPlane.kubeadm.files.audit" $ }}
+{{- include "cluster.internal.controlPlane.kubeadm.files.encryption" $ }}
+{{- include "cluster.internal.controlPlane.kubeadm.files.fairness" $ }}
+{{- include "cluster.internal.controlPlane.kubeadm.files.oidc" $ }}
 {{- include "cluster.internal.controlPlane.kubeadm.files.provider" $ }}
 {{- include "cluster.internal.controlPlane.kubeadm.files.custom" $ }}
-{{- if $.Values.global.controlPlane.oidc.caPem }}
-- path: /etc/ssl/certs/oidc.pem
-  permissions: "0600"
-  encoding: base64
-  content: {{ tpl ($.Files.Get "files/etc/ssl/certs/oidc.pem") . | b64enc }}
-{{- end }}
 {{- end }}
 
-{{- define "cluster.internal.kubeadm.files.kubernetes" }}
+{{- define "cluster.internal.controlPlane.kubeadm.files.audit" }}
 - path: /etc/kubernetes/policies/audit-policy.yaml
   permissions: "0600"
   encoding: base64
   content: {{ tpl ($.Files.Get "files/etc/kubernetes/policies/audit-policy.yaml") . | b64enc }}
+{{- end }}
+
+{{- define "cluster.internal.controlPlane.kubeadm.files.encryption" }}
 - path: /etc/kubernetes/encryption/config.yaml
   permissions: "0600"
   contentFrom:
     secret:
       name: {{ include "cluster.resource.name" $ }}-encryption-provider-config
       key: encryption
+{{- end }}
+
+{{- define "cluster.internal.controlPlane.kubeadm.files.fairness" }}
 {{- if $.Values.internal.advancedConfiguration.controlPlane.apiServer.enablePriorityAndFairness }}
 - path: /opt/bin/configure-apiserver-fairness.sh
   permissions: "0755"
@@ -31,6 +34,15 @@
   permissions: "0644"
   encoding: base64
   content: {{ tpl ($.Files.Get "files/etc/kubernetes/patches/kube-apiserver0+json.yaml") . | b64enc }}
+{{- end }}
+{{- end }}
+
+{{- define "cluster.internal.controlPlane.kubeadm.files.oidc" }}
+{{- if $.Values.global.controlPlane.oidc.caPem }}
+- path: /etc/ssl/certs/oidc.pem
+  permissions: "0600"
+  encoding: base64
+  content: {{ tpl ($.Files.Get "files/etc/ssl/certs/oidc.pem") . | b64enc }}
 {{- end }}
 {{- end }}
 
