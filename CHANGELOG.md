@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Chart: Improve `enable-admission-plugins` rendering. ([#113](https://github.com/giantswarm/cluster/pull/113))
+- Chart: Split `cluster.internal.kubeadm.files.kubernetes` into `cluster.internal.controlPlane.kubeadm.files.*`. ([#117](https://github.com/giantswarm/cluster/pull/117))
 
 ## [0.12.0] - 2024-02-29
 
