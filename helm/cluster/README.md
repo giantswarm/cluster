@@ -132,6 +132,11 @@ For Giant Swarm internal use only, not stable, or not supported by UIs.
 | `internal.advancedConfiguration.controlPlane.apiServer` | **API server** - Advanced configuration of API server.|**Type:** `object`<br/>|
 | `internal.advancedConfiguration.controlPlane.apiServer.additionalAdmissionPlugins` | **Additional admission plugins** - A list of plugins to enable, in addition to the default ones that include DefaultStorageClass, DefaultTolerationSeconds, LimitRanger, MutatingAdmissionWebhook, NamespaceLifecycle, PersistentVolumeClaimResize, Priority, ResourceQuota, ServiceAccount and ValidatingAdmissionWebhook.|**Type:** `array`<br/>|
 | `internal.advancedConfiguration.controlPlane.apiServer.additionalAdmissionPlugins[*]` | **Additional admission plugin**|**Type:** `string`<br/>|
+| `internal.advancedConfiguration.controlPlane.apiServer.admissionConfiguration` | **Admission configuration** - Configuration of admission control.|**Type:** `object`<br/>|
+| `internal.advancedConfiguration.controlPlane.apiServer.admissionConfiguration.plugins` | **Admission plugin configurations** - A list of admission plugin configurations.|**Type:** `array`<br/>|
+| `internal.advancedConfiguration.controlPlane.apiServer.admissionConfiguration.plugins[*]` | **Admission plugin configuration** - An admission plugin configuration.|**Type:** `object`<br/>|
+| `internal.advancedConfiguration.controlPlane.apiServer.admissionConfiguration.plugins[*].config` | **Admission plugin configuration** - Configuration of the admission plugin.|**Type:** `string`<br/>|
+| `internal.advancedConfiguration.controlPlane.apiServer.admissionConfiguration.plugins[*].name` | **Admission plugin name** - Name of the admission plugin.|**Type:** `string`<br/>|
 | `internal.advancedConfiguration.controlPlane.apiServer.auditPolicy` | **Audit policy** - Configuration of the audit policy.|**Type:** `object`<br/>|
 | `internal.advancedConfiguration.controlPlane.apiServer.auditPolicy.extraRules` | **Additional audit policy rules** - A list of additional audit policy rules.|**Type:** `array`<br/>|
 | `internal.advancedConfiguration.controlPlane.apiServer.auditPolicy.extraRules[*]` | **Additional audit policy rule**|**Type:** `object`<br/>|

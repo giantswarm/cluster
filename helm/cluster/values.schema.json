@@ -1235,6 +1235,41 @@
                                         "additionalAdmissionPlugins": {
                                             "$ref": "#/$defs/additionalAdmissionPlugins"
                                         },
+                                        "admissionConfiguration": {
+                                            "type": "object",
+                                            "title": "Admission configuration",
+                                            "description": "Configuration of admission control.",
+                                            "additionalProperties": false,
+                                            "properties": {
+                                                "plugins": {
+                                                    "type": "array",
+                                                    "title": "Admission plugin configurations",
+                                                    "description": "A list of admission plugin configurations.",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "title": "Admission plugin configuration",
+                                                        "description": "An admission plugin configuration.",
+                                                        "required": [
+                                                            "name",
+                                                            "config"
+                                                        ],
+                                                        "additionalProperties": false,
+                                                        "properties": {
+                                                            "config": {
+                                                                "type": "string",
+                                                                "title": "Admission plugin configuration",
+                                                                "description": "Configuration of the admission plugin."
+                                                            },
+                                                            "name": {
+                                                                "type": "string",
+                                                                "title": "Admission plugin name",
+                                                                "description": "Name of the admission plugin."
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
                                         "auditPolicy": {
                                             "type": "object",
                                             "title": "Audit policy",
