@@ -2,6 +2,15 @@
     "$id": "values.schema.json",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$defs": {
+        "additionalAdmissionPlugins": {
+            "type": "array",
+            "title": "Additional admission plugins",
+            "description": "A list of plugins to enable, in addition to the default ones that include DefaultStorageClass, DefaultTolerationSeconds, LimitRanger, MutatingAdmissionWebhook, NamespaceLifecycle, PersistentVolumeClaimResize, Priority, ResourceQuota, ServiceAccount and ValidatingAdmissionWebhook.",
+            "items": {
+                "type": "string",
+                "title": "Additional admission plugin"
+            }
+        },
         "app": {
             "type": "object",
             "title": "App",
@@ -1656,13 +1665,7 @@
                                             "additionalProperties": false,
                                             "properties": {
                                                 "additionalAdmissionPlugins": {
-                                                    "type": "array",
-                                                    "title": "Additional admission plugins",
-                                                    "description": "A list of plugins to enable, in addition to the default ones that include DefaultStorageClass, DefaultTolerationSeconds, LimitRanger, MutatingAdmissionWebhook, NamespaceLifecycle, PersistentVolumeClaimResize, Priority, ResourceQuota, ServiceAccount and ValidatingAdmissionWebhook.",
-                                                    "items": {
-                                                        "type": "string",
-                                                        "title": "Additional admission plugin"
-                                                    }
+                                                    "$ref": "#/$defs/additionalAdmissionPlugins"
                                                 },
                                                 "apiAudiences": {
                                                     "title": "API audiences",
