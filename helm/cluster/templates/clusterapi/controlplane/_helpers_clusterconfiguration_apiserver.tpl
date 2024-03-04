@@ -14,6 +14,9 @@ certSANs:
 */}}
 timeoutForControlPlane: 20m
 extraArgs:
+  {{- if .Values.internal.advancedConfiguration.controlPlane.apiServer.admissionConfiguration }}
+  admission-control-config-file: /etc/kubernetes/admission/config.yaml
+  {{- end }}
   {{- if .Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.apiAudiences }}
   api-audiences: {{ include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.apiAudiences" $ | trim | quote }}
   {{- end }}
@@ -61,6 +64,13 @@ extraVolumes:
   mountPath: /var/log/apiserver
   readOnly: false
   pathType: DirectoryOrCreate
+{{- if .Values.internal.advancedConfiguration.controlPlane.apiServer.admissionConfiguration }}
+- name: admission
+  hostPath: /etc/kubernetes/admission
+  mountPath: /etc/kubernetes/admission
+  readOnly: true
+  pathType: Directory
+{{- end }}
 - name: policies
   hostPath: /etc/kubernetes/policies
   mountPath: /etc/kubernetes/policies
