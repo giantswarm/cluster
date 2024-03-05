@@ -1,11 +1,29 @@
 {{- define "cluster.internal.controlPlane.kubeadm.files" }}
 {{- include "cluster.internal.kubeadm.files" $ }}
+{{- include "cluster.internal.controlPlane.kubeadm.files.admission" $ }}
 {{- include "cluster.internal.controlPlane.kubeadm.files.audit" $ }}
 {{- include "cluster.internal.controlPlane.kubeadm.files.encryption" $ }}
 {{- include "cluster.internal.controlPlane.kubeadm.files.fairness" $ }}
 {{- include "cluster.internal.controlPlane.kubeadm.files.oidc" $ }}
 {{- include "cluster.internal.controlPlane.kubeadm.files.provider" $ }}
 {{- include "cluster.internal.controlPlane.kubeadm.files.custom" $ }}
+{{- end }}
+
+{{- define "cluster.internal.controlPlane.kubeadm.files.admission" }}
+{{- with .Values.internal.advancedConfiguration.controlPlane.apiServer.admissionConfiguration }}
+- path: /etc/kubernetes/admission/config.yaml
+  permissions: "0644"
+  encoding: base64
+  content: {{ tpl ($.Files.Get "files/etc/kubernetes/admission/config.yaml") $ | b64enc }}
+{{- if .plugins }}
+{{- range .plugins }}
+- path: /etc/kubernetes/admission/plugins/{{ .name | lower }}.yaml
+  permissions: "0644"
+  encoding: base64
+  content: {{ tpl .config $ | b64enc }}
+{{- end }}
+{{- end }}
+{{- end }}
 {{- end }}
 
 {{- define "cluster.internal.controlPlane.kubeadm.files.audit" }}

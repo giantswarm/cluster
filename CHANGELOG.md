@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Cleanup HelmRelease Hook Job.
+- Chart: Make admission plugins configurable. ([#118](https://github.com/giantswarm/cluster/pull/118))
+  - Chart: Add `internal.advancedConfiguration.controlPlane.apiServer.additionalAdmissionPlugins`.
+  - Chart: Add `internal.advancedConfiguration.controlPlane.apiServer.admissionConfiguration`.
 
 ### Changed
 

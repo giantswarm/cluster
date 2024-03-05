@@ -45,6 +45,7 @@ internal:
     cgroupsv1: false
     controlPlane:
       apiServer:
+        admissionConfiguration: {}
         auditPolicy: {}
         enablePriorityAndFairness: true
       etcd:

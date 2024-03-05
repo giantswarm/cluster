@@ -1,0 +1,11 @@
+{{- with .Values.internal.advancedConfiguration.controlPlane.apiServer.admissionConfiguration -}}
+apiVersion: apiserver.config.k8s.io/v1
+kind: AdmissionConfiguration
+{{- if .plugins }}
+plugins:
+{{- range .plugins }}
+- name: {{ .name }}
+  path: /etc/kubernetes/admission/plugins/{{ .name | lower }}.yaml
+{{- end }}
+{{- end }}
+{{- end }}
