@@ -1438,6 +1438,12 @@
                         "preKubeadmCommands": {
                             "$ref": "#/$defs/preKubeadmCommands"
                         },
+                        "registry": {
+                            "type": "string",
+                            "title": "Registry",
+                            "description": "The registry to use for pulling images. If not set, the default registry is used.",
+                            "default": "gsoci.azurecr.io"
+                        },
                         "workers": {
                             "type": "object",
                             "title": "Workers",
@@ -1538,7 +1544,6 @@
                                     "description": "The image used by sandbox / pause container",
                                     "required": [
                                         "name",
-                                        "registry",
                                         "tag"
                                     ],
                                     "properties": {
@@ -1546,11 +1551,6 @@
                                             "type": "string",
                                             "title": "Repository",
                                             "default": "giantswarm/pause"
-                                        },
-                                        "registry": {
-                                            "type": "string",
-                                            "title": "Registry",
-                                            "default": "gsoci.azurecr.io"
                                         },
                                         "tag": {
                                             "type": "string",
@@ -1927,6 +1927,12 @@
                             "type": "boolean",
                             "title": "Cilium HelmRelease resource enabled",
                             "description": "Flag that indicates if the Cilium HelmRelease is enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.",
+                            "default": false
+                        },
+                        "cleanupHelmReleaseResourcesEnabled": {
+                            "type": "boolean",
+                            "title": "Cleanup HelmRelease hook job resource enabled",
+                            "description": "Flag that indicates if the Cleanup HelmRelease Hook Job is enabeld and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.",
                             "default": false
                         },
                         "clusterResourceEnabled": {

@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Cleanup HelmRelease Hook Job.
+
 ### Changed
 
 - Chart: Improve `enable-admission-plugins` rendering. ([#113](https://github.com/giantswarm/cluster/pull/113))

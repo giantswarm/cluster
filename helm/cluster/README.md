@@ -184,6 +184,7 @@ For Giant Swarm internal use only, not stable, or not supported by UIs.
 | `internal.advancedConfiguration.postKubeadmCommands[*]` |**None**|**Type:** `string`<br/>|
 | `internal.advancedConfiguration.preKubeadmCommands` | **Pre-kubeadm commands** - Extra commands to run before kubeadm runs.|**Type:** `array`<br/>|
 | `internal.advancedConfiguration.preKubeadmCommands[*]` |**None**|**Type:** `string`<br/>|
+| `internal.advancedConfiguration.registry` | **Registry** - The registry to use for pulling images. If not set, the default registry is used.|**Type:** `string`<br/>**Default:** `"gsoci.azurecr.io"`|
 | `internal.advancedConfiguration.workers` | **Workers** - Advanced configuration of worker nodes.|**Type:** `object`<br/>|
 | `internal.advancedConfiguration.workers.files` | **Files** - Custom cluster-specific files that are deployed to worker nodes.|**Type:** `array`<br/>|
 | `internal.advancedConfiguration.workers.files[*]` | **File from secret** - It defines a file with content in a Secret|**Type:** `object`<br/>|
@@ -316,7 +317,6 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.components.containerd` | **Containerd** - Configuration of containerd.|**Type:** `object`<br/>|
 | `providerIntegration.components.containerd.sandboxContainerImage` | **Sandbox image** - The image used by sandbox / pause container|**Type:** `object`<br/>|
 | `providerIntegration.components.containerd.sandboxContainerImage.name` | **Repository**|**Type:** `string`<br/>**Default:** `"giantswarm/pause"`|
-| `providerIntegration.components.containerd.sandboxContainerImage.registry` | **Registry**|**Type:** `string`<br/>**Default:** `"gsoci.azurecr.io"`|
 | `providerIntegration.components.containerd.sandboxContainerImage.tag` | **Tag**|**Type:** `string`<br/>**Default:** `"3.9"`|
 | `providerIntegration.components.systemd` | **systemd**||
 | `providerIntegration.connectivity` | **Connectivity** - Internal connectivity configuration.|**Type:** `object`<br/>|
@@ -484,6 +484,7 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.resourcesApi` | **Resources API** - Group, version and kind configuration that is required and used by a specific Cluster API provider.|**Type:** `object`<br/>|
 | `providerIntegration.resourcesApi.bastionResourceEnabled` | **Bastion resource enabled** - Flag that indicates if the Bastion resource is enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.|**Type:** `boolean`<br/>**Default:** `true`|
 | `providerIntegration.resourcesApi.ciliumHelmReleaseResourceEnabled` | **Cilium HelmRelease resource enabled** - Flag that indicates if the Cilium HelmRelease is enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.|**Type:** `boolean`<br/>**Default:** `false`|
+| `providerIntegration.resourcesApi.cleanupHelmReleaseResourcesEnabled` | **Cleanup HelmRelease hook job resource enabled** - Flag that indicates if the Cleanup HelmRelease Hook Job is enabeld and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.|**Type:** `boolean`<br/>**Default:** `false`|
 | `providerIntegration.resourcesApi.clusterResourceEnabled` | **Cluster resource enabled** - Flag that indicates if the Cluster resource is enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.|**Type:** `boolean`<br/>**Default:** `true`|
 | `providerIntegration.resourcesApi.controlPlaneResourceEnabled` | **Control plane resource enabled** - Flag that indicates if the control plane resource is enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.|**Type:** `boolean`<br/>**Default:** `true`|
 | `providerIntegration.resourcesApi.coreDnsHelmReleaseResourceEnabled` | **CoreDNS HelmRelease resource enabled** - Flag that indicates if the CoreDNS HelmRelease is enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.|**Type:** `boolean`<br/>**Default:** `false`|

@@ -252,6 +252,7 @@ cluster:
 Resource flags used for HelmRelease and HelmRepository resources are:
 - `helmRepositoryResourcesEnabled` for default-catalog and default-test-catalog HelmRepositories.
 - `ciliumHelmReleaseResourceEnabled` for cilium HelmRelease,
+- `cleanupHelmReleaseResourcesEnabled` for cleanup HelmRelease,
 - `coreDnsHelmReleaseResourceEnabled` for coredns HelmRelease,
 - `verticalPodAutoscalerCrdHelmReleaseResourceEnabled` for vertical-pod-autoscaler-crd HelmRelease, and
 - `networkPoliciesHelmReleaseResourceEnabled` for network-policies HelmRelease and cluster-catalog HelmRepository.
@@ -264,6 +265,7 @@ cluster:
     resourcesApi:
       helmRepositoryResourcesEnabled: true
       ciliumHelmReleaseResourceEnabled: true
+      cleanupHelmReleaseResourcesEnabled: true
       coreDnsHelmReleaseResourceEnabled: true
       verticalPodAutoscalerCrdHelmReleaseResourceEnabled: true
       networkPoliciesHelmReleaseResourceEnabled: true
