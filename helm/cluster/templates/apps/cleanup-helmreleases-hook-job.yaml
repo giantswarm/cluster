@@ -1,3 +1,4 @@
+{{- if $.Values.providerIntegration.resourcesApi.cleanupHelmReleaseResourceEnabled }}
 # Because cluster provider resources are often deleted before flux has a chance
 # to uninstall helm releases for all deleted HelmRelease CRs they become
 # leftovers because there is still flux finalizer on them. This looks like
@@ -18,7 +19,6 @@
 # To work around this, post-delete Job deletes all finalizers on all HelmRelease
 # CRs created with this chart.
 #
-{{- if $.Values.providerIntegration.resourcesApi.cleanupHelmReleaseHookJobEnabled }}
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -29,7 +29,7 @@ metadata:
     "helm.sh/hook-delete-policy": "before-hook-creation,hook-succeeded,hook-failed"
     "helm.sh/hook-weight": "-1"
   labels:
-    {{- include "labels.common" $ | nindent 4 }}
+    {{- include "cluster.labels.common.all" $ | nindent 4 }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -41,7 +41,7 @@ metadata:
     "helm.sh/hook-delete-policy": "before-hook-creation,hook-succeeded,hook-failed"
     "helm.sh/hook-weight": "-1"
   labels:
-    {{- include "labels.common" $ | nindent 4 }}
+    {{- include "cluster.labels.common.all" $ | nindent 4 }}
 rules:
   - apiGroups: ["helm.toolkit.fluxcd.io"]
     resources: ["helmreleases"]
@@ -60,7 +60,7 @@ metadata:
     "helm.sh/hook-delete-policy": "before-hook-creation,hook-succeeded,hook-failed"
     "helm.sh/hook-weight": "-1"
   labels:
-    {{- include "labels.common" $ | nindent 4 }}
+    {{- include "cluster.labels.common.all" $ | nindent 4 }}
 subjects:
   - kind: ServiceAccount
     name: "{{ include "cluster.resource.name" $ }}-cleanup-helmreleases-hook"
@@ -80,7 +80,7 @@ metadata:
     "helm.sh/hook-delete-policy": "before-hook-creation"
     "helm.sh/hook-weight": "0"
   labels:
-    {{- include "labels.common" $ | nindent 4 }}
+    {{- include "cluster.labels.common.all" $ | nindent 4 }}
 spec:
   ttlSecondsAfterFinished: 86400 # 24h
   template:
@@ -88,7 +88,7 @@ spec:
       name: "{{ include "cluster.resource.name" $ }}-cleanup-helmreleases-hook"
       namespace: {{ $.Release.Namespace }}
       labels:
-        {{- include "labels.common" $ | nindent 8 }}
+        {{- include "cluster.labels.common.all" $ | nindent 8 }}
     spec:
       restartPolicy: Never
       serviceAccountName: "{{ include "cluster.resource.name" $ }}-cleanup-helmreleases-hook"
@@ -100,7 +100,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: post-delete-job
-          image: "{{ .Values.internal.advancedConfiguration.kubectlImage.registry }}/{{ .Values.internal.advancedConfiguration.kubectlImage.name }}:{{ .Values.internal.kubectlImage.tag }}"
+          image: "{{ .Values.internal.advancedConfiguration.kubectlImage.registry }}/{{ .Values.internal.advancedConfiguration.kubectlImage.name }}:{{ .Values.internal.advancedConfiguration.kubectlImage.tag }}"
           command:
             - "/bin/sh"
             - "-xc"
