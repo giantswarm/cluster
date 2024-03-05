@@ -109,7 +109,7 @@ providerIntegration:
   resourcesApi:
     bastionResourceEnabled: true
     ciliumHelmReleaseResourceEnabled: false
-    cleanupHelmReleaseResourceEnabled: false
+    cleanupHelmReleaseResourcesEnabled: false
     clusterResourceEnabled: true
     controlPlaneResourceEnabled: true
     coreDnsHelmReleaseResourceEnabled: false
