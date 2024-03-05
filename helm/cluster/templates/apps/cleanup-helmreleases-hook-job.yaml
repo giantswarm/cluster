@@ -100,7 +100,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: post-delete-job
-          image: "{{ .Values.internal.advancedConfiguration.kubectlImage.registry }}/{{ .Values.internal.advancedConfiguration.kubectlImage.name }}:{{ .Values.internal.advancedConfiguration.kubectlImage.tag }}"
+          image: "{{ .Values.internal.advancedConfiguration.registry }}/giantswarm/kubectl:{{ .Values.providerIntegration.kubernetesVersion }}"
           command:
             - "/bin/sh"
             - "-xc"

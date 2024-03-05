@@ -170,10 +170,6 @@ For Giant Swarm internal use only, not stable, or not supported by UIs.
 | `internal.advancedConfiguration.files[*].contentFrom.secret.prependClusterNameAsPrefix` | **Prepend cluster name as name prefix** - Prepend cluster name as name prefix in order to use a unique secret name.|**Type:** `boolean`<br/>|
 | `internal.advancedConfiguration.files[*].path` | **Path** - File path on the node.|**Type:** `string`<br/>|
 | `internal.advancedConfiguration.files[*].permissions` | **Permissions** - File permissions in form 0644|**Type:** `string`<br/>**Default:** `"0644"`|
-| `internal.advancedConfiguration.kubectlImage` | **Kubectl image** - Kubectl image for jobs|**Type:** `object`<br/>|
-| `internal.advancedConfiguration.kubectlImage.name` | **Name** - Name of the kubectl image.|**Type:** `string`<br/>**Default:** `"giantswarm/kubectl"`|
-| `internal.advancedConfiguration.kubectlImage.registry` | **Registry** - Registry of the kubectl image.|**Type:** `string`<br/>**Default:** `"gsoci.azurecr.io"`|
-| `internal.advancedConfiguration.kubectlImage.tag` | **Tag** - Tag of the kubectl image.|**Type:** `string`<br/>**Default:** `"v1.23.5"`|
 | `internal.advancedConfiguration.kubelet` | **Kubelet configuration** - Kubelet configuration settings for the whole cluster.|**Type:** `object`<br/>|
 | `internal.advancedConfiguration.kubelet.containerLogMaxFiles` | **Maximum number of container log files** - Specifies the maximum number of container log files that can be present for a container.|**Type:** `integer`<br/>**Default:** `0`|
 | `internal.advancedConfiguration.kubelet.containerLogMaxSize` | **Maximum size of the container log** - Specifies the maximum size of the container log file before it is rotated. For example: "5Mi" or "256Ki".|**Type:** `string`<br/>**Default:** `""`|
@@ -188,6 +184,7 @@ For Giant Swarm internal use only, not stable, or not supported by UIs.
 | `internal.advancedConfiguration.postKubeadmCommands[*]` |**None**|**Type:** `string`<br/>|
 | `internal.advancedConfiguration.preKubeadmCommands` | **Pre-kubeadm commands** - Extra commands to run before kubeadm runs.|**Type:** `array`<br/>|
 | `internal.advancedConfiguration.preKubeadmCommands[*]` |**None**|**Type:** `string`<br/>|
+| `internal.advancedConfiguration.registry` | **Registry** - The registry to use for pulling images. If not set, the default registry is used.|**Type:** `string`<br/>**Default:** `"gsoci.azurecr.io"`|
 | `internal.advancedConfiguration.workers` | **Workers** - Advanced configuration of worker nodes.|**Type:** `object`<br/>|
 | `internal.advancedConfiguration.workers.files` | **Files** - Custom cluster-specific files that are deployed to worker nodes.|**Type:** `array`<br/>|
 | `internal.advancedConfiguration.workers.files[*]` | **File from secret** - It defines a file with content in a Secret|**Type:** `object`<br/>|
@@ -320,7 +317,6 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.components.containerd` | **Containerd** - Configuration of containerd.|**Type:** `object`<br/>|
 | `providerIntegration.components.containerd.sandboxContainerImage` | **Sandbox image** - The image used by sandbox / pause container|**Type:** `object`<br/>|
 | `providerIntegration.components.containerd.sandboxContainerImage.name` | **Repository**|**Type:** `string`<br/>**Default:** `"giantswarm/pause"`|
-| `providerIntegration.components.containerd.sandboxContainerImage.registry` | **Registry**|**Type:** `string`<br/>**Default:** `"gsoci.azurecr.io"`|
 | `providerIntegration.components.containerd.sandboxContainerImage.tag` | **Tag**|**Type:** `string`<br/>**Default:** `"3.9"`|
 | `providerIntegration.components.systemd` | **systemd**||
 | `providerIntegration.connectivity` | **Connectivity** - Internal connectivity configuration.|**Type:** `object`<br/>|

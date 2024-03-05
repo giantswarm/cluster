@@ -1369,31 +1369,6 @@
                                 "$ref": "#/$defs/fileFromSecret"
                             }
                         },
-                        "kubectlImage": {
-                            "type": "object",
-                            "title": "Kubectl image",
-                            "description": "Kubectl image for jobs",
-                            "properties": {
-                                "name": {
-                                    "type": "string",
-                                    "title": "Name",
-                                    "description": "Name of the kubectl image.",
-                                    "default": "giantswarm/kubectl"
-                                },
-                                "registry": {
-                                    "type": "string",
-                                    "title": "Registry",
-                                    "description": "Registry of the kubectl image.",
-                                    "default": "gsoci.azurecr.io"
-                                },
-                                "tag": {
-                                    "type": "string",
-                                    "title": "Tag",
-                                    "description": "Tag of the kubectl image.",
-                                    "default": "v1.23.5"
-                                }
-                            }
-                        },
                         "kubelet": {
                             "type": "object",
                             "title": "Kubelet configuration",
@@ -1462,6 +1437,12 @@
                         },
                         "preKubeadmCommands": {
                             "$ref": "#/$defs/preKubeadmCommands"
+                        },
+                        "registry": {
+                            "type": "string",
+                            "title": "Registry",
+                            "description": "The registry to use for pulling images. If not set, the default registry is used.",
+                            "default": "gsoci.azurecr.io"
                         },
                         "workers": {
                             "type": "object",
@@ -1563,7 +1544,6 @@
                                     "description": "The image used by sandbox / pause container",
                                     "required": [
                                         "name",
-                                        "registry",
                                         "tag"
                                     ],
                                     "properties": {
@@ -1571,11 +1551,6 @@
                                             "type": "string",
                                             "title": "Repository",
                                             "default": "giantswarm/pause"
-                                        },
-                                        "registry": {
-                                            "type": "string",
-                                            "title": "Registry",
-                                            "default": "gsoci.azurecr.io"
                                         },
                                         "tag": {
                                             "type": "string",
