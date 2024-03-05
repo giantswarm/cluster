@@ -1369,6 +1369,31 @@
                                 "$ref": "#/$defs/fileFromSecret"
                             }
                         },
+                        "kubectlImage": {
+                            "type": "object",
+                            "title": "Kubectl image",
+                            "description": "Kubectl image for jobs",
+                            "properties": {
+                                "name": {
+                                    "type": "string",
+                                    "title": "Name",
+                                    "description": "Name of the kubectl image.",
+                                    "default": "giantswarm/kubectl"
+                                },
+                                "registry": {
+                                    "type": "string",
+                                    "title": "Registry",
+                                    "description": "Registry of the kubectl image.",
+                                    "default": "gsoci.azurecr.io"
+                                },
+                                "tag": {
+                                    "type": "string",
+                                    "title": "Tag",
+                                    "description": "Tag of the kubectl image.",
+                                    "default": "v1.23.5"
+                                }
+                            }
+                        },
                         "kubelet": {
                             "type": "object",
                             "title": "Kubelet configuration",
@@ -1927,6 +1952,12 @@
                             "type": "boolean",
                             "title": "Cilium HelmRelease resource enabled",
                             "description": "Flag that indicates if the Cilium HelmRelease is enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.",
+                            "default": false
+                        },
+                        "cleanupHelmReleaseResourceEnabled": {
+                            "type": "boolean",
+                            "title": "Cleanup HelmRelease hook job resource enabled",
+                            "description": "Flag that indicates if the Cleanup HelmRelease Hook Job is enabeld and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.",
                             "default": false
                         },
                         "clusterResourceEnabled": {
