@@ -25,13 +25,20 @@ Configuration of apps that are part of the cluster.
 | **Property** | **Description** | **More Details** |
 | :----------- | :-------------- | :--------------- |
 | `global.apps.PATTERN` | **App configurations from parent chart** - Not used in this chart. This is here to keep the schemas compatible.|**Type:** `object`<br/>**Key pattern:**<br/>`PATTERN`=`[a-z][a-zA-Z]+`<br/>|
-| `global.apps.PATTERN.extraConfigs` | **Extra config maps or secrets** - Extra config maps or secrets that will be used to customize to the app. The desired values must be under configmap or secret key 'values'. The values are merged in the order given, with the later values overwriting earlier, and then inline values overwriting those. Resources must be in the same namespace as the cluster.|**Type:** `array`<br/>**Key pattern:**<br/>`PATTERN`=`[a-z][a-zA-Z]+`<br/>|
-| `global.apps.PATTERN.extraConfigs[*]` | **Config map or secret**|**Type:** `object`<br/>**Key pattern:**<br/>`PATTERN`=`[a-z][a-zA-Z]+`<br/>|
-| `global.apps.PATTERN.extraConfigs[*].kind` | **Kind** - Specifies whether the resource is a config map or a secret.|**Type:** `string`<br/>**Key pattern:**<br/>`PATTERN`=`[a-z][a-zA-Z]+`<br/>|
-| `global.apps.PATTERN.extraConfigs[*].name` | **Name** - Name of the config map or secret. The object must exist in the same namespace as the cluster App.|**Type:** `string`<br/>**Key pattern:**<br/>`PATTERN`=`[a-z][a-zA-Z]+`<br/>|
-| `global.apps.PATTERN.extraConfigs[*].optional` | **Optional** - Optional marks this ValuesReference as optional. When set, a not found error for the values reference is ignored, but any ValuesKey, TargetPath or transient error will still result in a reconciliation failure.|**Type:** `boolean`<br/>**Key pattern:**<br/>`PATTERN`=`[a-z][a-zA-Z]+`<br/>|
-| `global.apps.PATTERN.values` | **Values** - Values to be passed to the app. Values will have higher priority than values from configmaps.|**Type:** `object`<br/>**Key pattern:**<br/>`PATTERN`=`[a-z][a-zA-Z]+`<br/>|
-| `global.apps.cilium` | **App** - Configuration of an default app that is part of the cluster.|**Type:** `object`<br/>|
+| `global.apps.certExporter` | **App resource** - Configuration of a default app that is part of the cluster and is deployed as an App resource.|**Type:** `object`<br/>|
+| `global.apps.certExporter.extraConfigs` | **Extra config maps or secrets** - Extra config maps or secrets that will be used to customize to the app. The desired values must be under configmap or secret key 'values'. The values are merged in the order given, with the later values overwriting earlier, and then inline values overwriting those. Resources must be in the same namespace as the cluster.|**Type:** `array`<br/>|
+| `global.apps.certExporter.extraConfigs[*]` | **Config map or secret**|**Type:** `object`<br/>|
+| `global.apps.certExporter.extraConfigs[*].kind` | **Kind** - Specifies whether the resource is a config map or a secret.|**Type:** `string`<br/>|
+| `global.apps.certExporter.extraConfigs[*].name` | **Name** - Name of the config map or secret. The object must exist in the same namespace as the cluster App.|**Type:** `string`<br/>|
+| `global.apps.certExporter.extraConfigs[*].priority` | **Priority**|**Type:** `integer`<br/>**Default:** `25`|
+| `global.apps.certExporter.values` | **Config map** - Helm Values to be passed to the app as user config.|**Type:** `object`<br/>|
+| `global.apps.certManager` | **App resource** - Configuration of a default app that is part of the cluster and is deployed as an App resource.|**Type:** `object`<br/>|
+| `global.apps.certManager.extraConfigs` | **Extra config maps or secrets** - Extra config maps or secrets that will be used to customize to the app. The desired values must be under configmap or secret key 'values'. The values are merged in the order given, with the later values overwriting earlier, and then inline values overwriting those. Resources must be in the same namespace as the cluster.|**Type:** `array`<br/>|
+| `global.apps.certManager.extraConfigs[*]` | **Config map or secret**|**Type:** `object`<br/>|
+| `global.apps.certManager.extraConfigs[*].kind` | **Kind** - Specifies whether the resource is a config map or a secret.|**Type:** `string`<br/>|
+| `global.apps.certManager.extraConfigs[*].name` | **Name** - Name of the config map or secret. The object must exist in the same namespace as the cluster App.|**Type:** `string`<br/>|
+| `global.apps.certManager.extraConfigs[*].priority` | **Priority**|**Type:** `integer`<br/>**Default:** `25`|
+| `global.apps.certManager.values` | **Config map** - Helm Values to be passed to the app as user config.|**Type:** `object`<br/>|
 | `global.apps.cilium` | **App** - Configuration of a default app that is part of the cluster and is deployed as a HelmRelease resource.|**Type:** `object`<br/>|
 | `global.apps.cilium.extraConfigs` | **Extra config maps or secrets** - Extra config maps or secrets that will be used to customize to the app. The desired values must be under configmap or secret key 'values'. The values are merged in the order given, with the later values overwriting earlier, and then inline values overwriting those. Resources must be in the same namespace as the cluster.|**Type:** `array`<br/>|
 | `global.apps.cilium.extraConfigs[*]` | **Config map or secret**|**Type:** `object`<br/>|

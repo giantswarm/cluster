@@ -58,6 +58,21 @@ global:
             password: super_secret_password
         - endpoint: giantswarm.azurecr.io
   apps:
+    certManager:
+      values:
+        ingressShim:
+          defaultIssuerName: encrypt-giantswarm
+          defaultIssuerKind: ClusterIssuer
+          defaultIssuerGroup: encrypt.giantswarm.io
+        ciliumNetworkPolicy:
+          enabled: false
+      extraConfigs:
+      - name: my-cert-manager-secret-extra-config-1
+        kind: Secret
+        priority: 110
+      - name: my-cert-manager-extra-config-2
+        kind: ConfigMap
+        priority: 120
     coreDns:
       values:
         foo: bar
@@ -77,6 +92,12 @@ global:
     enforced: true
 internal:
   advancedConfiguration:
+    apps:
+      certExporter:
+        disabled: true
+      certManager:
+        disabled: false
+        catalogOverride: default-test
     cgroupsv1: true
     controlPlane:
       apiServer:
