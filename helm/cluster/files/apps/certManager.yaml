@@ -1,0 +1,16 @@
+appName: cert-manager
+chartName: cert-manager-app
+configKey: certManager
+catalog: default
+clusterValues:
+  configMap: true
+  secret: true
+dependsOn: prometheus-operator-crd
+namespace: kube-system
+# used by renovate
+# repo: giantswarm/cert-manager-app
+version: 3.7.3
+defaultValues:
+  ciliumNetworkPolicy:
+    enabled: true
+  dns01RecursiveNameserversOnly: true
