@@ -13,8 +13,8 @@
         },
         "app": {
             "type": "object",
-            "title": "App",
-            "description": "Configuration of an default app that is part of the cluster.",
+            "title": "App resource",
+            "description": "Configuration of a default app that is part of the cluster and is deployed as an App resource.",
             "additionalProperties": false,
             "properties": {
                 "extraConfigs": {
@@ -39,19 +39,39 @@
                                 "title": "Name",
                                 "description": "Name of the config map or secret. The object must exist in the same namespace as the cluster App."
                             },
-                            "optional": {
-                                "type": "boolean",
-                                "title": "Optional",
-                                "description": "Optional marks this ValuesReference as optional. When set, a not found error for the values reference is ignored, but any ValuesKey, TargetPath or transient error will still result in a reconciliation failure."
+                            "priority": {
+                                "type": "integer",
+                                "title": "Priority",
+                                "default": 25,
+                                "max": 150,
+                                "min": 1
                             }
                         }
                     }
                 },
                 "values": {
                     "type": "object",
-                    "title": "Values",
-                    "description": "Values to be passed to the app. Values will have higher priority than values from configmaps.",
+                    "title": "Config map",
+                    "description": "Helm Values to be passed to the app as user config.",
                     "additionalProperties": true
+                }
+            }
+        },
+        "appInternal": {
+            "type": "object",
+            "title": "App internal",
+            "description": "Internal configuration of a default app.",
+            "additionalProperties": false,
+            "properties": {
+                "catalogOverride": {
+                    "type": "string",
+                    "title": "Catalog override",
+                    "description": "Name of the catalog from which the app is installed. This should be used for development and testing purposes only."
+                },
+                "disabled": {
+                    "type": "boolean",
+                    "title": "Disabled",
+                    "description": "Flag that indicates if the app is disabled and skipped during WC deployment."
                 }
             }
         },
@@ -237,6 +257,50 @@
                         "v1beta1",
                         "v1"
                     ]
+                }
+            }
+        },
+        "helmRelease": {
+            "type": "object",
+            "title": "App",
+            "description": "Configuration of a default app that is part of the cluster and is deployed as a HelmRelease resource.",
+            "additionalProperties": false,
+            "properties": {
+                "extraConfigs": {
+                    "type": "array",
+                    "title": "Extra config maps or secrets",
+                    "description": "Extra config maps or secrets that will be used to customize to the app. The desired values must be under configmap or secret key 'values'. The values are merged in the order given, with the later values overwriting earlier, and then inline values overwriting those. Resources must be in the same namespace as the cluster.",
+                    "items": {
+                        "type": "object",
+                        "title": "Config map or secret",
+                        "properties": {
+                            "kind": {
+                                "type": "string",
+                                "title": "Kind",
+                                "description": "Specifies whether the resource is a config map or a secret.",
+                                "enum": [
+                                    "ConfigMap",
+                                    "Secret"
+                                ]
+                            },
+                            "name": {
+                                "type": "string",
+                                "title": "Name",
+                                "description": "Name of the config map or secret. The object must exist in the same namespace as the cluster App."
+                            },
+                            "optional": {
+                                "type": "boolean",
+                                "title": "Optional",
+                                "description": "Optional marks this ValuesReference as optional. When set, a not found error for the values reference is ignored, but any ValuesKey, TargetPath or transient error will still result in a reconciliation failure."
+                            }
+                        }
+                    }
+                },
+                "values": {
+                    "type": "object",
+                    "title": "Values",
+                    "description": "Values to be passed to the app. Values will have higher priority than values from configmaps.",
+                    "additionalProperties": true
                 }
             }
         },
@@ -861,21 +925,32 @@
                     "additionalProperties": false,
                     "patternProperties": {
                         "[a-z][a-zA-Z]+": {
-                            "$ref": "#/$defs/app",
                             "type": "object",
                             "title": "App configurations from parent chart",
                             "description": "Not used in this chart. This is here to keep the schemas compatible."
                         }
                     },
                     "properties": {
-                        "cilium": {
+                        "certExporter": {
                             "$ref": "#/$defs/app",
+                            "type": "object",
+                            "title": "cert-exporter",
+                            "description": "Configuration of cert-exporter. For all available values see https://github.com/giantswarm/cert-exporter."
+                        },
+                        "certManager": {
+                            "$ref": "#/$defs/app",
+                            "type": "object",
+                            "title": "cert-manager",
+                            "description": "Configuration of cert-manager. For all available values see https://github.com/giantswarm/cert-manager-app."
+                        },
+                        "cilium": {
+                            "$ref": "#/$defs/helmRelease",
                             "type": "object",
                             "title": "Cilium",
                             "description": "Configuration of cilium-app. For all available values see https://github.com/giantswarm/cilium-app."
                         },
                         "coreDns": {
-                            "$ref": "#/$defs/app",
+                            "$ref": "#/$defs/helmRelease",
                             "type": "object",
                             "title": "CoreDNS",
                             "description": "Configuration of coredns-app. For all available values see https://github.com/giantswarm/coredns-app."
@@ -887,7 +962,7 @@
                             "description": "Configuration of network-policies-app. For all available values see https://github.com/giantswarm/network-policies-app."
                         },
                         "verticalPodAutoscalerCrd": {
-                            "$ref": "#/$defs/app",
+                            "$ref": "#/$defs/helmRelease",
                             "type": "object",
                             "title": "Vertical-pod-autoscaler CRD",
                             "description": "Configuration of vertical-pod-autoscaler-crd-app. For all available values see https://github.com/giantswarm/vertical-pod-autoscaler-crd."
@@ -1349,6 +1424,19 @@
                     ],
                     "additionalProperties": false,
                     "properties": {
+                        "apps": {
+                            "type": "object",
+                            "title": "Apps",
+                            "description": "Internal configuration of apps that are part of the cluster.",
+                            "additionalProperties": false,
+                            "patternProperties": {
+                                "[a-z][a-zA-Z]+": {
+                                    "$ref": "#/$defs/appInternal",
+                                    "title": "App configurations from parent chart",
+                                    "description": "Not used in this chart. This is here to keep the schemas compatible."
+                                }
+                            }
+                        },
                         "cgroupsv1": {
                             "type": "boolean",
                             "title": "CGroups v1",

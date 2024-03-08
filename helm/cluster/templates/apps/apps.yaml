@@ -1,0 +1,112 @@
+{{ $rootScope := .}}
+{{- range $path, $_ :=  .Files.Glob "files/apps/**.yaml" }}
+{{- $app := dict }}
+{{- with $rootScope }}
+{{- $app = .Files.Get $path | fromYaml }}
+{{- $appName := $app.appName }}
+{{- $appKey := $app.configKey }}
+{{- $internalConfig := dict }}
+{{- if ($.Values.internal.advancedConfiguration).apps }}
+{{- $internalConfig = get $.Values.internal.advancedConfiguration.apps $appKey }}
+{{- end }}
+{{- if not ($internalConfig).disabled }}
+---
+apiVersion: application.giantswarm.io/v1alpha1
+kind: App
+metadata:
+  {{- $annotations := include "cluster.annotations.common.all" $ }}
+  {{- if or $annotations $app.dependsOn }}
+  annotations:
+    {{- if $annotations }}
+    {{- $annotations | indent 4 }}
+    {{- end }}
+    {{- if $app.dependsOn }}
+    # app-operator will make sure that the app on which it depends is installed before
+    app-operator.giantswarm.io/depends-on: {{ printf "%s-%s" $.Values.global.metadata.name $app.dependsOn -}}
+    {{- end }}
+  {{- end }}
+  labels:
+    {{- include "cluster.labels.common.all" $ | indent 4 }}
+    {{- if $app.inCluster }}
+    app-operator.giantswarm.io/version: 0.0.0
+    {{- end }}
+  name: {{ $.Values.global.metadata.name }}-{{ $app.appName }}
+  namespace: {{ $.Release.Namespace }}
+spec:
+  catalog: {{ ($internalConfig).catalogOverride | default $app.catalog }}
+  name: {{ $app.chartName }}
+  {{- if $app.inCluster }}
+  namespace: {{ $.Release.Namespace }}
+  kubeConfig:
+    inCluster: true
+  {{- else }}
+  namespace: {{ $app.namespace }}
+  kubeConfig:
+    context:
+      name: {{ $.Values.global.metadata.name }}-admin@{{ $.Values.global.metadata.name }}
+    inCluster: false
+    secret:
+      name: {{ $.Values.global.metadata.name }}-kubeconfig
+      namespace: {{ $.Release.Namespace}}
+  {{- end }}
+  version: {{ $app.version }}
+  {{- if or ($app.clusterValues).configMap ($app.clusterValues).secret }}
+  config:
+  {{- if ($app.clusterValues).configMap }}
+    configMap:
+      name: {{ $.Values.global.metadata.name }}-cluster-values
+      namespace: {{ $.Release.Namespace }}
+  {{- end }}
+  {{- if ($app.clusterValues).secret }}
+    secret:
+      name: {{ $.Values.global.metadata.name }}-cluster-values
+      namespace: {{ $.Release.Namespace }}
+  {{- end }}
+  {{- end }}
+  {{- if $app.extraConfigs }}
+  extraConfigs:
+  {{- range $extraConfig := $app.extraConfigs }}
+  - kind: {{ $extraConfig.kind }}
+    name: {{ tpl $extraConfig.name $ }}
+    namespace: {{ tpl $extraConfig.namespace $ }}
+    {{- if $extraConfig.priority }}
+    priority: {{ $extraConfig.priority }}
+    {{- end}}
+  {{- end }}
+  {{- end }}
+  {{- $userConfig := get $.Values.global.apps $appKey }}
+  {{- $hasUserValues := or ($userConfig).values $app.defaultValues }}
+  {{- if $hasUserValues }}
+  userConfig:
+    configMap:
+      name: {{ $.Values.global.metadata.name }}-{{ $appName }}-user-values
+      namespace: {{ $.Release.Namespace }}
+  {{- end }}
+{{- if $hasUserValues }}
+{{- $userValues := dict }}
+{{- if $app.defaultValues }}
+{{- $userValues = tpl ($app.defaultValues | toYaml | toString) $ | fromYaml }}
+{{- end }}
+{{- if ($userConfig).values }}
+{{- $userValues = mergeOverwrite $userValues (deepCopy $userConfig.values) }}
+{{- end }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    {{- include "cluster.labels.common.all" $ | nindent 4 }}
+  name: {{ $.Values.global.metadata.name }}-{{ $appName }}-user-values
+  namespace: {{ $.Release.Namespace }}
+data:
+  values: |
+  {{- (tpl ($userValues | toYaml | toString) $) | nindent 4 }}
+{{- /*end if $hasUserValues*/}}
+{{- end }}
+
+{{- /* end if not $internalConfig.disabled*/}}
+{{- end }}
+{{- /* end with $rootScope */}}
+{{- end }}
+{{- /* end outer range */}}
+{{- end }}
