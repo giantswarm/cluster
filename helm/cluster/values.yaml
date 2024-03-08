@@ -2,6 +2,8 @@
 
 global:
   apps:
+    certExporter: {}
+    certManager: {}
     cilium: {}
     coreDns: {}
     networkPolicies: {}
