@@ -63,8 +63,10 @@ spec:
       namespace: {{ $.Release.Namespace }}
   {{- end }}
   {{- end }}
-  {{- if $app.extraConfigs }}
+  {{- $userConfig := get $.Values.global.apps $appKey }}
+  {{- if or $app.extraConfigs $userConfig.extraConfigs }}
   extraConfigs:
+  {{- /* Render pre-defined extra configs*/}}
   {{- range $extraConfig := $app.extraConfigs }}
   - kind: {{ $extraConfig.kind }}
     name: {{ tpl $extraConfig.name $ }}
@@ -73,9 +75,17 @@ spec:
     priority: {{ $extraConfig.priority }}
     {{- end}}
   {{- end }}
+  {{- /* Render user's extra configs*/}}
+  {{- range $extraConfig := $userConfig.extraConfigs }}
+    - kind: {{ $extraConfig.kind }}
+      name: {{ $extraConfig.name }}
+      namespace: {{ $.Release.Namespace }}
+      {{- if $extraConfig.priority }}
+      priority: {{ $extraConfig.priority }}
+      {{- end}}
+    {{- end }}
   {{- end }}
-  {{- $userConfig := get $.Values.global.apps $appKey }}
-  {{- $hasUserValues := or ($userConfig).values $app.defaultValues }}
+  {{- $hasUserValues := or $userConfig.values $app.defaultValues }}
   {{- if $hasUserValues }}
   userConfig:
     configMap:
