@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Chart: Make `internal.advancedConfiguration.controlPlane.controllerManager.terminatedPodGCThreshold` configurable.
+- Chart: Make `internal.advancedConfiguration.controlPlane.controllerManager.terminatedPodGCThreshold` configurable. ([#123](https://github.com/giantswarm/cluster/pull/123))
 
 ## [0.13.0] - 2024-03-06
 
