@@ -48,6 +48,8 @@ internal:
         admissionConfiguration: {}
         auditPolicy: {}
         enablePriorityAndFairness: true
+      controllerManager:
+        terminatedPodGCThreshold: 125
       etcd:
         experimental: {}
         quotaBackendBytesGiB: 8

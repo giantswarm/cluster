@@ -6,5 +6,5 @@ extraArgs:
   cloud-provider: external
   cluster-cidr: {{ $.Values.global.connectivity.network.pods.cidrBlocks | first }}
   feature-gates: CronJobTimeZone=true
-  terminated-pod-gc-threshold: "125"
+  terminated-pod-gc-threshold: {{ $.Values.internal.advancedConfiguration.controlPlane.controllerManager.terminatedPodGCThreshold | quote }}
 {{- end }}
