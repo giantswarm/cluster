@@ -45,7 +45,7 @@ metadata:
 rules:
   - apiGroups: ["helm.toolkit.fluxcd.io"]
     resources: ["helmreleases"]
-    verbs: ["get", "list", patch"]
+    verbs: ["get", "list", "patch"]
   - apiGroups: ["source.toolkit.fluxcd.io"]
     resources: ["helmcharts"]
     verbs: ["get", "list", "patch"]
