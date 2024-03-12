@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Typo on role in Cleanup HelmReleases Hook Job.
+- Typo on role in Cleanup HelmReleases Hook Job role.
 
 ## [0.13.0] - 2024-03-06
 
