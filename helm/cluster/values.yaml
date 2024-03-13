@@ -13,6 +13,7 @@ global:
     externalDns: {}
     metricsServer: {}
     netExporter: {}
+    nodeExporter: {}
     verticalPodAutoscalerCrd: {}
   components:
     containerd:
