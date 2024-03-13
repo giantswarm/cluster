@@ -123,6 +123,12 @@ global:
       extraConfigs:
       - name: my-node-exporter-secret-extra-config
         kind: Secret
+    verticalPodAutoscaler:
+      values:
+        foo: bar
+      extraConfigs:
+      - name: my-vpa-extra-config
+        kind: ConfigMap
     verticalPodAutoscalerCrd:
       values:
         commonLabels:

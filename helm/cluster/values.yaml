@@ -14,6 +14,7 @@ global:
     metricsServer: {}
     netExporter: {}
     nodeExporter: {}
+    verticalPodAutoscaler: {}
     verticalPodAutoscalerCrd: {}
   components:
     containerd:

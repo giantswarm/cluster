@@ -1003,6 +1003,12 @@
                             "title": "node-exporter",
                             "description": "Configuration of node-exporter. For all available values see https://github.com/giantswarm/node-exporter-app."
                         },
+                        "verticalPodAutoscaler": {
+                            "$ref": "#/$defs/app",
+                            "type": "object",
+                            "title": "vertical-pod-autoscaler",
+                            "description": "Configuration of vertical-pod-autoscaler. For all available values see https://github.com/giantswarm/vertical-pod-autoscaler-app."
+                        },
                         "verticalPodAutoscalerCrd": {
                             "$ref": "#/$defs/helmRelease",
                             "type": "object",
