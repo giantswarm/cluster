@@ -83,6 +83,9 @@ global:
       - name: my-cert-manager-extra-config-2
         kind: ConfigMap
         priority: 120
+    chartOperatorExtensions:
+      values:
+        foo: bar
     coreDns:
       values:
         foo: bar
@@ -107,6 +110,8 @@ internal:
         disabled: true
       certManager:
         disabled: false
+        catalogOverride: default-test
+      chartOperatorExtensions:
         catalogOverride: default-test
     cgroupsv1: true
     controlPlane:

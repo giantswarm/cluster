@@ -949,6 +949,12 @@
                             "title": "cert-manager",
                             "description": "Configuration of cert-manager. For all available values see https://github.com/giantswarm/cert-manager-app."
                         },
+                        "chartOperatorExtensions": {
+                            "$ref": "#/$defs/app",
+                            "type": "object",
+                            "title": "chart-operator-extensions",
+                            "description": "Configuration of chart-operator-extensions. For all available values see https://github.com/giantswarm/chart-operator-extensions."
+                        },
                         "cilium": {
                             "$ref": "#/$defs/helmRelease",
                             "type": "object",
