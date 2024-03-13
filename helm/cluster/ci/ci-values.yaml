@@ -105,6 +105,12 @@ global:
       - name: my-external-dns-extra-config
         kind: ConfigMap
         priority: 120
+    metricsServer:
+      values:
+        foo: bar
+      extraConfigs:
+      - name: my-metrics-server-extra-config
+        kind: ConfigMap
     verticalPodAutoscalerCrd:
       values:
         commonLabels:

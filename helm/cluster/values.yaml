@@ -11,6 +11,7 @@ global:
     coreDns: {}
     networkPolicies: {}
     externalDns: {}
+    metricsServer: {}
     verticalPodAutoscalerCrd: {}
   components:
     containerd:

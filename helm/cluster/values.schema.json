@@ -985,6 +985,12 @@
                             "title": "external-dns",
                             "description": "Configuration of external-dns. For all available values see https://github.com/giantswarm/external-dns-app."
                         },
+                        "metricsServer": {
+                            "$ref": "#/$defs/app",
+                            "type": "object",
+                            "title": "metrics-server",
+                            "description": "Configuration of metrics-server. For all available values see https://github.com/giantswarm/metrics-server-app."
+                        },
                         "verticalPodAutoscalerCrd": {
                             "$ref": "#/$defs/helmRelease",
                             "type": "object",
