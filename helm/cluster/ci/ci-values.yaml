@@ -117,6 +117,12 @@ global:
       extraConfigs:
       - name: my-net-exporter-secret-extra-config
         kind: Secret
+    nodeExporter:
+      values:
+        foo: bar
+      extraConfigs:
+      - name: my-node-exporter-secret-extra-config
+        kind: Secret
     verticalPodAutoscalerCrd:
       values:
         commonLabels:

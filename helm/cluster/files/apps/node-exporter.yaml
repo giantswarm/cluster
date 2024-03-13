@@ -1,0 +1,13 @@
+appName: node-exporter
+chartName: node-exporter-app
+configKey: nodeExporter
+catalog: default
+clusterValues:
+  configMap: true
+  secret: false
+dependsOn: prometheus-operator-crd
+enabled: true
+namespace: kube-system
+# used by renovate
+# repo: giantswarm/node-exporter-app
+version: 1.18.2

@@ -997,6 +997,12 @@
                             "title": "net-exporter",
                             "description": "Configuration of net-exporter. For all available values see https://github.com/giantswarm/net-exporter."
                         },
+                        "nodeExporter": {
+                            "$ref": "#/$defs/app",
+                            "type": "object",
+                            "title": "node-exporter",
+                            "description": "Configuration of node-exporter. For all available values see https://github.com/giantswarm/node-exporter-app."
+                        },
                         "verticalPodAutoscalerCrd": {
                             "$ref": "#/$defs/helmRelease",
                             "type": "object",
