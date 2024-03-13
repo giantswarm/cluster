@@ -123,6 +123,12 @@ global:
       extraConfigs:
       - name: my-node-exporter-secret-extra-config
         kind: Secret
+    observabilityBundle:
+      values:
+        foo: bar
+      extraConfigs:
+      - name: my-observability-bundle-extra-config
+        kind: ConfigMap
     verticalPodAutoscaler:
       values:
         foo: bar
