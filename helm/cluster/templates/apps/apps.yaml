@@ -2,7 +2,7 @@
 {{- range $path, $_ :=  .Files.Glob "files/apps/**.yaml" }}
 {{- $app := dict }}
 {{- with $rootScope }}
-{{- $app = .Files.Get $path | fromYaml }}
+{{- $app = (tpl (.Files.Get $path) $) | fromYaml }}
 {{- $appName := $app.appName }}
 {{- $appKey := $app.configKey }}
 {{- $internalConfig := dict }}

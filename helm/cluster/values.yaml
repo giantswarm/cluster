@@ -10,6 +10,7 @@ global:
     clusterAutoscaler: {}
     coreDns: {}
     networkPolicies: {}
+    externalDns: {}
     verticalPodAutoscalerCrd: {}
   components:
     containerd:
