@@ -58,6 +58,16 @@ global:
             password: super_secret_password
         - endpoint: giantswarm.azurecr.io
   apps:
+    capiNodeLabeler:
+      values:
+        foo: bar
+      extraConfigs:
+      - name: my-secret-extra-config-1
+        kind: Secret
+        priority: 110
+      - name: my-extra-config-2
+        kind: ConfigMap
+        priority: 120
     certManager:
       values:
         ingressShim:

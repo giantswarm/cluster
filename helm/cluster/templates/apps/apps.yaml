@@ -7,9 +7,15 @@
 {{- $appKey := $app.configKey }}
 {{- $internalConfig := dict }}
 {{- if ($.Values.internal.advancedConfiguration).apps }}
-{{- $internalConfig = get $.Values.internal.advancedConfiguration.apps $appKey }}
+{{- $internalConfigRaw := get $.Values.internal.advancedConfiguration.apps $appKey }}
+{{- if $internalConfigRaw }}
+{{- /* Sometimes, when internal config is not set, $internalConfigRaw gets parsed as an empty string,
+       and sometimes as an empty dict. And we want $internalConfig, which is used in template, to be
+       always a dict, for the sake of cleaner template code. */}}
+{{- $internalConfig = $internalConfigRaw }}
 {{- end }}
-{{- if not ($internalConfig).disabled }}
+{{- end }}
+{{- if not $internalConfig.disabled }}
 ---
 apiVersion: application.giantswarm.io/v1alpha1
 kind: App
@@ -33,7 +39,7 @@ metadata:
   name: {{ $.Values.global.metadata.name }}-{{ $app.appName }}
   namespace: {{ $.Release.Namespace }}
 spec:
-  catalog: {{ ($internalConfig).catalogOverride | default $app.catalog }}
+  catalog: {{ $internalConfig.catalogOverride | default $app.catalog }}
   name: {{ $app.chartName }}
   {{- if $app.inCluster }}
   namespace: {{ $.Release.Namespace }}
@@ -63,7 +69,11 @@ spec:
       namespace: {{ $.Release.Namespace }}
   {{- end }}
   {{- end }}
-  {{- $userConfig := get $.Values.global.apps $appKey }}
+  {{- $userConfig := dict }}
+  {{- $userConfigRaw := get $.Values.global.apps $appKey }}
+  {{- if $userConfigRaw }}
+  {{- $userConfig = $userConfigRaw | toYaml | toString | fromYaml }}
+  {{- end }}
   {{- if or $app.extraConfigs $userConfig.extraConfigs }}
   extraConfigs:
   {{- /* Render pre-defined extra configs*/}}
