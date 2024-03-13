@@ -74,26 +74,17 @@ spec:
   {{- if $userConfigRaw }}
   {{- $userConfig = $userConfigRaw | toYaml | toString | fromYaml }}
   {{- end }}
-  {{- if or $app.extraConfigs $userConfig.extraConfigs }}
+  {{- $extraConfigs := concat ($app.extraConfigs | default list) ($userConfig.extraConfigs | default list) }}
+  {{- if $extraConfigs }}
   extraConfigs:
-  {{- /* Render pre-defined extra configs*/}}
-  {{- range $extraConfig := $app.extraConfigs }}
+  {{- range $extraConfig := $extraConfigs }}
   - kind: {{ $extraConfig.kind }}
-    name: {{ tpl $extraConfig.name $ }}
-    namespace: {{ tpl $extraConfig.namespace $ }}
+    name: {{ $extraConfig.name }}
+    namespace: {{ $extraConfig.namespace | default $.Release.Namespace }}
     {{- if $extraConfig.priority }}
     priority: {{ $extraConfig.priority }}
     {{- end}}
   {{- end }}
-  {{- /* Render user's extra configs*/}}
-  {{- range $extraConfig := $userConfig.extraConfigs }}
-    - kind: {{ $extraConfig.kind }}
-      name: {{ $extraConfig.name }}
-      namespace: {{ $.Release.Namespace }}
-      {{- if $extraConfig.priority }}
-      priority: {{ $extraConfig.priority }}
-      {{- end}}
-    {{- end }}
   {{- end }}
   {{- $hasUserValues := or $userConfig.values $app.defaultValues }}
   {{- if $hasUserValues }}

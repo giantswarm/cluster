@@ -135,6 +135,12 @@ global:
       extraConfigs:
       - name: my-security-bundle-extra-config
         kind: ConfigMap
+    teleportKubeAgent:
+      values:
+        foo: bar
+      extraConfigs:
+      - name: my-teleport-kube-agent-extra-config
+        kind: ConfigMap
     verticalPodAutoscaler:
       values:
         foo: bar

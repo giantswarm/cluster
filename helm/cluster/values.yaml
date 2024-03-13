@@ -16,6 +16,7 @@ global:
     nodeExporter: {}
     observabilityBundle: {}
     securityBundle: {}
+    teleportKubeAgent: {}
     verticalPodAutoscaler: {}
     verticalPodAutoscalerCrd: {}
   components:

@@ -1015,6 +1015,12 @@
                             "title": "security-bundle",
                             "description": "Configuration of security-bundle. For all available values see https://github.com/giantswarm/security-bundle."
                         },
+                        "teleportKubeAgent": {
+                            "$ref": "#/$defs/app",
+                            "type": "object",
+                            "title": "teleport-kube-agent",
+                            "description": "Configuration of teleport-kube-agent. For all available values see https://github.com/giantswarm/teleport-kube-agent."
+                        },
                         "verticalPodAutoscaler": {
                             "$ref": "#/$defs/app",
                             "type": "object",
