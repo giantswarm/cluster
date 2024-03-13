@@ -129,6 +129,12 @@ global:
       extraConfigs:
       - name: my-observability-bundle-extra-config
         kind: ConfigMap
+    securityBundle:
+      values:
+        foo: bar
+      extraConfigs:
+      - name: my-security-bundle-extra-config
+        kind: ConfigMap
     verticalPodAutoscaler:
       values:
         foo: bar
