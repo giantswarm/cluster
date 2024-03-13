@@ -98,6 +98,13 @@ global:
       - name: my-coredns-extra-config
         kind: ConfigMap
         optional: false
+    externalDns:
+      values:
+        foo: bar
+      extraConfigs:
+      - name: my-external-dns-extra-config
+        kind: ConfigMap
+        priority: 120
     verticalPodAutoscalerCrd:
       values:
         commonLabels:

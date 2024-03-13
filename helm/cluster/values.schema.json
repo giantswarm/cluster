@@ -979,6 +979,12 @@
                             "title": "NetworkPolicies",
                             "description": "Configuration of network-policies-app. For all available values see https://github.com/giantswarm/network-policies-app."
                         },
+                        "externalDns": {
+                            "$ref": "#/$defs/app",
+                            "type": "object",
+                            "title": "external-dns",
+                            "description": "Configuration of external-dns. For all available values see https://github.com/giantswarm/external-dns-app."
+                        },
                         "verticalPodAutoscalerCrd": {
                             "$ref": "#/$defs/helmRelease",
                             "type": "object",

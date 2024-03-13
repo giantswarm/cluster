@@ -1,0 +1,21 @@
+appName: external-dns
+chartName: external-dns-app
+configKey: externalDns
+catalog: default
+clusterValues:
+  configMap: true
+  secret: true
+dependsOn: prometheus-operator-crd
+enabled: true
+namespace: kube-system
+# used by renovate
+# repo: giantswarm/external-dns-app
+version: 3.1.0
+defaultValues:
+  txtOwnerId: giantswarm-io-external-dns
+  txtPrefix: {{ $.Values.global.metadata.name }}
+  annotationFilter: giantswarm.io/external-dns=managed
+  sources:
+  - service
+  ciliumNetworkPolicy:
+    enabled: true
