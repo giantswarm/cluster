@@ -86,6 +86,11 @@ global:
     chartOperatorExtensions:
       values:
         foo: bar
+    clusterAutoscaler:
+      values:
+        serviceAccount:
+          annotations:
+            eks.amazonaws.com/role-arn: my-cluster-autoscaler-role
     coreDns:
       values:
         foo: bar

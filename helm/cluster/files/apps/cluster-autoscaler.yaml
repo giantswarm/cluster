@@ -1,0 +1,12 @@
+appName: cluster-autoscaler
+chartName: cluster-autoscaler-app
+configKey: clusterAutoscaler
+catalog: default
+clusterValues:
+  configMap: true
+  secret: true
+enabled: true
+namespace: kube-system
+# used by renovate
+# repo: giantswarm/cluster-autoscaler-app
+version: 1.27.3-gs8

@@ -7,6 +7,7 @@ global:
     certManager: {}
     chartOperatorExtensions: {}
     cilium: {}
+    clusterAutoscaler: {}
     coreDns: {}
     networkPolicies: {}
     verticalPodAutoscalerCrd: {}
