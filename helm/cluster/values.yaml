@@ -5,6 +5,7 @@ global:
     capiNodeLabeler: {}
     certExporter: {}
     certManager: {}
+    chartOperatorExtensions: {}
     cilium: {}
     coreDns: {}
     networkPolicies: {}
