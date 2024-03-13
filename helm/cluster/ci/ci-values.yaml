@@ -111,6 +111,12 @@ global:
       extraConfigs:
       - name: my-metrics-server-extra-config
         kind: ConfigMap
+    netExporter:
+      values:
+        foo: bar
+      extraConfigs:
+      - name: my-net-exporter-secret-extra-config
+        kind: Secret
     verticalPodAutoscalerCrd:
       values:
         commonLabels:
