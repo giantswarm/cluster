@@ -991,6 +991,12 @@
                             "title": "metrics-server",
                             "description": "Configuration of metrics-server. For all available values see https://github.com/giantswarm/metrics-server-app."
                         },
+                        "netExporter": {
+                            "$ref": "#/$defs/app",
+                            "type": "object",
+                            "title": "net-exporter",
+                            "description": "Configuration of net-exporter. For all available values see https://github.com/giantswarm/net-exporter."
+                        },
                         "verticalPodAutoscalerCrd": {
                             "$ref": "#/$defs/helmRelease",
                             "type": "object",

@@ -1,0 +1,16 @@
+appName: net-exporter
+chartName: net-exporter
+configKey: netExporter
+catalog: default
+clusterValues:
+  configMap: true
+  secret: false
+dependsOn: prometheus-operator-crd
+enabled: true
+namespace: kube-system
+# used by renovate
+# repo: giantswarm/net-exporter
+version: 1.18.2
+values:
+  ciliumNetworkPolicy:
+    enabled: true
