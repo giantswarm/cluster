@@ -931,6 +931,12 @@
                         }
                     },
                     "properties": {
+                        "capiNodeLabeler": {
+                            "$ref": "#/$defs/app",
+                            "type": "object",
+                            "title": "capi-node-labeler",
+                            "description": "Configuration of capi-node-labeler. For all available values see https://github.com/giantswarm/capi-node-labeler."
+                        },
                         "certExporter": {
                             "$ref": "#/$defs/app",
                             "type": "object",
