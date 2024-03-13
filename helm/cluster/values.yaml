@@ -10,6 +10,7 @@ global:
     clusterAutoscaler: {}
     coreDns: {}
     networkPolicies: {}
+    etcdKubernetesResourcesCountExporter: {}
     externalDns: {}
     metricsServer: {}
     netExporter: {}

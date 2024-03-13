@@ -98,6 +98,12 @@ global:
       - name: my-coredns-extra-config
         kind: ConfigMap
         optional: false
+    etcdKubernetesResourcesCountExporter:
+      values:
+        foo: bar
+      extraConfigs:
+      - name: my-etcd-k8s-res-count-exporter-extra-config
+        kind: ConfigMap
     externalDns:
       values:
         foo: bar

@@ -979,6 +979,12 @@
                             "title": "NetworkPolicies",
                             "description": "Configuration of network-policies-app. For all available values see https://github.com/giantswarm/network-policies-app."
                         },
+                        "etcdKubernetesResourcesCountExporter": {
+                            "$ref": "#/$defs/app",
+                            "type": "object",
+                            "title": "etcd-kubernetes-resources-count-exporter",
+                            "description": "Configuration of etcd-kubernetes-resources-count-exporter. For all available values see https://github.com/giantswarm/etcd-kubernetes-resources-count-exporter."
+                        },
                         "externalDns": {
                             "$ref": "#/$defs/app",
                             "type": "object",
