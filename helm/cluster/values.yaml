@@ -15,6 +15,7 @@ global:
     netExporter: {}
     nodeExporter: {}
     observabilityBundle: {}
+    securityBundle: {}
     verticalPodAutoscaler: {}
     verticalPodAutoscalerCrd: {}
   components:
