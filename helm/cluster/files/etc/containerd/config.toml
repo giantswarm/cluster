@@ -24,7 +24,7 @@ SystemdCgroup = {{ if $.Values.internal.advancedConfiguration.cgroupsv1 }}false{
 {{- $registry := $.Values.internal.advancedConfiguration.registry }}
 {{- if $.Values.providerIntegration.components.containerd.sandboxContainerImage.registry }}
 {{- if $.Values.providerIntegration.components.containerd.sandboxContainerImage.registry.templateName }}
-{{- $registry = ( include "$.Values.providerIntegration.components.containerd.sandboxContainerImage.registry.templateName" $ ) }}
+{{- $registry = ( include $.Values.providerIntegration.components.containerd.sandboxContainerImage.registry.templateName $ ) }}
 {{- else if $.Values.providerIntegration.components.containerd.sandboxContainerImage.registry.value }}
 {{- $registry = $.Values.providerIntegration.components.containerd.sandboxContainerImage.registry.value }}
 {{- end }}
