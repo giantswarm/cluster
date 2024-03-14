@@ -21,7 +21,6 @@ runtime_type = "io.containerd.runc.v2"
 [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc.options]
 SystemdCgroup = {{ if $.Values.internal.advancedConfiguration.cgroupsv1 }}false{{else}}true{{end}}
 [plugins."io.containerd.grpc.v1.cri"]
-
 {{ $registry := $.Values.internal.advancedConfiguration.registry }}
 {{- if $.Values.providerIntegration.components.containerd.sandboxContainerImage.registry }}
 {{- if $.Values.providerIntegration.components.containerd.sandboxContainerImage.registry.templateName }}
