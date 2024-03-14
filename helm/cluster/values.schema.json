@@ -1542,6 +1542,9 @@
                     "properties": {
                         "cilium": {
                             "$ref": "#/$defs/providerIntegrationAppConfig"
+                        },
+                        "coredns": {
+                            "$ref": "#/$defs/providerIntegrationAppConfig"
                         }
                     }
                 },
@@ -1602,6 +1605,44 @@
                                             "type": "string",
                                             "title": "Repository",
                                             "default": "giantswarm/pause"
+                                        },
+                                        "registry": {
+                                            "type": "object",
+                                            "title": "Registry",
+                                            "additionalProperties": false,
+                                            "properties": {
+                                                "templateName": {
+                                                    "type": "string",
+                                                    "title": "Template name"
+                                                },
+                                                "value": {
+                                                    "type": "string",
+                                                    "title": "value"
+                                                }
+                                            },
+                                            "default": {},
+                                            "oneOf": [
+                                                {
+                                                    "required": [
+                                                        "value"
+                                                    ],
+                                                    "not": {
+                                                        "required": [
+                                                            "templateName"
+                                                        ]
+                                                    }
+                                                },
+                                                {
+                                                    "required": [
+                                                        "templateName"
+                                                    ],
+                                                    "not": {
+                                                        "required": [
+                                                            "value"
+                                                        ]
+                                                    }
+                                                }
+                                            ]
                                         },
                                         "tag": {
                                             "type": "string",
@@ -1804,6 +1845,11 @@
                                                                     "title": "Cluster domain prefix",
                                                                     "description": "Prefix that is prepended to the cluster domain name, so that resulting URL is used as the identifier of the service account token issuer."
                                                                 },
+                                                                "templateName": {
+                                                                    "type": "string",
+                                                                    "title": "Template name",
+                                                                    "description": "The name of the Helm template which renders the 'url' value"
+                                                                },
                                                                 "url": {
                                                                     "type": "string",
                                                                     "title": "URL",
@@ -1817,7 +1863,8 @@
                                                                     ],
                                                                     "not": {
                                                                         "required": [
-                                                                            "clusterDomainPrefix"
+                                                                            "clusterDomainPrefix",
+                                                                            "templateName"
                                                                         ]
                                                                     }
                                                                 },
@@ -1827,7 +1874,19 @@
                                                                     ],
                                                                     "not": {
                                                                         "required": [
-                                                                            "url"
+                                                                            "url",
+                                                                            "templateName"
+                                                                        ]
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "required": [
+                                                                        "templateName"
+                                                                    ],
+                                                                    "not": {
+                                                                        "required": [
+                                                                            "url",
+                                                                            "clusterDomainPrefix"
                                                                         ]
                                                                     }
                                                                 }

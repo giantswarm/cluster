@@ -267,6 +267,8 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.apps` | **Apps** - Provider-specific config for apps.|**Type:** `object`<br/>|
 | `providerIntegration.apps.cilium` | **Provider integration app config** - App config used to additionally configure an app for a specific provider|**Type:** `object`<br/>|
 | `providerIntegration.apps.cilium.configTemplateName` | **Config template name** - Name of the Helm template that has provider-specific app config. Provider-specific app config overrides provider-independent app config, while custom user config overrides both provider-independent and provider-specific default app config.|**Type:** `string`<br/>|
+| `providerIntegration.apps.coredns` | **Provider integration app config** - App config used to additionally configure an app for a specific provider|**Type:** `object`<br/>|
+| `providerIntegration.apps.coredns.configTemplateName` | **Config template name** - Name of the Helm template that has provider-specific app config. Provider-specific app config overrides provider-independent app config, while custom user config overrides both provider-independent and provider-specific default app config.|**Type:** `string`<br/>|
 | `providerIntegration.bastion` | **Internal bastion configuration**|**Type:** `object`<br/>|
 | `providerIntegration.bastion.kubeadmConfig` | **Kubeadm config** - Configuration of bastion nodes.|**Type:** `object`<br/>|
 | `providerIntegration.bastion.kubeadmConfig.ignition` | **Ignition** - Ignition-specific configuration.|**Type:** `object`<br/>|
@@ -326,6 +328,9 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.components.containerd` | **Containerd** - Configuration of containerd.|**Type:** `object`<br/>|
 | `providerIntegration.components.containerd.sandboxContainerImage` | **Sandbox image** - The image used by sandbox / pause container|**Type:** `object`<br/>|
 | `providerIntegration.components.containerd.sandboxContainerImage.name` | **Repository**|**Type:** `string`<br/>**Default:** `"giantswarm/pause"`|
+| `providerIntegration.components.containerd.sandboxContainerImage.registry` | **Registry**|**Type:** `object`<br/>**Default:** `{}`|
+| `providerIntegration.components.containerd.sandboxContainerImage.registry.templateName` | **Template name**|**Type:** `string`<br/>|
+| `providerIntegration.components.containerd.sandboxContainerImage.registry.value` | **value**|**Type:** `string`<br/>|
 | `providerIntegration.components.containerd.sandboxContainerImage.tag` | **Tag**|**Type:** `string`<br/>**Default:** `"3.9"`|
 | `providerIntegration.components.systemd` | **systemd**||
 | `providerIntegration.connectivity` | **Connectivity** - Internal connectivity configuration.|**Type:** `object`<br/>|

@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Chart: Add `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuer.templateName` to be able set API Service Account Issuer via template.
+- Chart: Add `providerIntegration.apps.corends` to beable to add provider specific coredns helm values.
+- Chart: Add `providerIntegration.components.containerd.sandboxContainerImage.registry` to be able to set the containerd sandbox image via either value or template.
+
 ### Changed
 
 - Chart: Make `internal.advancedConfiguration.controlPlane.controllerManager.terminatedPodGCThreshold` configurable. ([#123](https://github.com/giantswarm/cluster/pull/123))
