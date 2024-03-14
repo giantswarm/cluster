@@ -1607,40 +1607,46 @@
                                             "default": "giantswarm/pause"
                                         },
                                         "registry": {
-                                            "type": "object",
                                             "title": "Registry",
-                                            "additionalProperties": false,
-                                            "properties": {
-                                                "templateName": {
-                                                    "type": "string",
-                                                    "title": "Template name"
-                                                },
-                                                "value": {
-                                                    "type": "string",
-                                                    "title": "value"
-                                                }
-                                            },
-                                            "default": {},
                                             "oneOf": [
                                                 {
-                                                    "required": [
-                                                        "value"
-                                                    ],
-                                                    "not": {
-                                                        "required": [
-                                                            "templateName"
-                                                        ]
-                                                    }
+                                                    "type": "null"
                                                 },
                                                 {
-                                                    "required": [
-                                                        "templateName"
-                                                    ],
-                                                    "not": {
-                                                        "required": [
-                                                            "value"
-                                                        ]
-                                                    }
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "templateName": {
+                                                            "type": "string",
+                                                            "title": "Template name"
+                                                        },
+                                                        "value": {
+                                                            "type": "string",
+                                                            "title": "value"
+                                                        }
+                                                    },
+                                                    "default": {},
+                                                    "oneOf": [
+                                                        {
+                                                            "required": [
+                                                                "value"
+                                                            ],
+                                                            "not": {
+                                                                "required": [
+                                                                    "templateName"
+                                                                ]
+                                                            }
+                                                        },
+                                                        {
+                                                            "required": [
+                                                                "templateName"
+                                                            ],
+                                                            "not": {
+                                                                "required": [
+                                                                    "value"
+                                                                ]
+                                                            }
+                                                        }
+                                                    ]
                                                 }
                                             ]
                                         },

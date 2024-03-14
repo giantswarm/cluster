@@ -82,7 +82,6 @@ providerIntegration:
     containerd:
       sandboxContainerImage:
         name: giantswarm/pause
-        registry: {}
         tag: "3.9"
   connectivity:
     proxy:
