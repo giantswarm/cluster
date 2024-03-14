@@ -22,14 +22,14 @@ runtime_type = "io.containerd.runc.v2"
 SystemdCgroup = {{ if $.Values.internal.advancedConfiguration.cgroupsv1 }}false{{else}}true{{end}}
 [plugins."io.containerd.grpc.v1.cri"]
 
-{{ $registry := $.Values.internal.advancedConfiguration.registry}}
+{{ $registry := $.Values.internal.advancedConfiguration.registry }}
 {{- if $.Values.providerIntegration.components.containerd.sandboxContainerImage.registry }}
 {{- if $.Values.providerIntegration.components.containerd.sandboxContainerImage.registry.templateName }}
 {{ $registry = ( include "$.Values.providerIntegration.components.containerd.sandboxContainerImage.registry.templateName" $ ) }}
 {{- else if $.Values.providerIntegration.components.containerd.sandboxContainerImage.registry.value }}
 {{ $registry = $.Values.providerIntegration.components.containerd.sandboxContainerImage.registry.value }}
 {{- end }}
-{{- end }
+{{- end }}
 sandbox_image = "{{ $registry }}/{{ $.Values.providerIntegration.components.containerd.sandboxContainerImage.name }}:{{ $.Values.providerIntegration.components.containerd.sandboxContainerImage.tag }}"
 
 [plugins."io.containerd.grpc.v1.cri".registry]
