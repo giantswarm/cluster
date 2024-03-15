@@ -255,7 +255,7 @@ internal:
         catalogOverride: default-test
       chartOperatorExtensions:
         catalogOverride: default-test
-        versionOverride: 100.0.0-dev.8234y65dh92783
+        versionOverride: v100.0.0-dev.8234y65dh92783
 providerIntegration:
   apps:
     cilium:

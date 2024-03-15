@@ -55,7 +55,7 @@ spec:
       name: {{ $.Values.global.metadata.name }}-kubeconfig
       namespace: {{ $.Release.Namespace}}
   {{- end }}
-  version: {{ $ephemeralConfig.versionOverride | default $app.version }}
+  version: {{ $ephemeralConfig.versionOverride | default $app.version | trim | trimPrefix "v" }}
   {{- if or ($app.clusterValues).configMap ($app.clusterValues).secret }}
   config:
   {{- if ($app.clusterValues).configMap }}
