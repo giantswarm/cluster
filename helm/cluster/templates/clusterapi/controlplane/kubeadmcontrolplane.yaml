@@ -27,7 +27,7 @@ spec:
     clusterConfiguration:
       # Avoid accessibility issues (e.g. on private clusters) and potential future rate limits for
       # the default `registry.k8s.io`.
-      imageRepository: {{ include "cluster.image.registry" $ }}
+      imageRepository: {{ include "cluster.image.registry" $ }}/giantswarm
       # API server configuration
       apiServer:
         {{- include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer" $ | indent 8 }}
