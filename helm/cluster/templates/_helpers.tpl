@@ -141,3 +141,18 @@ Where `data` is the data to hash and `global` is the top level scope.
 {{- $testValue := .testValue }}
 {{ eq $propertyValue $testValue }}
 {{- end }}
+
+
+{{/* Function to determine the value of container image registry that is used across whole repository   */}}
+{{- define "cluster.image.registry" -}}
+{{- $registry := $.Values.internal.advancedConfiguration.registry -}}
+{{- if $.Values.providerIntegration.registry -}}
+{{- if $.Values.providerIntegration.registry.templateName -}}
+{{- $registry = ( include $.Values.providerIntegration.registry.templateName $ ) -}}
+{{- else if $.Values.providerIntegration.registry.value -}}
+{{- $registry = $.Values.providerIntegration.registry.value -}}
+{{- end -}}
+{{- end -}}
+{{- $registry -}}
+{{- end -}}
+
