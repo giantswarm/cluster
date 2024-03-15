@@ -57,21 +57,26 @@
                 }
             }
         },
-        "appInternal": {
+        "appEphemeral": {
             "type": "object",
-            "title": "App internal",
-            "description": "Internal configuration of a default app.",
+            "title": "Ephemeral app configuration",
+            "description": "Non-persistent app configuration that is meant for development and operation purposes only, and can be removed at any point.",
             "additionalProperties": false,
             "properties": {
                 "catalogOverride": {
                     "type": "string",
                     "title": "Catalog override",
-                    "description": "Name of the catalog from which the app is installed. This should be used for development and testing purposes only."
+                    "description": "Name of the catalog from which the app is installed."
                 },
-                "disabled": {
+                "disable": {
                     "type": "boolean",
-                    "title": "Disabled",
-                    "description": "Flag that indicates if the app is disabled and skipped during WC deployment."
+                    "title": "Disable",
+                    "description": "Flag that indicates if the app is disabled and skipped during the cluster deployment."
+                },
+                "versionOverride": {
+                    "type": "string",
+                    "title": "Version override",
+                    "description": "Custom application version that overrides the application version from the release. This is usually a new development version that you want to test, or a newer patch version that you need to deploy in order to put out a production fire in the middle of the night. Use carefully!"
                 }
             }
         },
@@ -973,12 +978,6 @@
                             "title": "CoreDNS",
                             "description": "Configuration of coredns-app. For all available values see https://github.com/giantswarm/coredns-app."
                         },
-                        "networkPolicies": {
-                            "$ref": "#/$defs/app",
-                            "type": "object",
-                            "title": "NetworkPolicies",
-                            "description": "Configuration of network-policies-app. For all available values see https://github.com/giantswarm/network-policies-app."
-                        },
                         "etcdKubernetesResourcesCountExporter": {
                             "$ref": "#/$defs/app",
                             "type": "object",
@@ -1002,6 +1001,12 @@
                             "type": "object",
                             "title": "net-exporter",
                             "description": "Configuration of net-exporter. For all available values see https://github.com/giantswarm/net-exporter."
+                        },
+                        "networkPolicies": {
+                            "$ref": "#/$defs/app",
+                            "type": "object",
+                            "title": "NetworkPolicies",
+                            "description": "Configuration of network-policies-app. For all available values see https://github.com/giantswarm/network-policies-app."
                         },
                         "nodeExporter": {
                             "$ref": "#/$defs/app",
@@ -1496,19 +1501,6 @@
                     ],
                     "additionalProperties": false,
                     "properties": {
-                        "apps": {
-                            "type": "object",
-                            "title": "Apps",
-                            "description": "Internal configuration of apps that are part of the cluster.",
-                            "additionalProperties": false,
-                            "patternProperties": {
-                                "[a-z][a-zA-Z]+": {
-                                    "$ref": "#/$defs/appInternal",
-                                    "title": "App configurations from parent chart",
-                                    "description": "Not used in this chart. This is here to keep the schemas compatible."
-                                }
-                            }
-                        },
                         "cgroupsv1": {
                             "type": "boolean",
                             "title": "CGroups v1",
@@ -1814,6 +1806,24 @@
                                 },
                                 "preKubeadmCommands": {
                                     "$ref": "#/$defs/preKubeadmCommands"
+                                }
+                            }
+                        }
+                    }
+                },
+                "ephemeralConfiguration": {
+                    "type": "object",
+                    "title": "Ephemeral configuration",
+                    "description": "This configuration is meant for Giant Swarm staff only, changes here are ephemeral and are not meant to be persistent and it can be removed at any point. It can be used for the purposes of development and operations.",
+                    "properties": {
+                        "apps": {
+                            "type": "object",
+                            "title": "Apps",
+                            "description": "Internal configuration of apps that are part of the cluster.",
+                            "additionalProperties": false,
+                            "patternProperties": {
+                                "[a-z][a-zA-Z]+": {
+                                    "$ref": "#/$defs/appEphemeral"
                                 }
                             }
                         }

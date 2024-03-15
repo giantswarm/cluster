@@ -165,14 +165,6 @@ global:
     enforced: true
 internal:
   advancedConfiguration:
-    apps:
-      certExporter:
-        disabled: true
-      certManager:
-        disabled: false
-        catalogOverride: default-test
-      chartOperatorExtensions:
-        catalogOverride: default-test
     cgroupsv1: true
     controlPlane:
       apiServer:
@@ -254,6 +246,16 @@ internal:
         memory: 384Mi
       containerLogMaxSize: 30Mi
       containerLogMaxFiles: 2
+  ephemeralConfiguration:
+    apps:
+      certExporter:
+        disable: false
+      certManager:
+        disable: false
+        catalogOverride: default-test
+      chartOperatorExtensions:
+        catalogOverride: default-test
+        versionOverride: 100.0.0-dev.8234y65dh92783
 providerIntegration:
   apps:
     cilium:

@@ -2,7 +2,6 @@ appName: chart-operator-extensions
 chartName: chart-operator-extensions
 catalog: default
 configKey: chartOperatorExtensions
-enabled: true
 clusterValues:
   configMap: false
   secret: false

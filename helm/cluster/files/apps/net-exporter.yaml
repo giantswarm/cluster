@@ -6,7 +6,6 @@ clusterValues:
   configMap: true
   secret: false
 dependsOn: prometheus-operator-crd
-enabled: true
 namespace: kube-system
 # used by renovate
 # repo: giantswarm/net-exporter

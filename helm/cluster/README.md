@@ -228,10 +228,6 @@ For Giant Swarm internal use only, not stable, or not supported by UIs.
 | **Property** | **Description** | **More Details** |
 | :----------- | :-------------- | :--------------- |
 | `internal.advancedConfiguration` | **Advanced configuration** - Advanced configuration of cluster components, to be configured by Giant Swarm staff only.|**Type:** `object`<br/>|
-| `internal.advancedConfiguration.apps` | **Apps** - Internal configuration of apps that are part of the cluster.|**Type:** `object`<br/>|
-| `internal.advancedConfiguration.apps.PATTERN` | **App internal** - Internal configuration of a default app.|**Type:** `object`<br/>**Key pattern:**<br/>`PATTERN`=`[a-z][a-zA-Z]+`<br/>|
-| `internal.advancedConfiguration.apps.PATTERN.catalogOverride` | **Catalog override** - Name of the catalog from which the app is installed. This should be used for development and testing purposes only.|**Type:** `string`<br/>**Key pattern:**<br/>`PATTERN`=`[a-z][a-zA-Z]+`<br/>|
-| `internal.advancedConfiguration.apps.PATTERN.disabled` | **Disabled** - Flag that indicates if the app is disabled and skipped during WC deployment.|**Type:** `boolean`<br/>**Key pattern:**<br/>`PATTERN`=`[a-z][a-zA-Z]+`<br/>|
 | `internal.advancedConfiguration.cgroupsv1` | **CGroups v1** - Force use of CGroups v1 for whole cluster.|**Type:** `boolean`<br/>**Default:** `false`|
 | `internal.advancedConfiguration.controlPlane` | **Control plane** - Advanced configuration of control plane components.|**Type:** `object`<br/>|
 | `internal.advancedConfiguration.controlPlane.apiServer` | **API server** - Advanced configuration of API server.|**Type:** `object`<br/>|
@@ -314,6 +310,12 @@ For Giant Swarm internal use only, not stable, or not supported by UIs.
 | `internal.advancedConfiguration.workers.postKubeadmCommands[*]` |**None**|**Type:** `string`<br/>|
 | `internal.advancedConfiguration.workers.preKubeadmCommands` | **Pre-kubeadm commands** - Extra commands to run before kubeadm runs.|**Type:** `array`<br/>|
 | `internal.advancedConfiguration.workers.preKubeadmCommands[*]` |**None**|**Type:** `string`<br/>|
+| `internal.ephemeralConfiguration` | **Ephemeral configuration** - This configuration is meant for Giant Swarm staff only, changes here are ephemeral and are not meant to be persistent and it can be removed at any point. It can be used for the purposes of development and operations.|**Type:** `object`<br/>|
+| `internal.ephemeralConfiguration.apps` | **Apps** - Internal configuration of apps that are part of the cluster.|**Type:** `object`<br/>|
+| `internal.ephemeralConfiguration.apps.PATTERN` | **Ephemeral app configuration** - Non-persistent app configuration that is meant for development and operation purposes only, and can be removed at any point.|**Type:** `object`<br/>**Key pattern:**<br/>`PATTERN`=`[a-z][a-zA-Z]+`<br/>|
+| `internal.ephemeralConfiguration.apps.PATTERN.catalogOverride` | **Catalog override** - Name of the catalog from which the app is installed.|**Type:** `string`<br/>**Key pattern:**<br/>`PATTERN`=`[a-z][a-zA-Z]+`<br/>|
+| `internal.ephemeralConfiguration.apps.PATTERN.disable` | **Disable** - Flag that indicates if the app is disabled and skipped during the cluster deployment.|**Type:** `boolean`<br/>**Key pattern:**<br/>`PATTERN`=`[a-z][a-zA-Z]+`<br/>|
+| `internal.ephemeralConfiguration.apps.PATTERN.versionOverride` | **Version override** - Custom application version that overrides the application version from the release. This is usually a new development version that you want to test, or a newer patch version that you need to deploy in order to put out a production fire in the middle of the night. Use carefully!|**Type:** `string`<br/>**Key pattern:**<br/>`PATTERN`=`[a-z][a-zA-Z]+`<br/>|
 | `internal.localRegistryCache` | **Enable local (per WC) cache**|**Type:** `object`<br/>|
 | `internal.localRegistryCache.enabled` |**None**|**Type:** `boolean`<br/>**Default:** `false`|
 | `internal.localRegistryCache.mirroredRegistries` |A list of registries that should be cached|**Type:** `array`<br/>**Default:** `[]`|

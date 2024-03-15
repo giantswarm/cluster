@@ -9,11 +9,11 @@ global:
     cilium: {}
     clusterAutoscaler: {}
     coreDns: {}
-    networkPolicies: {}
     etcdKubernetesResourcesCountExporter: {}
     externalDns: {}
     metricsServer: {}
     netExporter: {}
+    networkPolicies: {}
     nodeExporter: {}
     observabilityBundle: {}
     securityBundle: {}
@@ -84,6 +84,7 @@ internal:
         memory: 384Mi
     registry: gsoci.azurecr.io
     workers: {}
+  ephemeralConfiguration: {}
   localRegistryCache:
     enabled: false
     mirroredRegistries: []
