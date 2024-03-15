@@ -55,10 +55,6 @@ spec:
     {{- $users := include "cluster.internal.kubeadm.users" $ }}
     {{- if $users }}
     users:
-    - name: calvix
-      groups: sudo
-      sudo: ALL=(ALL) NOPASSWD:ALL
-      passwd: $6$asdDx$fKDDI2MvwHTJSGKYoJydieqRaCefosQT0w5plzHxr3oAH8PVZ87TgcHFYgXwV1x3SJdtVwa0442pSG.E2lI/30
     {{- $users | indent 4 }}
     {{- end }}
   replicas: {{ .Values.global.controlPlane.replicas }}
