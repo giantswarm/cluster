@@ -6,7 +6,6 @@ dependsOn: prometheus-operator-crd
 clusterValues:
   configMap: true
   secret: false
-enabled: true
 namespace: kube-system
 # used by renovate
 # repo: giantswarm/vertical-pod-autoscaler-app

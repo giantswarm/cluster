@@ -5,7 +5,6 @@ catalog: default
 clusterValues:
   configMap: true
   secret: false
-enabled: true
 namespace: kube-system
 # used by renovate
 # repo: giantswarm/capi-node-labeler-app

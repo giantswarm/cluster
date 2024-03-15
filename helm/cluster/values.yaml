@@ -82,6 +82,7 @@ internal:
         memory: 384Mi
     registry: gsoci.azurecr.io
     workers: {}
+  ephemeralConfiguration: {}
 providerIntegration:
   apps:
     cilium: {}
