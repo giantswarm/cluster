@@ -148,8 +148,6 @@ Where `data` is the data to hash and `global` is the top level scope.
 {{- if $.Values.providerIntegration.registry -}}
 {{- if $.Values.providerIntegration.registry.templateName -}}
 {{- $registry = ( include $.Values.providerIntegration.registry.templateName $ ) -}}
-{{- else if $.Values.providerIntegration.registry.value -}}
-{{- $registry = $.Values.providerIntegration.registry.value -}}
 {{- end -}}
 {{- end -}}
 {{- $registry -}}

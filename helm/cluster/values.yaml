@@ -110,6 +110,7 @@ providerIntegration:
           storage: {}
           systemd: {}
   kubernetesVersion: 1.25.16
+  registry: {}
   resourcesApi:
     bastionResourceEnabled: true
     ciliumHelmReleaseResourceEnabled: false

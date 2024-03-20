@@ -492,7 +492,8 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.pauseProperties` | **Pause properties** - A map of property names and their values that will affect setting pause annotation|**Type:** `object`<br/>|
 | `providerIntegration.pauseProperties.*` |**None**|**Types:** `string, number, integer, boolean`<br/>|
 | `providerIntegration.provider` | **Provider** - The name of the Cluster API provider. The name here must match the name of the provider in cluster-<provider> app name.|**Type:** `string`<br/>|
-| `providerIntegration.registry` | **Registry** - The registry to use for pulling images. If not set, the default registry is used.||
+| `providerIntegration.registry` | **Registry** - The registry to use for pulling images. If not set, the default registry is used.|**Type:** `object`<br/>|
+| `providerIntegration.registry.templateName` | **Template name**|**Type:** `string`<br/>|
 | `providerIntegration.resourcesApi` | **Resources API** - Group, version and kind configuration that is required and used by a specific Cluster API provider.|**Type:** `object`<br/>|
 | `providerIntegration.resourcesApi.bastionResourceEnabled` | **Bastion resource enabled** - Flag that indicates if the Bastion resource is enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.|**Type:** `boolean`<br/>**Default:** `true`|
 | `providerIntegration.resourcesApi.ciliumHelmReleaseResourceEnabled` | **Cilium HelmRelease resource enabled** - Flag that indicates if the Cilium HelmRelease is enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.|**Type:** `boolean`<br/>**Default:** `false`|
