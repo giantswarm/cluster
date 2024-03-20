@@ -19,10 +19,10 @@ spec:
   chart:
     spec:
       chart: network-policies
-      version: 0.0.4
+      version: 0.0.4-8cc29b591690c6658fc74e97fc2e04fb4a48fe2a
       sourceRef:
         kind: HelmRepository
-        name: {{ include "cluster.resource.name" $ }}-cluster
+        name: {{ include "cluster.resource.name" $ }}-cluster-test
   dependsOn:
   - name: {{ include "cluster.resource.name" $ }}-cilium
     namespace: {{ $.Release.Namespace }}
@@ -36,21 +36,5 @@ spec:
   # Default values
   # https://github.com/giantswarm/network-policies-app/blob/main/helm/network-policies-app/values.yaml
   # values:
----
-apiVersion: source.toolkit.fluxcd.io/v1beta2
-kind: HelmRepository
-metadata:
-  name: {{ include "cluster.resource.name" $ }}-cluster
-  namespace: {{ $.Release.Namespace }}
-  {{- $annotations = include "cluster.annotations.common.all" $ }}
-  {{- if $annotations }}
-  annotations:
-    {{- $annotations | indent 4 }}
-  {{- end }}
-  labels:
-    {{- include "cluster.labels.common.all" $ | indent 4 }}
-spec:
-  interval: 10m
-  url: https://giantswarm.github.io/cluster-catalog
 {{- end }}
 {{- end }}
