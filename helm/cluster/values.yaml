@@ -4,6 +4,7 @@ global:
   apps:
     cilium: {}
     coreDns: {}
+    networkPolicies: {}
     verticalPodAutoscalerCrd: {}
   components:
     containerd:
@@ -71,6 +72,7 @@ providerIntegration:
   apps:
     cilium: {}
     coredns: {}
+    networkPolicies: {}
   bastion:
     kubeadmConfig:
       ignition:
