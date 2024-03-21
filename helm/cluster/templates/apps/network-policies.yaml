@@ -23,7 +23,7 @@ spec:
   chart:
     spec:
       chart: network-policies
-      version: 0.0.4-d898c7da8286d6f23eecec1f8fb780da3499f124
+      version: 0.0.4-f5013ca3b995fe78137012310b0b5d1008239745
       sourceRef:
         kind: HelmRepository
         name: {{ include "cluster.resource.name" $ }}-cluster-test
