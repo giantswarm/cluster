@@ -14,6 +14,7 @@ nodeRegistration:
     feature-gates: CronJobTimeZone=true
     healthz-bind-address: 0.0.0.0
     node-ip: ${COREOS_EC2_IPV4_LOCAL}
+    node-labels: ip=${COREOS_EC2_IPV4_LOCAL}
     v: "2"
   name: ${COREOS_EC2_HOSTNAME}
   {{- if $.Values.global.controlPlane.customNodeTaints }}
