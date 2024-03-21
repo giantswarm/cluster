@@ -21,7 +21,7 @@ runtime_type = "io.containerd.runc.v2"
 [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc.options]
 SystemdCgroup = {{ if $.Values.internal.advancedConfiguration.cgroupsv1 }}false{{else}}true{{end}}
 [plugins."io.containerd.grpc.v1.cri"]
-sandbox_image = "{{ $.Values.internal.advancedConfiguration.registry }}/{{ $.Values.providerIntegration.components.containerd.sandboxContainerImage.name }}:{{ $.Values.providerIntegration.components.containerd.sandboxContainerImage.tag }}"
+sandbox_image = "{{ include "cluster.image.registry" $ }}/{{ $.Values.providerIntegration.components.containerd.sandboxContainerImage.name }}:{{ $.Values.providerIntegration.components.containerd.sandboxContainerImage.tag }}"
 
 [plugins."io.containerd.grpc.v1.cri".registry]
   [plugins."io.containerd.grpc.v1.cri".registry.mirrors]

@@ -1542,6 +1542,9 @@
                     "properties": {
                         "cilium": {
                             "$ref": "#/$defs/providerIntegrationAppConfig"
+                        },
+                        "coredns": {
+                            "$ref": "#/$defs/providerIntegrationAppConfig"
                         }
                     }
                 },
@@ -1804,6 +1807,11 @@
                                                                     "title": "Cluster domain prefix",
                                                                     "description": "Prefix that is prepended to the cluster domain name, so that resulting URL is used as the identifier of the service account token issuer."
                                                                 },
+                                                                "templateName": {
+                                                                    "type": "string",
+                                                                    "title": "Template name",
+                                                                    "description": "The name of the Helm template which renders the 'url' value"
+                                                                },
                                                                 "url": {
                                                                     "type": "string",
                                                                     "title": "URL",
@@ -1817,7 +1825,8 @@
                                                                     ],
                                                                     "not": {
                                                                         "required": [
-                                                                            "clusterDomainPrefix"
+                                                                            "clusterDomainPrefix",
+                                                                            "templateName"
                                                                         ]
                                                                     }
                                                                 },
@@ -1827,7 +1836,19 @@
                                                                     ],
                                                                     "not": {
                                                                         "required": [
-                                                                            "url"
+                                                                            "url",
+                                                                            "templateName"
+                                                                        ]
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "required": [
+                                                                        "templateName"
+                                                                    ],
+                                                                    "not": {
+                                                                        "required": [
+                                                                            "url",
+                                                                            "clusterDomainPrefix"
                                                                         ]
                                                                     }
                                                                 }
@@ -1954,6 +1975,17 @@
                     "type": "string",
                     "title": "Provider",
                     "description": "The name of the Cluster API provider. The name here must match the name of the provider in cluster-<provider> app name."
+                },
+                "registry": {
+                    "type": "object",
+                    "title": "Registry",
+                    "description": "The registry to use for pulling images. If not set, the default registry is used.",
+                    "properties": {
+                        "templateName": {
+                            "type": "string",
+                            "title": "Template name"
+                        }
+                    }
                 },
                 "resourcesApi": {
                     "type": "object",

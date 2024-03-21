@@ -267,6 +267,8 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.apps` | **Apps** - Provider-specific config for apps.|**Type:** `object`<br/>|
 | `providerIntegration.apps.cilium` | **Provider integration app config** - App config used to additionally configure an app for a specific provider|**Type:** `object`<br/>|
 | `providerIntegration.apps.cilium.configTemplateName` | **Config template name** - Name of the Helm template that has provider-specific app config. Provider-specific app config overrides provider-independent app config, while custom user config overrides both provider-independent and provider-specific default app config.|**Type:** `string`<br/>|
+| `providerIntegration.apps.coredns` | **Provider integration app config** - App config used to additionally configure an app for a specific provider|**Type:** `object`<br/>|
+| `providerIntegration.apps.coredns.configTemplateName` | **Config template name** - Name of the Helm template that has provider-specific app config. Provider-specific app config overrides provider-independent app config, while custom user config overrides both provider-independent and provider-specific default app config.|**Type:** `string`<br/>|
 | `providerIntegration.bastion` | **Internal bastion configuration**|**Type:** `object`<br/>|
 | `providerIntegration.bastion.kubeadmConfig` | **Kubeadm config** - Configuration of bastion nodes.|**Type:** `object`<br/>|
 | `providerIntegration.bastion.kubeadmConfig.ignition` | **Ignition** - Ignition-specific configuration.|**Type:** `object`<br/>|
@@ -490,6 +492,8 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.pauseProperties` | **Pause properties** - A map of property names and their values that will affect setting pause annotation|**Type:** `object`<br/>|
 | `providerIntegration.pauseProperties.*` |**None**|**Types:** `string, number, integer, boolean`<br/>|
 | `providerIntegration.provider` | **Provider** - The name of the Cluster API provider. The name here must match the name of the provider in cluster-<provider> app name.|**Type:** `string`<br/>|
+| `providerIntegration.registry` | **Registry** - The registry to use for pulling images. If not set, the default registry is used.|**Type:** `object`<br/>|
+| `providerIntegration.registry.templateName` | **Template name**|**Type:** `string`<br/>|
 | `providerIntegration.resourcesApi` | **Resources API** - Group, version and kind configuration that is required and used by a specific Cluster API provider.|**Type:** `object`<br/>|
 | `providerIntegration.resourcesApi.bastionResourceEnabled` | **Bastion resource enabled** - Flag that indicates if the Bastion resource is enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.|**Type:** `boolean`<br/>**Default:** `true`|
 | `providerIntegration.resourcesApi.ciliumHelmReleaseResourceEnabled` | **Cilium HelmRelease resource enabled** - Flag that indicates if the Cilium HelmRelease is enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.|**Type:** `boolean`<br/>**Default:** `false`|

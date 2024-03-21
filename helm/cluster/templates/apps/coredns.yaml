@@ -50,6 +50,11 @@ spec:
     remediation:
       retries: 30
   {{- $coreDnsHelmValues := (include "cluster.internal.apps.coredns.config.default" .) | fromYaml -}}
+  {{- /* Default provider-specific coredns config will override provider-independent cilium config */}}
+  {{- if $.Values.providerIntegration.apps.coredns.configTemplateName }}
+  {{- $providerSpecificCorednsHelmValues := (include $.Values.providerIntegration.apps.cilium.configTemplateName $) | fromYaml -}}
+  {{- $coreDnsHelmValues = mergeOverwrite $coreDnsHelmValues (deepCopy $providerSpecificCorednsHelmValues) -}}
+  {{- end }}
   {{- $customCoreDnsHelmValues := $.Values.global.apps.coreDns.values -}}
   {{- if $customCoreDnsHelmValues }}
   {{- $coreDnsHelmValues = mergeOverwrite $coreDnsHelmValues (deepCopy $customCoreDnsHelmValues) -}}
