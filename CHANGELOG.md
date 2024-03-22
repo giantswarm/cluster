@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Chart: Add `ip` to Kubelet node labels([#125](https://github.com/giantswarm/cluster/pull/131))
+
 ## [0.14.0] - 2024-03-21
 
 ### Added
