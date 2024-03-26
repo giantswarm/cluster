@@ -125,16 +125,19 @@
     [Install]
     WantedBy=multi-user.target
 {{- /*
-  Mask Flatcar's update-engine and locksmithd services, which are ussed for OS
+  Mask Flatcar's update-engine, locksmithd and sshkeys services, which are used for OS
   upgrades (update-engine is responsible for downloading and applying the
-  updates, and locksmithd is the default reboot manager).
-  We upgrade OS when we upgrade cluster chart version, so we don't want these
+  updates, and locksmithd is the default reboot manager) and getting SSH keys from instance meta data service.
+  We upgrade OS when we upgrade cluster chart version and for SSH we use teleport, so we don't want these
   services to be enabled.
 */}}
 - name: update-engine.service
   enabled: false
   mask: true
 - name: locksmithd.service
+  enabled: false
+  mask: true
+- name: sshkeys.service
   enabled: false
   mask: true
 {{- end }}

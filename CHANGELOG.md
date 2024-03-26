@@ -9,11 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.16.0] - 2024-03-26
 
+### Changed
+
+- Disable unnecessary systemd unit `sshkeys.service`. ([#136](https://github.com/giantswarm/cluster/pull/136))
+
 ## [0.15.0] - 2024-03-26
 
 ### Added
 
-- Chart: Add `ip` to Kubelet node labels([#125](https://github.com/giantswarm/cluster/pull/131))
+- Chart: Add `ip` to Kubelet node labels. ([#125](https://github.com/giantswarm/cluster/pull/131))
 - Chart: Add `providerIntegration.apps.networkPolicies` to be able to add provider specific network-policies helm values.
 - Chart: Add `global.apps.networkPolicies` to allow customers to change network-policies helm values.
 - Chart: Add `cluster-test` HelmRepository.
