@@ -23,7 +23,7 @@ spec:
   chart:
     spec:
       chart: network-policies
-      version: 0.0.4
+      version: 0.1.0
       sourceRef:
         kind: HelmRepository
         name: {{ include "cluster.resource.name" $ }}-cluster
