@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Chart: Add `ip` to Kubelet node labels([#125](https://github.com/giantswarm/cluster/pull/131))
+- Chart: Add `providerIntegration.apps.networkPolicies` to be able to add provider specific network-policies helm values.
+- Chart: Add `global.apps.networkPolicies` to allow customers to change network-policies helm values.
+- Chart: Add `cluster-test` HelmRepository.
 
 ## [0.14.0] - 2024-03-21
 
