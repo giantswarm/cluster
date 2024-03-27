@@ -2,7 +2,7 @@
 {{- /* https://github.com/giantswarm/network-policies-app/blob/main/helm/network-policies-app/values.yaml */}}
 {{- define "cluster.internal.apps.networkPolicies.config.default" }}
 {{- end }}
-{{- if .Values.providerIntegration.resourcesApi.networkPoliciesHelmReleaseResourceEnabled }}
+{{- if or $.Values.providerIntegration.apps.networkPolicies.enable .Values.providerIntegration.resourcesApi.networkPoliciesHelmReleaseResourceEnabled }}
 {{- if not .Values.global.connectivity.network.allowAllEgress }}
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease

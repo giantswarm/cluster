@@ -103,7 +103,7 @@ providerIntegration:
       enable: false
     clusterAutoscaler:
       enable: false
-    coredns:
+    coreDns:
       enable: false
     etcdKubernetesResourcesCountExporter:
       enable: false
