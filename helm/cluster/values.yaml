@@ -91,9 +91,40 @@ internal:
     port: 32767
 providerIntegration:
   apps:
-    cilium: {}
-    coredns: {}
-    networkPolicies: {}
+    capiNodeLabeler:
+      enable: false
+    certExporter:
+      enable: false
+    certManager:
+      enable: false
+    chartOperatorExtensions:
+      enable: false
+    cilium:
+      enable: false
+    clusterAutoscaler:
+      enable: false
+    coredns:
+      enable: false
+    etcdKubernetesResourcesCountExporter:
+      enable: false
+    externalDns:
+      enable: false
+    metricsServer:
+      enable: false
+    netExporter:
+      enable: false
+    networkPolicies:
+      enable: false
+    nodeExporter:
+      enable: false
+    observabilityBundle:
+      enable: false
+    securityBundle:
+      enable: false
+    teleportKubeAgent:
+      enable: false
+    verticalPodAutoscaler:
+      enable: false
   bastion:
     kubeadmConfig:
       ignition:

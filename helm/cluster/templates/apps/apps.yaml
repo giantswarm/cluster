@@ -5,6 +5,16 @@
 {{- $app = (tpl (.Files.Get $path) $) | fromYaml }}
 {{- $appName := $app.appName }}
 {{- $appKey := $app.configKey }}
+{{- /* Get provider-integration app config */}}
+{{- $providerIntegrationAppConfig := dict }}
+{{- $providerIntegrationAppConfigRaw := get $.Values.providerIntegration.apps $appKey }}
+{{- if $providerIntegrationAppConfigRaw }}
+{{- /* Sometimes, when provider app config is not set, $providerIntegrationAppConfigRaw gets parsed as an empty string,
+       and sometimes as an empty dict. And we want $providerIntegrationAppConfigRaw, which is used in template, to be
+       always a dict, for the sake of cleaner template code. */}}
+{{- $providerIntegrationAppConfig = $providerIntegrationAppConfigRaw }}
+{{- end }}
+{{- /* Get ephemeral app config */}}
 {{- $ephemeralConfig := dict }}
 {{- if ($.Values.internal.ephemeralConfiguration).apps }}
 {{- $ephemeralConfigRaw := get $.Values.internal.ephemeralConfiguration.apps $appKey }}
@@ -15,7 +25,7 @@
 {{- $ephemeralConfig = $ephemeralConfigRaw }}
 {{- end }}
 {{- end }}
-{{- if not $ephemeralConfig.disable }}
+{{- if and $providerIntegrationAppConfig.enable (not $ephemeralConfig.disable) }}
 ---
 apiVersion: application.giantswarm.io/v1alpha1
 kind: App

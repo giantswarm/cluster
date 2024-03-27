@@ -787,6 +787,12 @@
                     "type": "string",
                     "title": "Config template name",
                     "description": "Name of the Helm template that has provider-specific app config. Provider-specific app config overrides provider-independent app config, while custom user config overrides both provider-independent and provider-specific default app config."
+                },
+                "enable": {
+                    "type": "boolean",
+                    "title": "Enable",
+                    "description": "Flag that indicates if an app is enabled for a provider. It is false by default, which allows for more incremental and safer adoption of the cluster chart.",
+                    "default": false
                 }
             }
         },
@@ -1814,7 +1820,7 @@
                 "ephemeralConfiguration": {
                     "type": "object",
                     "title": "Ephemeral configuration",
-                    "description": "This configuration is meant for Giant Swarm staff only, changes here are ephemeral and are not meant to be persistent and it can be removed at any point. It can be used for the purposes of development and operations.",
+                    "description": "This configuration is meant for Giant Swarm staff only, changes here are ephemeral and are not meant to be persistent and it can be removed at any point. It can be used for the purposes of development, testing and operations.",
                     "properties": {
                         "apps": {
                             "type": "object",
@@ -1878,13 +1884,55 @@
                     "description": "Provider-specific config for apps.",
                     "additionalProperties": false,
                     "properties": {
+                        "capiNodeLabeler": {
+                            "$ref": "#/$defs/providerIntegrationAppConfig"
+                        },
+                        "certExporter": {
+                            "$ref": "#/$defs/providerIntegrationAppConfig"
+                        },
+                        "certManager": {
+                            "$ref": "#/$defs/providerIntegrationAppConfig"
+                        },
+                        "chartOperatorExtensions": {
+                            "$ref": "#/$defs/providerIntegrationAppConfig"
+                        },
                         "cilium": {
                             "$ref": "#/$defs/providerIntegrationAppConfig"
                         },
                         "coredns": {
                             "$ref": "#/$defs/providerIntegrationAppConfig"
                         },
+                        "clusterAutoscaler": {
+                            "$ref": "#/$defs/providerIntegrationAppConfig"
+                        },
+                        "etcdKubernetesResourcesCountExporter": {
+                            "$ref": "#/$defs/providerIntegrationAppConfig"
+                        },
+                        "externalDns": {
+                            "$ref": "#/$defs/providerIntegrationAppConfig"
+                        },
+                        "metricsServer": {
+                            "$ref": "#/$defs/providerIntegrationAppConfig"
+                        },
+                        "netExporter": {
+                            "$ref": "#/$defs/providerIntegrationAppConfig"
+                        },
                         "networkPolicies": {
+                            "$ref": "#/$defs/providerIntegrationAppConfig"
+                        },
+                        "nodeExporter": {
+                            "$ref": "#/$defs/providerIntegrationAppConfig"
+                        },
+                        "observabilityBundle": {
+                            "$ref": "#/$defs/providerIntegrationAppConfig"
+                        },
+                        "securityBundle": {
+                            "$ref": "#/$defs/providerIntegrationAppConfig"
+                        },
+                        "teleportKubeAgent": {
+                            "$ref": "#/$defs/providerIntegrationAppConfig"
+                        },
+                        "verticalPodAutoscaler": {
                             "$ref": "#/$defs/providerIntegrationAppConfig"
                         }
                     }
@@ -2403,7 +2451,7 @@
                         "ciliumHelmReleaseResourceEnabled": {
                             "type": "boolean",
                             "title": "Cilium HelmRelease resource enabled",
-                            "description": "Flag that indicates if the Cilium HelmRelease is enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.",
+                            "description": "Deprecated: use .Values.providerIntegration.apps.cilium.enabled instead (enabling any of this or the new flag will enable cilium). Flag that indicates if the Cilium HelmRelease is enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.",
                             "default": false
                         },
                         "cleanupHelmReleaseResourcesEnabled": {
