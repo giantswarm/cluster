@@ -2,9 +2,23 @@
 
 global:
   apps:
+    capiNodeLabeler: {}
+    certExporter: {}
+    certManager: {}
+    chartOperatorExtensions: {}
     cilium: {}
+    clusterAutoscaler: {}
     coreDns: {}
+    etcdKubernetesResourcesCountExporter: {}
+    externalDns: {}
+    metricsServer: {}
+    netExporter: {}
     networkPolicies: {}
+    nodeExporter: {}
+    observabilityBundle: {}
+    securityBundle: {}
+    teleportKubeAgent: {}
+    verticalPodAutoscaler: {}
     verticalPodAutoscalerCrd: {}
   components:
     containerd:
@@ -68,11 +82,43 @@ internal:
         memory: 384Mi
     registry: gsoci.azurecr.io
     workers: {}
+  ephemeralConfiguration: {}
 providerIntegration:
   apps:
-    cilium: {}
-    coredns: {}
-    networkPolicies: {}
+    capiNodeLabeler:
+      enable: false
+    certExporter:
+      enable: false
+    certManager:
+      enable: false
+    chartOperatorExtensions:
+      enable: false
+    cilium:
+      enable: false
+    clusterAutoscaler:
+      enable: false
+    coreDns:
+      enable: false
+    etcdKubernetesResourcesCountExporter:
+      enable: false
+    externalDns:
+      enable: false
+    metricsServer:
+      enable: false
+    netExporter:
+      enable: false
+    networkPolicies:
+      enable: false
+    nodeExporter:
+      enable: false
+    observabilityBundle:
+      enable: false
+    securityBundle:
+      enable: false
+    teleportKubeAgent:
+      enable: false
+    verticalPodAutoscaler:
+      enable: false
   bastion:
     kubeadmConfig:
       ignition:
