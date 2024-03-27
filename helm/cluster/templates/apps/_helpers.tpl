@@ -46,3 +46,18 @@ extraPolicies:
     httpProxy: {{ $.Values.global.connectivity.proxy.httpProxy | quote }}
     httpsProxy: {{ $.Values.global.connectivity.proxy.httpsProxy | quote }}
 {{- end }}
+
+{{/* Test helper used only in the CI */}}
+{{- define "cluster.test.providerIntegration.apps.external-dns.config" }}
+provider: aws
+aws:
+  irsa: "true"
+  batchChangeInterval: null
+serviceAccount:
+  annotations:
+    eks.amazonaws.com/role-arn: "{{ .Values.global.metadata.name }}-Route53Manager-Role"
+extraArgs:
+  - "--aws-batch-change-interval=10s"
+ciliumNetworkPolicy:
+  enabled: true
+{{- end }}

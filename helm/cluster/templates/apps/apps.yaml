@@ -108,6 +108,10 @@ spec:
 {{- if $app.defaultValues }}
 {{- $userValues = tpl ($app.defaultValues | toYaml | toString) $ | fromYaml }}
 {{- end }}
+{{- if $providerIntegrationAppConfig.configTemplateName }}
+{{- $providerSpecificDefaultValues := (include $providerIntegrationAppConfig.configTemplateName $) | fromYaml }}
+{{- $userValues = mergeOverwrite $userValues $providerSpecificDefaultValues }}
+{{- end }}
 {{- if ($userConfig).values }}
 {{- $userValues = mergeOverwrite $userValues (deepCopy $userConfig.values) }}
 {{- end }}
