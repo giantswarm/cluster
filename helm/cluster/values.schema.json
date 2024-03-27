@@ -1899,10 +1899,10 @@
                         "cilium": {
                             "$ref": "#/$defs/providerIntegrationAppConfig"
                         },
-                        "coredns": {
+                        "clusterAutoscaler": {
                             "$ref": "#/$defs/providerIntegrationAppConfig"
                         },
-                        "clusterAutoscaler": {
+                        "coredns": {
                             "$ref": "#/$defs/providerIntegrationAppConfig"
                         },
                         "etcdKubernetesResourcesCountExporter": {
