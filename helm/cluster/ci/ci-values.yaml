@@ -274,6 +274,7 @@ providerIntegration:
       enable: true
     externalDns:
       enable: true
+      configTemplateName: cluster.test.providerIntegration.apps.external-dns.config
     metricsServer:
       enable: true
     netExporter:
