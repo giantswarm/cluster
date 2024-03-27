@@ -258,8 +258,36 @@ internal:
         versionOverride: v100.0.0-dev.8234y65dh92783
 providerIntegration:
   apps:
+    capiNodeLabeler:
+      enable: true
+    certExporter:
+      enable: true
+    certManager:
+      enable: true
+    chartOperatorExtensions:
+      enable: true
     cilium:
-      configTemplateName: "cluster.test.providerIntegration.apps.cilium.config"
+      enable: true
+    clusterAutoscaler:
+      enable: true
+    etcdKubernetesResourcesCountExporter:
+      enable: true
+    externalDns:
+      enable: true
+    metricsServer:
+      enable: true
+    netExporter:
+      enable: true
+    nodeExporter:
+      enable: true
+    observabilityBundle:
+      enable: true
+    securityBundle:
+      enable: true
+    teleportKubeAgent:
+      enable: true
+    verticalPodAutoscaler:
+      enable: true
   provider: aws
   bastion:
     kubeadmConfig:
