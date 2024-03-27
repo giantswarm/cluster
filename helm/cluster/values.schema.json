@@ -876,12 +876,6 @@
                             "title": "CoreDNS",
                             "description": "Configuration of coredns-app. For all available values see https://github.com/giantswarm/coredns-app."
                         },
-                        "networkPolicies": {
-                            "$ref": "#/$defs/app",
-                            "type": "object",
-                            "title": "NetworkPolicies",
-                            "description": "Configuration of network-policies-app. For all available values see https://github.com/giantswarm/network-policies-app."
-                        },
                         "etcdKubernetesResourcesCountExporter": {
                             "$ref": "#/$defs/app",
                             "type": "object",
@@ -905,6 +899,12 @@
                             "type": "object",
                             "title": "net-exporter",
                             "description": "Configuration of net-exporter. For all available values see https://github.com/giantswarm/net-exporter."
+                        },
+                        "networkPolicies": {
+                            "$ref": "#/$defs/app",
+                            "type": "object",
+                            "title": "NetworkPolicies",
+                            "description": "Configuration of network-policies-app. For all available values see https://github.com/giantswarm/network-policies-app."
                         },
                         "nodeExporter": {
                             "$ref": "#/$defs/app",
@@ -1737,10 +1737,10 @@
                         "cilium": {
                             "$ref": "#/$defs/providerIntegrationAppConfig"
                         },
-                        "coredns": {
+                        "clusterAutoscaler": {
                             "$ref": "#/$defs/providerIntegrationAppConfig"
                         },
-                        "clusterAutoscaler": {
+                        "coredns": {
                             "$ref": "#/$defs/providerIntegrationAppConfig"
                         },
                         "etcdKubernetesResourcesCountExporter": {
