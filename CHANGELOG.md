@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Update network-policies-app to v0.1.0.
+- Update cilium to v0.22.0. This version includes schemas and the extra-policies deletion job.
 
 ## [0.16.0] - 2024-03-26
 
