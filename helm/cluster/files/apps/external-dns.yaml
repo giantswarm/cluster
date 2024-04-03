@@ -11,8 +11,12 @@ namespace: kube-system
 # repo: giantswarm/external-dns-app
 version: 3.1.0
 defaultValues:
+  provider: {{ .Values.providerIntegration.provider }}
+  domainFilters:
+  - {{ include "cluster.internal.apps.baseDomain" . }}
   txtOwnerId: giantswarm-io-external-dns
   txtPrefix: {{ $.Values.global.metadata.name }}
+  registry: txt
   annotationFilter: giantswarm.io/external-dns=managed
   sources:
   - service
