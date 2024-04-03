@@ -10,6 +10,10 @@ namespace: kube-system
 # used by renovate
 # repo: giantswarm/net-exporter
 version: 1.18.2
-values:
+defaultValues:
   ciliumNetworkPolicy:
     enabled: true
+  {{- if ($.Values.providerIntegration.components.systemd).timesyncd }}
+  NetExporter:
+    NTPServers: {{ join "," (compact $.Values.providerIntegration.components.systemd.timesyncd.ntp) }}
+  {{- end }}
