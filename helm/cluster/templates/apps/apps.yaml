@@ -96,7 +96,11 @@ spec:
     {{- end}}
   {{- end }}
   {{- end }}
-  {{- $hasUserValues := or $userConfig.values $app.defaultValues }}
+  {{- $providerSpecificDefaultValues := dict }}
+  {{- if $providerIntegrationAppConfig.configTemplateName }}
+  {{- $providerSpecificDefaultValues = (include $providerIntegrationAppConfig.configTemplateName $) | fromYaml }}
+  {{- end }}
+  {{- $hasUserValues := or $userConfig.values $app.defaultValues $providerSpecificDefaultValues }}
   {{- if $hasUserValues }}
   userConfig:
     configMap:
@@ -108,8 +112,7 @@ spec:
 {{- if $app.defaultValues }}
 {{- $userValues = tpl ($app.defaultValues | toYaml | toString) $ | fromYaml }}
 {{- end }}
-{{- if $providerIntegrationAppConfig.configTemplateName }}
-{{- $providerSpecificDefaultValues := (include $providerIntegrationAppConfig.configTemplateName $) | fromYaml }}
+{{- if $providerSpecificDefaultValues }}
 {{- $userValues = mergeOverwrite $userValues $providerSpecificDefaultValues }}
 {{- end }}
 {{- if ($userConfig).values }}

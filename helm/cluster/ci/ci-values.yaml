@@ -262,6 +262,7 @@ providerIntegration:
       enable: true
     certExporter:
       enable: true
+      configTemplateName: cluster.test.providerIntegration.apps.certExporter.config
     certManager:
       enable: true
     chartOperatorExtensions:
@@ -278,7 +279,7 @@ providerIntegration:
       enable: true
     externalDns:
       enable: true
-      configTemplateName: cluster.test.providerIntegration.apps.external-dns.config
+      configTemplateName: cluster.test.providerIntegration.apps.externalDns.config
     metricsServer:
       enable: true
     netExporter:

@@ -60,7 +60,7 @@ extraPolicies:
 {{- end }}
 
 {{/* Test helper used only in the CI */}}
-{{- define "cluster.test.providerIntegration.apps.external-dns.config" }}
+{{- define "cluster.test.providerIntegration.apps.externalDns.config" }}
 provider: aws
 aws:
   irsa: "true"
@@ -72,4 +72,9 @@ extraArgs:
   - "--aws-batch-change-interval=10s"
 ciliumNetworkPolicy:
   enabled: true
+{{- end }}
+
+{{/* Test helper used only in the CI */}}
+{{- define "cluster.test.providerIntegration.apps.certExporter.config" }}
+foo: bar
 {{- end }}
