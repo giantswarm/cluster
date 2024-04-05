@@ -972,6 +972,12 @@
                             "title": "Cilium",
                             "description": "Configuration of cilium-app. For all available values see https://github.com/giantswarm/cilium-app."
                         },
+                        "ciliumServiceMonitors": {
+                            "$ref": "#/$defs/app",
+                            "type": "object",
+                            "title": "Cilium service monitors",
+                            "description": "Configuration of cilium-servicemonitors. For all available values see https://github.com/giantswarm/cilium-servicemonitors-app."
+                        },
                         "clusterAutoscaler": {
                             "$ref": "#/$defs/app",
                             "type": "object",
@@ -1897,6 +1903,9 @@
                             "$ref": "#/$defs/providerIntegrationAppConfig"
                         },
                         "cilium": {
+                            "$ref": "#/$defs/providerIntegrationAppConfig"
+                        },
+                        "ciliumServiceMonitors": {
                             "$ref": "#/$defs/providerIntegrationAppConfig"
                         },
                         "clusterAutoscaler": {

@@ -7,6 +7,7 @@ global:
     certManager: {}
     chartOperatorExtensions: {}
     cilium: {}
+    ciliumServiceMonitors: {}
     clusterAutoscaler: {}
     coreDns: {}
     etcdKubernetesResourcesCountExporter: {}
@@ -100,6 +101,8 @@ providerIntegration:
     chartOperatorExtensions:
       enable: false
     cilium:
+      enable: false
+    ciliumServiceMonitors:
       enable: false
     clusterAutoscaler:
       enable: false
