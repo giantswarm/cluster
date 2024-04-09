@@ -12,6 +12,7 @@ global:
     coreDns: {}
     etcdKubernetesResourcesCountExporter: {}
     externalDns: {}
+    k8sDnsNodeCache: {}
     metricsServer: {}
     netExporter: {}
     networkPolicies: {}
@@ -111,6 +112,8 @@ providerIntegration:
     etcdKubernetesResourcesCountExporter:
       enable: false
     externalDns:
+      enable: false
+    k8sDnsNodeCache:
       enable: false
     metricsServer:
       enable: false

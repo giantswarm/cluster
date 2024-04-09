@@ -280,6 +280,8 @@ providerIntegration:
     externalDns:
       enable: true
       configTemplateName: cluster.test.providerIntegration.apps.externalDns.config
+    k8sDnsNodeCache:
+      enable: true
     metricsServer:
       enable: true
     netExporter:
