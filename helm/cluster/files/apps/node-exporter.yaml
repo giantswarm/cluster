@@ -9,4 +9,4 @@ dependsOn: prometheus-operator-crd
 namespace: kube-system
 # used by renovate
 # repo: giantswarm/node-exporter-app
-version: 1.18.2
+version: 1.19.0
