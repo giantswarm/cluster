@@ -131,6 +131,8 @@ providerIntegration:
       enable: false
     verticalPodAutoscaler:
       enable: false
+    verticalPodAutoscalerCrd:
+      enable: false
   bastion:
     kubeadmConfig:
       ignition:

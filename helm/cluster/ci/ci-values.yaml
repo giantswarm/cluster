@@ -298,6 +298,8 @@ providerIntegration:
       enable: true
     verticalPodAutoscaler:
       enable: true
+    verticalPodAutoscalerCrd:
+      enable: true
   provider: aws
   bastion:
     kubeadmConfig:

@@ -1952,6 +1952,9 @@
                         },
                         "verticalPodAutoscaler": {
                             "$ref": "#/$defs/providerIntegrationAppConfig"
+                        },
+                        "verticalPodAutoscalerCrd": {
+                            "$ref": "#/$defs/providerIntegrationAppConfig"
                         }
                     }
                 },
@@ -2526,7 +2529,7 @@
                         "verticalPodAutoscalerCrdHelmReleaseResourceEnabled": {
                             "type": "boolean",
                             "title": "vertical-pod-autoscaler-crd HelmRelease resource enabled",
-                            "description": "Flag that indicates if the vertical-pod-autoscaler-crd HelmRelease is enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.",
+                            "description": "Deprecated: use .Values.providerIntegration.apps.verticalPodAutoscalerCrd.enabled instead (enabling any of this or the new flag will enable network-policies). Flag that indicates if the vertical-pod-autoscaler-crd HelmRelease is enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.",
                             "default": false
                         }
                     },

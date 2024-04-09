@@ -1,4 +1,4 @@
-{{- if $.Values.providerIntegration.resourcesApi.verticalPodAutoscalerCrdHelmReleaseResourceEnabled }}
+{{- if or $.Values.providerIntegration.apps.verticalPodAutoscalerCrd.enable $.Values.providerIntegration.resourcesApi.verticalPodAutoscalerCrdHelmReleaseResourceEnabled }}
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
