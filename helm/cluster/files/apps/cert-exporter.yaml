@@ -9,4 +9,4 @@ dependsOn: prometheus-operator-crd
 namespace: kube-system
 # used by renovate
 # repo: giantswarm/cert-exporter
-version: 2.8.5
+version: 2.9.0
