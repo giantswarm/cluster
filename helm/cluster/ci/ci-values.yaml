@@ -63,10 +63,10 @@ global:
         foo: bar
       extraConfigs:
       - name: my-secret-extra-config-1
-        kind: Secret
+        kind: secret
         priority: 110
       - name: my-extra-config-2
-        kind: ConfigMap
+        kind: configMap
         priority: 120
     certManager:
       values:
@@ -78,10 +78,10 @@ global:
           enabled: false
       extraConfigs:
       - name: my-cert-manager-secret-extra-config-1
-        kind: Secret
+        kind: secret
         priority: 110
       - name: my-cert-manager-extra-config-2
-        kind: ConfigMap
+        kind: configMap
         priority: 120
     chartOperatorExtensions:
       values:
@@ -103,56 +103,56 @@ global:
         foo: bar
       extraConfigs:
       - name: my-etcd-k8s-res-count-exporter-extra-config
-        kind: ConfigMap
+        kind: configMap
     externalDns:
       values:
         foo: bar
       extraConfigs:
       - name: my-external-dns-extra-config
-        kind: ConfigMap
+        kind: configMap
         priority: 120
     metricsServer:
       values:
         foo: bar
       extraConfigs:
       - name: my-metrics-server-extra-config
-        kind: ConfigMap
+        kind: configMap
     netExporter:
       values:
         foo: bar
       extraConfigs:
       - name: my-net-exporter-secret-extra-config
-        kind: Secret
+        kind: secret
     nodeExporter:
       values:
         foo: bar
       extraConfigs:
       - name: my-node-exporter-secret-extra-config
-        kind: Secret
+        kind: secret
     observabilityBundle:
       values:
         foo: bar
       extraConfigs:
       - name: my-observability-bundle-extra-config
-        kind: ConfigMap
+        kind: configMap
     securityBundle:
       values:
         foo: bar
       extraConfigs:
       - name: my-security-bundle-extra-config
-        kind: ConfigMap
+        kind: configMap
     teleportKubeAgent:
       values:
         foo: bar
       extraConfigs:
       - name: my-teleport-kube-agent-extra-config
-        kind: ConfigMap
+        kind: configMap
     verticalPodAutoscaler:
       values:
         foo: bar
       extraConfigs:
       - name: my-vpa-extra-config
-        kind: ConfigMap
+        kind: configMap
     verticalPodAutoscalerCrd:
       values:
         commonLabels:

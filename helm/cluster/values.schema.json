@@ -30,8 +30,8 @@
                                 "title": "Kind",
                                 "description": "Specifies whether the resource is a config map or a secret.",
                                 "enum": [
-                                    "ConfigMap",
-                                    "Secret"
+                                    "configMap",
+                                    "secret"
                                 ]
                             },
                             "name": {
