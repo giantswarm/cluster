@@ -1,5 +1,5 @@
-{{ $rootScope := .}}
-{{- range $path, $_ :=  .Files.Glob "files/apps/**.yaml" }}
+{{- $rootScope := . }}
+{{- range $path, $_ := .Files.Glob "files/apps/**.yaml" }}
 {{- $app := dict }}
 {{- with $rootScope }}
 {{- $app = (tpl (.Files.Get $path) $) | fromYaml }}
@@ -130,10 +130,10 @@ metadata:
 data:
   values: |
   {{- (tpl ($userValues | toYaml | toString) $) | nindent 4 }}
-{{- /*end if $hasUserValues*/}}
+{{- /* end if $hasUserValues */}}
 {{- end }}
 
-{{- /* end if not $ephemeralConfig.disable*/}}
+{{- /* end if not $ephemeralConfig.disable */}}
 {{- end }}
 {{- /* end with $rootScope */}}
 {{- end }}
