@@ -5,7 +5,7 @@ catalog: default
 clusterValues:
   configMap: true
   secret: false
-dependsOn: prometheus-operator-crd
+dependsOn: kyverno
 namespace: kube-system
 # used by renovate
 # repo: giantswarm/node-exporter-app
