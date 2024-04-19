@@ -5,6 +5,7 @@ catalog: default
 clusterValues:
   configMap: true
   secret: true
+dependsOn: kyverno
 namespace: kube-system
 # used by renovate
 # repo: giantswarm/cluster-autoscaler-app

@@ -36,6 +36,10 @@ metadata:
     {{- if $annotations }}
     {{- $annotations | indent 4 }}
     {{- end }}
+    {{- if $app.dependsOnHelmRelease }}
+    # explicitly instruct app-operator that this App depends on a HelmRelease (otherwise it will just check App resources)
+    app-operator.giantswarm.io/depends-on-helmrelease: "true"
+    {{- end }}
     {{- if $app.dependsOn }}
     # app-operator will make sure that the app on which it depends is installed before
     app-operator.giantswarm.io/depends-on: {{ printf "%s-%s" $.Values.global.metadata.name $app.dependsOn -}}
