@@ -29,7 +29,11 @@ sandbox_image = "{{ include "cluster.image.registry" $ }}/{{ $.Values.providerIn
     [plugins."io.containerd.grpc.v1.cri".registry.mirrors."{{$host}}"]
       endpoint = [
         {{- range $value := $config -}}
+        {{- if hasPrefix "http://" $value.endpoint -}}
+        "{{ $value.endpoint }}",
+        {{- else -}}
         "https://{{$value.endpoint}}",
+        {{- end -}}
         {{- end -}}
     ]
   {{- end }}
