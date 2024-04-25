@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.19.0] - 2024-04-25
+
 - Upgrade cilium-app to v0.23.0 in order to make Cilium ENI mode for CAPA usable (adds subnet and security group selection filters)
 
 ## [0.18.0] - 2024-03-28
@@ -310,7 +312,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Update and clean up the template repo.
 
-[Unreleased]: https://github.com/giantswarm/cluster/compare/v0.18.0...HEAD
+[Unreleased]: https://github.com/giantswarm/cluster/compare/v0.19.0...HEAD
+[0.19.0]: https://github.com/giantswarm/cluster/compare/v0.18.0...v0.19.0
 [0.18.0]: https://github.com/giantswarm/cluster/compare/v0.17.0...v0.18.0
 [0.17.0]: https://github.com/giantswarm/cluster/compare/v0.16.0...v0.17.0
 [0.16.0]: https://github.com/giantswarm/cluster/compare/v0.15.0...v0.16.0
