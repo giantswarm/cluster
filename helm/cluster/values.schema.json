@@ -1967,6 +1967,36 @@
                     "title": "Kubernetes version",
                     "default": "1.25.16"
                 },
+                "osImage": {
+                    "type": "object",
+                    "title": "OS image",
+                    "description": "OS image properties",
+                    "properties": {
+                        "channel": {
+                            "type": "string",
+                            "title": "Channel",
+                            "enum": [
+                                "stable",
+                                "beta",
+                                "alpha",
+                                "lts"
+                            ],
+                            "default": "stable"
+                        },
+                        "name": {
+                            "type": "string",
+                            "title": "Name"
+                        },
+                        "variant": {
+                            "type": "string",
+                            "title": "Variant"
+                        },
+                        "version": {
+                            "type": "string",
+                            "title": "Version"
+                        }
+                    }
+                },
                 "pauseProperties": {
                     "type": "object",
                     "title": "Pause properties",
