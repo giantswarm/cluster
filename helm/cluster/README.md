@@ -498,6 +498,11 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.kubeadmConfig.preKubeadmCommands` | **Pre-kubeadm commands** - Extra commands to run before kubeadm runs.|**Type:** `array`<br/>|
 | `providerIntegration.kubeadmConfig.preKubeadmCommands[*]` |**None**|**Type:** `string`<br/>|
 | `providerIntegration.kubernetesVersion` | **Kubernetes version**|**Type:** `string`<br/>**Default:** `"1.25.16"`|
+| `providerIntegration.osImage` | **OS image** - OS image properties|**Type:** `object`<br/>|
+| `providerIntegration.osImage.channel` | **Channel**|**Type:** `string`<br/>**Default:** `"stable"`|
+| `providerIntegration.osImage.name` | **Name**|**Type:** `string`<br/>|
+| `providerIntegration.osImage.variant` | **Variant**|**Type:** `string`<br/>|
+| `providerIntegration.osImage.version` | **Version**|**Type:** `string`<br/>|
 | `providerIntegration.pauseProperties` | **Pause properties** - A map of property names and their values that will affect setting pause annotation|**Type:** `object`<br/>|
 | `providerIntegration.pauseProperties.*` |**None**|**Types:** `string, number, integer, boolean`<br/>|
 | `providerIntegration.provider` | **Provider** - The name of the Cluster API provider. The name here must match the name of the provider in cluster-<provider> app name.|**Type:** `string`<br/>|
