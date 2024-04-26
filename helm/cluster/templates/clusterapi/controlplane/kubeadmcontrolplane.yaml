@@ -19,8 +19,8 @@ spec:
     infrastructureRef:
       apiVersion: {{ $.Values.providerIntegration.controlPlane.resources.infrastructureMachineTemplate.group }}/{{ $.Values.providerIntegration.controlPlane.resources.infrastructureMachineTemplate.version }}
       kind: {{ $.Values.providerIntegration.controlPlane.resources.infrastructureMachineTemplate.kind }}
-      {{- $_ := set $ "osImage" $.Values.providerIntegration.osImage -}}
-      {{- $_ = set $ "kubernetesVersion" $.Values.providerIntegration.kubernetesVersion -}}
+      {{- $_ := set $ "osImage" $.Values.providerIntegration.osImage }}
+      {{- $_ = set $ "kubernetesVersion" $.Values.providerIntegration.kubernetesVersion }}
       name: {{ include "cluster.resource.name" $ }}-control-plane-{{ include "cluster.data.hash" (dict "data" (include $.Values.providerIntegration.controlPlane.resources.infrastructureMachineTemplateSpecTemplateName $) "salt" $.Values.providerIntegration.hashSalt) }}
   kubeadmConfigSpec:
     format: ignition
