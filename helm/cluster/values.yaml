@@ -112,6 +112,8 @@ providerIntegration:
           storage: {}
           systemd: {}
   kubernetesVersion: 1.25.16
+  osImage:
+    channel: stable
   registry: {}
   resourcesApi:
     bastionResourceEnabled: true
