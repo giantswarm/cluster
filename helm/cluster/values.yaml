@@ -68,6 +68,10 @@ internal:
         memory: 384Mi
     registry: gsoci.azurecr.io
     workers: {}
+  localCache:
+    enabled: false
+    mirrors: []
+    port: 32767
 providerIntegration:
   apps:
     cilium: {}

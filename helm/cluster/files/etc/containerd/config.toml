@@ -28,12 +28,11 @@ sandbox_image = "{{ include "cluster.image.registry" $ }}/{{ $.Values.providerIn
   {{- range $host, $config := $.Values.global.components.containerd.containerRegistries }}
     [plugins."io.containerd.grpc.v1.cri".registry.mirrors."{{$host}}"]
       endpoint = [
-        {{- range $value := $config -}}
-        {{- if hasPrefix "http://" $value.endpoint -}}
-        "{{ $value.endpoint }}",
-        {{- else -}}
-        "https://{{$value.endpoint}}",
+        {{- if and $.Values.internal.localCache.enabled (has $host $.Values.internal.localCache.mirrors) -}}
+        "http://127.0.0.1:{{ $.Values.internal.localCache.port }}",
         {{- end -}}
+        {{- range $value := $config -}}
+        "https://{{$value.endpoint}}",
         {{- end -}}
     ]
   {{- end }}
