@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Upgrade cilium-app to v0.24.0 for Cilium [v1.15.4](https://github.com/cilium/cilium/releases/tag/v1.15.4)
+
 ## [0.19.0] - 2024-04-25
 
 - Upgrade cilium-app to v0.23.0 in order to make Cilium ENI mode for CAPA usable (adds subnet and security group selection filters)
