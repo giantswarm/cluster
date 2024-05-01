@@ -16,7 +16,7 @@
   permissions: "0644"
   contentFrom:
     secret:
-      name: test-wc-control-plane-{{ include "get-controlplane-hash" $ }}-azure-json
+      name: {{ include "cluster.resource.name" $ }}-{{ include "get-controlplane-hash" $ }}-azure-json
       key: control-plane-azure.json
       owner: root:root
 {{- end }}
