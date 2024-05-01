@@ -6,8 +6,8 @@ extraArgs:
   cloud-provider: external
 {{- if $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.cloudConfig  }}
   cloud-config: {{ $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.cloudConfig  }}
-  external-cloud-volume-plugin: {{ $.Values.providerIntegration.provider }}
 {{- end }}
+  external-cloud-volume-plugin: {{ $.Values.providerIntegration.provider }}
   cluster-cidr: {{ $.Values.global.connectivity.network.pods.cidrBlocks | first }}
   feature-gates: CronJobTimeZone=true
   terminated-pod-gc-threshold: {{ $.Values.internal.advancedConfiguration.controlPlane.controllerManager.terminatedPodGCThreshold | quote }}
