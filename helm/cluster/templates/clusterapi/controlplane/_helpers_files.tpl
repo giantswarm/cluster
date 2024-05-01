@@ -7,6 +7,19 @@
 {{- include "cluster.internal.controlPlane.kubeadm.files.oidc" $ }}
 {{- include "cluster.internal.controlPlane.kubeadm.files.provider" $ }}
 {{- include "cluster.internal.controlPlane.kubeadm.files.custom" $ }}
+{{- include "cluster.internal.controlPlane.kubeadm.files.azure" $ }}
+{{- end }}
+
+{{- define "cluster.internal.controlPlane.kubeadm.files.azure" }}
+{{- if eq $.Values.providerIntegration.provider "azure" }}
+- path: /etc/kubernetes/azure.json
+  permissions: "0644"
+  contentFrom:
+    secret:
+      name: test-wc-control-plane-{{ include "get-controlplane-hash" $ }}-azure-json
+      key: control-plane-azure.json
+      owner: root:root
+{{- end }}
 {{- end }}
 
 {{- define "cluster.internal.controlPlane.kubeadm.files.admission" }}
