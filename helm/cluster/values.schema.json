@@ -1779,7 +1779,7 @@
                                                 },
                                                 "cloudConfig": {
                                                     "type": "string",
-                                                    "title": "cloudf config",
+                                                    "title": "cloud config",
                                                     "description": "The path of the cloud config file."
                                                 },
                                                 "featureGates": {

@@ -11,8 +11,8 @@
 {{- end }}
 
 {{- define "cluster.internal.controlPlane.kubeadm.files.cloudConfig" }}
-{{- if and $.Values.providerIntegration.controlPlane.apiServer $.Values.providerIntegration.controlPlane.apiServer.cloudConfig }}
-- path:  {{ $.Values.providerIntegration.controlPlane.apiServer.cloudConfig }}
+{{- if $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.cloudConfig  }}
+- path:  {{ $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.cloudConfig  }}
   permissions: "0644"
   contentFrom:
     secret:
