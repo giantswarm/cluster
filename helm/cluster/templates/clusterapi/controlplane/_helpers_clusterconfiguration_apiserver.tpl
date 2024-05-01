@@ -26,7 +26,7 @@ extraArgs:
   audit-log-path: /var/log/apiserver/audit.log
   audit-policy-file: /etc/kubernetes/policies/audit-policy.yaml
   cloud-provider: external
-  {{- if and $.Values.providerIntegration.controlPlane.apiServer $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.cloudConfig  }}
+  {{- if $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.cloudConfig  }}
   cloud-config: {{ $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.cloudConfig  }}
   {{- end }}
   enable-admission-plugins: {{ include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.enableAdmissionPlugins" $ }}
