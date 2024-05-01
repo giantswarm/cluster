@@ -4,18 +4,22 @@ extraArgs:
   authorization-always-allow-paths: "/healthz,/readyz,/livez,/metrics"
   bind-address: 0.0.0.0
   cloud-provider: external
-{{ if $.Values.providerIntegration.controlPlane.apiServer.cloudConfig }}
-  cloud-config: {{ $.Values.providerIntegration.controlPlane.apiServer.cloudConfig }}
-  external-cloud-volume-plugin: {{ $.Values.providerIntegration.provider }}
+{{- if $.Values.providerIntegration.controlPlane.apiServer }}
+{{- if $.Values.providerIntegration.controlPlane.apiServer.cloudConfig }}
+  cloud-config: {{ $.Values.providerIntegration.controlPlane.apiServer.cloudConfig | quote }}
+  external-cloud-volume-plugin: {{ $.Values.providerIntegration.provider | quote }}
+{{- end }}
 {{- end }}
   cluster-cidr: {{ $.Values.global.connectivity.network.pods.cidrBlocks | first }}
   feature-gates: CronJobTimeZone=true
   terminated-pod-gc-threshold: {{ $.Values.internal.advancedConfiguration.controlPlane.controllerManager.terminatedPodGCThreshold | quote }}
-{{ if $.Values.providerIntegration.controlPlane.apiServer.cloudConfig }}
+{{- if $.Values.providerIntegration.controlPlane.apiServer }}
+{{- if $.Values.providerIntegration.controlPlane.apiServer.cloudConfig }}
 extraVolumes:
   - name: cloud-config
-    hostPath:  {{ $.Values.providerIntegration.controlPlane.apiServer.cloudConfig }}
-    mountPath:  {{ $.Values.providerIntegration.controlPlane.apiServer.cloudConfig }}
+    hostPath:  {{ $.Values.providerIntegration.controlPlane.apiServer.cloudConfig | quote }}
+    mountPath:  {{ $.Values.providerIntegration.controlPlane.apiServer.cloudConfig | quote }}
     readOnly: true
+{{- end }}
 {{- end }}
 {{- end }}

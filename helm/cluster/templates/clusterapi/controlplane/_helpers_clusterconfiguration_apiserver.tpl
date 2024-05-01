@@ -26,8 +26,10 @@ extraArgs:
   audit-log-path: /var/log/apiserver/audit.log
   audit-policy-file: /etc/kubernetes/policies/audit-policy.yaml
   cloud-provider: external
+  {{- if $.Values.providerIntegration.controlPlane.apiServer }}
   {{- if $.Values.providerIntegration.controlPlane.apiServer.cloudConfig }}
   cloud-config: {{ $.Values.providerIntegration.controlPlane.apiServer.cloudConfig }}
+  {{- end }}
   {{- end }}
   enable-admission-plugins: {{ include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.enableAdmissionPlugins" $ }}
   {{- if $.Values.internal.advancedConfiguration.controlPlane.apiServer.enablePriorityAndFairness }}
@@ -74,11 +76,13 @@ extraVolumes:
   readOnly: true
   pathType: Directory
 {{- end }}
+{{- if $.Values.providerIntegration.controlPlane.apiServer }}
 {{- if $.Values.providerIntegration.controlPlane.apiServer.cloudConfig }}
 - name: cloud-config
   hostPath: {{ $.Values.providerIntegration.controlPlane.apiServer.cloudConfig }} 
   mountPath: {{ $.Values.providerIntegration.controlPlane.apiServer.cloudConfig }}
   readOnly: true
+{{- end }}
 {{- end }}
 - name: policies
   hostPath: /etc/kubernetes/policies

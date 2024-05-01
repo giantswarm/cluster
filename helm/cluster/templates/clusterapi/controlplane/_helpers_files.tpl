@@ -11,6 +11,7 @@
 {{- end }}
 
 {{- define "cluster.internal.controlPlane.kubeadm.files.cloudConfig" }}
+{{- if $.Values.providerIntegration.controlPlane.apiServer }}
 {{- if $.Values.providerIntegration.controlPlane.apiServer.cloudConfig }}
 - path:  {{ $.Values.providerIntegration.controlPlane.apiServer.cloudConfig }}
   permissions: "0644"
@@ -19,6 +20,7 @@
       name: {{ include "cluster.resource.name" $ }}-control-plane-{{ include "get-controlplane-hash" $ }}-{{ include $.Values.providerIntegration.provider }}-json
       key: control-plane-{{ include $.Values.providerIntegration.provider }}.json
       owner: root:root
+{{- end }}
 {{- end }}
 {{- end }}
 
