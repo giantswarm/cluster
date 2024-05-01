@@ -16,7 +16,7 @@
   permissions: "0644"
   contentFrom:
     secret:
-      name: {{ include "cluster.resource.name" $ }}-control-plane-{{ include "cluster.data.hash" (dict "data" (include $.Values.providerIntegration.controlPlane.resources.infrastructureMachineTemplateSpecTemplateName $) "salt" $.Values.providerIntegration.hashSalt) }}-{{ include $.Values.providerIntegration.provider }}-json
+      name: {{ include "cluster.resource.name" $ }}-control-plane-{{ include "cluster.data.hash" (dict "data" (include $.Values.providerIntegration.controlPlane.resources.infrastructureMachineTemplateSpecTemplateName $) "salt" $.Values.providerIntegration.hashSalt) }}-{{ $.Values.providerIntegration.provider }}-json
       key: control-plane-{{ include $.Values.providerIntegration.provider }}.json
       owner: root:root
 {{- end }}
