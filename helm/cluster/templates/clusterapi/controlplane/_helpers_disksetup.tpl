@@ -16,9 +16,7 @@ filesystems:
   {{- if .label }}
   label: {{ .label }}
   {{- end }}
-  {{- if .overwrite }}
   overwrite: {{ .overwrite }}
-  {{- end }}
   {{- if .partition }}
   partition: {{ .partition }}
   {{- end }}
