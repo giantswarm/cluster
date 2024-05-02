@@ -1,5 +1,5 @@
 {{- define "cluster.internal.controlPlane.kubeadm.mounts" }}
-{{- if ($.Values.providerIntegration.controlPlane.kubeadmConfig).mounts }}
-{{- include "cluster.internal.controlPlane.kubeadm.mounts" $.Values.providerIntegration.controlPlane.kubeadmConfig.mounts | indent 6 }}
+{{- range $.Values.providerIntegration.controlPlane.kubeadmConfig.mounts }}
+  - {{ . }}
 {{- end }}
 {{- end }}
