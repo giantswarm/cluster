@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Allow to set cloud-config path.
+
 ### Changed
 
 - Upgrade cilium-app to v0.24.0 (cilium 1.15.4).

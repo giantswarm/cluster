@@ -7,6 +7,19 @@
 {{- include "cluster.internal.controlPlane.kubeadm.files.oidc" $ }}
 {{- include "cluster.internal.controlPlane.kubeadm.files.provider" $ }}
 {{- include "cluster.internal.controlPlane.kubeadm.files.custom" $ }}
+{{- include "cluster.internal.controlPlane.kubeadm.files.cloudConfig" $ }}
+{{- end }}
+
+{{- define "cluster.internal.controlPlane.kubeadm.files.cloudConfig" }}
+{{- if $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.cloudConfig  }}
+- path:  {{ $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.cloudConfig  }}
+  permissions: "0644"
+  contentFrom:
+    secret:
+      name: {{ include "cluster.resource.name" $ }}-control-plane-{{ include "cluster.data.hash" (dict "data" (include $.Values.providerIntegration.controlPlane.resources.infrastructureMachineTemplateSpecTemplateName $) "salt" $.Values.providerIntegration.hashSalt) }}-{{ $.Values.providerIntegration.provider }}-json
+      key: control-plane-{{ $.Values.providerIntegration.provider }}.json
+      owner: root:root
+{{- end }}
 {{- end }}
 
 {{- define "cluster.internal.controlPlane.kubeadm.files.admission" }}
