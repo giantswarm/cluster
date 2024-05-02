@@ -148,57 +148,56 @@
             "description": "Filesystems specifies the list of file systems to setup.",
             "items": {
                 "type": "object",
-                "title": "File system",
-                "description": "Filesystem defines the file systems to be created.",
+                "required": [
+                    "device",
+                    "filesystem"
+                ],
                 "properties": {
-                    "required": [
-                        "device",
-                        "filesystem"
-                    ],
-                "device": {
-                    "type": "string",
-                    "title": "Device",
-                    "description": "The absolute path to the device. Devices are typically referenced by the /dev/disk/by-* symlinks."
-                },
-                "filesystem": {
-                    "type": "string",
-                    "title": "Format",
-                    "description": "The filesystem format (ext4, btrfs, or xfs).",
-                    "enum": [
-                        "ext4",
-                        "btrfs",
-                        "xfs"
-                    ]
-                },
-                "label": {
-                    "type": "string",
-                    "title": "Label",
-                    "description": "The label of the filesystem."
-                },
-                "extraOpts": {
-                    "type": "array",
-                    "title": "Extra options",
-                    "description": "ExtraOpts defined extra options to add to the command for creating the filesystem.",
-                    "items": {
+                    "device": {
                         "type": "string",
-                        "description": "An additional option to be passed to the format-specific mkfs utility.",
-                        "name": "Option"
+                        "title": "Device",
+                        "description": "The absolute path to the device. Devices are typically referenced by the /dev/disk/by-* symlinks."
+                    },
+                    "extraOpts": {
+                        "type": "array",
+                        "title": "Extra options",
+                        "description": "ExtraOpts defined extra options to add to the command for creating the filesystem.",
+                        "items": {
+                            "type": "string",
+                            "description": "An additional option to be passed to the format-specific mkfs utility.",
+                            "name": "Option"
+                        }
+                    },
+                    "filesystem": {
+                        "type": "string",
+                        "title": "Format",
+                        "description": "The filesystem format (ext4, btrfs, or xfs).",
+                        "enum": [
+                            "ext4",
+                            "btrfs",
+                            "xfs"
+                        ]
+                    },
+                    "label": {
+                        "type": "string",
+                        "title": "Label",
+                        "description": "The label of the filesystem."
+                    },
+                    "overwrite": {
+                        "type": "boolean",
+                        "title": "Overwrite",
+                        "description": "Overwrite defines whether or not to overwrite any existing filesystem. If true, any pre-existing file system will be destroyed. Use with Caution."
+                    },
+                    "partition": {
+                        "type": "string",
+                        "title": "Partition",
+                        "description": "Partition specifies the partition to use. The valid options are: 'auto|any', 'auto', 'any', 'none', and <NUM>, where NUM is the actual partition number."
+                    },
+                    "replaceFS": {
+                        "type": "string",
+                        "title": "Replace filesystem",
+                        "description": "ReplaceFS is a special directive, used for Microsoft Azure that instructs cloud-init to replace a file system of <FS_TYPE>. NOTE: unless you define a label, this requires the use of the 'any' partition directive."
                     }
-                },
-                "replaceFS": {
-                    "type": "string",
-                    "title": "Replace filesystem",
-                    "description": "ReplaceFS is a special directive, used for Microsoft Azure that instructs cloud-init to replace a file system of <FS_TYPE>. NOTE: unless you define a label, this requires the use of the 'any' partition directive."
-                },
-                "partition": {
-                    "type": "string",
-                    "title": "Partition",
-                    "description": "Partition specifies the partition to use. The valid options are: 'auto|any', 'auto', 'any', 'none', and <NUM>, where NUM is the actual partition number."
-                },
-                "overwrite": {
-                    "type": "boolean",
-                    "title": "Overwrite",
-                    "description": "Overwrite defines whether or not to overwrite any existing filesystem. If true, any pre-existing file system will be destroyed. Use with Caution."
                 }
             }
         },
@@ -553,8 +552,7 @@
             "title": "Additional mounts",
             "description": "Mounts specifies a list of mount points to be setup.",
             "items": {
-                "type": "string",
-                "title": "MountPoints defines input for generated mounts in cloud-init."
+                "type": "string"
             }
         },
         "nodePool": {
@@ -1939,6 +1937,16 @@
                                         }
                                     }
                                 },
+                                "diskSetup": {
+                                    "type": "object",
+                                    "title": "Disk setup",
+                                    "description": "Provider-specific disk setup that is deployed to control plane nodes. They are specified in the cluster-<provider> apps.",
+                                    "properties": {
+                                        "filesystems": {
+                                            "$ref": "#/$defs/filesystems"
+                                        }
+                                    }
+                                },
                                 "files": {
                                     "type": "array",
                                     "title": "Files",
@@ -1949,16 +1957,6 @@
                                 },
                                 "ignition": {
                                     "$ref": "#/$defs/ignition"
-                                },
-                                "diskSetup": {
-                                    "type": "object",
-                                    "title": "Disk setup",
-                                    "description": "Provider-specific disk setup that is deployed to control plane nodes. They are specified in the cluster-<provider> apps.",
-                                    "properties": {
-                                        "filesystems": {
-                                            "$ref": "#/$defs/filesystems"
-                                        }
-                                    }
                                 },
                                 "mounts": {
                                     "type": "array",

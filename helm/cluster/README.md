@@ -358,6 +358,17 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.featureGates[*].enabled` | **Enabled**|**Type:** `boolean`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.featureGates[*].name` | **Name**|**Type:** `string`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuer` | **Service account issuer** - Configuration of the identifier of the service account token issuer. You must specify either URL or clusterDomainPrefix (only one, not both).||
+| `providerIntegration.controlPlane.kubeadmConfig.diskSetup` | **Disk setup** - Provider-specific disk setup that is deployed to control plane nodes. They are specified in the cluster-<provider> apps.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.diskSetup.filesystems` | **File systems** - Filesystems specifies the list of file systems to setup.|**Type:** `array`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.diskSetup.filesystems[*]` |**None**|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.diskSetup.filesystems[*].device` | **Device** - The absolute path to the device. Devices are typically referenced by the /dev/disk/by-* symlinks.|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.diskSetup.filesystems[*].extraOpts` | **Extra options** - ExtraOpts defined extra options to add to the command for creating the filesystem.|**Type:** `array`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.diskSetup.filesystems[*].extraOpts[*]` |An additional option to be passed to the format-specific mkfs utility.|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.diskSetup.filesystems[*].filesystem` | **Format** - The filesystem format (ext4, btrfs, or xfs).|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.diskSetup.filesystems[*].label` | **Label** - The label of the filesystem.|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.diskSetup.filesystems[*].overwrite` | **Overwrite** - Overwrite defines whether or not to overwrite any existing filesystem. If true, any pre-existing file system will be destroyed. Use with Caution.|**Type:** `boolean`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.diskSetup.filesystems[*].partition` | **Partition** - Partition specifies the partition to use. The valid options are: 'auto|any', 'auto', 'any', 'none', and <NUM>, where NUM is the actual partition number.|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.diskSetup.filesystems[*].replaceFS` | **Replace filesystem** - ReplaceFS is a special directive, used for Microsoft Azure that instructs cloud-init to replace a file system of <FS_TYPE>. NOTE: unless you define a label, this requires the use of the 'any' partition directive.|**Type:** `string`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.files` | **Files** - Provider-specific files that are deployed to control plane nodes. They are specified in the cluster-<provider> apps.|**Type:** `array`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.files[*]` | **File from secret** - It defines a file with content in a Secret|**Type:** `object`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.files[*].contentFrom` | **Content from** - It specifies where the file content is coming from.|**Type:** `object`<br/>|
@@ -417,6 +428,9 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].mask` | **Masked?** - Whether or not the service shall be masked. When true, the service is masked by symlinking it to /dev/null.|**Type:** `boolean`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].name` | **Name** - The name of the unit. This must be suffixed with a valid unit type (e.g. “thing.service”).|**Type:** `string`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.strict` | **Strict** - It controls if AdditionalConfig should be strictly parsed. If so, warnings are treated as errors.|**Type:** `boolean`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.mounts` | **Mounts** - Provider-specific mounts that are deployed to control plane nodes. They are specified in the cluster-<provider> apps.|**Type:** `array`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.mounts[*]` | **Additional mounts** - Mounts specifies a list of mount points to be setup.|**Type:** `array`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.mounts[*][*]` |**None**|**Type:** `string`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.postKubeadmCommands` | **Post-kubeadm commands** - Extra commands to run after kubeadm runs.|**Type:** `array`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.postKubeadmCommands[*]` |**None**|**Type:** `string`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.preKubeadmCommands` | **Pre-kubeadm commands** - Extra commands to run before kubeadm runs.|**Type:** `array`<br/>|
