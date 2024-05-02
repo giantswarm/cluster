@@ -328,6 +328,47 @@
                                                 }
                                             }
                                         },
+                                        "disks": {
+                                            "type": "array",
+                                            "title": "Disks",
+                                            "description": "The list of disks to be configured and/or used.",
+                                            "items": {
+                                                "type": "object",
+                                                "title": "Disk",
+                                                "description": "The ddisk to be configured and/or used.",
+                                                "required": [
+                                                    "device",
+                                                    "partitions"
+                                                ],
+                                                "properties": {
+                                                    "device": {
+                                                        "type": "string",
+                                                        "title": "device",
+                                                        "description": "The path of the device."
+                                                    },
+                                                    "partitions": {
+                                                        "type": "array",
+                                                        "title": "Partitions",
+                                                        "description": "The list of partitions to be configured and/or used.",
+                                                        "items": {
+                                                            "type": "object",
+                                                            "title": "Partition",
+                                                            "description": "The partition to be configured and/or used.",
+                                                            "required": [
+                                                                "number"
+                                                            ],
+                                                            "properties": {
+                                                                "number": {
+                                                                    "type": "integer",
+                                                                    "title": "Number",
+                                                                    "description": "The number of the partition."
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
                                         "filesystems": {
                                             "type": "array",
                                             "title": "File systems",

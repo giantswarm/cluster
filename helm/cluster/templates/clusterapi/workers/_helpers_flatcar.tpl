@@ -10,8 +10,6 @@ containerLinuxConfig:
       directories:
       {{- include "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.storage.directorties.default" $ | indent 6 }}
       {{- include "cluster.internal.workers.kubeadm.ignition.containerLinuxConfig.additionalConfig.storage.directories" $ | indent 6 }}
-    disks:
-      {{- include "cluster.internal.workers.kubeadm.ignition.containerLinuxConfig.additionalConfig.storage.disks" $ | indent 6 }}
 {{- end }}
 
 {{- define "cluster.internal.workers.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units" }}

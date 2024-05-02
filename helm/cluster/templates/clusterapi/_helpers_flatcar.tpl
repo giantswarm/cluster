@@ -78,6 +78,16 @@
 {{- end }}
 {{- end }}
 
+{{- define "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.storage.disks" }}
+{{- range . }}
+- device: {{ .device }}
+  partitions:
+  {{- range .partitions }}
+  - number: {{ .number }}
+  {{- end }}
+{{- end }}
+{{- end }}
+
 {{- define "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.storage.directories" }}
 {{- range . }}
 - path: {{ .path }}
