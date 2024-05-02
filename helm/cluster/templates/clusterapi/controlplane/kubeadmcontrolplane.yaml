@@ -28,7 +28,7 @@ spec:
       # Don't define partitions here, they are defined in "ignition.containerLinuxConfig.additionalConfig"
       {{- include "cluster.internal.controlPlane.kubeadm.diskSetup" $ | indent 6 }}
     mounts:
-      {{- include "cluster.internal.controlPlane.kubeadm.mounts" $ | indent 6 }}
+    {{- include "cluster.internal.controlPlane.kubeadm.mounts" $ | indent 2 }}
     format: ignition
     ignition:
       {{- include "cluster.internal.controlPlane.kubeadm.ignition" $ | indent 6 }}
