@@ -2,6 +2,6 @@
 {{- range $.Values.providerIntegration.controlPlane.kubeadmConfig.mounts }}
 - {{- range . }}
   - {{ . }}
-{{- end }}
+  {{- end }}
 {{- end }}
 {{- end }}
