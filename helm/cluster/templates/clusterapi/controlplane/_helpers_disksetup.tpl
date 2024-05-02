@@ -6,6 +6,6 @@ filesystems:
 
 {{- define "cluster.internal.controlPlane.kubeadm.diskSetup.filesystems" }}
 {{- if (($.Values.providerIntegration.controlPlane.kubeadmConfig).diskSetup).filesystems }}
-{{- include "cluster.internal.controlPlane.kubeadm.diskSetup.filesystems" $.Values.providerIntegration.controlPlane.kubeadmConfig.diskSetup.filesystems}}
+{{- include "cluster.internal.controlPlane.kubeadm.diskSetup.filesystems" $ }}
 {{- end }}
 {{- end }}
