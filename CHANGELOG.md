@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Allow to set cloud-config path.
+- Add `mounts` and `diskSystem` as spec fields for `KubeadmControlPlane`.
 
 ### Changed
 
