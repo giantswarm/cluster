@@ -6,16 +6,24 @@ filesystems:
 {{- define "cluster.internal.controlPlane.kubeadm.diskSetup.filesystems" }}
 {{- range $.Values.providerIntegration.controlPlane.kubeadmConfig.diskSetup.filesystems }}
 - device: {{ .device }}
-  filesystem: {{ .filesystem }}
-  label: {{ if .label }}{{ .label }}{{ end }}
-  partition: {{ if .partition }}{{ .partition }}{{ end }}
-  replaceFS: {{ if .replaceFS }}{{ .replaceFS }}{{ end }}
-  overwrite: {{ .overwrite }}
-  extraOpts: 
   {{- if .extraOpts }}
+  extraOpts: 
   {{- range .extraOpts }}
     - {{ . }}
   {{- end }}
+  {{- end }}
+  filesystem: {{ .filesystem }}
+  {{- if .label }}
+  label: {{ .label }}
+  {{- end }}
+  {{- if .overwrite }}
+  overwrite: {{ .overwrite }}
+  {{- end }}
+  {{- if .partition }}
+  partition: {{ .partition }}
+  {{- end }}
+  {{- if .replaceFS }}
+  replaceFS: {{ .replaceFS }}
   {{- end }}
 {{- end }}
 {{- end }}
