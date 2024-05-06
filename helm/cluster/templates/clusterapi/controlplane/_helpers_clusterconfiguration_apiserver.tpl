@@ -26,6 +26,9 @@ extraArgs:
   audit-log-path: /var/log/apiserver/audit.log
   audit-policy-file: /etc/kubernetes/policies/audit-policy.yaml
   cloud-provider: external
+  {{- if $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.cloudConfig  }}
+  cloud-config: {{ $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.cloudConfig  }}
+  {{- end }}
   enable-admission-plugins: {{ include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.enableAdmissionPlugins" $ }}
   {{- if $.Values.internal.advancedConfiguration.controlPlane.apiServer.enablePriorityAndFairness }}
   enable-priority-and-fairness: "true"
@@ -70,6 +73,12 @@ extraVolumes:
   mountPath: /etc/kubernetes/admission
   readOnly: true
   pathType: Directory
+{{- end }}
+{{- if $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.cloudConfig }}
+- name: cloud-config
+  hostPath: {{ $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.cloudConfig  }} 
+  mountPath: {{ $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.cloudConfig  }}
+  readOnly: true
 {{- end }}
 - name: policies
   hostPath: /etc/kubernetes/policies
