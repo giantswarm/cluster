@@ -215,11 +215,11 @@ For Giant Swarm internal use only, not stable, or not supported by UIs.
 | `internal.advancedConfiguration.workers.postKubeadmCommands[*]` |**None**|**Type:** `string`<br/>|
 | `internal.advancedConfiguration.workers.preKubeadmCommands` | **Pre-kubeadm commands** - Extra commands to run before kubeadm runs.|**Type:** `array`<br/>|
 | `internal.advancedConfiguration.workers.preKubeadmCommands[*]` |**None**|**Type:** `string`<br/>|
-| `internal.localCache` | **Enable local (per WC) cache**|**Type:** `object`<br/>|
-| `internal.localCache.enabled` |**None**|**Type:** `boolean`<br/>**Default:** `false`|
-| `internal.localCache.mirrors` |A list of registries that should be cached|**Type:** `array`<br/>**Default:** `[]`|
-| `internal.localCache.mirrors[*]` |**None**|**Type:** `string`<br/>|
-| `internal.localCache.port` |**None**|**Type:** `integer`<br/>**Default:** `32767`|
+| `internal.localRegistryCache` | **Enable local (per WC) cache**|**Type:** `object`<br/>|
+| `internal.localRegistryCache.enabled` |**None**|**Type:** `boolean`<br/>**Default:** `false`|
+| `internal.localRegistryCache.mirrors` |A list of registries that should be cached|**Type:** `array`<br/>**Default:** `[]`|
+| `internal.localRegistryCache.mirrors[*]` |**None**|**Type:** `string`<br/>|
+| `internal.localRegistryCache.port` |**None**|**Type:** `integer`<br/>**Default:** `32767`|
 
 ### Metadata
 Properties within the `.global.metadata` object

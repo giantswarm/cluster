@@ -1524,7 +1524,7 @@
                         }
                     }
                 },
-                "localCache": {
+                "localRegistryCache": {
                     "type": "object",
                     "title": "Enable local (per WC) cache",
                     "required": [

@@ -68,7 +68,7 @@ internal:
         memory: 384Mi
     registry: gsoci.azurecr.io
     workers: {}
-  localCache:
+  localRegistryCache:
     enabled: false
     mirrors: []
     port: 32767
