@@ -808,7 +808,7 @@
                                     "additionalProperties": {
                                         "type": "array",
                                         "title": "Registries",
-                                        "description": "Container registries and mirrors",
+                                        "description": "Container registries and mirroredRegistries",
                                         "items": {
                                             "type": "object",
                                             "title": "Registry",
@@ -1537,7 +1537,7 @@
                             "type": "boolean",
                             "default": false
                         },
-                        "mirrors": {
+                        "mirroredRegistries": {
                             "type": "array",
                             "description": "A list of registries that should be cached",
                             "items": {

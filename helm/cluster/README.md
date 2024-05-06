@@ -68,7 +68,7 @@ Advanced configuration of components that are running on all nodes.
 | :----------- | :-------------- | :--------------- |
 | `global.components.containerd` | **Containerd** - Configuration of containerd.|**Type:** `object`<br/>|
 | `global.components.containerd.containerRegistries` | **Container registries** - Endpoints and credentials configuration for container registries.|**Type:** `object`<br/>**Default:** `{"docker.io":[{"endpoint":"registry-1.docker.io"},{"endpoint":"giantswarm.azurecr.io"}]}`|
-| `global.components.containerd.containerRegistries.*` | **Registries** - Container registries and mirrors|**Type:** `array`<br/>|
+| `global.components.containerd.containerRegistries.*` | **Registries** - Container registries and mirroredRegistries|**Type:** `array`<br/>|
 | `global.components.containerd.containerRegistries.*[*]` | **Registry**|**Type:** `object`<br/>|
 | `global.components.containerd.containerRegistries.*[*].credentials` | **Credentials**|**Type:** `object`<br/>|
 | `global.components.containerd.containerRegistries.*[*].credentials.auth` | **Auth** - Base64-encoded string from the concatenation of the username, a colon, and the password.|**Type:** `string`<br/>|
@@ -217,8 +217,8 @@ For Giant Swarm internal use only, not stable, or not supported by UIs.
 | `internal.advancedConfiguration.workers.preKubeadmCommands[*]` |**None**|**Type:** `string`<br/>|
 | `internal.localRegistryCache` | **Enable local (per WC) cache**|**Type:** `object`<br/>|
 | `internal.localRegistryCache.enabled` |**None**|**Type:** `boolean`<br/>**Default:** `false`|
-| `internal.localRegistryCache.mirrors` |A list of registries that should be cached|**Type:** `array`<br/>**Default:** `[]`|
-| `internal.localRegistryCache.mirrors[*]` |**None**|**Type:** `string`<br/>|
+| `internal.localRegistryCache.mirroredRegistries` |A list of registries that should be cached|**Type:** `array`<br/>**Default:** `[]`|
+| `internal.localRegistryCache.mirroredRegistries[*]` |**None**|**Type:** `string`<br/>|
 | `internal.localRegistryCache.port` |**None**|**Type:** `integer`<br/>**Default:** `32767`|
 
 ### Metadata

@@ -70,7 +70,7 @@ internal:
     workers: {}
   localRegistryCache:
     enabled: false
-    mirrors: []
+    mirroredRegistries: []
     port: 32767
 providerIntegration:
   apps:
