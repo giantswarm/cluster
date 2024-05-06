@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Allow to set cloud-config path.
+- Allow to set SELinux mode through `global.components.selinux.mode`.
 
 ### Changed
 
