@@ -1,12 +1,15 @@
 {{- define "cluster.internal.controlPlane.kubeadm.clusterConfiguration.etcd" }}
 local:
+  {{- with $etcdConfig := $.Values.internal.advancedConfiguration.controlPlane.etcd }}
+  {{- if $etcdConfig.dataDir }}
+  dataDir: {{ $etcdConfig.dataDir | quote }}
+  {{- end }}
   extraArgs:
     {{- /*
       All extraArgs must be strings, as the extraArg object is a map[string]string so numbers
       and booleans must be quoted here.
     */}}
     listen-metrics-urls: "http://0.0.0.0:2381"
-    {{- with $etcdConfig := $.Values.internal.advancedConfiguration.controlPlane.etcd }}
     quota-backend-bytes: {{ mul $etcdConfig.quotaBackendBytesGiB 1024 1024 1024 | quote }}
     {{- if $etcdConfig.initialCluster }}
     initial-cluster: {{ $etcdConfig.initialCluster | quote }}

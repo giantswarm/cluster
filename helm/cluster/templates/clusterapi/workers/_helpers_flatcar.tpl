@@ -21,6 +21,15 @@ containerLinuxConfig:
 {{- end }}
 {{- end }}
 
+{{- define "cluster.internal.workers.kubeadm.ignition.containerLinuxConfig.additionalConfig.storage.disks" }}
+{{- if ((((($.Values.providerIntegration.kubeadmConfig).ignition).containerLinuxConfig).additionalConfig).storage).disks }}
+{{- include "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.storage.disks" $.Values.providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.storage.filesystems }}
+{{- end }}
+{{- if (((((($.Values.providerIntegration.workers).kubeadmConfig).ignition).containerLinuxConfig).additionalConfig).storage).disks }}
+{{- include "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.storage.disks" $.Values.providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.storage.filesystems }}
+{{- end }}
+{{- end }}
+
 {{- define "cluster.internal.workers.kubeadm.ignition.containerLinuxConfig.additionalConfig.storage.filesystems" }}
 {{- if ((((($.Values.providerIntegration.kubeadmConfig).ignition).containerLinuxConfig).additionalConfig).storage).filesystems }}
 {{- include "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.storage.filesystems" $.Values.providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.storage.filesystems }}
