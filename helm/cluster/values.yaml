@@ -12,6 +12,8 @@ global:
         docker.io:
           - endpoint: registry-1.docker.io
           - endpoint: giantswarm.azurecr.io
+    selinux:
+      mode: permissive
   connectivity:
     bastion:
       enabled: true
