@@ -142,6 +142,65 @@
                 }
             }
         },
+        "filesystems": {
+            "type": "array",
+            "title": "File systems",
+            "description": "Filesystems specifies the list of file systems to setup.",
+            "items": {
+                "type": "object",
+                "required": [
+                    "device",
+                    "filesystem"
+                ],
+                "properties": {
+                    "device": {
+                        "type": "string",
+                        "title": "Device",
+                        "description": "The absolute path to the device. Devices are typically referenced by the /dev/disk/by-* symlinks."
+                    },
+                    "extraOpts": {
+                        "type": "array",
+                        "title": "Extra options",
+                        "description": "ExtraOpts defined extra options to add to the command for creating the filesystem.",
+                        "items": {
+                            "type": "string",
+                            "description": "An additional option to be passed to the format-specific mkfs utility.",
+                            "name": "Option"
+                        }
+                    },
+                    "filesystem": {
+                        "type": "string",
+                        "title": "Format",
+                        "description": "The filesystem format (ext4, btrfs, or xfs).",
+                        "enum": [
+                            "ext4",
+                            "btrfs",
+                            "xfs"
+                        ]
+                    },
+                    "label": {
+                        "type": "string",
+                        "title": "Label",
+                        "description": "The label of the filesystem."
+                    },
+                    "overwrite": {
+                        "type": "boolean",
+                        "title": "Overwrite",
+                        "description": "Overwrite defines whether or not to overwrite any existing filesystem. If true, any pre-existing file system will be destroyed. Use with Caution."
+                    },
+                    "partition": {
+                        "type": "string",
+                        "title": "Partition",
+                        "description": "Partition specifies the partition to use. The valid options are: 'auto|any', 'auto', 'any', 'none', and <NUM>, where NUM is the actual partition number."
+                    },
+                    "replaceFS": {
+                        "type": "string",
+                        "title": "Replace filesystem",
+                        "description": "ReplaceFS is a special directive, used for Microsoft Azure that instructs cloud-init to replace a file system of <FS_TYPE>. NOTE: unless you define a label, this requires the use of the 'any' partition directive."
+                    }
+                }
+            }
+        },
         "gvk": {
             "type": "object",
             "title": "Schema for Kubernetes API group, version and kind",
@@ -263,6 +322,47 @@
                                                                 "type": "string",
                                                                 "title": "Name",
                                                                 "description": "The user name of the owner."
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "disks": {
+                                            "type": "array",
+                                            "title": "Disks",
+                                            "description": "The list of disks to be configured and/or used.",
+                                            "items": {
+                                                "type": "object",
+                                                "title": "Disk",
+                                                "description": "The ddisk to be configured and/or used.",
+                                                "required": [
+                                                    "device",
+                                                    "partitions"
+                                                ],
+                                                "properties": {
+                                                    "device": {
+                                                        "type": "string",
+                                                        "title": "device",
+                                                        "description": "The path of the device."
+                                                    },
+                                                    "partitions": {
+                                                        "type": "array",
+                                                        "title": "Partitions",
+                                                        "description": "The list of partitions to be configured and/or used.",
+                                                        "items": {
+                                                            "type": "object",
+                                                            "title": "Partition",
+                                                            "description": "The partition to be configured and/or used.",
+                                                            "required": [
+                                                                "number"
+                                                            ],
+                                                            "properties": {
+                                                                "number": {
+                                                                    "type": "integer",
+                                                                    "title": "Number",
+                                                                    "description": "The number of the partition."
+                                                                }
                                                             }
                                                         }
                                                     }
@@ -486,6 +586,14 @@
                         "v2"
                     ]
                 }
+            }
+        },
+        "mounts": {
+            "type": "array",
+            "title": "Additional mounts",
+            "description": "Mounts specifies a list of mount points to be setup.",
+            "items": {
+                "type": "string"
             }
         },
         "nodePool": {
@@ -1902,6 +2010,16 @@
                                         }
                                     }
                                 },
+                                "diskSetup": {
+                                    "type": "object",
+                                    "title": "Disk setup",
+                                    "description": "Provider-specific disk setup that is deployed to control plane nodes. They are specified in the cluster-<provider> apps.",
+                                    "properties": {
+                                        "filesystems": {
+                                            "$ref": "#/$defs/filesystems"
+                                        }
+                                    }
+                                },
                                 "files": {
                                     "type": "array",
                                     "title": "Files",
@@ -1912,6 +2030,14 @@
                                 },
                                 "ignition": {
                                     "$ref": "#/$defs/ignition"
+                                },
+                                "mounts": {
+                                    "type": "array",
+                                    "title": "Mounts",
+                                    "description": "Provider-specific mounts that are deployed to control plane nodes. They are specified in the cluster-<provider> apps.",
+                                    "items": {
+                                        "$ref": "#/$defs/mounts"
+                                    }
                                 },
                                 "postKubeadmCommands": {
                                     "$ref": "#/$defs/postKubeadmCommands"
