@@ -1454,6 +1454,11 @@
                                     "description": "Configuration of etcd",
                                     "additionalProperties": false,
                                     "properties": {
+                                        "dataDir": {
+                                            "type": "string",
+                                            "title": "Data directory",
+                                            "description": "The directory for etcd data."
+                                        },
                                         "experimental": {
                                             "type": "object",
                                             "title": "Experimental",
