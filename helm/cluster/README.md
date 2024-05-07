@@ -156,6 +156,7 @@ For Giant Swarm internal use only, not stable, or not supported by UIs.
 | `internal.advancedConfiguration.controlPlane.controllerManager` | **Controller manager** - Advanced configuration of controller manager|**Type:** `object`<br/>|
 | `internal.advancedConfiguration.controlPlane.controllerManager.terminatedPodGCThreshold` | **Terminated pod GC threshold** - Number of terminated pods that can exist before the terminated pod garbage collector starts deleting terminated pods. If <= 0, the terminated pod garbage collector is disabled.|**Type:** `integer`<br/>**Default:** `125`|
 | `internal.advancedConfiguration.controlPlane.etcd` | **etcd** - Configuration of etcd|**Type:** `object`<br/>|
+| `internal.advancedConfiguration.controlPlane.etcd.dataDir` | **Data directory** - The directory for etcd data.|**Type:** `string`<br/>|
 | `internal.advancedConfiguration.controlPlane.etcd.experimental` | **Experimental**|**Type:** `object`<br/>|
 | `internal.advancedConfiguration.controlPlane.etcd.experimental.peerSkipClientSanVerification` | **Peer skip client SAN verification** - Skip verification of SAN field in client certificate for peer connections.|**Type:** `boolean`<br/>|
 | `internal.advancedConfiguration.controlPlane.etcd.extraArgs` | **Extra args**|**Type:** `object`<br/>|
