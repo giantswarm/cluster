@@ -7,6 +7,8 @@ containerLinuxConfig:
       {{- include "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units.default" $ | indent 6 }}
       {{- include "cluster.internal.workers.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units" $ | indent 6 }}
     storage:
+      filesystems:
+      {{- include "cluster.internal.workers.kubeadm.ignition.containerLinuxConfig.additionalConfig.storage.filesystems" $ | indent 6 }}
       directories:
       {{- include "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.storage.directorties.default" $ | indent 6 }}
       {{- include "cluster.internal.workers.kubeadm.ignition.containerLinuxConfig.additionalConfig.storage.directories" $ | indent 6 }}
