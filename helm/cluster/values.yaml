@@ -28,6 +28,10 @@ global:
         docker.io:
           - endpoint: registry-1.docker.io
           - endpoint: giantswarm.azurecr.io
+      localRegistryCache:
+        enabled: false
+        mirroredRegistries: []
+        port: 32767
     selinux:
       mode: permissive
   connectivity:
@@ -87,10 +91,6 @@ internal:
     registry: gsoci.azurecr.io
     workers: {}
   ephemeralConfiguration: {}
-  localRegistryCache:
-    enabled: false
-    mirroredRegistries: []
-    port: 32767
 providerIntegration:
   apps:
     capiNodeLabeler:

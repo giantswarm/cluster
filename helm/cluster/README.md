@@ -182,6 +182,11 @@ Advanced configuration of components that are running on all nodes.
 | `global.components.containerd.containerRegistries.*[*].credentials.password` | **Password** - Used to authenticate for the registry with username/password.|**Type:** `string`<br/>|
 | `global.components.containerd.containerRegistries.*[*].credentials.username` | **Username** - Used to authenticate for the registry with username/password.|**Type:** `string`<br/>|
 | `global.components.containerd.containerRegistries.*[*].endpoint` | **Endpoint** - Endpoint for the container registry.|**Type:** `string`<br/>|
+| `global.components.containerd.localRegistryCache` | **Local registry caches configuration** - Enable local (per WC) cache via http://127.0.0.1:<PORT>.|**Type:** `object`<br/>|
+| `global.components.containerd.localRegistryCache.enabled` | **Enable local registry caches** - Flag to enable local registry cache.|**Type:** `boolean`<br/>**Default:** `false`|
+| `global.components.containerd.localRegistryCache.mirroredRegistries` | **Registries to cache locally** - A list of registries that should be cached.|**Type:** `array`<br/>**Default:** `[]`|
+| `global.components.containerd.localRegistryCache.mirroredRegistries[*]` |**None**|**Type:** `string`<br/>|
+| `global.components.containerd.localRegistryCache.port` | **Local port for the registry cache** - Port for the local registry cache under: http://127.0.0.1:<PORT>.|**Type:** `integer`<br/>**Default:** `32767`|
 | `global.components.selinux` | **SELinux** - Configuration of SELinux.|**Type:** `object`<br/>|
 | `global.components.selinux.mode` | **SELinux mode** - Configure SELinux mode: 'enforcing', 'permissive' or 'disabled'.|**Type:** `string`<br/>**Default:** `"permissive"`|
 
@@ -330,11 +335,6 @@ For Giant Swarm internal use only, not stable, or not supported by UIs.
 | `internal.ephemeralConfiguration.apps.PATTERN.catalogOverride` | **Catalog override** - Name of the catalog from which the app is installed.|**Type:** `string`<br/>**Key pattern:**<br/>`PATTERN`=`[a-z][a-zA-Z]+`<br/>|
 | `internal.ephemeralConfiguration.apps.PATTERN.disable` | **Disable** - Flag that indicates if the app is disabled and skipped during the cluster deployment.|**Type:** `boolean`<br/>**Key pattern:**<br/>`PATTERN`=`[a-z][a-zA-Z]+`<br/>|
 | `internal.ephemeralConfiguration.apps.PATTERN.versionOverride` | **Version override** - Custom application version that overrides the application version from the release. This is usually a new development version that you want to test, or a newer patch version that you need to deploy in order to put out a production fire in the middle of the night. Use carefully!|**Type:** `string`<br/>**Key pattern:**<br/>`PATTERN`=`[a-z][a-zA-Z]+`<br/>|
-| `internal.localRegistryCache` | **Enable local (per WC) cache**|**Type:** `object`<br/>|
-| `internal.localRegistryCache.enabled` |**None**|**Type:** `boolean`<br/>**Default:** `false`|
-| `internal.localRegistryCache.mirroredRegistries` |A list of registries that should be cached|**Type:** `array`<br/>**Default:** `[]`|
-| `internal.localRegistryCache.mirroredRegistries[*]` |**None**|**Type:** `string`<br/>|
-| `internal.localRegistryCache.port` |**None**|**Type:** `integer`<br/>**Default:** `32767`|
 
 ### Metadata
 Properties within the `.global.metadata` object
