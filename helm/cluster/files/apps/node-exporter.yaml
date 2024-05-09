@@ -1,0 +1,12 @@
+appName: node-exporter
+chartName: node-exporter-app
+configKey: nodeExporter
+catalog: default
+clusterValues:
+  configMap: true
+  secret: false
+dependsOn: kyverno
+namespace: kube-system
+# used by renovate
+# repo: giantswarm/node-exporter-app
+version: 1.19.0

@@ -1,0 +1,13 @@
+appName: cilium-servicemonitors
+chartName: cilium-servicemonitors
+configKey: ciliumServiceMonitors
+catalog: default
+enabled: true
+clusterValues:
+  configMap: false
+  secret: false
+dependsOn: prometheus-operator-crd
+namespace: kube-system
+# used by renovate
+# repo: giantswarm/cilium-servicemonitors-app
+version: 0.1.2

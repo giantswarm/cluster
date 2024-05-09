@@ -7,6 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add capi-node-labeler app (disabled by default).
+- Add cert-exporter app (disabled by default).
+- Add cert-manager app (disabled by default).
+- Add chart-operator-extensions app (disabled by default).
+- Add cilium-servicemonitors app (disabled by default).
+- Add cluster-autoscaler app (disabled by default).
+- Add etcd-kubernetes-resources-count-exporter app (disabled by default).
+- Add external-dns app (disabled by default).
+- Add k8s-dns-node-cache app (disabled by default).
+- Add metrics-server app (disabled by default).
+- Add net-exporter app (disabled by default).
+- Add node-exporter app (disabled by default).
+- Add observability-bundle app (disabled by default).
+- Add security-bundle app (disabled by default).
+- Add teleport-kube-agent app (disabled by default).
+- Add vertical-pod-autoscaler app (disabled by default).
+- Add `$.Values.providerIntegration.apps.cilium.enable` flag to enable Cilium HelmRelease (old flag `$.Values.providerIntegration.resourcesApi.ciliumHelmReleaseResourceEnabled` is deprecated).
+- Add `$.Values.providerIntegration.apps.coreDns.enable` flag to enable CoreDns HelmRelease (old flag `$.Values.providerIntegration.resourcesApi.coreDnsHelmReleaseResourceEnabled` is deprecated).
+- Add `$.Values.providerIntegration.apps.networkPolicies.enable` flag to enable Network policies HelmRelease (old flag `$.Values.providerIntegration.resourcesApi.networkPoliciesHelmReleaseResourceEnabled` is deprecated).
+- Add `$.Values.providerIntegration.apps.verticalPodAutoscalerCrd.enable` flag to enable Network policies HelmRelease (old flag `$.Values.providerIntegration.resourcesApi.verticalPodAutoscalerCrdHelmReleaseResourceEnabled` is deprecated).
+- Add `$.Values.internal.ephemeralConfiguration.apps` config, meant only for development and temporary problem mitigation purposes, and where version and catalog can be overridden for every app.
+
+### Fixed
+
+- Fix CoreDNS provider-specific config (it was incorrectly reading Cilium app config instead of CoreDNS app config).
+
 ## [0.23.0] - 2024-05-08
 
 ### Added

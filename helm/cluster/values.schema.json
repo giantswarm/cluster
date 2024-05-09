@@ -13,8 +13,8 @@
         },
         "app": {
             "type": "object",
-            "title": "App",
-            "description": "Configuration of an default app that is part of the cluster.",
+            "title": "App resource",
+            "description": "Configuration of a default app that is part of the cluster and is deployed as an App resource.",
             "additionalProperties": false,
             "properties": {
                 "extraConfigs": {
@@ -30,8 +30,8 @@
                                 "title": "Kind",
                                 "description": "Specifies whether the resource is a config map or a secret.",
                                 "enum": [
-                                    "ConfigMap",
-                                    "Secret"
+                                    "configMap",
+                                    "secret"
                                 ]
                             },
                             "name": {
@@ -39,19 +39,44 @@
                                 "title": "Name",
                                 "description": "Name of the config map or secret. The object must exist in the same namespace as the cluster App."
                             },
-                            "optional": {
-                                "type": "boolean",
-                                "title": "Optional",
-                                "description": "Optional marks this ValuesReference as optional. When set, a not found error for the values reference is ignored, but any ValuesKey, TargetPath or transient error will still result in a reconciliation failure."
+                            "priority": {
+                                "type": "integer",
+                                "title": "Priority",
+                                "default": 25,
+                                "max": 150,
+                                "min": 1
                             }
                         }
                     }
                 },
                 "values": {
                     "type": "object",
-                    "title": "Values",
-                    "description": "Values to be passed to the app. Values will have higher priority than values from configmaps.",
+                    "title": "Config map",
+                    "description": "Helm Values to be passed to the app as user config.",
                     "additionalProperties": true
+                }
+            }
+        },
+        "appEphemeral": {
+            "type": "object",
+            "title": "Ephemeral app configuration",
+            "description": "Non-persistent app configuration that is meant for development and operation purposes only, and can be removed at any point.",
+            "additionalProperties": false,
+            "properties": {
+                "catalogOverride": {
+                    "type": "string",
+                    "title": "Catalog override",
+                    "description": "Name of the catalog from which the app is installed."
+                },
+                "disable": {
+                    "type": "boolean",
+                    "title": "Disable",
+                    "description": "Flag that indicates if the app is disabled and skipped during the cluster deployment."
+                },
+                "versionOverride": {
+                    "type": "string",
+                    "title": "Version override",
+                    "description": "Custom application version that overrides the application version from the release. This is usually a new development version that you want to test, or a newer patch version that you need to deploy in order to put out a production fire in the middle of the night. Use carefully!"
                 }
             }
         },
@@ -237,6 +262,50 @@
                         "v1beta1",
                         "v1"
                     ]
+                }
+            }
+        },
+        "helmRelease": {
+            "type": "object",
+            "title": "App",
+            "description": "Configuration of a default app that is part of the cluster and is deployed as a HelmRelease resource.",
+            "additionalProperties": false,
+            "properties": {
+                "extraConfigs": {
+                    "type": "array",
+                    "title": "Extra config maps or secrets",
+                    "description": "Extra config maps or secrets that will be used to customize to the app. The desired values must be under configmap or secret key 'values'. The values are merged in the order given, with the later values overwriting earlier, and then inline values overwriting those. Resources must be in the same namespace as the cluster.",
+                    "items": {
+                        "type": "object",
+                        "title": "Config map or secret",
+                        "properties": {
+                            "kind": {
+                                "type": "string",
+                                "title": "Kind",
+                                "description": "Specifies whether the resource is a config map or a secret.",
+                                "enum": [
+                                    "ConfigMap",
+                                    "Secret"
+                                ]
+                            },
+                            "name": {
+                                "type": "string",
+                                "title": "Name",
+                                "description": "Name of the config map or secret. The object must exist in the same namespace as the cluster App."
+                            },
+                            "optional": {
+                                "type": "boolean",
+                                "title": "Optional",
+                                "description": "Optional marks this ValuesReference as optional. When set, a not found error for the values reference is ignored, but any ValuesKey, TargetPath or transient error will still result in a reconciliation failure."
+                            }
+                        }
+                    }
+                },
+                "values": {
+                    "type": "object",
+                    "title": "Values",
+                    "description": "Values to be passed to the app. Values will have higher priority than values from configmaps.",
+                    "additionalProperties": true
                 }
             }
         },
@@ -718,6 +787,12 @@
                     "type": "string",
                     "title": "Config template name",
                     "description": "Name of the Helm template that has provider-specific app config. Provider-specific app config overrides provider-independent app config, while custom user config overrides both provider-independent and provider-specific default app config."
+                },
+                "enable": {
+                    "type": "boolean",
+                    "title": "Enable",
+                    "description": "Flag that indicates if an app is enabled for a provider. It is false by default, which allows for more incremental and safer adoption of the cluster chart.",
+                    "default": false
                 }
             }
         },
@@ -861,24 +936,89 @@
                     "additionalProperties": false,
                     "patternProperties": {
                         "[a-z][a-zA-Z]+": {
-                            "$ref": "#/$defs/app",
                             "type": "object",
                             "title": "App configurations from parent chart",
                             "description": "Not used in this chart. This is here to keep the schemas compatible."
                         }
                     },
                     "properties": {
-                        "cilium": {
+                        "capiNodeLabeler": {
                             "$ref": "#/$defs/app",
+                            "type": "object",
+                            "title": "capi-node-labeler",
+                            "description": "Configuration of capi-node-labeler. For all available values see https://github.com/giantswarm/capi-node-labeler."
+                        },
+                        "certExporter": {
+                            "$ref": "#/$defs/app",
+                            "type": "object",
+                            "title": "cert-exporter",
+                            "description": "Configuration of cert-exporter. For all available values see https://github.com/giantswarm/cert-exporter."
+                        },
+                        "certManager": {
+                            "$ref": "#/$defs/app",
+                            "type": "object",
+                            "title": "cert-manager",
+                            "description": "Configuration of cert-manager. For all available values see https://github.com/giantswarm/cert-manager-app."
+                        },
+                        "chartOperatorExtensions": {
+                            "$ref": "#/$defs/app",
+                            "type": "object",
+                            "title": "chart-operator-extensions",
+                            "description": "Configuration of chart-operator-extensions. For all available values see https://github.com/giantswarm/chart-operator-extensions."
+                        },
+                        "cilium": {
+                            "$ref": "#/$defs/helmRelease",
                             "type": "object",
                             "title": "Cilium",
                             "description": "Configuration of cilium-app. For all available values see https://github.com/giantswarm/cilium-app."
                         },
-                        "coreDns": {
+                        "ciliumServiceMonitors": {
                             "$ref": "#/$defs/app",
+                            "type": "object",
+                            "title": "Cilium service monitors",
+                            "description": "Configuration of cilium-servicemonitors. For all available values see https://github.com/giantswarm/cilium-servicemonitors-app."
+                        },
+                        "clusterAutoscaler": {
+                            "$ref": "#/$defs/app",
+                            "type": "object",
+                            "title": "cluster-autoscaler",
+                            "description": "Configuration of cluster-autoscaler. For all available values see https://github.com/giantswarm/cluster-autoscaler-app."
+                        },
+                        "coreDns": {
+                            "$ref": "#/$defs/helmRelease",
                             "type": "object",
                             "title": "CoreDNS",
                             "description": "Configuration of coredns-app. For all available values see https://github.com/giantswarm/coredns-app."
+                        },
+                        "etcdKubernetesResourcesCountExporter": {
+                            "$ref": "#/$defs/app",
+                            "type": "object",
+                            "title": "etcd-kubernetes-resources-count-exporter",
+                            "description": "Configuration of etcd-kubernetes-resources-count-exporter. For all available values see https://github.com/giantswarm/etcd-kubernetes-resources-count-exporter."
+                        },
+                        "externalDns": {
+                            "$ref": "#/$defs/app",
+                            "type": "object",
+                            "title": "external-dns",
+                            "description": "Configuration of external-dns. For all available values see https://github.com/giantswarm/external-dns-app."
+                        },
+                        "k8sDnsNodeCache": {
+                            "$ref": "#/$defs/app",
+                            "type": "object",
+                            "title": "k8s-dns-node-cache",
+                            "description": "Configuration of k8s-dns-node-cache. For all available values see https://github.com/giantswarm/k8s-dns-node-cache-app."
+                        },
+                        "metricsServer": {
+                            "$ref": "#/$defs/app",
+                            "type": "object",
+                            "title": "metrics-server",
+                            "description": "Configuration of metrics-server. For all available values see https://github.com/giantswarm/metrics-server-app."
+                        },
+                        "netExporter": {
+                            "$ref": "#/$defs/app",
+                            "type": "object",
+                            "title": "net-exporter",
+                            "description": "Configuration of net-exporter. For all available values see https://github.com/giantswarm/net-exporter."
                         },
                         "networkPolicies": {
                             "$ref": "#/$defs/app",
@@ -886,8 +1026,38 @@
                             "title": "NetworkPolicies",
                             "description": "Configuration of network-policies-app. For all available values see https://github.com/giantswarm/network-policies-app."
                         },
-                        "verticalPodAutoscalerCrd": {
+                        "nodeExporter": {
                             "$ref": "#/$defs/app",
+                            "type": "object",
+                            "title": "node-exporter",
+                            "description": "Configuration of node-exporter. For all available values see https://github.com/giantswarm/node-exporter-app."
+                        },
+                        "observabilityBundle": {
+                            "$ref": "#/$defs/app",
+                            "type": "object",
+                            "title": "observability-bundle",
+                            "description": "Configuration of observability-bundle. For all available values see https://github.com/giantswarm/observability-bundle."
+                        },
+                        "securityBundle": {
+                            "$ref": "#/$defs/app",
+                            "type": "object",
+                            "title": "security-bundle",
+                            "description": "Configuration of security-bundle. For all available values see https://github.com/giantswarm/security-bundle."
+                        },
+                        "teleportKubeAgent": {
+                            "$ref": "#/$defs/app",
+                            "type": "object",
+                            "title": "teleport-kube-agent",
+                            "description": "Configuration of teleport-kube-agent. For all available values see https://github.com/giantswarm/teleport-kube-agent."
+                        },
+                        "verticalPodAutoscaler": {
+                            "$ref": "#/$defs/app",
+                            "type": "object",
+                            "title": "vertical-pod-autoscaler",
+                            "description": "Configuration of vertical-pod-autoscaler. For all available values see https://github.com/giantswarm/vertical-pod-autoscaler-app."
+                        },
+                        "verticalPodAutoscalerCrd": {
+                            "$ref": "#/$defs/helmRelease",
                             "type": "object",
                             "title": "Vertical-pod-autoscaler CRD",
                             "description": "Configuration of vertical-pod-autoscaler-crd-app. For all available values see https://github.com/giantswarm/vertical-pod-autoscaler-crd."
@@ -1659,6 +1829,24 @@
                         }
                     }
                 },
+                "ephemeralConfiguration": {
+                    "type": "object",
+                    "title": "Ephemeral configuration",
+                    "description": "This configuration is meant for Giant Swarm staff only, changes here are ephemeral and are not meant to be persistent and it can be removed at any point. It can be used for the purposes of development, testing and operations.",
+                    "properties": {
+                        "apps": {
+                            "type": "object",
+                            "title": "Apps",
+                            "description": "Internal configuration of apps that are part of the cluster.",
+                            "additionalProperties": false,
+                            "patternProperties": {
+                                "[a-z][a-zA-Z]+": {
+                                    "$ref": "#/$defs/appEphemeral"
+                                }
+                            }
+                        }
+                    }
+                },
                 "localRegistryCache": {
                     "type": "object",
                     "title": "Enable local (per WC) cache",
@@ -1708,13 +1896,64 @@
                     "description": "Provider-specific config for apps.",
                     "additionalProperties": false,
                     "properties": {
+                        "capiNodeLabeler": {
+                            "$ref": "#/$defs/providerIntegrationAppConfig"
+                        },
+                        "certExporter": {
+                            "$ref": "#/$defs/providerIntegrationAppConfig"
+                        },
+                        "certManager": {
+                            "$ref": "#/$defs/providerIntegrationAppConfig"
+                        },
+                        "chartOperatorExtensions": {
+                            "$ref": "#/$defs/providerIntegrationAppConfig"
+                        },
                         "cilium": {
                             "$ref": "#/$defs/providerIntegrationAppConfig"
                         },
-                        "coredns": {
+                        "ciliumServiceMonitors": {
+                            "$ref": "#/$defs/providerIntegrationAppConfig"
+                        },
+                        "clusterAutoscaler": {
+                            "$ref": "#/$defs/providerIntegrationAppConfig"
+                        },
+                        "coreDns": {
+                            "$ref": "#/$defs/providerIntegrationAppConfig"
+                        },
+                        "etcdKubernetesResourcesCountExporter": {
+                            "$ref": "#/$defs/providerIntegrationAppConfig"
+                        },
+                        "externalDns": {
+                            "$ref": "#/$defs/providerIntegrationAppConfig"
+                        },
+                        "k8sDnsNodeCache": {
+                            "$ref": "#/$defs/providerIntegrationAppConfig"
+                        },
+                        "metricsServer": {
+                            "$ref": "#/$defs/providerIntegrationAppConfig"
+                        },
+                        "netExporter": {
                             "$ref": "#/$defs/providerIntegrationAppConfig"
                         },
                         "networkPolicies": {
+                            "$ref": "#/$defs/providerIntegrationAppConfig"
+                        },
+                        "nodeExporter": {
+                            "$ref": "#/$defs/providerIntegrationAppConfig"
+                        },
+                        "observabilityBundle": {
+                            "$ref": "#/$defs/providerIntegrationAppConfig"
+                        },
+                        "securityBundle": {
+                            "$ref": "#/$defs/providerIntegrationAppConfig"
+                        },
+                        "teleportKubeAgent": {
+                            "$ref": "#/$defs/providerIntegrationAppConfig"
+                        },
+                        "verticalPodAutoscaler": {
+                            "$ref": "#/$defs/providerIntegrationAppConfig"
+                        },
+                        "verticalPodAutoscalerCrd": {
                             "$ref": "#/$defs/providerIntegrationAppConfig"
                         }
                     }
@@ -2233,7 +2472,7 @@
                         "ciliumHelmReleaseResourceEnabled": {
                             "type": "boolean",
                             "title": "Cilium HelmRelease resource enabled",
-                            "description": "Flag that indicates if the Cilium HelmRelease is enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.",
+                            "description": "Deprecated: use .Values.providerIntegration.apps.cilium.enabled instead (enabling any of this or the new flag will enable cilium). Flag that indicates if the Cilium HelmRelease is enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.",
                             "default": false
                         },
                         "cleanupHelmReleaseResourcesEnabled": {
@@ -2257,7 +2496,7 @@
                         "coreDnsHelmReleaseResourceEnabled": {
                             "type": "boolean",
                             "title": "CoreDNS HelmRelease resource enabled",
-                            "description": "Flag that indicates if the CoreDNS HelmRelease is enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.",
+                            "description": "Deprecated: use .Values.providerIntegration.apps.coreDns.enabled instead (enabling any of this or the new flag will enable CoreDNS). Flag that indicates if the CoreDNS HelmRelease is enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.",
                             "default": false
                         },
                         "helmRepositoryResourcesEnabled": {
@@ -2284,13 +2523,13 @@
                         "networkPoliciesHelmReleaseResourceEnabled": {
                             "type": "boolean",
                             "title": "Network policies HelmRelease resource enabled",
-                            "description": "Flag that indicates if the network-policies HelmRelease is enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.",
+                            "description": "Deprecated: use .Values.providerIntegration.apps.networkPolicies.enabled instead (enabling any of this or the new flag will enable network-policies). Flag that indicates if the network-policies HelmRelease is enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.",
                             "default": false
                         },
                         "verticalPodAutoscalerCrdHelmReleaseResourceEnabled": {
                             "type": "boolean",
                             "title": "vertical-pod-autoscaler-crd HelmRelease resource enabled",
-                            "description": "Flag that indicates if the vertical-pod-autoscaler-crd HelmRelease is enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.",
+                            "description": "Deprecated: use .Values.providerIntegration.apps.verticalPodAutoscalerCrd.enabled instead (enabling any of this or the new flag will enable network-policies). Flag that indicates if the vertical-pod-autoscaler-crd HelmRelease is enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.",
                             "default": false
                         }
                     },

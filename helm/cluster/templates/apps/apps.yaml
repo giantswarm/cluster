@@ -1,0 +1,145 @@
+{{- $rootScope := . }}
+{{- range $path, $_ := .Files.Glob "files/apps/**.yaml" }}
+{{- $app := dict }}
+{{- with $rootScope }}
+{{- $app = (tpl (.Files.Get $path) $) | fromYaml }}
+{{- $appName := $app.appName }}
+{{- $appKey := $app.configKey }}
+{{- /* Get provider-integration app config */}}
+{{- $providerIntegrationAppConfig := dict }}
+{{- $providerIntegrationAppConfigRaw := get $.Values.providerIntegration.apps $appKey }}
+{{- if $providerIntegrationAppConfigRaw }}
+{{- /* Sometimes, when provider app config is not set, $providerIntegrationAppConfigRaw gets parsed as an empty string,
+       and sometimes as an empty dict. And we want $providerIntegrationAppConfigRaw, which is used in template, to be
+       always a dict, for the sake of cleaner template code. */}}
+{{- $providerIntegrationAppConfig = $providerIntegrationAppConfigRaw }}
+{{- end }}
+{{- /* Get ephemeral app config */}}
+{{- $ephemeralConfig := dict }}
+{{- if ($.Values.internal.ephemeralConfiguration).apps }}
+{{- $ephemeralConfigRaw := get $.Values.internal.ephemeralConfiguration.apps $appKey }}
+{{- if $ephemeralConfigRaw }}
+{{- /* Sometimes, when ephemeral config is not set, $ephemeralConfigRaw gets parsed as an empty string,
+       and sometimes as an empty dict. And we want $ephemeralConfig, which is used in template, to be
+       always a dict, for the sake of cleaner template code. */}}
+{{- $ephemeralConfig = $ephemeralConfigRaw }}
+{{- end }}
+{{- end }}
+{{- if and $providerIntegrationAppConfig.enable (not $ephemeralConfig.disable) }}
+---
+apiVersion: application.giantswarm.io/v1alpha1
+kind: App
+metadata:
+  {{- $annotations := include "cluster.annotations.common.all" $ }}
+  {{- if or $annotations $app.dependsOn }}
+  annotations:
+    {{- if $annotations }}
+    {{- $annotations | indent 4 }}
+    {{- end }}
+    {{- if $app.dependsOnHelmRelease }}
+    # explicitly instruct app-operator that this App depends on a HelmRelease (otherwise it will just check App resources)
+    app-operator.giantswarm.io/depends-on-helmrelease: "true"
+    {{- end }}
+    {{- if $app.dependsOn }}
+    # app-operator will make sure that the app on which it depends is installed before
+    app-operator.giantswarm.io/depends-on: {{ printf "%s-%s" $.Values.global.metadata.name $app.dependsOn -}}
+    {{- end }}
+  {{- end }}
+  labels:
+    {{- include "cluster.labels.common.all" $ | indent 4 }}
+    giantswarm.io/managed-by: {{ .Chart.Name }}
+    {{- if $app.inCluster }}
+    app-operator.giantswarm.io/version: 0.0.0
+    {{- end }}
+  name: {{ $.Values.global.metadata.name }}-{{ $app.appName }}
+  namespace: {{ $.Release.Namespace }}
+spec:
+  catalog: {{ $ephemeralConfig.catalogOverride | default $app.catalog }}
+  name: {{ $app.chartName }}
+  {{- if $app.inCluster }}
+  namespace: {{ $.Release.Namespace }}
+  kubeConfig:
+    inCluster: true
+  {{- else }}
+  namespace: {{ $app.namespace }}
+  kubeConfig:
+    context:
+      name: {{ $.Values.global.metadata.name }}-admin@{{ $.Values.global.metadata.name }}
+    inCluster: false
+    secret:
+      name: {{ $.Values.global.metadata.name }}-kubeconfig
+      namespace: {{ $.Release.Namespace}}
+  {{- end }}
+  version: {{ $ephemeralConfig.versionOverride | default $app.version | trim | trimPrefix "v" }}
+  {{- if or ($app.clusterValues).configMap ($app.clusterValues).secret }}
+  config:
+  {{- if ($app.clusterValues).configMap }}
+    configMap:
+      name: {{ $.Values.global.metadata.name }}-cluster-values
+      namespace: {{ $.Release.Namespace }}
+  {{- end }}
+  {{- if ($app.clusterValues).secret }}
+    secret:
+      name: {{ $.Values.global.metadata.name }}-cluster-values
+      namespace: {{ $.Release.Namespace }}
+  {{- end }}
+  {{- end }}
+  {{- $userConfig := dict }}
+  {{- $userConfigRaw := get $.Values.global.apps $appKey }}
+  {{- if $userConfigRaw }}
+  {{- $userConfig = $userConfigRaw | toYaml | toString | fromYaml }}
+  {{- end }}
+  {{- $extraConfigs := concat ($app.extraConfigs | default list) ($userConfig.extraConfigs | default list) }}
+  {{- if $extraConfigs }}
+  extraConfigs:
+  {{- range $extraConfig := $extraConfigs }}
+  - kind: {{ $extraConfig.kind }}
+    name: {{ $extraConfig.name }}
+    namespace: {{ $extraConfig.namespace | default $.Release.Namespace }}
+    {{- if $extraConfig.priority }}
+    priority: {{ $extraConfig.priority }}
+    {{- end}}
+  {{- end }}
+  {{- end }}
+  {{- $providerSpecificDefaultValues := dict }}
+  {{- if $providerIntegrationAppConfig.configTemplateName }}
+  {{- $providerSpecificDefaultValues = (include $providerIntegrationAppConfig.configTemplateName $) | fromYaml }}
+  {{- end }}
+  {{- $hasUserValues := or $userConfig.values $app.defaultValues $providerSpecificDefaultValues }}
+  {{- if $hasUserValues }}
+  userConfig:
+    configMap:
+      name: {{ $.Values.global.metadata.name }}-{{ $appName }}-user-values
+      namespace: {{ $.Release.Namespace }}
+  {{- end }}
+{{- if $hasUserValues }}
+{{- $userValues := dict }}
+{{- if $app.defaultValues }}
+{{- $userValues = tpl ($app.defaultValues | toYaml | toString) $ | fromYaml }}
+{{- end }}
+{{- if $providerSpecificDefaultValues }}
+{{- $userValues = mergeOverwrite $userValues $providerSpecificDefaultValues }}
+{{- end }}
+{{- if ($userConfig).values }}
+{{- $userValues = mergeOverwrite $userValues (deepCopy $userConfig.values) }}
+{{- end }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    {{- include "cluster.labels.common.all" $ | nindent 4 }}
+  name: {{ $.Values.global.metadata.name }}-{{ $appName }}-user-values
+  namespace: {{ $.Release.Namespace }}
+data:
+  values: |
+  {{- (tpl ($userValues | toYaml | toString) $) | nindent 4 }}
+{{- /* end if $hasUserValues */}}
+{{- end }}
+
+{{- /* end if not $ephemeralConfig.disable */}}
+{{- end }}
+{{- /* end with $rootScope */}}
+{{- end }}
+{{- /* end outer range */}}
+{{- end }}

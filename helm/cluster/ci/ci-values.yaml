@@ -58,6 +58,39 @@ global:
             password: super_secret_password
         - endpoint: giantswarm.azurecr.io
   apps:
+    capiNodeLabeler:
+      values:
+        foo: bar
+      extraConfigs:
+      - name: my-secret-extra-config-1
+        kind: secret
+        priority: 110
+      - name: my-extra-config-2
+        kind: configMap
+        priority: 120
+    certManager:
+      values:
+        ingressShim:
+          defaultIssuerName: encrypt-giantswarm
+          defaultIssuerKind: ClusterIssuer
+          defaultIssuerGroup: encrypt.giantswarm.io
+        ciliumNetworkPolicy:
+          enabled: false
+      extraConfigs:
+      - name: my-cert-manager-secret-extra-config-1
+        kind: secret
+        priority: 110
+      - name: my-cert-manager-extra-config-2
+        kind: configMap
+        priority: 120
+    chartOperatorExtensions:
+      values:
+        foo: bar
+    clusterAutoscaler:
+      values:
+        serviceAccount:
+          annotations:
+            eks.amazonaws.com/role-arn: my-cluster-autoscaler-role
     coreDns:
       values:
         foo: bar
@@ -65,6 +98,61 @@ global:
       - name: my-coredns-extra-config
         kind: ConfigMap
         optional: false
+    etcdKubernetesResourcesCountExporter:
+      values:
+        foo: bar
+      extraConfigs:
+      - name: my-etcd-k8s-res-count-exporter-extra-config
+        kind: configMap
+    externalDns:
+      values:
+        foo: bar
+      extraConfigs:
+      - name: my-external-dns-extra-config
+        kind: configMap
+        priority: 120
+    metricsServer:
+      values:
+        foo: bar
+      extraConfigs:
+      - name: my-metrics-server-extra-config
+        kind: configMap
+    netExporter:
+      values:
+        foo: bar
+      extraConfigs:
+      - name: my-net-exporter-secret-extra-config
+        kind: secret
+    nodeExporter:
+      values:
+        foo: bar
+      extraConfigs:
+      - name: my-node-exporter-secret-extra-config
+        kind: secret
+    observabilityBundle:
+      values:
+        foo: bar
+      extraConfigs:
+      - name: my-observability-bundle-extra-config
+        kind: configMap
+    securityBundle:
+      values:
+        foo: bar
+      extraConfigs:
+      - name: my-security-bundle-extra-config
+        kind: configMap
+    teleportKubeAgent:
+      values:
+        foo: bar
+      extraConfigs:
+      - name: my-teleport-kube-agent-extra-config
+        kind: configMap
+    verticalPodAutoscaler:
+      values:
+        foo: bar
+      extraConfigs:
+      - name: my-vpa-extra-config
+        kind: configMap
     verticalPodAutoscalerCrd:
       values:
         commonLabels:
@@ -158,10 +246,60 @@ internal:
         memory: 384Mi
       containerLogMaxSize: 30Mi
       containerLogMaxFiles: 2
+  ephemeralConfiguration:
+    apps:
+      certExporter:
+        disable: false
+      certManager:
+        disable: false
+        catalogOverride: default-test
+      chartOperatorExtensions:
+        catalogOverride: default-test
+        versionOverride: v100.0.0-dev.8234y65dh92783
 providerIntegration:
   apps:
+    capiNodeLabeler:
+      enable: true
+    certExporter:
+      enable: true
+      configTemplateName: cluster.test.providerIntegration.apps.certExporter.config
+    certManager:
+      enable: true
+    chartOperatorExtensions:
+      enable: true
     cilium:
-      configTemplateName: "cluster.test.providerIntegration.apps.cilium.config"
+      enable: true
+    ciliumServiceMonitors:
+      enable: true
+    clusterAutoscaler:
+      enable: true
+    coreDns:
+      enable: true
+    etcdKubernetesResourcesCountExporter:
+      enable: true
+    externalDns:
+      enable: true
+      configTemplateName: cluster.test.providerIntegration.apps.externalDns.config
+    k8sDnsNodeCache:
+      enable: true
+    metricsServer:
+      enable: true
+    netExporter:
+      enable: true
+    networkPolicies:
+      enable: true
+    nodeExporter:
+      enable: true
+    observabilityBundle:
+      enable: true
+    securityBundle:
+      enable: true
+    teleportKubeAgent:
+      enable: true
+    verticalPodAutoscaler:
+      enable: true
+    verticalPodAutoscalerCrd:
+      enable: true
   provider: aws
   bastion:
     kubeadmConfig:

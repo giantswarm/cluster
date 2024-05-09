@@ -14,6 +14,18 @@
     {{- mustRegexReplaceAll `^(\d+\.\d+\.\d+).*$` $serviceCidrBlock "${1}.10" -}}
 {{- end -}}
 
+{{/*
+Resolve App CR inconcistencies when baseDomain is taken from the catalog or from cluster-values.
+See https://github.com/giantswarm/giantswarm/issues/29733
+*/}}
+{{- define "cluster.internal.apps.baseDomain" -}}
+{{- if hasPrefix .Values.global.metadata.name .Values.global.connectivity.baseDomain -}}
+{{- printf "%s" .Values.global.connectivity.baseDomain -}}
+{{- else -}}
+{{- printf "%s.%s" .Values.global.metadata.name .Values.global.connectivity.baseDomain -}}
+{{- end -}}
+{{- end -}}
+
 {{/* Test helper used only in the CI */}}
 {{- define "cluster.test.providerIntegration.apps.cilium.config" }}
 hubble:
@@ -45,4 +57,24 @@ extraPolicies:
     enabled: {{ $.Values.global.connectivity.proxy.enabled }}
     httpProxy: {{ $.Values.global.connectivity.proxy.httpProxy | quote }}
     httpsProxy: {{ $.Values.global.connectivity.proxy.httpsProxy | quote }}
+{{- end }}
+
+{{/* Test helper used only in the CI */}}
+{{- define "cluster.test.providerIntegration.apps.externalDns.config" }}
+provider: aws
+aws:
+  irsa: "true"
+  batchChangeInterval: null
+serviceAccount:
+  annotations:
+    eks.amazonaws.com/role-arn: "{{ .Values.global.metadata.name }}-Route53Manager-Role"
+extraArgs:
+  - "--aws-batch-change-interval=10s"
+ciliumNetworkPolicy:
+  enabled: true
+{{- end }}
+
+{{/* Test helper used only in the CI */}}
+{{- define "cluster.test.providerIntegration.apps.certExporter.config" }}
+foo: bar
 {{- end }}

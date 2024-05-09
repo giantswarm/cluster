@@ -1,0 +1,21 @@
+appName: etcd-k8s-res-count-exporter
+chartName: etcd-kubernetes-resources-count-exporter
+configKey: etcdKubernetesResourcesCountExporter
+catalog: default
+clusterValues:
+  configMap: true
+  secret: false
+dependsOn: kyverno
+namespace: kube-system
+# used by renovate
+# repo: giantswarm/etcd-kubernetes-resources-count-exporter
+version: 1.10.0
+defaultValues:
+  etcd:
+    hostPath: "/etc/kubernetes/pki/etcd/"
+    cacertpath: "/certs/ca.crt"
+    certpath: "/certs/server.crt"
+    keypath: "/certs/server.key"
+    prefix: "/registry/"
+  events:
+    prefix: "/registry/events/"

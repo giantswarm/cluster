@@ -1,0 +1,15 @@
+# Includes prometheus-operator-crd
+appName: observability-bundle
+chartName: observability-bundle
+configKey: observabilityBundle
+catalog: default
+clusterValues:
+  configMap: true
+  secret: false
+inCluster: true
+dependsOnHelmRelease: true
+dependsOn: coredns
+namespace: kube-system
+# used by renovate
+# repo: giantswarm/observability-bundle
+version: 1.3.4
