@@ -1086,7 +1086,7 @@
                                     "additionalProperties": {
                                         "type": "array",
                                         "title": "Registries",
-                                        "description": "Container registries and mirroredRegistries",
+                                        "description": "Container registries and mirrors",
                                         "items": {
                                             "type": "object",
                                             "title": "Registry",
@@ -1844,33 +1844,6 @@
                                     "$ref": "#/$defs/appEphemeral"
                                 }
                             }
-                        }
-                    }
-                },
-                "localRegistryCache": {
-                    "type": "object",
-                    "title": "Enable local (per WC) cache",
-                    "required": [
-                        "enabled",
-                        "port"
-                    ],
-                    "additionalProperties": false,
-                    "properties": {
-                        "enabled": {
-                            "type": "boolean",
-                            "default": false
-                        },
-                        "mirroredRegistries": {
-                            "type": "array",
-                            "description": "A list of registries that should be cached",
-                            "items": {
-                                "type": "string"
-                            },
-                            "default": []
-                        },
-                        "port": {
-                            "type": "integer",
-                            "default": 32767
                         }
                     }
                 }
