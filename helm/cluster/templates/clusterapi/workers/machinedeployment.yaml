@@ -40,7 +40,7 @@ spec:
       clusterName: {{ include "cluster.resource.name" $ }}
       infrastructureRef:
         apiVersion: {{ $.Values.providerIntegration.resourcesApi.infrastructureMachinePool.group }}/{{ $.Values.providerIntegration.resourcesApi.infrastructureMachinePool.version }}
-        kind: { $.Values.providerIntegration.resourcesApi.infrastructureMachinePool.kind }}
+        kind: {{ $.Values.providerIntegration.resourcesApi.infrastructureMachinePool.kind }}
         name: {{ include "cluster.resource.name" $ }}-{{ $nodePoolName }}-{{ include "cluster.data.hash" (dict "data" (include $.Values.providerIntegration.workers.resources.infrastructureMachineTemplateSpecTemplateName $) "salt" $.Values.providerIntegration.hashSalt) }}
       version: {{ $.Values.providerIntegration.kubernetesVersion }}
       {{- if hasKey $nodePoolConfig "failureDomain" }}
