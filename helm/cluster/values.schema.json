@@ -2664,6 +2664,19 @@
                                     "$ref": "#/$defs/preKubeadmCommands"
                                 }
                             }
+                        },
+                        "resources": {
+                            "type": "object",
+                            "title": "Resources configuration",
+                            "description": "Infrastructure template for worker resources when using MachineDeployment.",
+                            "additionalProperties": false,
+                            "properties": {
+                                "infrastructureMachineTemplateSpecTemplateName": {
+                                    "type": "string",
+                                    "title": "Infrastructure Machine template spec template name",
+                                    "description": "The name of Helm template that renders Infrastructure Machine template spec."
+                                }
+                            }
                         }
                     }
                 }
