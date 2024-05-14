@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Add MachineDeployment resource template.
 - Add MachineHealthCheck resource template to NodePools.
 
 ## [0.24.0] - 2024-05-10
