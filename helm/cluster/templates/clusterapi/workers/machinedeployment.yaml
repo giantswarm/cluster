@@ -36,7 +36,7 @@ spec:
         configRef:
           apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
           kind: KubeadmConfigTemplate
-          name: {{ include "cluster.resource.name" $ }}-{{ $nodePoolName }}
+          name: {{ include "cluster.resource.name" $ }}-{{ $nodePoolName }}-{{ include "cluster.internal.workers.kubeadmConfig.spec.hash" $ }}
       clusterName: {{ include "cluster.resource.name" $ }}
       infrastructureRef:
         apiVersion: {{ $.Values.providerIntegration.resourcesApi.infrastructureMachinePool.group }}/{{ $.Values.providerIntegration.resourcesApi.infrastructureMachinePool.version }}
