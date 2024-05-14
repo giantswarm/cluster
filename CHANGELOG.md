@@ -19,6 +19,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Revert https://github.com/giantswarm/cluster/pull/152 because it introduced invalid containerd config which caused containerd to silently partially fail and not apply registry mirrors config.
 
+### Added
+
+- Add MachineHealthCheck resource template to NodePools.
+
 ## [0.24.0] - 2024-05-10
 
 ### Added
