@@ -87,10 +87,6 @@ internal:
     registry: gsoci.azurecr.io
     workers: {}
   ephemeralConfiguration: {}
-  localRegistryCache:
-    enabled: false
-    mirroredRegistries: []
-    port: 32767
 providerIntegration:
   apps:
     capiNodeLabeler:

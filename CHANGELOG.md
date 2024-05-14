@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### ⚠️ Breaking changes
+
+- Revert https://github.com/giantswarm/cluster/pull/152 because it introduced invalid containerd config which caused containerd to silently partially fail and not apply registry mirrors config.
+
 ## [0.24.0] - 2024-05-10
 
 ### Added
@@ -71,7 +75,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Upgrade cilium-app to v0.23.0 in order to make Cilium ENI mode for CAPA usable (adds subnet and security group selection filters)
 - Add OS image to cluster chart schema, so it can be used by cluster-\<provider\> apps.
-- Add an ability to use http registry mirrors
 
 ## [0.18.0] - 2024-03-28
 
