@@ -12,7 +12,7 @@ metadata:
   namespace: {{ $.Release.Namespace }}
 spec:
   template:
-    spec: {{-- include "cluster.internal.workers.kubeadmConfig.spec.hash" $ | nindent 6 }}
+    spec: {{- include "cluster.internal.workers.kubeadmConfig.spec.hash" $ | nindent 6 }}
 ---
 {{- end }}
 {{- end }}
