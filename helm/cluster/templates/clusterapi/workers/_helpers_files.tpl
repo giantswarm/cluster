@@ -22,6 +22,8 @@
 {{/* CloudConfig cluster-specific files for worker nodes */}}
 {{- define "cluster.internal.workers.kubeadm.files.cloudConfig" }}
 {{- if $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.cloudConfig  }}
+{{- $_ := set $ "osImage" $.Values.providerIntegration.osImage }}
+{{- $_ = set $ "kubernetesVersion" $.Values.providerIntegration.kubernetesVersion }}
 - path:  {{ $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.cloudConfig  }}
   permissions: "0644"
   contentFrom:
