@@ -22,8 +22,8 @@ nodeRegistration:
     {{- end }}
     feature-gates: CronJobTimeZone=true
     healthz-bind-address: 0.0.0.0
-    node-ip: ${IPV4_LOCAL}
-    node-labels: ip=${IPV4_LOCAL},role=worker,giantswarm.io/machine-pool={{ include "cluster.resource.name" $ }}-{{ $nodePool.name }},{{- join "," $nodePool.config.customNodeLabels }}
+    node-ip: IPV4_LOCAL
+    node-labels: ip=IPV4_LOCAL,role=worker,giantswarm.io/machine-pool={{ include "cluster.resource.name" $ }}-{{ $nodePool.name }},{{- join "," $nodePool.config.customNodeLabels }}
     v: "2"
   {{- if $nodePool.config.customNodeTaints }}
   taints:

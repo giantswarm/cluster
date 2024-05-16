@@ -13,8 +13,8 @@ nodeRegistration:
     cloud-provider: external
     feature-gates: CronJobTimeZone=true
     healthz-bind-address: 0.0.0.0
-    node-ip: ${IPV4_LOCAL}
-    node-labels: ip=${IPV4_LOCAL}
+    node-ip: IPV4_LOCAL
+    node-labels: ip=IPV4_LOCAL
     v: "2"
   name: ${HOSTNAME}
   {{- if $.Values.global.controlPlane.customNodeTaints }}
