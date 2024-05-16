@@ -10,7 +10,7 @@
 nodeRegistration:
   name: ${COREOS_EC2_HOSTNAME}
   kubeletExtraArgs:
-    {{ if eq $.Values.providerIntegration.provider "azure" }}
+    {{- if eq $.Values.providerIntegration.provider "azure" }}
     azure-container-registry-config: {{ $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.cloudConfig  }}
     {{- end }}
     {{- if $.Values.internal.advancedConfiguration.cgroupsv1 }}
