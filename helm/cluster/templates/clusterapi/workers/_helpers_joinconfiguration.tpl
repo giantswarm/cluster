@@ -10,10 +10,16 @@
 nodeRegistration:
   name: ${COREOS_EC2_HOSTNAME}
   kubeletExtraArgs:
+    {{ if eq $.Values.providerIntegration.provider "azure" }}
+    azure-container-registry-config: {{ $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.cloudConfig  }}
+    {{- end }}
     {{- if $.Values.internal.advancedConfiguration.cgroupsv1 }}
     cgroup-driver: cgroupfs
     {{- end }}
     cloud-provider: external
+    {{- if $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.cloudConfig  }}
+    cloud-config: {{ $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.cloudConfig  }}
+    {{- end }}
     feature-gates: CronJobTimeZone=true
     healthz-bind-address: 0.0.0.0
     node-ip: ${COREOS_EC2_IPV4_LOCAL}
