@@ -24,6 +24,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add MachineDeployment resource template.
 - Add MachineHealthCheck resource template to NodePools.
 
+### Changed
+
+- Replace `COREOS_EC2_HOSTNAME` with `HOSTNAME` to support multiple providers.
+- Replace `COREOS_EC2_IPV4_LOCAL` with `IPV4_LOCAL` to support multiple providers.
+
 ## [0.24.0] - 2024-05-10
 
 ### Added
