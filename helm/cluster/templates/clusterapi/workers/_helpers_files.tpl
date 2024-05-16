@@ -28,7 +28,7 @@
   permissions: "0644"
   contentFrom:
     secret:
-      name: {{ include "cluster.resource.name" $ }}-wc-{{ include "cluster.data.hash" (dict "data" (include $.Values.providerIntegration.workers.resources.infrastructureMachineTemplateSpecTemplateName $) "salt" $.Values.providerIntegration.hashSalt) }}-{{ $.Values.providerIntegration.provider }}-json
+      name: {{ include "cluster.resource.name" $ }}-{{ .nodePool }}-{{ include "cluster.data.hash" (dict "data" (include $.Values.providerIntegration.workers.resources.infrastructureMachineTemplateSpecTemplateName $) "salt" $.Values.providerIntegration.hashSalt) }}-{{ $.Values.providerIntegration.provider }}-json
       key: worker-node-{{ $.Values.providerIntegration.provider }}.json
       owner: root:root
 {{- end }}
