@@ -1,4 +1,5 @@
 {{- if $.Values.providerIntegration.resourcesApi.machinePoolResourcesEnabled }}
+{{- if $.Values.providerIntegration.resourcesApi.machineHealthCheckResourceEnabled }}
 {{- if eq $.Values.providerIntegration.resourcesApi.nodePoolKind "MachineDeployment" }}
 {{- range $nodePoolName, $nodePoolConfig := $.Values.global.nodePools | default $.Values.providerIntegration.workers.defaultNodePools }}
 {{- if $nodePoolConfig.machineHealthCheck }}
@@ -35,6 +36,7 @@ spec:
   - type: Ready
     status: "False"
     timeout: {{ $.nodePoolConfig.machineHealthCheck.unhealthyNotReadyTimeout }}
+{{- end }}
 {{- end }}
 {{- end }}
 {{- end }}
