@@ -748,6 +748,7 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.teleport.enabled` | **Enable teleport**|**Type:** `boolean`<br/>**Default:** `true`|
 | `providerIntegration.teleport.proxyAddr` | **Teleport proxy address**|**Type:** `string`<br/>**Default:** `"teleport.giantswarm.io:443"`|
 | `providerIntegration.teleport.version` | **Teleport version**|**Type:** `string`<br/>**Default:** `"14.1.3"`|
+| `providerIntegration.useReleases` | **Use releases** - Flag that indicates if the provider is using release resources to get app and component versions.|**Type:** `boolean`<br/>**Default:** `false`|
 | `providerIntegration.workers` | **Provider-specific workers configuration**|**Type:** `object`<br/>|
 | `providerIntegration.workers.defaultNodePools` | **Default node pools**|**Type:** `object`<br/>|
 | `providerIntegration.workers.defaultNodePools.PATTERN` | **Node pool**|**Type:** `object`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|

@@ -2636,6 +2636,12 @@
                         }
                     }
                 },
+                "useReleases": {
+                    "type": "boolean",
+                    "title": "Use releases",
+                    "description": "Flag that indicates if the provider is using release resources to get app and component versions.",
+                    "default": false
+                },
                 "workers": {
                     "type": "object",
                     "title": "Provider-specific workers configuration",
