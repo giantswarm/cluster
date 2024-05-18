@@ -1,0 +1,10 @@
+appName: cilium
+chartName: cilium
+configKey: cilium
+catalog: default
+namespace: kube-system
+# used by renovate
+# repo: giantswarm/cilium-app
+version: 0.24.0
+defaultValues:
+  hello: world

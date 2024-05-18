@@ -18,10 +18,11 @@ global:
     enforced: {{ .Values.global.podSecurityStandards.enforced }}
 {{- end }}
 {{- if or $.Values.providerIntegration.apps.cilium.enable $.Values.providerIntegration.resourcesApi.ciliumHelmReleaseResourceEnabled }}
+{{- $helmRelease := tpl (.Files.Get "files/helmreleases/cilium.yaml") $ | fromYaml }}
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: {{ include "cluster.resource.name" $ }}-cilium
+  name: {{ include "cluster.resource.name" $ }}-{{ $helmRelease.appName }}
   namespace: {{ $.Release.Namespace }}
   {{- $annotations := include "cluster.annotations.common.all" $ }}
   {{- if $annotations }}
@@ -31,18 +32,16 @@ metadata:
   labels:
     {{- include "cluster.labels.common.all" $ | indent 4 }}
 spec:
-  releaseName: cilium
-  targetNamespace: kube-system
-  storageNamespace: kube-system
+  releaseName: {{ $helmRelease.appName }}
+  targetNamespace: {{ $helmRelease.namespace }}
+  storageNamespace: {{ $helmRelease.namespace }}
   chart:
     spec:
-      chart: cilium
-      # used by renovate
-      # repo: giantswarm/cilium-app
-      version: 0.24.0
+      chart: {{ $helmRelease.chartName }}
+      version: {{ $helmRelease.version }}
       sourceRef:
         kind: HelmRepository
-        name: {{ include "cluster.resource.name" $ }}-default
+        name: {{ include "cluster.resource.name" $ }}-{{ $helmRelease.catalog }}
   kubeConfig:
     secretRef:
       name: {{ include "cluster.resource.name" $ }}-kubeconfig
