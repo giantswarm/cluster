@@ -70,7 +70,12 @@ spec:
       name: {{ $.Values.global.metadata.name }}-kubeconfig
       namespace: {{ $.Release.Namespace}}
   {{- end }}
-  version: {{ $ephemeralConfig.versionOverride | default $app.version | trim | trimPrefix "v" }}
+  {{- $appVersion := $app.version -}}
+  {{- if $.Values.providerIntegration.useReleases }}
+  {{- $_ := set $ "appName" $app.appName }}
+  {{ $appVersion = include "cluster.app.version" $ }}
+  {{- end }}
+  version: {{ $ephemeralConfig.versionOverride | default $appVersion | trim | trimPrefix "v" }}
   {{- if or ($app.clusterValues).configMap ($app.clusterValues).secret }}
   config:
   {{- if ($app.clusterValues).configMap }}

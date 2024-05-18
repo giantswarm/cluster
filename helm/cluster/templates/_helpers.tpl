@@ -152,3 +152,17 @@ Where `data` is the data to hash and `global` is the top level scope.
 {{- end -}}
 {{- $registry -}}
 {{- end -}}
+
+{{- define "cluster.app.version" }}
+{{- $appVersion := "N/A" }}
+{{- $clusterApp := lookup "application.giantswarm.io/v1alpha1" "App" $.Release.Namespace $.Release.Name -}}
+{{- $releaseVersion := get $clusterApp.metadata.labels "release.giantswarm.io/version" | trimPrefix "v" }}
+{{- $releaseVersion = printf "v%s" $releaseVersion }}
+{{- $release := lookup "release.giantswarm.io/v1alpha1" "Release" "" $releaseVersion -}}
+{{- range $_, $app := $release.spec.apps }}
+{{- if eq $app.name $.appName }}
+{{- $appVersion = $app.version }}
+{{- end }}
+{{- end }}
+{{- $appVersion }}
+{{- end }}
