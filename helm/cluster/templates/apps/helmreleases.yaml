@@ -1,4 +1,7 @@
-{{- $app := tpl (.Files.Get "files/helmreleases/cilium.yaml") $ | fromYaml }}
+{{- $rootScope := . }}
+{{- range $path, $_ := .Files.Glob "files/helmreleases/**.yaml" }}
+{{- with $rootScope }}
+{{- $app := tpl (.Files.Get $path) $ | fromYaml }}
 {{- $appName := $app.appName }}
 {{- $appKey := $app.configKey | default $appName }}
 {{- /*
@@ -91,4 +94,10 @@ spec:
     optional: {{ $extraConfig.optional | default false  }}
     {{- end }}
   {{- end }}
+{{- /* end if and $providerIntegrationAppConfig.enable (not $ephemeralConfig.disable) */}}
 {{- end }}
+{{- /* end with $rootScope */}}
+{{- end }}
+{{- /* end outer range */}}
+{{- end }}
+

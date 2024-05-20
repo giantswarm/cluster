@@ -136,8 +136,7 @@ data:
   {{- (tpl ($userValues | toYaml | toString) $) | nindent 4 }}
 {{- /* end if $hasUserValues */}}
 {{- end }}
-
-{{- /* end if not $ephemeralConfig.disable */}}
+{{- /* end if and $providerIntegrationAppConfig.enable (not $ephemeralConfig.disable) */}}
 {{- end }}
 {{- /* end with $rootScope */}}
 {{- end }}
