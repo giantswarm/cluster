@@ -1,5 +1,4 @@
 appName: vertical-pod-autoscaler-crd
-chartName: vertical-pod-autoscaler-crd
 configKey: verticalPodAutoscalerCrd
 catalog: default
 namespace: kube-system

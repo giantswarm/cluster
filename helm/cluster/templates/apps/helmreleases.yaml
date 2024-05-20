@@ -53,7 +53,7 @@ spec:
   storageNamespace: {{ $app.namespace }}
   chart:
     spec:
-      chart: {{ $app.chartName }}
+      chart: {{ $app.chartName | default $app.appName }}
       version: {{ $ephemeralConfig.versionOverride | default $app.version }}
       sourceRef:
         kind: HelmRepository

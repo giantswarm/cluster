@@ -1,5 +1,4 @@
 appName: network-policies
-chartName: network-policies
 configKey: networkPolicies
 catalog: cluster
 namespace: kube-system

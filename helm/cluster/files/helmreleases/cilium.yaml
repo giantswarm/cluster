@@ -1,5 +1,4 @@
 appName: cilium
-chartName: cilium
 configKey: cilium
 catalog: default
 namespace: kube-system
