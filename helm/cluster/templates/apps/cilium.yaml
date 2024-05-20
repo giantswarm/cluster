@@ -15,6 +15,22 @@
        always a dict, for the sake of cleaner template code. */}}
 {{- $providerIntegrationAppConfig = $providerIntegrationAppConfigRaw }}
 {{- end }}
+{{- /*
+    Get ephemeral app config where we optionally have:
+    - flag that indicates if the app is enabled or not
+    - version override
+    - catalog override
+*/}}
+{{- $ephemeralConfig := dict }}
+{{- if ($.Values.internal.ephemeralConfiguration).apps }}
+{{- $ephemeralConfigRaw := get $.Values.internal.ephemeralConfiguration.apps $appKey }}
+{{- if $ephemeralConfigRaw }}
+{{- /* Sometimes, when ephemeral config is not set, $ephemeralConfigRaw gets parsed as an empty string,
+       and sometimes as an empty dict. And we want $ephemeralConfig, which is used in template, to be
+       always a dict, for the sake of cleaner template code. */}}
+{{- $ephemeralConfig = $ephemeralConfigRaw }}
+{{- end }}
+{{- end }}
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
@@ -34,10 +50,10 @@ spec:
   chart:
     spec:
       chart: {{ $app.chartName }}
-      version: {{ $app.version }}
+      version: {{ $ephemeralConfig.versionOverride | default $app.version }}
       sourceRef:
         kind: HelmRepository
-        name: {{ include "cluster.resource.name" $ }}-{{ $app.catalog }}
+        name: {{ include "cluster.resource.name" $ }}-{{ $ephemeralConfig.catalogOverride | default $app.catalog }}
   kubeConfig:
     secretRef:
       name: {{ include "cluster.resource.name" $ }}-kubeconfig
