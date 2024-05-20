@@ -68,7 +68,7 @@ spec:
   kubeConfig:
     secretRef:
       name: {{ include "cluster.resource.name" $ }}-kubeconfig
-  interval: 5m
+  interval: {{ $app.interval | default "5m" }}
   install:
     remediation:
       retries: 30
