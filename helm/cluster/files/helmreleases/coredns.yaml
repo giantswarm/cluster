@@ -1,5 +1,5 @@
 appName: coredns
-chartName: coredns
+chartName: coredns-app
 configKey: coreDns
 catalog: default
 namespace: kube-system

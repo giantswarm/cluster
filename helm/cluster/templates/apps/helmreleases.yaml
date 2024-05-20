@@ -61,7 +61,7 @@ spec:
   {{- if $app.dependsOn }}
   dependsOn:
   {{- range $_, $dependency := $app.dependsOn }}
-  - name: {{ $.Release.Name }}-{{ $dependency }}
+  - name: {{ include "cluster.resource.name" $ }}-{{ $dependency }}
     namespace: {{ $.Release.Namespace }}
   {{- end }}
   {{- end }}
