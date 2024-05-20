@@ -54,7 +54,12 @@ spec:
   chart:
     spec:
       chart: {{ $app.chartName | default $app.appName }}
-      version: {{ $ephemeralConfig.versionOverride | default $app.version }}
+      {{- $appVersion := $app.version -}}
+      {{- if $.Values.providerIntegration.useReleases }}
+      {{- $_ := set $ "appName" $app.appName }}
+      {{- $appVersion = include "cluster.app.version" $ }}
+      {{- end }}
+      version: {{ $ephemeralConfig.versionOverride | default $appVersion }}
       sourceRef:
         kind: HelmRepository
         name: {{ include "cluster.resource.name" $ }}-{{ $ephemeralConfig.catalogOverride | default $app.catalog | default "default" }}
