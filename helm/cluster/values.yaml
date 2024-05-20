@@ -181,7 +181,6 @@ providerIntegration:
     infrastructureCluster: {}
     machineHealthCheckResourceEnabled: true
     machinePoolResourcesEnabled: true
-    verticalPodAutoscalerCrdHelmReleaseResourceEnabled: false
   teleport:
     enabled: true
     proxyAddr: teleport.giantswarm.io:443

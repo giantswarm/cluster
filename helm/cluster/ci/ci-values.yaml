@@ -519,7 +519,6 @@ providerIntegration:
       version: v1beta1
       kind: AWSMachinePool
     helmRepositoryResourcesEnabled: true
-    verticalPodAutoscalerCrdHelmReleaseResourceEnabled: true
     bastion:
       infrastructureMachineTemplate:
         group: infrastructure.cluster.x-k8s.io

@@ -28,7 +28,6 @@ providerIntegration:
       version: v1beta1
       kind: GiantMachinePool
     helmRepositoryResourcesEnabled: true
-    verticalPodAutoscalerCrdHelmReleaseResourceEnabled: true
   controlPlane:
     resources:
       infrastructureMachineTemplate:
