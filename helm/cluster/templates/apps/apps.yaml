@@ -54,7 +54,7 @@ metadata:
   name: {{ $.Values.global.metadata.name }}-{{ $app.appName }}
   namespace: {{ $.Release.Namespace }}
 spec:
-  catalog: {{ $ephemeralConfig.catalogOverride | default $app.catalog }}
+  catalog: {{ $ephemeralConfig.catalogOverride | default $app.catalog | default "default" }}
   name: {{ $app.chartName | default $app.appName }}
   {{- if $app.inCluster }}
   namespace: {{ $.Release.Namespace }}

@@ -1,6 +1,5 @@
 appName: cilium-servicemonitors
 configKey: ciliumServiceMonitors
-catalog: default
 enabled: true
 clusterValues:
   configMap: false

@@ -1,6 +1,5 @@
 appName: net-exporter
 configKey: netExporter
-catalog: default
 clusterValues:
   configMap: true
   secret: false
