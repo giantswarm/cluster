@@ -1,5 +1,4 @@
 appName: chart-operator-extensions
-chartName: chart-operator-extensions
 catalog: default
 configKey: chartOperatorExtensions
 clusterValues:

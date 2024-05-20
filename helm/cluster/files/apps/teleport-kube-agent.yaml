@@ -1,5 +1,4 @@
 appName: teleport-kube-agent
-chartName: teleport-kube-agent
 configKey: teleportKubeAgent
 catalog: default
 clusterValues:

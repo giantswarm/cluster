@@ -55,7 +55,7 @@ metadata:
   namespace: {{ $.Release.Namespace }}
 spec:
   catalog: {{ $ephemeralConfig.catalogOverride | default $app.catalog }}
-  name: {{ $app.chartName }}
+  name: {{ $app.chartName | default $app.appName }}
   {{- if $app.inCluster }}
   namespace: {{ $.Release.Namespace }}
   kubeConfig:

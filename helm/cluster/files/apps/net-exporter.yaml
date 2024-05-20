@@ -1,5 +1,4 @@
 appName: net-exporter
-chartName: net-exporter
 configKey: netExporter
 catalog: default
 clusterValues:

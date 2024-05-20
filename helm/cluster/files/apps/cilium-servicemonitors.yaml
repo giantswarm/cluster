@@ -1,5 +1,4 @@
 appName: cilium-servicemonitors
-chartName: cilium-servicemonitors
 configKey: ciliumServiceMonitors
 catalog: default
 enabled: true
