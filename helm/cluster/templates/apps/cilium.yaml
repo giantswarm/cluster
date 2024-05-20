@@ -1,4 +1,3 @@
-{{- if or $.Values.providerIntegration.apps.cilium.enable $.Values.providerIntegration.resourcesApi.ciliumHelmReleaseResourceEnabled }}
 {{- $app := tpl (.Files.Get "files/helmreleases/cilium.yaml") $ | fromYaml }}
 {{- $appName := $app.appName }}
 {{- $appKey := $app.configKey | default $appName }}
@@ -31,6 +30,7 @@
 {{- $ephemeralConfig = $ephemeralConfigRaw }}
 {{- end }}
 {{- end }}
+{{- if and $providerIntegrationAppConfig.enable (not $ephemeralConfig.disable) }}
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
