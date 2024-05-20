@@ -4,7 +4,7 @@
 {{- with $rootScope }}
 {{- $app = (tpl (.Files.Get $path) $) | fromYaml }}
 {{- $appName := $app.appName }}
-{{- $appKey := $app.configKey }}
+{{- $appKey := $app.configKey | default $appName }}
 {{- /* Get provider-integration app config */}}
 {{- $providerIntegrationAppConfig := dict }}
 {{- $providerIntegrationAppConfigRaw := get $.Values.providerIntegration.apps $appKey }}
