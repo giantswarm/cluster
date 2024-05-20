@@ -1,0 +1,8 @@
+appName: vertical-pod-autoscaler-crd
+chartName: vertical-pod-autoscaler-crd
+configKey: verticalPodAutoscalerCrd
+catalog: default
+namespace: kube-system
+# used by renovate
+# repo: giantswarm/vertical-pod-autoscaler-crd
+version: 3.0.0
