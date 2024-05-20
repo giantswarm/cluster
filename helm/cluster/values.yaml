@@ -181,7 +181,6 @@ providerIntegration:
     infrastructureCluster: {}
     machineHealthCheckResourceEnabled: true
     machinePoolResourcesEnabled: true
-    networkPoliciesHelmReleaseResourceEnabled: false
     verticalPodAutoscalerCrdHelmReleaseResourceEnabled: false
   teleport:
     enabled: true
