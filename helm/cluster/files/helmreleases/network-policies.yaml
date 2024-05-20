@@ -1,0 +1,12 @@
+appName: network-policies
+chartName: network-policies
+configKey: networkPolicies
+catalog: cluster
+namespace: kube-system
+# used by renovate
+# repo: giantswarm/network-policies-app
+version: 0.1.0
+dependsOn:
+- cilium
+interval: 1m
+disable: {{ .Values.global.connectivity.network.allowAllEgress }}

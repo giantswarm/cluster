@@ -33,7 +33,7 @@
 {{- $ephemeralConfig = $ephemeralConfigRaw }}
 {{- end }}
 {{- end }}
-{{- if and $providerIntegrationAppConfig.enable (not $ephemeralConfig.disable) }}
+{{- if and (not $app.disable) $providerIntegrationAppConfig.enable (not $ephemeralConfig.disable) }}
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
