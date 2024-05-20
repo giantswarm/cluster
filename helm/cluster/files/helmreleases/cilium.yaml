@@ -16,10 +16,10 @@ defaultValues:
   hubble:
     relay:
       enabled: true
-      tolerations: [ ] # set in cluster-<provider> apps
-    ui: { } # set by cluster-<provider> apps
-  defaultPolicies: { } # set in cluster-<provider> apps
-  extraPolicies: { } # set in cluster-<provider> apps
+      tolerations: [] # set in cluster-<provider> apps
+    ui: {} # set by cluster-<provider> apps
+  defaultPolicies: {} # set in cluster-<provider> apps
+  extraPolicies: {} # set in cluster-<provider> apps
   global:
     podSecurityStandards:
-      enforced: { { .Values.global.podSecurityStandards.enforced } }
+      enforced: {{ .Values.global.podSecurityStandards.enforced }}
