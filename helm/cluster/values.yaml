@@ -177,7 +177,6 @@ providerIntegration:
     cleanupHelmReleaseResourcesEnabled: false
     clusterResourceEnabled: true
     controlPlaneResourceEnabled: true
-    coreDnsHelmReleaseResourceEnabled: false
     helmRepositoryResourcesEnabled: false
     infrastructureCluster: {}
     machineHealthCheckResourceEnabled: true
