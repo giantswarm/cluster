@@ -1,7 +1,6 @@
 appName: coredns
 chartName: coredns-app
 configKey: coreDns
-catalog: default
 namespace: kube-system
 # used by renovate
 # repo: giantswarm/coredns-app

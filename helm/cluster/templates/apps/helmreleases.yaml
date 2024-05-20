@@ -57,7 +57,7 @@ spec:
       version: {{ $ephemeralConfig.versionOverride | default $app.version }}
       sourceRef:
         kind: HelmRepository
-        name: {{ include "cluster.resource.name" $ }}-{{ $ephemeralConfig.catalogOverride | default $app.catalog }}
+        name: {{ include "cluster.resource.name" $ }}-{{ $ephemeralConfig.catalogOverride | default $app.catalog | default "default" }}
   {{- if $app.dependsOn }}
   dependsOn:
   {{- range $_, $dependency := $app.dependsOn }}
