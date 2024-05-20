@@ -164,5 +164,21 @@ Where `data` is the data to hash and `global` is the top level scope.
 {{- $appVersion = $app.version }}
 {{- end }}
 {{- end }}
+{{- /* Trigger Helm error in case app is not found. */}}
 {{- $appVersion }}
+{{- end }}
+
+{{- define "cluster.component.version" }}
+{{- $componentVersion := "N/A" }}
+{{- $clusterApp := lookup "application.giantswarm.io/v1alpha1" "App" $.Release.Namespace $.Release.Name -}}
+{{- $releaseVersion := get $clusterApp.metadata.labels "release.giantswarm.io/version" | trimPrefix "v" }}
+{{- $releaseVersion = printf "v%s" $releaseVersion }}
+{{- $release := lookup "release.giantswarm.io/v1alpha1" "Release" "" $releaseVersion -}}
+{{- range $_, $component := $release.spec.components }}
+{{- if eq $component.name $.componentName }}
+{{- $componentVersion = $component.version }}
+{{- end }}
+{{- end }}
+{{- /* Trigger Helm error in case component is not found. */}}
+{{- $componentVersion }}
 {{- end }}

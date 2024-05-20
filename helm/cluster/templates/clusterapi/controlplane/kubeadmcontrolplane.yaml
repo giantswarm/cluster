@@ -68,5 +68,10 @@ spec:
   replicas: {{ .Values.global.controlPlane.replicas }}
   rolloutBefore:
     {{- toYaml $.Values.internal.advancedConfiguration.controlPlane.rolloutBefore | nindent 4 }}
-  version: v{{ trimPrefix "v" .Values.providerIntegration.kubernetesVersion }}
+  {{- $kubernetesVersion := .Values.providerIntegration.kubernetesVersion }}
+  {{- if $.Values.providerIntegration.useReleases }}
+  {{- $_ := set $ "componentName" "kubernetes" }}
+  {{ $kubernetesVersion = include "cluster.component.version" $ }}
+  {{- end }}
+  version: v{{ trimPrefix "v" $kubernetesVersion }}
 {{- end }}
