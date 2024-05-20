@@ -29,7 +29,6 @@ providerIntegration:
       version: v1beta1
       kind: GiantMachinePool
     helmRepositoryResourcesEnabled: true
-    ciliumHelmReleaseResourceEnabled: true
     coreDnsHelmReleaseResourceEnabled: true
     verticalPodAutoscalerCrdHelmReleaseResourceEnabled: true
   controlPlane:

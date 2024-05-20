@@ -174,7 +174,6 @@ providerIntegration:
   registry: {}
   resourcesApi:
     bastionResourceEnabled: true
-    ciliumHelmReleaseResourceEnabled: false
     cleanupHelmReleaseResourcesEnabled: false
     clusterResourceEnabled: true
     controlPlaneResourceEnabled: true

@@ -2442,12 +2442,6 @@
                             "description": "Flag that indicates if the Bastion resource is enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.",
                             "default": true
                         },
-                        "ciliumHelmReleaseResourceEnabled": {
-                            "type": "boolean",
-                            "title": "Cilium HelmRelease resource enabled",
-                            "description": "Deprecated: use .Values.providerIntegration.apps.cilium.enabled instead (enabling any of this or the new flag will enable cilium). Flag that indicates if the Cilium HelmRelease is enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.",
-                            "default": false
-                        },
                         "cleanupHelmReleaseResourcesEnabled": {
                             "type": "boolean",
                             "title": "Cleanup HelmRelease hook job resource enabled",

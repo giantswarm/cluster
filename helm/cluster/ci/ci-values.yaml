@@ -519,7 +519,6 @@ providerIntegration:
       version: v1beta1
       kind: AWSMachinePool
     helmRepositoryResourcesEnabled: true
-    ciliumHelmReleaseResourceEnabled: true
     coreDnsHelmReleaseResourceEnabled: true
     networkPoliciesHelmReleaseResourceEnabled: true
     verticalPodAutoscalerCrdHelmReleaseResourceEnabled: true
