@@ -1,9 +1,24 @@
 {{- if or $.Values.providerIntegration.apps.cilium.enable $.Values.providerIntegration.resourcesApi.ciliumHelmReleaseResourceEnabled }}
 {{- $app := tpl (.Files.Get "files/helmreleases/cilium.yaml") $ | fromYaml }}
+{{- $appName := $app.appName }}
+{{- $appKey := $app.configKey | default $appName }}
+{{- /*
+    Get provider-integration app config where we have:
+    - name of Helm template that specifies provider-specific Helm values for the app
+    - flag that indicates if the app is enabled for the provider
+*/}}
+{{- $providerIntegrationAppConfig := dict }}
+{{- $providerIntegrationAppConfigRaw := get $.Values.providerIntegration.apps $appKey }}
+{{- if $providerIntegrationAppConfigRaw }}
+{{- /* Sometimes, when provider app config is not set, $providerIntegrationAppConfigRaw gets parsed as an empty string,
+       and sometimes as an empty dict. And we want $providerIntegrationAppConfigRaw, which is used in template, to be
+       always a dict, for the sake of cleaner template code. */}}
+{{- $providerIntegrationAppConfig = $providerIntegrationAppConfigRaw }}
+{{- end }}
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: {{ include "cluster.resource.name" $ }}-{{ $app.appName }}
+  name: {{ include "cluster.resource.name" $ }}-{{ $appName }}
   namespace: {{ $.Release.Namespace }}
   {{- $annotations := include "cluster.annotations.common.all" $ }}
   {{- if $annotations }}
@@ -13,7 +28,7 @@ metadata:
   labels:
     {{- include "cluster.labels.common.all" $ | indent 4 }}
 spec:
-  releaseName: {{ $app.appName }}
+  releaseName: {{ $appName }}
   targetNamespace: {{ $app.namespace }}
   storageNamespace: {{ $app.namespace }}
   chart:
@@ -33,8 +48,8 @@ spec:
   {{- /* Default provider-independent cilium config */}}
   {{- $ciliumHelmValues := (include "cluster.internal.apps.cilium.config.default" $) | fromYaml -}}
   {{- /* Default provider-specific cilium config will override provider-independent cilium config */}}
-  {{- if $.Values.providerIntegration.apps.cilium.configTemplateName }}
-  {{- $providerSpecificCiliumHelmValues := (include $.Values.providerIntegration.apps.cilium.configTemplateName $) | fromYaml -}}
+  {{- if $providerIntegrationAppConfig.configTemplateName }}
+  {{- $providerSpecificCiliumHelmValues := (include $providerIntegrationAppConfig.configTemplateName $) | fromYaml -}}
   {{- $ciliumHelmValues = mergeOverwrite $ciliumHelmValues (deepCopy $providerSpecificCiliumHelmValues) -}}
   {{- end }}
   {{- /* Custom user config will override both default provider-specific and provider-independent cilium config */}}
