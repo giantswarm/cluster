@@ -61,28 +61,34 @@ spec:
   install:
     remediation:
       retries: 30
-  {{- /* Default provider-independent cilium config */}}
-  {{- $ciliumHelmValues := (include "cluster.internal.apps.cilium.config.default" $) | fromYaml -}}
-  {{- /* Default provider-specific cilium config will override provider-independent cilium config */}}
+  {{- /* We have multiple layers of app Helm values, where every next layer overwrites the previous one. */}}
+  {{- /* Layer 1: default provider-independent app Helm values */}}
+  {{- $appHelmValues := $app.defaultValues | default dict -}}
+  {{- /* Layer 2: default provider-specific Helm values */}}
   {{- if $providerIntegrationAppConfig.configTemplateName }}
-  {{- $providerSpecificCiliumHelmValues := (include $providerIntegrationAppConfig.configTemplateName $) | fromYaml -}}
-  {{- $ciliumHelmValues = mergeOverwrite $ciliumHelmValues (deepCopy $providerSpecificCiliumHelmValues) -}}
+  {{- $providerSpecificDefaultValues := (include $providerIntegrationAppConfig.configTemplateName $) | fromYaml -}}
+  {{- $appHelmValues = mergeOverwrite $appHelmValues $providerSpecificDefaultValues -}}
   {{- end }}
-  {{- /* Custom user config will override both default provider-specific and provider-independent cilium config */}}
-  {{- $customCiliumHelmValues := $.Values.global.apps.cilium.values -}}
-  {{- if $customCiliumHelmValues }}
-  {{- $ciliumHelmValues = mergeOverwrite $ciliumHelmValues (deepCopy $customCiliumHelmValues) -}}
+  {{- /* Layer 3: custom user config */}}
+  {{- $userConfig := dict }}
+  {{- $userConfigRaw := get $.Values.global.apps $appKey }}
+  {{- if $userConfigRaw }}
+  {{- $userConfig = $userConfigRaw | toYaml | toString | fromYaml }}
   {{- end }}
-  {{- if $ciliumHelmValues }}
-  values: {{- $ciliumHelmValues | toYaml | nindent 4 }}
+  {{- if $userConfig.values }}
+  {{- $appHelmValues = mergeOverwrite $appHelmValues (deepCopy $userConfig.values) -}}
   {{- end }}
-  {{- if $.Values.global.apps.cilium.extraConfigs }}
+  {{- if $appHelmValues }}
+  values: {{- $appHelmValues | toYaml | nindent 4 }}
+  {{- end }}
+  {{- $extraConfigs := concat ($app.extraConfigs | default list) ($userConfig.extraConfigs | default list) }}
+  {{- if $extraConfigs }}
   valuesFrom:
-    {{- range $config := $.Values.global.apps.cilium.extraConfigs }}
-  - kind: {{ $config.kind }}
-    name: {{ $config.name }}
+    {{- range $extraConfig := $extraConfigs }}
+  - kind: {{ $extraConfig.kind }}
+    name: {{ $extraConfig.name }}
     valuesKey: values
-    optional: {{ $config.optional | default false  }}
+    optional: {{ $extraConfig.optional | default false  }}
     {{- end }}
   {{- end }}
 {{- end }}
