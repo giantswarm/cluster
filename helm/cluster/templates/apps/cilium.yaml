@@ -1,22 +1,3 @@
-{{- /* Default values */}}
-{{- /* https://github.com/giantswarm/cilium-app/blob/main/helm/cilium/values.yaml */}}
-{{- define "cluster.internal.apps.cilium.config.default" }}
-ipam:
-  mode: kubernetes
-k8sServiceHost: api.{{ include "cluster.resource.name" $ }}.{{ .Values.global.connectivity.baseDomain }}
-k8sServicePort: '{{ .Values.global.controlPlane.apiServerPort }}'
-kubeProxyReplacement: strict
-hubble:
-  relay:
-    enabled: true
-    tolerations: [] # set in cluster-<provider> apps
-  ui: {} # set by cluster-<provider> apps
-defaultPolicies: {} # set in cluster-<provider> apps
-extraPolicies: {} # set in cluster-<provider> apps
-global:
-  podSecurityStandards:
-    enforced: {{ .Values.global.podSecurityStandards.enforced }}
-{{- end }}
 {{- if or $.Values.providerIntegration.apps.cilium.enable $.Values.providerIntegration.resourcesApi.ciliumHelmReleaseResourceEnabled }}
 {{- $helmRelease := tpl (.Files.Get "files/helmreleases/cilium.yaml") $ | fromYaml }}
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
