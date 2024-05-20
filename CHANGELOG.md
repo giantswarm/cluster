@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Update cluster-autoscaler-app to 1.27.3-gs9.
+
 ## [0.26.0] - 2024-05-16
 
 ### Added

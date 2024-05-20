@@ -9,4 +9,4 @@ dependsOn: kyverno
 namespace: kube-system
 # used by renovate
 # repo: giantswarm/cluster-autoscaler-app
-version: 1.27.3-gs8
+version: 1.27.3-gs9
