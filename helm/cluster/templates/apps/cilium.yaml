@@ -1,9 +1,9 @@
 {{- if or $.Values.providerIntegration.apps.cilium.enable $.Values.providerIntegration.resourcesApi.ciliumHelmReleaseResourceEnabled }}
-{{- $helmRelease := tpl (.Files.Get "files/helmreleases/cilium.yaml") $ | fromYaml }}
+{{- $app := tpl (.Files.Get "files/helmreleases/cilium.yaml") $ | fromYaml }}
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: {{ include "cluster.resource.name" $ }}-{{ $helmRelease.appName }}
+  name: {{ include "cluster.resource.name" $ }}-{{ $app.appName }}
   namespace: {{ $.Release.Namespace }}
   {{- $annotations := include "cluster.annotations.common.all" $ }}
   {{- if $annotations }}
@@ -13,16 +13,16 @@ metadata:
   labels:
     {{- include "cluster.labels.common.all" $ | indent 4 }}
 spec:
-  releaseName: {{ $helmRelease.appName }}
-  targetNamespace: {{ $helmRelease.namespace }}
-  storageNamespace: {{ $helmRelease.namespace }}
+  releaseName: {{ $app.appName }}
+  targetNamespace: {{ $app.namespace }}
+  storageNamespace: {{ $app.namespace }}
   chart:
     spec:
-      chart: {{ $helmRelease.chartName }}
-      version: {{ $helmRelease.version }}
+      chart: {{ $app.chartName }}
+      version: {{ $app.version }}
       sourceRef:
         kind: HelmRepository
-        name: {{ include "cluster.resource.name" $ }}-{{ $helmRelease.catalog }}
+        name: {{ include "cluster.resource.name" $ }}-{{ $app.catalog }}
   kubeConfig:
     secretRef:
       name: {{ include "cluster.resource.name" $ }}-kubeconfig
