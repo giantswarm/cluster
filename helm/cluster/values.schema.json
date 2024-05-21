@@ -1141,7 +1141,7 @@
                                 },
                                 "localRegistryCache": {
                                     "type": "object",
-                                    "title": "Local registry caches configuration",
+                                    "title": "Local registry cache",
                                     "description": "Enable local (per WC) cache via http://127.0.0.1:<PORT>.",
                                     "required": [
                                         "enabled",
