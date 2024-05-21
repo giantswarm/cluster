@@ -15,7 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - **BREAKING** Replace `COREOS_EC2_HOSTNAME` with `HOSTNAME` to support multiple providers.
-- **BREAKING** Replace `COREOS_EC2_IPV4_LOCAL` with `IPV4_LOCAL` to support multiple providers.
+- **BREAKING** Replace `COREOS_EC2_IPV4_LOCAL` with `IPV4_LOCAL` to support multiple providers
+- Update cluster-autoscaler-app to 1.27.3-gs9.
 
 ## [0.26.0] - 2024-05-16
 
