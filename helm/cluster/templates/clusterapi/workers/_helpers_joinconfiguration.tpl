@@ -8,7 +8,7 @@
 {{- define "cluster.internal.workers.kubeadm.joinConfiguration" }}
 {{- with $nodePool := required "nodePool must be set" .nodePool }}
 nodeRegistration:
-  name: ${HOSTNAME}
+  name: HOSTNAME
   kubeletExtraArgs:
     {{- if eq $.Values.providerIntegration.provider "azure" }}
     azure-container-registry-config: {{ $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.cloudConfig  }}

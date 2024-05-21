@@ -16,7 +16,7 @@ nodeRegistration:
     node-ip: IPV4_LOCAL
     node-labels: ip=IPV4_LOCAL
     v: "2"
-  name: ${HOSTNAME}
+  name: HOSTNAME
   {{- if $.Values.global.controlPlane.customNodeTaints }}
   {{- if (gt (len $.Values.global.controlPlane.customNodeTaints) 0) }}
   taints:

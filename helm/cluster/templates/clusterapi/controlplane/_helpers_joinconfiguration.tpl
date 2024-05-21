@@ -12,7 +12,7 @@ nodeRegistration:
     feature-gates: CronJobTimeZone=true
     node-ip: IPV4_LOCAL
     node-labels: ip=IPV4_LOCAL
-  name: ${HOSTNAME}
+  name: HOSTNAME
   {{- if $.Values.global.controlPlane.customNodeTaints }}
   {{- if (gt (len $.Values.global.controlPlane.customNodeTaints) 0) }}
   taints:
