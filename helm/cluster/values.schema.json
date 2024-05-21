@@ -1142,7 +1142,7 @@
                                 "localRegistryCache": {
                                     "type": "object",
                                     "title": "Local registry cache",
-                                    "description": "Enable local (per WC) cache via http://127.0.0.1:<PORT>.",
+                                    "description": "Caching container registry within the cluster",
                                     "required": [
                                         "enabled",
                                         "port"
