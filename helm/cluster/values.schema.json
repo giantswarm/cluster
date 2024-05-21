@@ -1151,8 +1151,8 @@
                                     "properties": {
                                         "enabled": {
                                             "type": "boolean",
-                                            "title": "Enable local registry caches",
-                                            "description": "Flag to enable local registry cache.",
+                                            "title": "Enable",
+                                            "description": "Enabling this will deploy the Zot registry service in the cluster. To make use of it as a pull-through cache, you also have to specify registries to cache images for.",
                                             "default": false
                                         },
                                         "mirroredRegistries": {
