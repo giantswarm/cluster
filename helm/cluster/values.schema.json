@@ -1142,7 +1142,7 @@
                                 "localRegistryCache": {
                                     "type": "object",
                                     "title": "Local registry cache",
-                                    "description": "Caching container registry within the cluster",
+                                    "description": "Caching container registry within the cluster.",
                                     "required": [
                                         "enabled",
                                         "port"
@@ -1158,7 +1158,7 @@
                                         "mirroredRegistries": {
                                             "type": "array",
                                             "title": "Registries to cache",
-                                            "description": "Here you must specify each registry to cache container images for. Please also make sure to have an entry for each registry in Global > Components > Containerd > Container registries",
+                                            "description": "Here you must specify each registry to cache container images for. Please also make sure to have an entry for each registry in Global > Components > Containerd > Container registries.",
                                             "items": {
                                                 "type": "string"
                                             },
