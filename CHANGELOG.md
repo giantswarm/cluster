@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Update cluster-autoscaler-app to 1.27.3-gs9.
+
+## [0.26.0] - 2024-05-16
+
+### Added
+
+- Restart containerd before kubeadm command.
+
+## [0.25.0] - 2024-05-14
+
+### ⚠️ Breaking changes
+
+- Revert https://github.com/giantswarm/cluster/pull/152 because it introduced invalid containerd config which caused containerd to silently partially fail and not apply registry mirrors config.
+
 ## [0.24.0] - 2024-05-10
 
 ### Added
@@ -76,7 +92,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Upgrade cilium-app to v0.23.0 in order to make Cilium ENI mode for CAPA usable (adds subnet and security group selection filters)
 - Add OS image to cluster chart schema, so it can be used by cluster-\<provider\> apps.
-- Add an ability to use http registry mirrors
 
 ## [0.18.0] - 2024-03-28
 
@@ -379,7 +394,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Update and clean up the template repo.
 
-[Unreleased]: https://github.com/giantswarm/cluster/compare/v0.24.0...HEAD
+[Unreleased]: https://github.com/giantswarm/cluster/compare/v0.26.0...HEAD
+[0.26.0]: https://github.com/giantswarm/cluster/compare/v0.25.0...v0.26.0
+[0.25.0]: https://github.com/giantswarm/cluster/compare/v0.24.0...v0.25.0
 [0.24.0]: https://github.com/giantswarm/cluster/compare/v0.23.0...v0.24.0
 [0.23.0]: https://github.com/giantswarm/cluster/compare/v0.22.0...v0.23.0
 [0.22.0]: https://github.com/giantswarm/cluster/compare/v0.21.0...v0.22.0

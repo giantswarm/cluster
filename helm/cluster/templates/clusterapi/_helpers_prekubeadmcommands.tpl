@@ -18,6 +18,7 @@
 {{- define "cluster.internal.kubeadm.preKubeadmCommands.flatcar" }}
 - envsubst < /etc/kubeadm.yml > /etc/kubeadm.yml.tmp
 - mv /etc/kubeadm.yml.tmp /etc/kubeadm.yml
+- systemctl restart containerd
 {{- end }}
 
 {{- define "cluster.internal.kubeadm.preKubeadmCommands.ssh" }}

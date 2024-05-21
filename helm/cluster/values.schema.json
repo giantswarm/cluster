@@ -1086,7 +1086,7 @@
                                     "additionalProperties": {
                                         "type": "array",
                                         "title": "Registries",
-                                        "description": "Container registries and mirroredRegistries",
+                                        "description": "Container registries and mirrors",
                                         "items": {
                                             "type": "object",
                                             "title": "Registry",
