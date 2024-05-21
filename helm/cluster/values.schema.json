@@ -1166,8 +1166,8 @@
                                         },
                                         "port": {
                                             "type": "integer",
-                                            "title": "Local port for the registry cache",
-                                            "description": "Port for the local registry cache under: http://127.0.0.1:<PORT>.",
+                                            "title": "Service port",
+                                            "description": "NodePort used by the local registry service.",
                                             "default": 32767
                                         }
                                     }
