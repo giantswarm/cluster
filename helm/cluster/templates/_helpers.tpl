@@ -153,33 +153,49 @@ Where `data` is the data to hash and `global` is the top level scope.
 {{- $registry -}}
 {{- end -}}
 
+{{- define "cluster.internal.get-release-resource" }}
+{{- if not $.GiantSwarm }}
+  {{- $_ := set $ "GiantSwarm" dict }}
+{{- end }}
+
+{{- $clusterApp := lookup "application.giantswarm.io/v1alpha1" "App" $.Release.Namespace $.Release.Name -}}
+{{- if $clusterApp }}
+  {{- $_ := set $.GiantSwarm "ClusterApp" $clusterApp }}
+  {{- $releaseVersion := get $.GiantSwarm.ClusterApp.metadata.labels "release.giantswarm.io/version" | trimPrefix "v" }}
+  {{- $release := lookup "release.giantswarm.io/v1alpha1" "Release" "" $releaseVersion }}
+  {{- if $release }}
+    {{- $_ := set $.GiantSwarm "Release" $release }}
+  {{ else if not $.Values.internal.ephemeralConfiguration.offlineTesting.renderWithoutReleaseResource }}
+    {{- fail "Release resource not found" }}
+  {{- end }}
+{{- else if not $.Values.internal.ephemeralConfiguration.offlineTesting.renderWithoutReleaseResource }}
+  {{- fail "Cluster App resource not found" }}
+{{- end }}
+{{- end }}
+
 {{- define "cluster.app.version" }}
 {{- $appVersion := "N/A" }}
-{{- $clusterApp := lookup "application.giantswarm.io/v1alpha1" "App" $.Release.Namespace $.Release.Name -}}
-{{- $releaseVersion := get $clusterApp.metadata.labels "release.giantswarm.io/version" | trimPrefix "v" }}
-{{- $releaseVersion = printf "v%s" $releaseVersion }}
-{{- $release := lookup "release.giantswarm.io/v1alpha1" "Release" "" $releaseVersion -}}
-{{- range $_, $app := $release.spec.apps }}
+{{- $_ := (include "cluster.internal.get-release-resource" $) }}
+{{- if $.GiantSwarm.Release }}
+{{- range $_, $app := $.GiantSwarm.Release.spec.apps }}
 {{- if eq $app.name $.appName }}
 {{- $appVersion = $app.version }}
 {{- end }}
 {{- end }}
-{{- /* Trigger Helm error in case app is not found. */}}
+{{- end }}
 {{- $appVersion }}
 {{- end }}
 
 {{- define "cluster.component.version" }}
 {{- $componentVersion := "N/A" }}
-{{- $clusterApp := lookup "application.giantswarm.io/v1alpha1" "App" $.Release.Namespace $.Release.Name -}}
-{{- $releaseVersion := get $clusterApp.metadata.labels "release.giantswarm.io/version" | trimPrefix "v" }}
-{{- $releaseVersion = printf "v%s" $releaseVersion }}
-{{- $release := lookup "release.giantswarm.io/v1alpha1" "Release" "" $releaseVersion -}}
-{{- range $_, $component := $release.spec.components }}
-{{- if eq $component.name $.componentName }}
+{{- $_ := (include "cluster.internal.get-release-resource" $) }}
+{{- if $.GiantSwarm.Release }}
+{{- range $_, $component := $.GiantSwarm.Release.spec.components }}
+{{- if eq $component.name $.appName }}
 {{- $componentVersion = $component.version }}
 {{- end }}
 {{- end }}
-{{- /* Trigger Helm error in case component is not found. */}}
+{{- end }}
 {{- $componentVersion }}
 {{- end }}
 

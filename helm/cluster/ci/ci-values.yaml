@@ -266,6 +266,8 @@ internal:
       chartOperatorExtensions:
         catalogOverride: default-test
         versionOverride: v100.0.0-dev.8234y65dh92783
+    offlineTesting:
+      renderWithoutReleaseResource: true
 providerIntegration:
   apps:
     capiNodeLabeler:

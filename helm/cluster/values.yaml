@@ -86,7 +86,8 @@ internal:
         memory: 384Mi
     registry: gsoci.azurecr.io
     workers: {}
-  ephemeralConfiguration: {}
+  ephemeralConfiguration:
+    offlineTesting: {}
 providerIntegration:
   apps:
     capiNodeLabeler:

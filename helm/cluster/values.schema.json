@@ -1884,6 +1884,19 @@
                                     "$ref": "#/$defs/appEphemeral"
                                 }
                             }
+                        },
+                        "offlineTesting": {
+                            "type": "object",
+                            "title": "Offline testing",
+                            "description": "Configure how Helm template rendering behaves when it is running during testing (e.g. locally or in the CI) and without connection to cluster.",
+                            "additionalProperties": false,
+                            "properties": {
+                                "renderWithoutReleaseResource": {
+                                    "type": "boolean",
+                                    "title": "Render without Release resource",
+                                    "description": "Flag that indicates that Helm should render templates even when Release CR cannot be fetched from the cluster."
+                                }
+                            }
                         }
                     }
                 }

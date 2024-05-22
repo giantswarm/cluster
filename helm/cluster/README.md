@@ -338,6 +338,8 @@ For Giant Swarm internal use only, not stable, or not supported by UIs.
 | `internal.ephemeralConfiguration.apps.PATTERN.catalogOverride` | **Catalog override** - Name of the catalog from which the app is installed.|**Type:** `string`<br/>**Key pattern:**<br/>`PATTERN`=`[a-z][a-zA-Z]+`<br/>|
 | `internal.ephemeralConfiguration.apps.PATTERN.disable` | **Disable** - Flag that indicates if the app is disabled and skipped during the cluster deployment.|**Type:** `boolean`<br/>**Key pattern:**<br/>`PATTERN`=`[a-z][a-zA-Z]+`<br/>|
 | `internal.ephemeralConfiguration.apps.PATTERN.versionOverride` | **Version override** - Custom application version that overrides the application version from the release. This is usually a new development version that you want to test, or a newer patch version that you need to deploy in order to put out a production fire in the middle of the night. Use carefully!|**Type:** `string`<br/>**Key pattern:**<br/>`PATTERN`=`[a-z][a-zA-Z]+`<br/>|
+| `internal.ephemeralConfiguration.offlineTesting` | **Offline testing** - Configure how Helm template rendering behaves when it is running during testing (e.g. locally or in the CI) and without connection to cluster.|**Type:** `object`<br/>|
+| `internal.ephemeralConfiguration.offlineTesting.renderWithoutReleaseResource` | **Render without Release resource** - Flag that indicates that Helm should render templates even when Release CR cannot be fetched from the cluster.|**Type:** `boolean`<br/>|
 
 ### Metadata
 Properties within the `.global.metadata` object
