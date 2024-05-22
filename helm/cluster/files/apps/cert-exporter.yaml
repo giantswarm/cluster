@@ -1,7 +1,5 @@
 appName: cert-exporter
-chartName: cert-exporter
 configKey: certExporter
-catalog: default
 clusterValues:
   configMap: true
   secret: false

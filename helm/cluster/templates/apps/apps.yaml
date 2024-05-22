@@ -4,7 +4,7 @@
 {{- with $rootScope }}
 {{- $app = (tpl (.Files.Get $path) $) | fromYaml }}
 {{- $appName := $app.appName }}
-{{- $appKey := $app.configKey }}
+{{- $appKey := $app.configKey | default $appName }}
 {{- /* Get provider-integration app config */}}
 {{- $providerIntegrationAppConfig := dict }}
 {{- $providerIntegrationAppConfigRaw := get $.Values.providerIntegration.apps $appKey }}
@@ -54,8 +54,8 @@ metadata:
   name: {{ $.Values.global.metadata.name }}-{{ $app.appName }}
   namespace: {{ $.Release.Namespace }}
 spec:
-  catalog: {{ $ephemeralConfig.catalogOverride | default $app.catalog }}
-  name: {{ $app.chartName }}
+  catalog: {{ $ephemeralConfig.catalogOverride | default $app.catalog | default "default" }}
+  name: {{ $app.chartName | default $app.appName }}
   {{- if $app.inCluster }}
   namespace: {{ $.Release.Namespace }}
   kubeConfig:
@@ -136,8 +136,7 @@ data:
   {{- (tpl ($userValues | toYaml | toString) $) | nindent 4 }}
 {{- /* end if $hasUserValues */}}
 {{- end }}
-
-{{- /* end if not $ephemeralConfig.disable */}}
+{{- /* end if and $providerIntegrationAppConfig.enable (not $ephemeralConfig.disable) */}}
 {{- end }}
 {{- /* end with $rootScope */}}
 {{- end }}

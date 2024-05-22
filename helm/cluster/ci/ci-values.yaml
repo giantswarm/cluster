@@ -253,6 +253,9 @@ internal:
       certManager:
         disable: false
         catalogOverride: default-test
+      cilium:
+        catalogOverride: default-test
+        versionOverride: 100.100.100-dev.fb431b464a9713
       chartOperatorExtensions:
         catalogOverride: default-test
         versionOverride: v100.0.0-dev.8234y65dh92783
@@ -516,10 +519,6 @@ providerIntegration:
       version: v1beta1
       kind: AWSMachinePool
     helmRepositoryResourcesEnabled: true
-    ciliumHelmReleaseResourceEnabled: true
-    coreDnsHelmReleaseResourceEnabled: true
-    networkPoliciesHelmReleaseResourceEnabled: true
-    verticalPodAutoscalerCrdHelmReleaseResourceEnabled: true
     bastion:
       infrastructureMachineTemplate:
         group: infrastructure.cluster.x-k8s.io

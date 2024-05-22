@@ -1,7 +1,6 @@
 appName: k8s-dns-node-cache
 chartName: k8s-dns-node-cache-app
 configKey: k8sDnsNodeCache
-catalog: default
 enabled: true
 dependsOn: kyverno
 namespace: kube-system
