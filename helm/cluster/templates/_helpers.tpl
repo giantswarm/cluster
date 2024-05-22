@@ -182,3 +182,12 @@ Where `data` is the data to hash and `global` is the top level scope.
 {{- /* Trigger Helm error in case component is not found. */}}
 {{- $componentVersion }}
 {{- end }}
+
+{{- define "cluster.component.kubernetes.version" }}
+{{- if $.Values.providerIntegration.useReleases }}
+{{- $_ := set $ "componentName" "kubernetes" }}
+{{- include "cluster.component.version" $ | trimPrefix "v" }}
+{{- else }}
+{{- .Values.providerIntegration.kubernetesVersion | trimPrefix "v" }}
+{{- end }}
+{{- end }}
