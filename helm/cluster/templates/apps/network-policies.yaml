@@ -4,7 +4,7 @@
 {{- end }}
 {{- if or $.Values.providerIntegration.apps.networkPolicies.enable .Values.providerIntegration.resourcesApi.networkPoliciesHelmReleaseResourceEnabled }}
 {{- if not .Values.global.connectivity.network.allowAllEgress }}
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: {{ include "cluster.resource.name" $ }}-network-policies
