@@ -4,7 +4,7 @@ catalog: cluster
 namespace: kube-system
 # used by renovate
 # repo: giantswarm/network-policies-app
-version: 0.1.0
+version: 0.1.1
 dependsOn:
 - cilium
 interval: 1m
