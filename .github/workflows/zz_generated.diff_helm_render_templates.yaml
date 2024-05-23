@@ -98,7 +98,7 @@ jobs:
               continue
             fi
 
-            helm template -n org-giantswarm -f "old/helm/${{ github.event.repository.name }}/ci/ci-values.yaml" -f "${test_file_path}" "old/helm/${{ github.event.repository.name }}" > "/tmp/${test_file_path}/render-old.yaml"
+            helm template -n org-giantswarm -f "old/helm/${{ github.event.repository.name }}/ci/ci-values.yaml" -f "old/${test_file_path}" "old/helm/${{ github.event.repository.name }}" > "/tmp/${test_file_path}/render-old.yaml"
           done
       - name: get the diffs
         uses: mathiasvr/command-output@34408ea3d0528273faff3d9e201761ae96106cd0  # v2.0.0
