@@ -1,0 +1,111 @@
+{{- $rootScope := . }}
+{{- range $path, $_ := .Files.Glob "files/helmreleases/**.yaml" }}
+{{- with $rootScope }}
+{{- $app := tpl (.Files.Get $path) $ | fromYaml }}
+{{- $appName := $app.appName }}
+{{- $appKey := $app.configKey | default $appName }}
+{{- /*
+    Get provider-specific app config where we have:
+    - name of Helm template that renders provider-specific Helm values for the app
+    - flag that indicates if the app is enabled for the provider
+*/}}
+{{- $providerIntegrationAppConfig := dict }}
+{{- $providerIntegrationAppConfigRaw := get $.Values.providerIntegration.apps $appKey }}
+{{- if $providerIntegrationAppConfigRaw }}
+{{- /* Sometimes, when provider app config is not set, $providerIntegrationAppConfigRaw gets parsed as an empty string,
+       and sometimes as an empty dict. And we want $providerIntegrationAppConfigRaw, which is used in template, to be
+       always a dict, for the sake of cleaner template code. */}}
+{{- $providerIntegrationAppConfig = $providerIntegrationAppConfigRaw }}
+{{- end }}
+{{- /*
+    Get (optional) ephemeral app config where we have:
+    - flag that indicates if the app is enabled or not
+    - version override
+    - catalog override
+*/}}
+{{- $ephemeralConfig := dict }}
+{{- if ($.Values.internal.ephemeralConfiguration).apps }}
+{{- $ephemeralConfigRaw := get $.Values.internal.ephemeralConfiguration.apps $appKey }}
+{{- if $ephemeralConfigRaw }}
+{{- /* Sometimes, when ephemeral config is not set, $ephemeralConfigRaw gets parsed as an empty string,
+       and sometimes as an empty dict. And we want $ephemeralConfig, which is used in template, to be
+       always a dict, for the sake of cleaner template code. */}}
+{{- $ephemeralConfig = $ephemeralConfigRaw }}
+{{- end }}
+{{- end }}
+{{- if and (not $app.disable) $providerIntegrationAppConfig.enable (not $ephemeralConfig.disable) }}
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: {{ include "cluster.resource.name" $ }}-{{ $appName }}
+  namespace: {{ $.Release.Namespace }}
+  {{- $annotations := include "cluster.annotations.common.all" $ }}
+  {{- if $annotations }}
+  annotations:
+    {{- $annotations | indent 4 }}
+  {{- end }}
+  labels:
+    {{- include "cluster.labels.common.all" $ | indent 4 }}
+spec:
+  releaseName: {{ $appName }}
+  targetNamespace: {{ $app.namespace }}
+  storageNamespace: {{ $app.namespace }}
+  chart:
+    spec:
+      chart: {{ $app.chartName | default $app.appName }}
+      version: {{ $ephemeralConfig.versionOverride | default $app.version }}
+      sourceRef:
+        kind: HelmRepository
+        name: {{ include "cluster.resource.name" $ }}-{{ $ephemeralConfig.catalogOverride | default $app.catalog | default "default" }}
+  {{- if $app.dependsOn }}
+  dependsOn:
+  {{- range $_, $dependency := $app.dependsOn }}
+  - name: {{ include "cluster.resource.name" $ }}-{{ $dependency }}
+    namespace: {{ $.Release.Namespace }}
+  {{- end }}
+  {{- end }}
+  kubeConfig:
+    secretRef:
+      name: {{ include "cluster.resource.name" $ }}-kubeconfig
+  interval: {{ $app.interval | default "5m" }}
+  install:
+    remediation:
+      retries: 30
+  {{- /* We have multiple layers of app Helm values, where every next layer overwrites the previous one. */}}
+  {{- /* Layer 1: default provider-independent app Helm values */}}
+  {{- $appHelmValues := $app.defaultValues | default dict -}}
+  {{- /* Layer 2: default provider-specific Helm values */}}
+  {{- if $providerIntegrationAppConfig.configTemplateName }}
+  {{- $providerSpecificDefaultValues := (include $providerIntegrationAppConfig.configTemplateName $) | fromYaml -}}
+  {{- $appHelmValues = mergeOverwrite $appHelmValues $providerSpecificDefaultValues -}}
+  {{- end }}
+  {{- /* Layer 3: custom user config */}}
+  {{- $userConfig := dict }}
+  {{- $userConfigRaw := get $.Values.global.apps $appKey }}
+  {{- if $userConfigRaw }}
+  {{- $userConfig = $userConfigRaw | toYaml | toString | fromYaml }}
+  {{- end }}
+  {{- if $userConfig.values }}
+  {{- $appHelmValues = mergeOverwrite $appHelmValues (deepCopy $userConfig.values) -}}
+  {{- end }}
+  {{- if $appHelmValues }}
+  values: {{- $appHelmValues | toYaml | nindent 4 }}
+  {{- end }}
+  {{- $extraConfigs := concat ($app.extraConfigs | default list) ($userConfig.extraConfigs | default list) }}
+  {{- if $extraConfigs }}
+  valuesFrom:
+    {{- range $extraConfig := $extraConfigs }}
+  - kind: {{ $extraConfig.kind }}
+    name: {{ $extraConfig.name }}
+    valuesKey: values
+    optional: {{ $extraConfig.optional | default false  }}
+    {{- end }}
+  {{- end }}
+{{- /* end if and $providerIntegrationAppConfig.enable (not $ephemeralConfig.disable) */}}
+{{- end }}
+{{- /* end with $rootScope */}}
+{{- end }}
+{{- /* end outer range */}}
+{{- end }}
+

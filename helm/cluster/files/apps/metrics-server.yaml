@@ -1,7 +1,6 @@
 appName: metrics-server
 chartName: metrics-server-app
 configKey: metricsServer
-catalog: default
 clusterValues:
   configMap: true
   secret: false

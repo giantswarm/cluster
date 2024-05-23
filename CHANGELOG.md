@@ -17,6 +17,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **BREAKING** Replace `COREOS_EC2_HOSTNAME` with `HOSTNAME` to support multiple providers.
 - **BREAKING** Replace `COREOS_EC2_IPV4_LOCAL` with `IPV4_LOCAL` to support multiple providers
 - Update cluster-autoscaler-app to 1.27.3-gs9.
+- HelmReleases are deployed from a single generic template and details about apps that are deployed as HelmReleases are in `helm/cluster/files/helmreleases` (similarly to `helm/cluster/files/apps`).
+- HelmReleases can be configured with `.Values.ephemeralConfiguration.<app name>` in the same way like App resources. Available values are:
+  - `versionOverride` to override app version,
+  - `catalogOverride` to override catalog (e.g. when you use development build version of your app), and
+  - `disable` to disable rendering and deployment of the app.
+- `chartName` is now optional when specifying app details in `helm/cluster/files/apps/<app name>.yaml` or `helm/cluster/files/helmreleases/<app name>.yaml`, and if it is not specified, `appName` property value will be used.
+- `catalog` is now optional when specifying app details in `helm/cluster/files/apps/<app name>.yaml` or `helm/cluster/files/helmreleases/<app name>.yaml`, and if it is not specified, `"default"` value will be used.
+
+### ⚠️ Breaking changes for cluster-$provider apps
+
+> _Note: This is NOT a breaking change for customers. Team Turtles handles updates of cluster chart in cluster-$provider apps and updates Helm values accordingly._ 
+
+- Remove deprecated `.Values.providerIntegration.resourcesApi.ciliumHelmReleaseResourceEnabled` Helm value.
+- Remove deprecated `.Values.providerIntegration.resourcesApi.coreDnsHelmReleaseResourceEnabled` Helm value.
+- Remove deprecated `.Values.providerIntegration.resourcesApi.networkPoliciesHelmReleaseResourceEnabled` Helm value.
+- Remove deprecated `.Values.providerIntegration.resourcesApi.verticalPodAutoscalerCrdHelmReleaseResourceEnabled` Helm value.
 
 ## [0.26.0] - 2024-05-16
 

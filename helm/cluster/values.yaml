@@ -175,17 +175,13 @@ providerIntegration:
   registry: {}
   resourcesApi:
     bastionResourceEnabled: true
-    ciliumHelmReleaseResourceEnabled: false
     cleanupHelmReleaseResourcesEnabled: false
     clusterResourceEnabled: true
     controlPlaneResourceEnabled: true
-    coreDnsHelmReleaseResourceEnabled: false
     helmRepositoryResourcesEnabled: false
     infrastructureCluster: {}
     machineHealthCheckResourceEnabled: true
     machinePoolResourcesEnabled: true
-    networkPoliciesHelmReleaseResourceEnabled: false
-    verticalPodAutoscalerCrdHelmReleaseResourceEnabled: false
   teleport:
     enabled: true
     proxyAddr: teleport.giantswarm.io:443

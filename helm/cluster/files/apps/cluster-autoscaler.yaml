@@ -1,7 +1,6 @@
 appName: cluster-autoscaler
 chartName: cluster-autoscaler-app
 configKey: clusterAutoscaler
-catalog: default
 clusterValues:
   configMap: true
   secret: true

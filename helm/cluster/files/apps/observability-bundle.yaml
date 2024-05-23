@@ -1,8 +1,6 @@
 # Includes prometheus-operator-crd
 appName: observability-bundle
-chartName: observability-bundle
 configKey: observabilityBundle
-catalog: default
 clusterValues:
   configMap: true
   secret: false

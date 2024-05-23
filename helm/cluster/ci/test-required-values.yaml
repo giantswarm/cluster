@@ -22,16 +22,12 @@ providerIntegration:
       version: v1beta1
     machineHealthCheckResourceEnabled: true
     machinePoolResourcesEnabled: true
-    networkPoliciesHelmReleaseResourceEnabled: true
     nodePoolKind: MachinePool
     infrastructureMachinePool:
       group: infrastructure.cluster.x-k8s.io
       version: v1beta1
       kind: GiantMachinePool
     helmRepositoryResourcesEnabled: true
-    ciliumHelmReleaseResourceEnabled: true
-    coreDnsHelmReleaseResourceEnabled: true
-    verticalPodAutoscalerCrdHelmReleaseResourceEnabled: true
   controlPlane:
     resources:
       infrastructureMachineTemplate:

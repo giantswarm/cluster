@@ -1,7 +1,6 @@
 appName: external-dns
 chartName: external-dns-app
 configKey: externalDns
-catalog: default
 clusterValues:
   configMap: true
   secret: true
