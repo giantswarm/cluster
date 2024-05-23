@@ -153,42 +153,43 @@ Where `data` is the data to hash and `global` is the top level scope.
 {{- $registry -}}
 {{- end -}}
 
-{{- define "cluster.internal.get-use-releases" }}
-{{- $useReleases := false }}
+{{- define "cluster.internal.get-provider-integration-values" }}
+{{- $providerIntegration := dict }}
 {{- /* Case 1: template is called from the cluster chart itself */}}
 {{- if and (eq $.Chart.Name "cluster") $.Values.providerIntegration }}
-  {{- $useReleases = $.Values.providerIntegration.useReleases }}
-{{- /* Case 2: template is called from the cluster-$provider app */}}
-{{- else if and (eq $.Chart.Name (printf "cluster-%" (($.Values.cluster).providerIntegration).provider)) ($.Values.cluster).providerIntegration }}
-  {{- $useReleases = $.Values.cluster.providerIntegration.useReleases }}
+  {{- $providerIntegration = $.Values.providerIntegration }}
+{{- /* Case 2: template is called from a parent chart that passes Helm values to cluster chart in .Values.cluster */}}
+{{- else if ($.Values.cluster).providerIntegration }}
+  {{- $providerIntegration = $.Values.cluster.providerIntegration }}
 {{- end }}
 {{- /* Create $.GiantSwarm object where we put custom Giant Swarm vars */}}
 {{- if not $.GiantSwarm }}
   {{- $_ := set $ "GiantSwarm" dict }}
 {{- end }}
 {{- /* Finally set "UseReleases" property that can be used in other templates */}}
-{{- $_ := set $.GiantSwarm "UseReleases" $useReleases }}
+{{- $_ := set $.GiantSwarm "providerIntegration" $providerIntegration }}
 {{- end }}
 
-{{- define "cluster.internal.get-offline-testing" }}
-{{- $offlineTesting := dict }}
+{{- define "cluster.internal.get-internal-values" }}
+{{- $internalValues := dict }}
 {{- /* Case 1: template is called from the cluster chart itself */}}
-{{- if and (eq $.Chart.Name "cluster") ($.Values.internal).ephemeralConfiguration }}
-  {{- $offlineTesting = $.Values.internal.ephemeralConfiguration.offlineTesting }}
-{{- /* Case 2: template is called from the cluster-$provider app */}}
-{{- else if and (eq $.Chart.Name (printf "cluster-%" (($.Values.cluster).providerIntegration).provider)) (($.Values.cluster).internal).ephemeralConfiguration }}
-  {{- $offlineTesting = $.Values.cluster.internal.ephemeralConfiguration.offlineTesting }}
+{{- if and (eq $.Chart.Name "cluster") $.Values.internal }}
+  {{- $internalValues = $.Values.internal }}
+{{- /* Case 2: template is called from a parent chart that passes Helm values to cluster chart in .Values.cluster */}}
+{{- else if ($.Values.cluster).internal }}
+  {{- $internalValues = $.Values.cluster.internal }}
 {{- end }}
-{{- /* Create $.GiantSwarm object where we put custom Giant Swarm vars */}}
+{{- /* Create $.GiantSwarm.internal object */}}
 {{- if not $.GiantSwarm }}
   {{- $_ := set $ "GiantSwarm" dict }}
 {{- end }}
 {{- /* Finally set "UseReleases" property that can be used in other templates */}}
-{{- $_ := set $.GiantSwarm "OfflineTesting" $offlineTesting }}
+{{- $_ := set $.GiantSwarm "internal" $internalValues }}
 {{- end }}
 
 {{- define "cluster.internal.get-release-resource" }}
-{{- $_ := (include "cluster.internal.get-offline-testing" $) }}
+{{- $_ := include "cluster.internal.get-internal-values" $ }}
+{{- $renderWithoutReleaseResource := ((($.GiantSwarm.internal).ephemeralConfiguration).offlineTesting).renderWithoutReleaseResource | default false }}
 {{- $clusterApp := lookup "application.giantswarm.io/v1alpha1" "App" $.Release.Namespace $.Release.Name -}}
 {{- if $clusterApp }}
   {{- $_ := set $.GiantSwarm "ClusterApp" $clusterApp }}
@@ -197,10 +198,10 @@ Where `data` is the data to hash and `global` is the top level scope.
   {{- $release := lookup "release.giantswarm.io/v1alpha1" "Release" "" $releaseVersion }}
   {{- if $release }}
     {{- $_ := set $.GiantSwarm "Release" $release }}
-  {{ else if not $.GiantSwarm.OfflineTesting.renderWithoutReleaseResource }}
+  {{ else if not $renderWithoutReleaseResource }}
     {{- fail (printf "Release resource '%s' not found" $releaseVersion) }}
   {{- end }}
-{{- else if not $.GiantSwarm.OfflineTesting.renderWithoutReleaseResource }}
+{{- else if not $renderWithoutReleaseResource }}
   {{- fail (printf "Cluster App resource not found for cluster '%s/%s'" $.Release.Namespace $.Release.Name) }}
 {{- end }}
 {{- end }}
@@ -232,22 +233,26 @@ Where `data` is the data to hash and `global` is the top level scope.
 {{- end }}
 
 {{- define "cluster.component.kubernetes.version" }}
-{{- $_ := include "cluster.internal.get-use-releases" $ }}
-{{- if $.GiantSwarm.UseReleases }}
+{{- $_ := include "cluster.internal.get-provider-integration-values" $ }}
+{{- if $.GiantSwarm.providerIntegration.useReleases }}
 {{- $_ := set $ "componentName" "kubernetes" }}
 {{- include "cluster.component.version" $ | trimPrefix "v" }}
+{{- else if $.GiantSwarm.providerIntegration.kubernetesVersion }}
+{{- $.GiantSwarm.providerIntegration.kubernetesVersion | trimPrefix "v" }}
 {{- else }}
-{{- .Values.providerIntegration.kubernetesVersion | trimPrefix "v" }}
+{{- fail "Cannot determine Kubernetes version" }}
 {{- end }}
 {{- end }}
 
 {{- define "cluster.component.flatcar.variant" }}
-{{- $_ := include "cluster.internal.get-use-releases" $ }}
-{{- if $.GiantSwarm.UseReleases }}
+{{- $_ := include "cluster.internal.get-provider-integration-values" $ }}
+{{- if $.GiantSwarm.providerIntegration.useReleases }}
 {{- $_ := set $ "componentName" "flatcar-variant" }}
 {{- $flatcarVariant := include "cluster.component.version" $ | trimPrefix "v" | split "." }}
 {{- $flatcarVariant._0 }}
+{{- else if $.GiantSwarm.providerIntegration.osImage }}
+{{- $.GiantSwarm.providerIntegration.osImage.variant }}
 {{- else }}
-{{- $.Values.providerIntegration.osImage.variant }}
+{{- fail "Cannot determine Flatcar image variant" }}
 {{- end }}
 {{- end }}
