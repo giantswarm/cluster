@@ -303,6 +303,9 @@ providerIntegration:
       enable: true
     verticalPodAutoscalerCrd:
       enable: true
+  environments:
+    hostName: COREOS_EC2_HOSTNAME
+    ipv4: COREOS_EC2_IPV4_LOCAL
   provider: aws
   bastion:
     kubeadmConfig:
