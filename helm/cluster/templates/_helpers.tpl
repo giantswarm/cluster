@@ -153,11 +153,42 @@ Where `data` is the data to hash and `global` is the top level scope.
 {{- $registry -}}
 {{- end -}}
 
-{{- define "cluster.internal.get-release-resource" }}
+{{- define "cluster.internal.get-use-releases" }}
+{{- $useReleases := false }}
+{{- /* Case 1: template is called from the cluster chart itself */}}
+{{- if and (eq $.Chart.Name "cluster") $.Values.providerIntegration }}
+  {{- $useReleases = $.Values.providerIntegration.useReleases }}
+{{- /* Case 2: template is called from the cluster-$provider app */}}
+{{- else if and (eq $.Chart.Name (printf "cluster-%" (($.Values.cluster).providerIntegration).provider)) ($.Values.cluster).providerIntegration }}
+  {{- $useReleases = $.Values.cluster.providerIntegration.useReleases }}
+{{- end }}
+{{- /* Create $.GiantSwarm object where we put custom Giant Swarm vars */}}
 {{- if not $.GiantSwarm }}
   {{- $_ := set $ "GiantSwarm" dict }}
 {{- end }}
+{{- /* Finally set "UseReleases" property that can be used in other templates */}}
+{{- $_ := set $.GiantSwarm "UseReleases" $useReleases }}
+{{- end }}
 
+{{- define "cluster.internal.get-offline-testing" }}
+{{- $offlineTesting := dict }}
+{{- /* Case 1: template is called from the cluster chart itself */}}
+{{- if and (eq $.Chart.Name "cluster") ($.Values.internal).ephemeralConfiguration }}
+  {{- $offlineTesting = $.Values.internal.ephemeralConfiguration.offlineTesting }}
+{{- /* Case 2: template is called from the cluster-$provider app */}}
+{{- else if and (eq $.Chart.Name (printf "cluster-%" (($.Values.cluster).providerIntegration).provider)) (($.Values.cluster).internal).ephemeralConfiguration }}
+  {{- $offlineTesting = $.Values.cluster.internal.ephemeralConfiguration.offlineTesting }}
+{{- end }}
+{{- /* Create $.GiantSwarm object where we put custom Giant Swarm vars */}}
+{{- if not $.GiantSwarm }}
+  {{- $_ := set $ "GiantSwarm" dict }}
+{{- end }}
+{{- /* Finally set "UseReleases" property that can be used in other templates */}}
+{{- $_ := set $.GiantSwarm "OfflineTesting" $offlineTesting }}
+{{- end }}
+
+{{- define "cluster.internal.get-release-resource" }}
+{{- $_ := (include "cluster.internal.get-offline-testing" $) }}
 {{- $clusterApp := lookup "application.giantswarm.io/v1alpha1" "App" $.Release.Namespace $.Release.Name -}}
 {{- if $clusterApp }}
   {{- $_ := set $.GiantSwarm "ClusterApp" $clusterApp }}
@@ -166,10 +197,10 @@ Where `data` is the data to hash and `global` is the top level scope.
   {{- $release := lookup "release.giantswarm.io/v1alpha1" "Release" "" $releaseVersion }}
   {{- if $release }}
     {{- $_ := set $.GiantSwarm "Release" $release }}
-  {{ else if not $.Values.internal.ephemeralConfiguration.offlineTesting.renderWithoutReleaseResource }}
+  {{ else if not $.GiantSwarm.OfflineTesting.renderWithoutReleaseResource }}
     {{- fail (printf "Release resource '%s' not found" $releaseVersion) }}
   {{- end }}
-{{- else if not $.Values.internal.ephemeralConfiguration.offlineTesting.renderWithoutReleaseResource }}
+{{- else if not $.GiantSwarm.OfflineTesting.renderWithoutReleaseResource }}
   {{- fail (printf "Cluster App resource not found for cluster '%s/%s'" $.Release.Namespace $.Release.Name) }}
 {{- end }}
 {{- end }}
@@ -201,7 +232,8 @@ Where `data` is the data to hash and `global` is the top level scope.
 {{- end }}
 
 {{- define "cluster.component.kubernetes.version" }}
-{{- if $.Values.providerIntegration.useReleases }}
+{{- $_ := include "cluster.internal.get-use-releases" $ }}
+{{- if $.GiantSwarm.UseReleases }}
 {{- $_ := set $ "componentName" "kubernetes" }}
 {{- include "cluster.component.version" $ | trimPrefix "v" }}
 {{- else }}
@@ -210,7 +242,8 @@ Where `data` is the data to hash and `global` is the top level scope.
 {{- end }}
 
 {{- define "cluster.component.flatcar.variant" }}
-{{- if $.Values.providerIntegration.useReleases }}
+{{- $_ := include "cluster.internal.get-use-releases" $ }}
+{{- if $.GiantSwarm.UseReleases }}
 {{- $_ := set $ "componentName" "flatcar-variant" }}
 {{- $flatcarVariant := include "cluster.component.version" $ | trimPrefix "v" | split "." }}
 {{- $flatcarVariant._0 }}
