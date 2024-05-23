@@ -208,3 +208,13 @@ Where `data` is the data to hash and `global` is the top level scope.
 {{- .Values.providerIntegration.kubernetesVersion | trimPrefix "v" }}
 {{- end }}
 {{- end }}
+
+{{- define "cluster.component.flatcar.variant" }}
+{{- if $.Values.providerIntegration.useReleases }}
+{{- $_ := set $ "componentName" "flatcar-variant" }}
+{{- $flatcarVariant := include "cluster.component.version" $ | trimPrefix "v" | split "." }}
+{{- $flatcarVariant._0 }}
+{{- else }}
+{{- $.Values.providerIntegration.osImage.variant }}
+{{- end }}
+{{- end }}
