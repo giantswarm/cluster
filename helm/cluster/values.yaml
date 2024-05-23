@@ -162,6 +162,7 @@ providerIntegration:
           kind: KubeadmControlPlane
           version: v1beta1
       infrastructureMachineTemplate: {}
+  environments: {}
   kubeadmConfig:
     ignition:
       containerLinuxConfig:
