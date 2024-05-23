@@ -162,6 +162,7 @@ Where `data` is the data to hash and `global` is the top level scope.
 {{- if $clusterApp }}
   {{- $_ := set $.GiantSwarm "ClusterApp" $clusterApp }}
   {{- $releaseVersion := get $.GiantSwarm.ClusterApp.metadata.labels "release.giantswarm.io/version" | trimPrefix "v" }}
+  {{- $releaseVersion = printf "v%s" $releaseVersion }}
   {{- $release := lookup "release.giantswarm.io/v1alpha1" "Release" "" $releaseVersion }}
   {{- if $release }}
     {{- $_ := set $.GiantSwarm "Release" $release }}
@@ -191,7 +192,7 @@ Where `data` is the data to hash and `global` is the top level scope.
 {{- $_ := (include "cluster.internal.get-release-resource" $) }}
 {{- if $.GiantSwarm.Release }}
 {{- range $_, $component := $.GiantSwarm.Release.spec.components }}
-{{- if eq $component.name $.appName }}
+{{- if eq $component.name $.componentName }}
 {{- $componentVersion = $component.version }}
 {{- end }}
 {{- end }}
