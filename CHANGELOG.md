@@ -14,8 +14,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- **BREAKING** Replace `COREOS_EC2_HOSTNAME` with `HOSTNAME` to support multiple providers.
-- **BREAKING** Replace `COREOS_EC2_IPV4_LOCAL` with `IPV4_LOCAL` to support multiple providers
+- **BREAKING** Replace `COREOS_EC2_HOSTNAME` with `Values.providerIntegration.environments.hostName` to support multiple providers.
+- **BREAKING** Replace `COREOS_EC2_IPV4_LOCAL` with `Values.providerIntegration.environments.ipv4` to support multiple providers.
+
 - Update cluster-autoscaler-app to 1.27.3-gs9.
 - HelmReleases are deployed from a single generic template and details about apps that are deployed as HelmReleases are in `helm/cluster/files/helmreleases` (similarly to `helm/cluster/files/apps`).
 - HelmReleases can be configured with `.Values.ephemeralConfiguration.<app name>` in the same way like App resources. Available values are:
