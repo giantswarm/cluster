@@ -634,9 +634,9 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.controlPlane.resources.infrastructureMachineTemplate.kind` | **API kind**|**Type:** `string`<br/>**Examples:** `"AWSMachineTemplate", "AzureMachineTemplate"`<br/>|
 | `providerIntegration.controlPlane.resources.infrastructureMachineTemplate.version` | **API version**|**Type:** `string`<br/>**Examples:** `"v1alpha1", "v1beta1", "v1beta2", "v1", "v2"`<br/>|
 | `providerIntegration.controlPlane.resources.infrastructureMachineTemplateSpecTemplateName` | **Infrastructure Machine template spec template name** - The name of Helm template that renders Infrastructure Machine template spec.|**Type:** `string`<br/>|
-| `providerIntegration.environments` | **Environments for provider**|**Type:** `object`<br/>|
-| `providerIntegration.environments.hostName` |Environment for host name.|**Type:** `string`<br/>|
-| `providerIntegration.environments.ipv4` | **IPv4** - Environment for IPv4.|**Type:** `string`<br/>|
+| `providerIntegration.environmentVariables` | **environmentVariables for provider**|**Type:** `object`<br/>|
+| `providerIntegration.environmentVariables.hostName` |Environment for host name.|**Type:** `string`<br/>|
+| `providerIntegration.environmentVariables.ipv4` | **IPv4** - Environment for IPv4.|**Type:** `string`<br/>|
 | `providerIntegration.hashSalt` | **Hash salt** - If specified, this token is used as a salt to the hash suffix of some resource names. Can be used to force-recreate some resources.|**Type:** `string`<br/>|
 | `providerIntegration.kubeadmConfig` | **Provider-specific kubeadm config** - Provider-specific kubeadm config that is common for all nodes, including both control plane and workers.|**Type:** `object`<br/>|
 | `providerIntegration.kubeadmConfig.files` | **Files** - Provider-specific files that are deployed to all nodes. They are specified in the cluster-<provider> apps.|**Type:** `array`<br/>|

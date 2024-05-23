@@ -1864,7 +1864,7 @@
                 "connectivity",
                 "components",
                 "controlPlane",
-                "environments",
+                "environmentVariables",
                 "kubernetesVersion",
                 "provider",
                 "resourcesApi"
@@ -2337,9 +2337,9 @@
                         }
                     }
                 },
-                "environments": {
+                "environmentVariables": {
                     "type": "object",
-                    "title": "Environments for provider",
+                    "title": "environmentVariables for provider",
                     "additionalProperties": false,
                     "properties": {
                         "hostName": {

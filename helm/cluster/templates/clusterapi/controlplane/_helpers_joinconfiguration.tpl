@@ -10,9 +10,9 @@ nodeRegistration:
     {{- end }}
     cloud-provider: external
     feature-gates: CronJobTimeZone=true
-    node-ip: {{ printf "${%s}" $.Values.providerIntegration.environments.ipv4 }}
-    node-labels: ip={{ printf "${%s}" $.Values.providerIntegration.environments.ipv4 }}
-  name: {{ printf "${%s}" $.Values.providerIntegration.environments.hostName }}
+    node-ip: {{ printf "${%s}" $.Values.providerIntegration.environmentVariables.ipv4 }}
+    node-labels: ip={{ printf "${%s}" $.Values.providerIntegration.environmentVariables.ipv4 }}
+  name: {{ printf "${%s}" $.Values.providerIntegration.environmentVariables.hostName }}
   {{- if $.Values.global.controlPlane.customNodeTaints }}
   {{- if (gt (len $.Values.global.controlPlane.customNodeTaints) 0) }}
   taints:

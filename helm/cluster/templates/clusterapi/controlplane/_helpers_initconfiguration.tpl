@@ -13,10 +13,10 @@ nodeRegistration:
     cloud-provider: external
     feature-gates: CronJobTimeZone=true
     healthz-bind-address: 0.0.0.0
-    node-ip: {{ printf "${%s}" $.Values.providerIntegration.environments.ipv4 }}
-    node-labels: ip={{ printf "${%s}" $.Values.providerIntegration.environments.ipv4 }}
+    node-ip: {{ printf "${%s}" $.Values.providerIntegration.environmentVariables.ipv4 }}
+    node-labels: ip={{ printf "${%s}" $.Values.providerIntegration.environmentVariables.ipv4 }}
     v: "2"
-  name: {{ printf "${%s}" $.Values.providerIntegration.environments.hostName }}
+  name: {{ printf "${%s}" $.Values.providerIntegration.environmentVariables.hostName }}
   {{- if $.Values.global.controlPlane.customNodeTaints }}
   {{- if (gt (len $.Values.global.controlPlane.customNodeTaints) 0) }}
   taints:
