@@ -166,10 +166,10 @@ Where `data` is the data to hash and `global` is the top level scope.
   {{- if $release }}
     {{- $_ := set $.GiantSwarm "Release" $release }}
   {{ else if not $.Values.internal.ephemeralConfiguration.offlineTesting.renderWithoutReleaseResource }}
-    {{- fail "Release resource not found" }}
+    {{- fail (printf "Release resource '%s' not found" $releaseVersion) }}
   {{- end }}
 {{- else if not $.Values.internal.ephemeralConfiguration.offlineTesting.renderWithoutReleaseResource }}
-  {{- fail "Cluster App resource not found" }}
+  {{- fail (printf "Cluster App resource not found for cluster '%s/%s'" $.Release.Namespace $.Release.Name) }}
 {{- end }}
 {{- end }}
 
