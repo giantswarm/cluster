@@ -1,7 +1,6 @@
 appName: node-exporter
 chartName: node-exporter-app
 configKey: nodeExporter
-catalog: default
 clusterValues:
   configMap: true
   secret: false

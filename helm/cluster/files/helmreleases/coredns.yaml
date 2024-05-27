@@ -1,0 +1,21 @@
+appName: coredns
+chartName: coredns-app
+configKey: coreDns
+namespace: kube-system
+# used by renovate
+# repo: giantswarm/coredns-app
+version: 1.21.0
+dependsOn:
+- cilium
+defaultValues:
+  cluster:
+    calico:
+      CIDR: {{ first .Values.global.connectivity.network.pods.cidrBlocks | quote }}
+    kubernetes:
+      API:
+        clusterIPRange: {{ first .Values.global.connectivity.network.services.cidrBlocks | quote }}
+      DNS:
+        IP: {{ include "cluster.internal.apps.coredns.dns" $ | quote }}
+  global:
+    podSecurityStandards:
+      enforced: {{ .Values.global.podSecurityStandards.enforced }}

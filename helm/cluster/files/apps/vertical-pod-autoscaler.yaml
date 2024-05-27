@@ -1,7 +1,6 @@
 appName: vertical-pod-autoscaler
 chartName: vertical-pod-autoscaler-app
 configKey: verticalPodAutoscaler
-catalog: default
 dependsOn: prometheus-operator-crd
 clusterValues:
   configMap: true
@@ -9,4 +8,4 @@ clusterValues:
 namespace: kube-system
 # used by renovate
 # repo: giantswarm/vertical-pod-autoscaler-app
-version: 5.1.0
+version: 5.2.2

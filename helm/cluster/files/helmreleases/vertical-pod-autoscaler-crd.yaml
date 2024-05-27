@@ -1,0 +1,7 @@
+appName: vertical-pod-autoscaler-crd
+configKey: verticalPodAutoscalerCrd
+namespace: kube-system
+# used by renovate
+# repo: giantswarm/vertical-pod-autoscaler-crd
+version: 3.0.0
+interval: 1m

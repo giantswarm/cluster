@@ -1,7 +1,5 @@
 appName: capi-node-labeler
-chartName: capi-node-labeler
 configKey: capiNodeLabeler
-catalog: default
 clusterValues:
   configMap: true
   secret: false

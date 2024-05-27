@@ -1,7 +1,6 @@
 appName: cert-manager
 chartName: cert-manager-app
 configKey: certManager
-catalog: default
 clusterValues:
   configMap: true
   secret: true

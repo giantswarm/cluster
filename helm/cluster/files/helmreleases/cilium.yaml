@@ -1,0 +1,23 @@
+appName: cilium
+configKey: cilium
+namespace: kube-system
+# used by renovate
+# repo: giantswarm/cilium-app
+version: 0.24.0
+defaultValues:
+  # For all available values see https://github.com/giantswarm/cilium-app/blob/main/helm/cilium/values.yaml
+  ipam:
+    mode: kubernetes
+  k8sServiceHost: api.{{ include "cluster.resource.name" $ }}.{{ .Values.global.connectivity.baseDomain }}
+  k8sServicePort: '{{ .Values.global.controlPlane.apiServerPort }}'
+  kubeProxyReplacement: strict
+  hubble:
+    relay:
+      enabled: true
+      tolerations: [] # set in cluster-<provider> apps
+    ui: {} # set by cluster-<provider> apps
+  defaultPolicies: {} # set in cluster-<provider> apps
+  extraPolicies: {} # set in cluster-<provider> apps
+  global:
+    podSecurityStandards:
+      enforced: {{ .Values.global.podSecurityStandards.enforced }}

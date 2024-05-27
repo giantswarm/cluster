@@ -2475,12 +2475,6 @@
                             "description": "Flag that indicates if the Bastion resource is enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.",
                             "default": true
                         },
-                        "ciliumHelmReleaseResourceEnabled": {
-                            "type": "boolean",
-                            "title": "Cilium HelmRelease resource enabled",
-                            "description": "Deprecated: use .Values.providerIntegration.apps.cilium.enabled instead (enabling any of this or the new flag will enable cilium). Flag that indicates if the Cilium HelmRelease is enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.",
-                            "default": false
-                        },
                         "cleanupHelmReleaseResourcesEnabled": {
                             "type": "boolean",
                             "title": "Cleanup HelmRelease hook job resource enabled",
@@ -2498,12 +2492,6 @@
                             "title": "Control plane resource enabled",
                             "description": "Flag that indicates if the control plane resource is enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.",
                             "default": true
-                        },
-                        "coreDnsHelmReleaseResourceEnabled": {
-                            "type": "boolean",
-                            "title": "CoreDNS HelmRelease resource enabled",
-                            "description": "Deprecated: use .Values.providerIntegration.apps.coreDns.enabled instead (enabling any of this or the new flag will enable CoreDNS). Flag that indicates if the CoreDNS HelmRelease is enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.",
-                            "default": false
                         },
                         "helmRepositoryResourcesEnabled": {
                             "type": "boolean",
@@ -2525,18 +2513,6 @@
                             "title": "Machine pool resources enabled",
                             "description": "Flag that indicates if the machine pool resources are enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.",
                             "default": true
-                        },
-                        "networkPoliciesHelmReleaseResourceEnabled": {
-                            "type": "boolean",
-                            "title": "Network policies HelmRelease resource enabled",
-                            "description": "Deprecated: use .Values.providerIntegration.apps.networkPolicies.enabled instead (enabling any of this or the new flag will enable network-policies). Flag that indicates if the network-policies HelmRelease is enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.",
-                            "default": false
-                        },
-                        "verticalPodAutoscalerCrdHelmReleaseResourceEnabled": {
-                            "type": "boolean",
-                            "title": "vertical-pod-autoscaler-crd HelmRelease resource enabled",
-                            "description": "Deprecated: use .Values.providerIntegration.apps.verticalPodAutoscalerCrd.enabled instead (enabling any of this or the new flag will enable network-policies). Flag that indicates if the vertical-pod-autoscaler-crd HelmRelease is enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.",
-                            "default": false
                         }
                     },
                     "allOf": [
