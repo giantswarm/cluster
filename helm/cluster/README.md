@@ -847,6 +847,14 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.workers.resources` | **Resources configuration** - Infrastructure template for worker resources when using MachineDeployment.|**Type:** `object`<br/>|
 | `providerIntegration.workers.resources.infrastructureMachineTemplateSpecTemplateName` | **Infrastructure Machine template spec template name** - The name of Helm template that renders Infrastructure Machine template spec.|**Type:** `string`<br/>|
 
+### Release
+Properties within the `.global.release` object
+Information about the workload cluster release.
+
+| **Property** | **Description** | **More Details** |
+| :----------- | :-------------- | :--------------- |
+| `global.release.version` | **Version**|**Type:** `string`<br/>|
+
 
 
 <!-- DOCS_END -->

@@ -1003,7 +1003,8 @@
                 "components",
                 "connectivity",
                 "controlPlane",
-                "metadata"
+                "metadata",
+                "release"
             ],
             "additionalProperties": true,
             "properties": {
@@ -1534,6 +1535,20 @@
                             "type": "boolean",
                             "title": "Enforced",
                             "default": false
+                        }
+                    }
+                },
+                "release": {
+                    "type": "object",
+                    "title": "Release",
+                    "description": "Information about the workload cluster release.",
+                    "required": [
+                        "version"
+                    ],
+                    "properties": {
+                        "version": {
+                            "type": "string",
+                            "title": "Version"
                         }
                     }
                 }

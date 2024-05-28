@@ -59,6 +59,7 @@ global:
     servicePriority: highest
   podSecurityStandards:
     enforced: false
+  release: {}
 internal:
   advancedConfiguration:
     cgroupsv1: false
