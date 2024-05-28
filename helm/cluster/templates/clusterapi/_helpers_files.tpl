@@ -64,8 +64,8 @@
   permissions: "0644"
   contentFrom:
     secret:
-      name: {{ include "cluster.resource.name" $ }}-registry-configuration {{/* TODO: rename *-registry-configuration to -containerd-configuration */}}
-      key: registry-config.toml {{/* TODO: rename *-registry-config.toml to -containerd-config.toml */}}
+      name: {{ include "cluster.resource.name" $ }}-containerd-{{ include "cluster.data.hash" (dict "data" (tpl ($.Files.Get "files/etc/containerd/config.toml") $) "salt" $.Values.providerIntegration.hashSalt) }}
+      key: config.toml
 {{- end }}
 
 {{- define "cluster.internal.kubeadm.files.kubelet" }}

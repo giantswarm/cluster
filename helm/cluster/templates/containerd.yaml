@@ -1,0 +1,8 @@
+{{- if or $.Values.providerIntegration.resourcesApi.controlPlaneResourceEnabled $.Values.providerIntegration.resourcesApi.machinePoolResourcesEnabled }}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ include "cluster.resource.name" $ }}-containerd-{{ include "cluster.data.hash" (dict "data" (tpl ($.Files.Get "files/etc/containerd/config.toml") $) "salt" $.Values.providerIntegration.hashSalt) }}
+data:
+  config.toml: {{ tpl ($.Files.Get "files/etc/containerd/config.toml") $ | b64enc | quote }}
+{{- end }}

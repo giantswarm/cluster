@@ -25,6 +25,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `disable` to disable rendering and deployment of the app.
 - `chartName` is now optional when specifying app details in `helm/cluster/files/apps/<app name>.yaml` or `helm/cluster/files/helmreleases/<app name>.yaml`, and if it is not specified, `appName` property value will be used.
 - `catalog` is now optional when specifying app details in `helm/cluster/files/apps/<app name>.yaml` or `helm/cluster/files/helmreleases/<app name>.yaml`, and if it is not specified, `"default"` value will be used.
+- containerd: Append content hash to configuration secret name. ([#158](https://github.com/giantswarm/cluster/pull/158))\
+  This ensures nodes roll whenever containerd configuration is changed.\
+  **NOTE:** This also causes nodes to roll when upgrading to this version.
 
 ### ⚠️ Breaking changes for cluster-$provider apps
 
