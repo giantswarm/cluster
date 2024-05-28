@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - API Server: Make feature gates configurable. ([#201](https://github.com/giantswarm/cluster/pull/201))\
   - Values: Make `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.featureGates` reusable.
   - Values: Add `internal.advancedConfiguration.controlPlane.apiServer.featureGates`.
+  - API Server: Implement `internal.advancedConfiguration.controlPlane.apiServer.featureGates`.
 
 ### Changed
 
