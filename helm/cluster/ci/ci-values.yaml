@@ -193,6 +193,9 @@ internal:
         extraCertificateSANs:
         - this-is-extra-cert-san.giantswarm.io
         - another-extra-cert-san.giantswarm.io
+        featureGates:
+        - name: StatefulSetAutoDeletePVC
+          enabled: true
       etcd:
         quotaBackendBytesGiB: 16
         initialCluster: "default=http://localhost:2380"

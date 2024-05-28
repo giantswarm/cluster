@@ -157,9 +157,15 @@ api-audiences-example.giantswarm.io
 {{- end }}
 
 {{- define "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.featureGates" }}
-{{- $featureGates := list -}}
-{{- range $featureGate := $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.featureGates }}
-{{- $featureGates = append $featureGates (printf "%s=%t" $featureGate.name $featureGate.enabled) -}}
+{{- $providerFeatureGates := $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.featureGates | default list }}
+{{- $internalFeatureGates := $.Values.internal.advancedConfiguration.controlPlane.apiServer.featureGates | default list }}
+{{- $mergedFeatureGates := dict }}
+{{- range (concat $providerFeatureGates $internalFeatureGates) }}
+{{- $_ := set $mergedFeatureGates (trim .name) .enabled }}
 {{- end }}
-{{- join "," (compact $featureGates) | quote }}
+{{- $featureGates := list }}
+{{- range $name, $enabled := $mergedFeatureGates }}
+{{- $featureGates = append $featureGates (printf "%s=%t" $name $enabled) }}
+{{- end }}
+{{- $featureGates | join "," }}
 {{- end }}

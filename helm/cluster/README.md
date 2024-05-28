@@ -261,6 +261,10 @@ For Giant Swarm internal use only, not stable, or not supported by UIs.
 | `internal.advancedConfiguration.controlPlane.apiServer.extraArgs` | **Extra CLI args** - A map with the additional CLI flags that are appended to the default flags. Use with caution, as there is no validation for these values, so you can set incorrect or duplicate flags.|**Type:** `object`<br/>|
 | `internal.advancedConfiguration.controlPlane.apiServer.extraCertificateSANs` | **Extra certificate SANs** - The additional certificate SANs that are appended to the default SANs. Use with caution, as there is no validation for these values, so you can set incorrect or duplicate certificates.|**Type:** `array`<br/>|
 | `internal.advancedConfiguration.controlPlane.apiServer.extraCertificateSANs[*]` | **Extra certificate SAN**|**Type:** `string`<br/>|
+| `internal.advancedConfiguration.controlPlane.apiServer.featureGates` | **Feature gates** - A list of feature gates to enable or disable.|**Type:** `array`<br/>|
+| `internal.advancedConfiguration.controlPlane.apiServer.featureGates[*]` | **Feature gate** - A feature gate to enable or disable.|**Type:** `object`<br/>|
+| `internal.advancedConfiguration.controlPlane.apiServer.featureGates[*].enabled` | **Enabled** - Whether to enable or disable the feature gate.|**Type:** `boolean`<br/>|
+| `internal.advancedConfiguration.controlPlane.apiServer.featureGates[*].name` | **Name** - Name of the feature gate.|**Type:** `string`<br/>|
 | `internal.advancedConfiguration.controlPlane.controllerManager` | **Controller manager** - Advanced configuration of controller manager|**Type:** `object`<br/>|
 | `internal.advancedConfiguration.controlPlane.controllerManager.terminatedPodGCThreshold` | **Terminated pod GC threshold** - Number of terminated pods that can exist before the terminated pod garbage collector starts deleting terminated pods. If <= 0, the terminated pod garbage collector is disabled.|**Type:** `integer`<br/>**Default:** `125`|
 | `internal.advancedConfiguration.controlPlane.etcd` | **etcd** - Configuration of etcd|**Type:** `object`<br/>|
@@ -535,10 +539,10 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.additionalAdmissionPlugins[*]` | **Additional admission plugin**|**Type:** `string`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.apiAudiences` | **API audiences** - Identifiers of the API. The service account token authenticator will validate that tokens used against the API are bound to at least one of these audiences. If the --service-account-issuer flag is configured and this flag is not, 'api-audiences' field defaults to a single element list containing the issuer URL.||
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.cloudConfig` | **cloud config** - The path of the cloud config file.|**Type:** `string`<br/>|
-| `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.featureGates` | **Feature gates**|**Type:** `array`<br/>|
-| `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.featureGates[*]` | **Feature gate**|**Type:** `object`<br/>|
-| `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.featureGates[*].enabled` | **Enabled**|**Type:** `boolean`<br/>|
-| `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.featureGates[*].name` | **Name**|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.featureGates` | **Feature gates** - A list of feature gates to enable or disable.|**Type:** `array`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.featureGates[*]` | **Feature gate** - A feature gate to enable or disable.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.featureGates[*].enabled` | **Enabled** - Whether to enable or disable the feature gate.|**Type:** `boolean`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.featureGates[*].name` | **Name** - Name of the feature gate.|**Type:** `string`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuer` | **Service account issuer** - Configuration of the identifier of the service account token issuer. You must specify either URL or clusterDomainPrefix (only one, not both).||
 | `providerIntegration.controlPlane.kubeadmConfig.diskSetup` | **Disk setup** - Provider-specific disk setup that is deployed to control plane nodes. They are specified in the cluster-<provider> apps.|**Type:** `object`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.diskSetup.filesystems` | **File systems** - Filesystems specifies the list of file systems to setup.|**Type:** `array`<br/>|
