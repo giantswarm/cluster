@@ -657,6 +657,53 @@
                 }
             }
         },
+        "machineHealthCheck": {
+            "type": "object",
+            "title": "Machine health check",
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "title": "Enable",
+                    "default": true
+                },
+                "maxUnhealthy": {
+                    "type": "string",
+                    "title": "Maximum unhealthy nodes",
+                    "examples": [
+                        "40%"
+                    ],
+                    "default": "40%"
+                },
+                "nodeStartupTimeout": {
+                    "type": "string",
+                    "title": "Node startup timeout",
+                    "description": "Determines how long a machine health check should wait for a node to join the cluster, before considering a machine unhealthy.",
+                    "examples": [
+                        "10m",
+                        "100s"
+                    ],
+                    "default": "8m0s"
+                },
+                "unhealthyNotReadyTimeout": {
+                    "type": "string",
+                    "title": "Timeout for ready",
+                    "description": "If a node is not in condition 'Ready' after this timeout, it will be considered unhealthy.",
+                    "examples": [
+                        "300s"
+                    ],
+                    "default": "10m0s"
+                },
+                "unhealthyUnknownTimeout": {
+                    "type": "string",
+                    "title": "Timeout for unknown condition",
+                    "description": "If a node is in 'Unknown' condition after this timeout, it will be considered unhealthy.",
+                    "examples": [
+                        "300s"
+                    ],
+                    "default": "10m0s"
+                }
+            }
+        },
         "mounts": {
             "type": "array",
             "title": "Additional mounts",
@@ -737,6 +784,10 @@
                             "pattern": "^[a-zA-Z0-9\\._-]+$"
                         }
                     }
+                },
+                "machineHealthCheck": {
+                    "$ref": "#/$defs/machineHealthCheck",
+                    "title": "Machine health check"
                 },
                 "maxSize": {
                     "type": "integer",
@@ -1316,51 +1367,7 @@
                             "$ref": "#/$defs/customNodeTaints"
                         },
                         "machineHealthCheck": {
-                            "type": "object",
-                            "title": "Machine health check",
-                            "properties": {
-                                "enabled": {
-                                    "type": "boolean",
-                                    "title": "Enable",
-                                    "default": true
-                                },
-                                "maxUnhealthy": {
-                                    "type": "string",
-                                    "title": "Maximum unhealthy nodes",
-                                    "examples": [
-                                        "40%"
-                                    ],
-                                    "default": "40%"
-                                },
-                                "nodeStartupTimeout": {
-                                    "type": "string",
-                                    "title": "Node startup timeout",
-                                    "description": "Determines how long a machine health check should wait for a node to join the cluster, before considering a machine unhealthy.",
-                                    "examples": [
-                                        "10m",
-                                        "100s"
-                                    ],
-                                    "default": "8m0s"
-                                },
-                                "unhealthyNotReadyTimeout": {
-                                    "type": "string",
-                                    "title": "Timeout for ready",
-                                    "description": "If a node is not in condition 'Ready' after this timeout, it will be considered unhealthy.",
-                                    "examples": [
-                                        "300s"
-                                    ],
-                                    "default": "10m0s"
-                                },
-                                "unhealthyUnknownTimeout": {
-                                    "type": "string",
-                                    "title": "Timeout for unknown condition",
-                                    "description": "If a node is in 'Unknown' condition after this timeout, it will be considered unhealthy.",
-                                    "examples": [
-                                        "300s"
-                                    ],
-                                    "default": "10m0s"
-                                }
-                            }
+                            "$ref": "#/$defs/machineHealthCheck"
                         },
                         "oidc": {
                             "type": "object",
@@ -1857,6 +1864,7 @@
                 "connectivity",
                 "components",
                 "controlPlane",
+                "environmentVariables",
                 "kubernetesVersion",
                 "provider",
                 "resourcesApi"
@@ -2329,6 +2337,23 @@
                         }
                     }
                 },
+                "environmentVariables": {
+                    "type": "object",
+                    "title": "environmentVariables for provider",
+                    "additionalProperties": false,
+                    "properties": {
+                        "hostName": {
+                            "type": "string",
+                            "title": "",
+                            "description": "Environment for host name."
+                        },
+                        "ipv4": {
+                            "type": "string",
+                            "title": "IPv4",
+                            "description": "Environment for IPv4."
+                        }
+                    }
+                },
                 "hashSalt": {
                     "type": "string",
                     "title": "Hash salt",
@@ -2631,6 +2656,19 @@
                                 },
                                 "preKubeadmCommands": {
                                     "$ref": "#/$defs/preKubeadmCommands"
+                                }
+                            }
+                        },
+                        "resources": {
+                            "type": "object",
+                            "title": "Resources configuration",
+                            "description": "Infrastructure template for worker resources when using MachineDeployment.",
+                            "additionalProperties": false,
+                            "properties": {
+                                "infrastructureMachineTemplateSpecTemplateName": {
+                                    "type": "string",
+                                    "title": "Infrastructure Machine template spec template name",
+                                    "description": "The name of Helm template that renders Infrastructure Machine template spec."
                                 }
                             }
                         }

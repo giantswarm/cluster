@@ -11,6 +11,9 @@ global:
     verybignodepool-1234:
       replicas: 100
 providerIntegration:
+  environmentVariables:
+    hostName: COREOS_EC2_HOSTNAME
+    ipv4: COREOS_EC2_IPV4_LOCAL
   provider: aws
   resourcesApi:
     bastionResourceEnabled: false
