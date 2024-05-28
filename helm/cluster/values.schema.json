@@ -128,7 +128,7 @@
                     "enabled": {
                         "type": "boolean",
                         "title": "Enabled",
-                        "description": "Wheter to enable or disable the feature gate."
+                        "description": "Whether to enable or disable the feature gate."
                     },
                     "name": {
                         "type": "string",

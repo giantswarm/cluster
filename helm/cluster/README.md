@@ -263,7 +263,7 @@ For Giant Swarm internal use only, not stable, or not supported by UIs.
 | `internal.advancedConfiguration.controlPlane.apiServer.extraCertificateSANs[*]` | **Extra certificate SAN**|**Type:** `string`<br/>|
 | `internal.advancedConfiguration.controlPlane.apiServer.featureGates` | **Feature gates** - A list of feature gates to enable or disable.|**Type:** `array`<br/>|
 | `internal.advancedConfiguration.controlPlane.apiServer.featureGates[*]` | **Feature gate** - A feature gate to enable or disable.|**Type:** `object`<br/>|
-| `internal.advancedConfiguration.controlPlane.apiServer.featureGates[*].enabled` | **Enabled** - Wheter to enable or disable the feature gate.|**Type:** `boolean`<br/>|
+| `internal.advancedConfiguration.controlPlane.apiServer.featureGates[*].enabled` | **Enabled** - Whether to enable or disable the feature gate.|**Type:** `boolean`<br/>|
 | `internal.advancedConfiguration.controlPlane.apiServer.featureGates[*].name` | **Name** - Name of the feature gate.|**Type:** `string`<br/>|
 | `internal.advancedConfiguration.controlPlane.controllerManager` | **Controller manager** - Advanced configuration of controller manager|**Type:** `object`<br/>|
 | `internal.advancedConfiguration.controlPlane.controllerManager.terminatedPodGCThreshold` | **Terminated pod GC threshold** - Number of terminated pods that can exist before the terminated pod garbage collector starts deleting terminated pods. If <= 0, the terminated pod garbage collector is disabled.|**Type:** `integer`<br/>**Default:** `125`|
@@ -541,7 +541,7 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.cloudConfig` | **cloud config** - The path of the cloud config file.|**Type:** `string`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.featureGates` | **Feature gates** - A list of feature gates to enable or disable.|**Type:** `array`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.featureGates[*]` | **Feature gate** - A feature gate to enable or disable.|**Type:** `object`<br/>|
-| `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.featureGates[*].enabled` | **Enabled** - Wheter to enable or disable the feature gate.|**Type:** `boolean`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.featureGates[*].enabled` | **Enabled** - Whether to enable or disable the feature gate.|**Type:** `boolean`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.featureGates[*].name` | **Name** - Name of the feature gate.|**Type:** `string`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuer` | **Service account issuer** - Configuration of the identifier of the service account token issuer. You must specify either URL or clusterDomainPrefix (only one, not both).||
 | `providerIntegration.controlPlane.kubeadmConfig.diskSetup` | **Disk setup** - Provider-specific disk setup that is deployed to control plane nodes. They are specified in the cluster-<provider> apps.|**Type:** `object`<br/>|
