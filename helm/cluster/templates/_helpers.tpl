@@ -190,19 +190,13 @@ Where `data` is the data to hash and `global` is the top level scope.
 {{- define "cluster.internal.get-release-resource" }}
 {{- $_ := include "cluster.internal.get-internal-values" $ }}
 {{- $renderWithoutReleaseResource := ((($.GiantSwarm.internal).ephemeralConfiguration).offlineTesting).renderWithoutReleaseResource | default false }}
-{{- $clusterApp := lookup "application.giantswarm.io/v1alpha1" "App" $.Release.Namespace $.Release.Name -}}
-{{- if $clusterApp }}
-  {{- $_ := set $.GiantSwarm "ClusterApp" $clusterApp }}
-  {{- $releaseVersion := get $.GiantSwarm.ClusterApp.metadata.labels "release.giantswarm.io/version" | trimPrefix "v" }}
-  {{- $releaseVersion = printf "v%s" $releaseVersion }}
-  {{- $release := lookup "release.giantswarm.io/v1alpha1" "Release" "" $releaseVersion }}
-  {{- if $release }}
-    {{- $_ := set $.GiantSwarm "Release" $release }}
-  {{ else if not $renderWithoutReleaseResource }}
-    {{- fail (printf "Release resource '%s' not found" $releaseVersion) }}
-  {{- end }}
-{{- else if not $renderWithoutReleaseResource }}
-  {{- fail (printf "Cluster App resource not found for cluster '%s/%s'" $.Release.Namespace $.Release.Name) }}
+{{- $releaseVersion := $.Values.global.release.version | trimPrefix "v" }}
+{{- $releaseVersion = printf "v%s" $releaseVersion }}
+{{- $release := lookup "release.giantswarm.io/v1alpha1" "Release" "" $releaseVersion }}
+{{- if $release }}
+  {{- $_ := set $.GiantSwarm "Release" $release }}
+{{ else if not $renderWithoutReleaseResource }}
+  {{- fail (printf "Release resource '%s' not found" $releaseVersion) }}
 {{- end }}
 {{- end }}
 
