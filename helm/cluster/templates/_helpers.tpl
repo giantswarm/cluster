@@ -244,6 +244,18 @@ Where `data` is the data to hash and `global` is the top level scope.
 {{- end }}
 {{- end }}
 
+{{- define "cluster.component.flatcar.version" }}
+{{- $_ := include "cluster.internal.get-provider-integration-values" $ }}
+{{- if $.GiantSwarm.providerIntegration.useReleases }}
+{{- $_ := set $ "componentName" "flatcar" }}
+{{- $flatcarVariant := include "cluster.component.version" $ | trimPrefix "v" }}
+{{- else if $.GiantSwarm.providerIntegration.osImage }}
+{{- $.GiantSwarm.providerIntegration.osImage.version }}
+{{- else }}
+{{- fail "Cannot determine Flatcar version" }}
+{{- end }}
+{{- end }}
+
 {{- define "cluster.component.flatcar.variant" }}
 {{- $_ := include "cluster.internal.get-provider-integration-values" $ }}
 {{- if $.GiantSwarm.providerIntegration.useReleases }}
