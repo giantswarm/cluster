@@ -111,6 +111,33 @@
                 }
             }
         },
+        "featureGates": {
+            "type": "array",
+            "title": "Feature gates",
+            "description": "A list of feature gates to enable or disable.",
+            "items": {
+                "type": "object",
+                "title": "Feature gate",
+                "description": "A feature gate to enable or disable.",
+                "required": [
+                    "name",
+                    "enabled"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                    "enabled": {
+                        "type": "boolean",
+                        "title": "Enabled",
+                        "description": "Wheter to enable or disable the feature gate."
+                    },
+                    "name": {
+                        "type": "string",
+                        "title": "Name",
+                        "description": "Name of the feature gate."
+                    }
+                }
+            }
+        },
         "fileFromSecret": {
             "type": "object",
             "title": "File from secret",
@@ -2165,27 +2192,7 @@
                                                     "description": "The path of the cloud config file."
                                                 },
                                                 "featureGates": {
-                                                    "type": "array",
-                                                    "title": "Feature gates",
-                                                    "items": {
-                                                        "type": "object",
-                                                        "title": "Feature gate",
-                                                        "required": [
-                                                            "name",
-                                                            "enabled"
-                                                        ],
-                                                        "additionalProperties": false,
-                                                        "properties": {
-                                                            "enabled": {
-                                                                "type": "boolean",
-                                                                "title": "Enabled"
-                                                            },
-                                                            "name": {
-                                                                "type": "string",
-                                                                "title": "Name"
-                                                            }
-                                                        }
-                                                    }
+                                                    "$ref": "#/$defs/featureGates"
                                                 },
                                                 "serviceAccountIssuer": {
                                                     "title": "Service account issuer",

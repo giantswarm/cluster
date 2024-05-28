@@ -535,10 +535,10 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.additionalAdmissionPlugins[*]` | **Additional admission plugin**|**Type:** `string`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.apiAudiences` | **API audiences** - Identifiers of the API. The service account token authenticator will validate that tokens used against the API are bound to at least one of these audiences. If the --service-account-issuer flag is configured and this flag is not, 'api-audiences' field defaults to a single element list containing the issuer URL.||
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.cloudConfig` | **cloud config** - The path of the cloud config file.|**Type:** `string`<br/>|
-| `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.featureGates` | **Feature gates**|**Type:** `array`<br/>|
-| `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.featureGates[*]` | **Feature gate**|**Type:** `object`<br/>|
-| `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.featureGates[*].enabled` | **Enabled**|**Type:** `boolean`<br/>|
-| `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.featureGates[*].name` | **Name**|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.featureGates` | **Feature gates** - A list of feature gates to enable or disable.|**Type:** `array`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.featureGates[*]` | **Feature gate** - A feature gate to enable or disable.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.featureGates[*].enabled` | **Enabled** - Wheter to enable or disable the feature gate.|**Type:** `boolean`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.featureGates[*].name` | **Name** - Name of the feature gate.|**Type:** `string`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuer` | **Service account issuer** - Configuration of the identifier of the service account token issuer. You must specify either URL or clusterDomainPrefix (only one, not both).||
 | `providerIntegration.controlPlane.kubeadmConfig.diskSetup` | **Disk setup** - Provider-specific disk setup that is deployed to control plane nodes. They are specified in the cluster-<provider> apps.|**Type:** `object`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.diskSetup.filesystems` | **File systems** - Filesystems specifies the list of file systems to setup.|**Type:** `array`<br/>|
