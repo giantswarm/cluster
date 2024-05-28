@@ -248,7 +248,8 @@ Where `data` is the data to hash and `global` is the top level scope.
 {{- $_ := include "cluster.internal.get-provider-integration-values" $ }}
 {{- if $.GiantSwarm.providerIntegration.useReleases }}
 {{- $_ := set $ "componentName" "flatcar" }}
-{{- $flatcarVariant := include "cluster.component.version" $ | trimPrefix "v" }}
+{{- $flatcarVersion := include "cluster.component.version" $ | trimPrefix "v" }}
+{{- $flatcarVersion }}
 {{- else if $.GiantSwarm.providerIntegration.osImage }}
 {{- $.GiantSwarm.providerIntegration.osImage.version }}
 {{- else }}
