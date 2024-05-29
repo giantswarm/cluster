@@ -266,6 +266,10 @@ For Giant Swarm internal use only, not stable, or not supported by UIs.
 | `internal.advancedConfiguration.controlPlane.apiServer.featureGates[*].enabled` | **Enabled** - Whether to enable or disable the feature gate.|**Type:** `boolean`<br/>|
 | `internal.advancedConfiguration.controlPlane.apiServer.featureGates[*].name` | **Name** - Name of the feature gate.|**Type:** `string`<br/>|
 | `internal.advancedConfiguration.controlPlane.controllerManager` | **Controller manager** - Advanced configuration of controller manager|**Type:** `object`<br/>|
+| `internal.advancedConfiguration.controlPlane.controllerManager.featureGates` | **Feature gates** - A list of feature gates to enable or disable.|**Type:** `array`<br/>|
+| `internal.advancedConfiguration.controlPlane.controllerManager.featureGates[*]` | **Feature gate** - A feature gate to enable or disable.|**Type:** `object`<br/>|
+| `internal.advancedConfiguration.controlPlane.controllerManager.featureGates[*].enabled` | **Enabled** - Whether to enable or disable the feature gate.|**Type:** `boolean`<br/>|
+| `internal.advancedConfiguration.controlPlane.controllerManager.featureGates[*].name` | **Name** - Name of the feature gate.|**Type:** `string`<br/>|
 | `internal.advancedConfiguration.controlPlane.controllerManager.terminatedPodGCThreshold` | **Terminated pod GC threshold** - Number of terminated pods that can exist before the terminated pod garbage collector starts deleting terminated pods. If <= 0, the terminated pod garbage collector is disabled.|**Type:** `integer`<br/>**Default:** `125`|
 | `internal.advancedConfiguration.controlPlane.etcd` | **etcd** - Configuration of etcd|**Type:** `object`<br/>|
 | `internal.advancedConfiguration.controlPlane.etcd.dataDir` | **Data directory** - The directory for etcd data.|**Type:** `string`<br/>|
