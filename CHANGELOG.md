@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Controller Manager: Make feature gates configurable. ([#203](https://github.com/giantswarm/cluster/pull/203))\
   - Values: Add `internal.advancedConfiguration.controlPlane.controllerManager.featureGates`.
   - Values: Add `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.controllerManager.featureGates`.
+  - Controller Manager: Implement `cluster.internal.controlPlane.kubeadm.clusterConfiguration.controllerManager.featureGates`.
 
 ### Changed
 
