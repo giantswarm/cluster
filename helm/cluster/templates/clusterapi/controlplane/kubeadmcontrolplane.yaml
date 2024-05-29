@@ -53,6 +53,7 @@ spec:
       {{- include "cluster.internal.controlPlane.kubeadm.joinConfiguration" $ | indent 6 }}
     files:
     {{- include "cluster.internal.controlPlane.kubeadm.files" $ | indent 4 }}
+      owner: root:root
     preKubeadmCommands:
     {{- include "cluster.internal.controlPlane.kubeadm.preKubeadmCommands" $ | indent 4 }}
     {{- $postKubeadmCommands := include "cluster.internal.controlPlane.kubeadm.postKubeadmCommands" $ }}

@@ -18,7 +18,6 @@
     secret:
       name: {{ include "cluster.resource.name" $ }}-control-plane-{{ include "cluster.data.hash" (dict "data" (include $.Values.providerIntegration.controlPlane.resources.infrastructureMachineTemplateSpecTemplateName $) "salt" $.Values.providerIntegration.hashSalt) }}-{{ $.Values.providerIntegration.provider }}-json
       key: control-plane-{{ $.Values.providerIntegration.provider }}.json
-      owner: root:root
 {{- end }}
 {{- end }}
 
