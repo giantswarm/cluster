@@ -37,7 +37,7 @@ extraArgs:
   {{- if $.Values.internal.advancedConfiguration.controlPlane.apiServer.etcdPrefix }}
   etcd-prefix: {{ $.Values.internal.advancedConfiguration.controlPlane.apiServer.etcdPrefix }}
   {{- end }}
-  {{- if .Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.featureGates }}
+  {{- if include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.featureGates" $ }}
   feature-gates: {{ include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.featureGates" $ }}
   {{- end }}
   kubelet-preferred-address-types: InternalIP
@@ -112,9 +112,9 @@ extraVolumes:
   "ResourceQuota"
   "ServiceAccount"
   "ValidatingAdmissionWebhook" -}}
-{{- $internalPlugins := $.Values.internal.advancedConfiguration.controlPlane.apiServer.additionalAdmissionPlugins | default list }}
 {{- $providerPlugins := $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.additionalAdmissionPlugins | default list }}
-{{- concat $defaultPlugins $internalPlugins $providerPlugins | uniq | compact | join "," }}
+{{- $internalPlugins := $.Values.internal.advancedConfiguration.controlPlane.apiServer.additionalAdmissionPlugins | default list }}
+{{- concat $defaultPlugins $providerPlugins $internalPlugins | compact | uniq | join "," }}
 {{- end }}
 
 {{- define "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.serviceAccountIssuer" }}
