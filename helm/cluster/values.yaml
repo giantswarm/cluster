@@ -149,6 +149,7 @@ providerIntegration:
     kubeadmConfig:
       clusterConfiguration:
         apiServer: {}
+        controllerManager: {}
       diskSetup: {}
       ignition:
         containerLinuxConfig:
