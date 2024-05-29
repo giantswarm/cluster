@@ -22,5 +22,4 @@ users:
 {{- end }}
 files:
 {{- include "cluster.internal.workers.kubeadm.files" $ | indent 2 }}
-  owner: root:root
 {{- end }}
