@@ -163,6 +163,9 @@
       After=coreos-metadata.service
       # kubeadm must run after containerd - see https://github.com/kubernetes-sigs/image-builder/issues/939.
       After=containerd.service
+      # kubeadm requires having an IP
+      After=network-online.target
+      Wants=network-online.target
       [Service]
       # Ensure kubeadm service has access to kubeadm binary in /opt/bin on Flatcar.
       Environment=PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/opt/bin
