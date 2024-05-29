@@ -1,8 +1,0 @@
-{{- if or $.Values.providerIntegration.resourcesApi.controlPlaneResourceEnabled $.Values.providerIntegration.resourcesApi.machinePoolResourcesEnabled }}
-apiVersion: v1
-kind: Secret
-metadata:
-  name: {{ include "cluster.resource.name" $ }}-registry-configuration
-data:
-  registry-config.toml: {{ tpl ($.Files.Get "files/etc/containerd/config.toml") $ | b64enc | quote }}
-{{- end }}

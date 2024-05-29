@@ -111,6 +111,33 @@
                 }
             }
         },
+        "featureGates": {
+            "type": "array",
+            "title": "Feature gates",
+            "description": "A list of feature gates to enable or disable.",
+            "items": {
+                "type": "object",
+                "title": "Feature gate",
+                "description": "A feature gate to enable or disable.",
+                "required": [
+                    "name",
+                    "enabled"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                    "enabled": {
+                        "type": "boolean",
+                        "title": "Enabled",
+                        "description": "Whether to enable or disable the feature gate."
+                    },
+                    "name": {
+                        "type": "string",
+                        "title": "Name",
+                        "description": "Name of the feature gate."
+                    }
+                }
+            }
+        },
         "fileFromSecret": {
             "type": "object",
             "title": "File from secret",
@@ -657,6 +684,53 @@
                 }
             }
         },
+        "machineHealthCheck": {
+            "type": "object",
+            "title": "Machine health check",
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "title": "Enable",
+                    "default": true
+                },
+                "maxUnhealthy": {
+                    "type": "string",
+                    "title": "Maximum unhealthy nodes",
+                    "examples": [
+                        "40%"
+                    ],
+                    "default": "40%"
+                },
+                "nodeStartupTimeout": {
+                    "type": "string",
+                    "title": "Node startup timeout",
+                    "description": "Determines how long a machine health check should wait for a node to join the cluster, before considering a machine unhealthy.",
+                    "examples": [
+                        "10m",
+                        "100s"
+                    ],
+                    "default": "8m0s"
+                },
+                "unhealthyNotReadyTimeout": {
+                    "type": "string",
+                    "title": "Timeout for ready",
+                    "description": "If a node is not in condition 'Ready' after this timeout, it will be considered unhealthy.",
+                    "examples": [
+                        "300s"
+                    ],
+                    "default": "10m0s"
+                },
+                "unhealthyUnknownTimeout": {
+                    "type": "string",
+                    "title": "Timeout for unknown condition",
+                    "description": "If a node is in 'Unknown' condition after this timeout, it will be considered unhealthy.",
+                    "examples": [
+                        "300s"
+                    ],
+                    "default": "10m0s"
+                }
+            }
+        },
         "mounts": {
             "type": "array",
             "title": "Additional mounts",
@@ -737,6 +811,10 @@
                             "pattern": "^[a-zA-Z0-9\\._-]+$"
                         }
                     }
+                },
+                "machineHealthCheck": {
+                    "$ref": "#/$defs/machineHealthCheck",
+                    "title": "Machine health check"
                 },
                 "maxSize": {
                     "type": "integer",
@@ -1349,51 +1427,7 @@
                             "$ref": "#/$defs/customNodeTaints"
                         },
                         "machineHealthCheck": {
-                            "type": "object",
-                            "title": "Machine health check",
-                            "properties": {
-                                "enabled": {
-                                    "type": "boolean",
-                                    "title": "Enable",
-                                    "default": true
-                                },
-                                "maxUnhealthy": {
-                                    "type": "string",
-                                    "title": "Maximum unhealthy nodes",
-                                    "examples": [
-                                        "40%"
-                                    ],
-                                    "default": "40%"
-                                },
-                                "nodeStartupTimeout": {
-                                    "type": "string",
-                                    "title": "Node startup timeout",
-                                    "description": "Determines how long a machine health check should wait for a node to join the cluster, before considering a machine unhealthy.",
-                                    "examples": [
-                                        "10m",
-                                        "100s"
-                                    ],
-                                    "default": "8m0s"
-                                },
-                                "unhealthyNotReadyTimeout": {
-                                    "type": "string",
-                                    "title": "Timeout for ready",
-                                    "description": "If a node is not in condition 'Ready' after this timeout, it will be considered unhealthy.",
-                                    "examples": [
-                                        "300s"
-                                    ],
-                                    "default": "10m0s"
-                                },
-                                "unhealthyUnknownTimeout": {
-                                    "type": "string",
-                                    "title": "Timeout for unknown condition",
-                                    "description": "If a node is in 'Unknown' condition after this timeout, it will be considered unhealthy.",
-                                    "examples": [
-                                        "300s"
-                                    ],
-                                    "default": "10m0s"
-                                }
-                            }
+                            "$ref": "#/$defs/machineHealthCheck"
                         },
                         "oidc": {
                             "type": "object",
@@ -1657,6 +1691,9 @@
                                                 "type": "string",
                                                 "title": "Extra certificate SAN"
                                             }
+                                        },
+                                        "featureGates": {
+                                            "$ref": "#/$defs/featureGates"
                                         }
                                     }
                                 },
@@ -1665,6 +1702,9 @@
                                     "title": "Controller manager",
                                     "description": "Advanced configuration of controller manager",
                                     "properties": {
+                                        "featureGates": {
+                                            "$ref": "#/$defs/featureGates"
+                                        },
                                         "terminatedPodGCThreshold": {
                                             "type": "integer",
                                             "title": "Terminated pod GC threshold",
@@ -1890,6 +1930,7 @@
                 "connectivity",
                 "components",
                 "controlPlane",
+                "environmentVariables",
                 "kubernetesVersion",
                 "provider",
                 "resourcesApi"
@@ -2190,27 +2231,7 @@
                                                     "description": "The path of the cloud config file."
                                                 },
                                                 "featureGates": {
-                                                    "type": "array",
-                                                    "title": "Feature gates",
-                                                    "items": {
-                                                        "type": "object",
-                                                        "title": "Feature gate",
-                                                        "required": [
-                                                            "name",
-                                                            "enabled"
-                                                        ],
-                                                        "additionalProperties": false,
-                                                        "properties": {
-                                                            "enabled": {
-                                                                "type": "boolean",
-                                                                "title": "Enabled"
-                                                            },
-                                                            "name": {
-                                                                "type": "string",
-                                                                "title": "Name"
-                                                            }
-                                                        }
-                                                    }
+                                                    "$ref": "#/$defs/featureGates"
                                                 },
                                                 "serviceAccountIssuer": {
                                                     "title": "Service account issuer",
@@ -2279,6 +2300,16 @@
                                                 }
                                             },
                                             "default": {}
+                                        },
+                                        "controllerManager": {
+                                            "type": "object",
+                                            "title": "Controller manager",
+                                            "description": "Configuration of controller manager",
+                                            "properties": {
+                                                "featureGates": {
+                                                    "$ref": "#/$defs/featureGates"
+                                                }
+                                            }
                                         }
                                     }
                                 },
@@ -2359,6 +2390,23 @@
                                     "description": "The name of Helm template that renders Infrastructure Machine template spec."
                                 }
                             }
+                        }
+                    }
+                },
+                "environmentVariables": {
+                    "type": "object",
+                    "title": "environmentVariables for provider",
+                    "additionalProperties": false,
+                    "properties": {
+                        "hostName": {
+                            "type": "string",
+                            "title": "",
+                            "description": "Environment for host name."
+                        },
+                        "ipv4": {
+                            "type": "string",
+                            "title": "IPv4",
+                            "description": "Environment for IPv4."
                         }
                     }
                 },
@@ -2664,6 +2712,19 @@
                                 },
                                 "preKubeadmCommands": {
                                     "$ref": "#/$defs/preKubeadmCommands"
+                                }
+                            }
+                        },
+                        "resources": {
+                            "type": "object",
+                            "title": "Resources configuration",
+                            "description": "Infrastructure template for worker resources when using MachineDeployment.",
+                            "additionalProperties": false,
+                            "properties": {
+                                "infrastructureMachineTemplateSpecTemplateName": {
+                                    "type": "string",
+                                    "title": "Infrastructure Machine template spec template name",
+                                    "description": "The name of Helm template that renders Infrastructure Machine template spec."
                                 }
                             }
                         }

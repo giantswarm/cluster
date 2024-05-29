@@ -7,7 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Fix wrong indentation for owner field of KubeadmConfig files.
+
+## [0.27.0] - 2024-05-28
+
+### Added
+
+- Add MachineDeployment resource template.
+- Add MachineHealthCheck resource template to NodePools.
+- API Server: Make feature gates configurable. ([#201](https://github.com/giantswarm/cluster/pull/201))\
+  - Values: Make `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.featureGates` reusable.
+  - Values: Add `internal.advancedConfiguration.controlPlane.apiServer.featureGates`.
+  - API Server: Implement `internal.advancedConfiguration.controlPlane.apiServer.featureGates`.
+- Controller Manager: Make feature gates configurable. ([#203](https://github.com/giantswarm/cluster/pull/203))\
+  - Values: Add `internal.advancedConfiguration.controlPlane.controllerManager.featureGates`.
+  - Values: Add `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.controllerManager.featureGates`.
+  - Controller Manager: Implement `cluster.internal.controlPlane.kubeadm.clusterConfiguration.controllerManager.featureGates`.
+
 ### Changed
+
+- **BREAKING** Replace `COREOS_EC2_HOSTNAME` with `Values.providerIntegration.environmentVariables.hostName` to support multiple providers.
+- **BREAKING** Replace `COREOS_EC2_IPV4_LOCAL` with `Values.providerIntegration.environmentVariables.ipv4` to support multiple providers.
 
 - Update cluster-autoscaler-app to 1.27.3-gs9.
 - HelmReleases are deployed from a single generic template and details about apps that are deployed as HelmReleases are in `helm/cluster/files/helmreleases` (similarly to `helm/cluster/files/apps`).
@@ -17,6 +39,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `disable` to disable rendering and deployment of the app.
 - `chartName` is now optional when specifying app details in `helm/cluster/files/apps/<app name>.yaml` or `helm/cluster/files/helmreleases/<app name>.yaml`, and if it is not specified, `appName` property value will be used.
 - `catalog` is now optional when specifying app details in `helm/cluster/files/apps/<app name>.yaml` or `helm/cluster/files/helmreleases/<app name>.yaml`, and if it is not specified, `"default"` value will be used.
+- containerd: Append content hash to configuration secret name. ([#158](https://github.com/giantswarm/cluster/pull/158))\
+  This ensures nodes roll whenever containerd configuration is changed.\
+  **NOTE:** This also causes nodes to roll when upgrading to this version.
 
 ### ⚠️ Breaking changes for cluster-$provider apps
 
@@ -410,7 +435,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Update and clean up the template repo.
 
-[Unreleased]: https://github.com/giantswarm/cluster/compare/v0.26.0...HEAD
+[Unreleased]: https://github.com/giantswarm/cluster/compare/v0.27.0...HEAD
+[0.27.0]: https://github.com/giantswarm/cluster/compare/v0.26.0...v0.27.0
 [0.26.0]: https://github.com/giantswarm/cluster/compare/v0.25.0...v0.26.0
 [0.25.0]: https://github.com/giantswarm/cluster/compare/v0.24.0...v0.25.0
 [0.24.0]: https://github.com/giantswarm/cluster/compare/v0.23.0...v0.24.0

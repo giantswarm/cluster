@@ -37,7 +37,7 @@ extraArgs:
   {{- if $.Values.internal.advancedConfiguration.controlPlane.apiServer.etcdPrefix }}
   etcd-prefix: {{ $.Values.internal.advancedConfiguration.controlPlane.apiServer.etcdPrefix }}
   {{- end }}
-  {{- if .Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.featureGates }}
+  {{- if include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.featureGates" $ }}
   feature-gates: {{ include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.featureGates" $ }}
   {{- end }}
   kubelet-preferred-address-types: InternalIP
@@ -112,9 +112,9 @@ extraVolumes:
   "ResourceQuota"
   "ServiceAccount"
   "ValidatingAdmissionWebhook" -}}
-{{- $internalPlugins := $.Values.internal.advancedConfiguration.controlPlane.apiServer.additionalAdmissionPlugins | default list }}
 {{- $providerPlugins := $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.additionalAdmissionPlugins | default list }}
-{{- concat $defaultPlugins $internalPlugins $providerPlugins | uniq | compact | join "," }}
+{{- $internalPlugins := $.Values.internal.advancedConfiguration.controlPlane.apiServer.additionalAdmissionPlugins | default list }}
+{{- concat $defaultPlugins $providerPlugins $internalPlugins | compact | uniq | join "," }}
 {{- end }}
 
 {{- define "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.serviceAccountIssuer" }}
@@ -157,9 +157,15 @@ api-audiences-example.giantswarm.io
 {{- end }}
 
 {{- define "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.featureGates" }}
-{{- $featureGates := list -}}
-{{- range $featureGate := $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.featureGates }}
-{{- $featureGates = append $featureGates (printf "%s=%t" $featureGate.name $featureGate.enabled) -}}
+{{- $providerFeatureGates := $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.featureGates | default list }}
+{{- $internalFeatureGates := $.Values.internal.advancedConfiguration.controlPlane.apiServer.featureGates | default list }}
+{{- $mergedFeatureGates := dict }}
+{{- range (concat $providerFeatureGates $internalFeatureGates) }}
+{{- $_ := set $mergedFeatureGates (trim .name) .enabled }}
 {{- end }}
-{{- join "," (compact $featureGates) | quote }}
+{{- $featureGates := list }}
+{{- range $name, $enabled := $mergedFeatureGates }}
+{{- $featureGates = append $featureGates (printf "%s=%t" $name $enabled) }}
+{{- end }}
+{{- $featureGates | join "," }}
 {{- end }}

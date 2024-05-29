@@ -8,16 +8,22 @@
 {{- define "cluster.internal.workers.kubeadm.joinConfiguration" }}
 {{- with $nodePool := required "nodePool must be set" .nodePool }}
 nodeRegistration:
-  name: ${COREOS_EC2_HOSTNAME}
+  name: {{ printf "${%s}" $.Values.providerIntegration.environmentVariables.hostName }}
   kubeletExtraArgs:
+    {{- if eq $.Values.providerIntegration.provider "azure" }}
+    azure-container-registry-config: {{ $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.cloudConfig  }}
+    {{- end }}
     {{- if $.Values.internal.advancedConfiguration.cgroupsv1 }}
     cgroup-driver: cgroupfs
     {{- end }}
     cloud-provider: external
+    {{- if $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.cloudConfig  }}
+    cloud-config: {{ $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.cloudConfig  }}
+    {{- end }}
     feature-gates: CronJobTimeZone=true
     healthz-bind-address: 0.0.0.0
-    node-ip: ${COREOS_EC2_IPV4_LOCAL}
-    node-labels: ip=${COREOS_EC2_IPV4_LOCAL},role=worker,giantswarm.io/machine-pool={{ include "cluster.resource.name" $ }}-{{ $nodePool.name }},{{- join "," $nodePool.config.customNodeLabels }}
+    node-ip: {{ printf "${%s}" $.Values.providerIntegration.environmentVariables.ipv4 }}
+    node-labels: ip={{ printf "${%s}" $.Values.providerIntegration.environmentVariables.ipv4 }},role=worker,giantswarm.io/machine-pool={{ include "cluster.resource.name" $ }}-{{ $nodePool.name }},{{- join "," $nodePool.config.customNodeLabels }}
     v: "2"
   {{- if $nodePool.config.customNodeTaints }}
   taints:
