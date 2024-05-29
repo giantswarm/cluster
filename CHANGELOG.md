@@ -21,6 +21,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Values: Make `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.featureGates` reusable.
   - Values: Add `internal.advancedConfiguration.controlPlane.apiServer.featureGates`.
   - API Server: Implement `internal.advancedConfiguration.controlPlane.apiServer.featureGates`.
+- Controller Manager: Make feature gates configurable. ([#203](https://github.com/giantswarm/cluster/pull/203))\
+  - Values: Add `internal.advancedConfiguration.controlPlane.controllerManager.featureGates`.
+  - Values: Add `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.controllerManager.featureGates`.
+  - Controller Manager: Implement `cluster.internal.controlPlane.kubeadm.clusterConfiguration.controllerManager.featureGates`.
 
 ### Changed
 
