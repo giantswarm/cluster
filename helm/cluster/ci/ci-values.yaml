@@ -196,6 +196,10 @@ internal:
         featureGates:
         - name: StatefulSetAutoDeletePVC
           enabled: true
+      controllerManager:
+        featureGates:
+        - name: StatefulSetAutoDeletePVC
+          enabled: true
       etcd:
         quotaBackendBytesGiB: 16
         initialCluster: "default=http://localhost:2380"
