@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fix wrong indentation for owner field of KubeadmConfig files.
-
+- Fix `unable to select an IP from default routes` error by adding `network-online.target` as dependency for kubeadm service.
 ## [0.27.0] - 2024-05-28
 
 ### Added
