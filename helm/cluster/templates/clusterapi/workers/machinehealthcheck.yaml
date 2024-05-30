@@ -19,7 +19,7 @@ metadata:
     {{ $key }}: {{ $val | quote }}
     {{- end }}
     {{- end }}
-  name: {{ include "cluster.resource.name" . }}-control-plane
+  name: {{ include "cluster.resource.name" . }}-{{ $nodePoolName }}
   namespace: {{ $.Release.Namespace }}
 spec:
   clusterName: {{ include "cluster.resource.name" $ }}
@@ -28,7 +28,7 @@ spec:
   selector:
     matchLabels:
       cluster.x-k8s.io/cluster-name: {{ include "cluster.resource.name" $ }}
-      cluster.x-k8s.io/control-plane: ""
+      cluster.x-k8s.io/deployment-name: {{ include "cluster.resource.name" $ }}-{{ $nodePoolName }}
   unhealthyConditions:
   - type: Ready
     status: Unknown
