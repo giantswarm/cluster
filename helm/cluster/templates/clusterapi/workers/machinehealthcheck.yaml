@@ -18,7 +18,7 @@ metadata:
     {{ $key }}: {{ $val | quote }}
     {{- end }}
     {{- end }}
-  name: {{ include "cluster.resource.name" . }}-{{ $nodePoolName }}
+  name: {{ include "cluster.resource.name" $ }}-{{ $nodePoolName }}
   namespace: {{ $.Release.Namespace }}
 spec:
   clusterName: {{ include "cluster.resource.name" $ }}
