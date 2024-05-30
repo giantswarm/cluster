@@ -2,8 +2,8 @@
 {{- if $.Values.providerIntegration.resourcesApi.machineHealthCheckResourceEnabled }}
 {{- if eq $.Values.providerIntegration.resourcesApi.nodePoolKind "MachineDeployment" }}
 {{- range $nodePoolName, $nodePoolConfig := $.Values.global.nodePools | default $.Values.providerIntegration.workers.defaultNodePools }}
-{{- $_ := set $ "nodePool" (dict "name" $nodePoolName "config" $nodePoolConfig) }}
 {{- if and $nodePoolConfig.machineHealthCheck ($nodePoolConfig.machineHealthCheck.enabled | default false) }}
+{{- $_ := set $ "nodePool" (dict "name" $nodePoolName "config" $nodePoolConfig) }}
 apiVersion: cluster.x-k8s.io/v1beta1
 kind: MachineHealthCheck
 metadata:
