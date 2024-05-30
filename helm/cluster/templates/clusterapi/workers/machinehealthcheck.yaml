@@ -13,6 +13,7 @@ metadata:
     {{- $annotations | indent 4 }}
   {{- end }}
   labels:
+    giantswarm.io/machine-deployment: {{ include "cluster.resource.name" $ }}-{{ $nodePoolName }}
     {{- include "cluster.labels.common" $ | nindent 4 }}
     {{- if $nodePoolConfig.labels }}
     {{- range $key, $val := $nodePoolConfig.labels }}
