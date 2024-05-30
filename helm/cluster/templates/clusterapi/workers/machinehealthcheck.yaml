@@ -2,7 +2,6 @@
 {{- if $.Values.providerIntegration.resourcesApi.machineHealthCheckResourceEnabled }}
 {{- if eq $.Values.providerIntegration.resourcesApi.nodePoolKind "MachineDeployment" }}
 {{- range $nodePoolName, $nodePoolConfig := $.Values.global.nodePools | default $.Values.providerIntegration.workers.defaultNodePools }}
-{{- if $nodePoolConfig.machineHealthCheck }}
 {{- $_ := set $ "nodePool" (dict "name" $nodePoolName "config" $nodePoolConfig) }}
 apiVersion: cluster.x-k8s.io/v1beta1
 kind: MachineHealthCheck
@@ -36,7 +35,6 @@ spec:
   - type: Ready
     status: "False"
     timeout: {{ $.nodePoolConfig.machineHealthCheck.unhealthyNotReadyTimeout }}
-{{- end }}
 {{- end }}
 {{- end }}
 {{- end }}
