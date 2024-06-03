@@ -1940,6 +1940,9 @@
                         "externalDns": {
                             "$ref": "#/$defs/providerIntegrationAppConfig"
                         },
+                        "k8sAuditMetrics": {
+                            "$ref": "#/$defs/providerIntegrationAppConfig"
+                        },
                         "k8sDnsNodeCache": {
                             "$ref": "#/$defs/providerIntegrationAppConfig"
                         },
@@ -1956,6 +1959,9 @@
                             "$ref": "#/$defs/providerIntegrationAppConfig"
                         },
                         "observabilityBundle": {
+                            "$ref": "#/$defs/providerIntegrationAppConfig"
+                        },
+                        "prometheusBlackboxExporter": {
                             "$ref": "#/$defs/providerIntegrationAppConfig"
                         },
                         "securityBundle": {
