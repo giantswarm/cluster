@@ -1080,6 +1080,12 @@
                             "title": "external-dns",
                             "description": "Configuration of external-dns. For all available values see https://github.com/giantswarm/external-dns-app."
                         },
+                        "k8sAuditMetrics": {
+                            "$ref": "#/$defs/app",
+                            "type": "object",
+                            "title": "k8s-audit-metrics",
+                            "description": "Configuration of k8s-audit-metrics. For all available values see https://github.com/giantswarm/k8s-audit-metrics."
+                        },
                         "k8sDnsNodeCache": {
                             "$ref": "#/$defs/app",
                             "type": "object",
@@ -1115,6 +1121,12 @@
                             "type": "object",
                             "title": "observability-bundle",
                             "description": "Configuration of observability-bundle. For all available values see https://github.com/giantswarm/observability-bundle."
+                        },
+                        "prometheusBlackboxExporter": {
+                            "$ref": "#/$defs/app",
+                            "type": "object",
+                            "title": "prometheus-blackbox-exporter",
+                            "description": "Configuration of prometheus-blackbox-exporter. For all available values see https://github.com/giantswarm/prometheus-blackbox-exporter-app."
                         },
                         "securityBundle": {
                             "$ref": "#/$defs/app",
@@ -1940,6 +1952,9 @@
                         "externalDns": {
                             "$ref": "#/$defs/providerIntegrationAppConfig"
                         },
+                        "k8sAuditMetrics": {
+                            "$ref": "#/$defs/providerIntegrationAppConfig"
+                        },
                         "k8sDnsNodeCache": {
                             "$ref": "#/$defs/providerIntegrationAppConfig"
                         },
@@ -1956,6 +1971,9 @@
                             "$ref": "#/$defs/providerIntegrationAppConfig"
                         },
                         "observabilityBundle": {
+                            "$ref": "#/$defs/providerIntegrationAppConfig"
+                        },
+                        "prometheusBlackboxExporter": {
                             "$ref": "#/$defs/providerIntegrationAppConfig"
                         },
                         "securityBundle": {
