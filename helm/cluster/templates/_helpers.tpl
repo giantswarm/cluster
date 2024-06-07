@@ -153,6 +153,14 @@ Where `data` is the data to hash and `global` is the top level scope.
 {{- $registry -}}
 {{- end -}}
 
+{{/*
+  cluster.internal.get-provider-integration-values named helper template gets provider-integration Helm values and sets
+  them in the $.GiantSwarm.providerIntegration object.
+
+  For more details about how this works and how and why it is used, see explanation for the named helper template
+  cluster.internal.get-internal-values, since this template serves the same purpose and works in the same way, just for
+  $.Values.providerIntegration (vs $.Values.cluster.providerIntegration) Helm values.
+*/}}
 {{- define "cluster.internal.get-provider-integration-values" }}
 {{- $providerIntegration := dict }}
 {{- /* Case 1: template is called from the cluster chart itself */}}
@@ -166,10 +174,31 @@ Where `data` is the data to hash and `global` is the top level scope.
 {{- if not $.GiantSwarm }}
   {{- $_ := set $ "GiantSwarm" dict }}
 {{- end }}
-{{- /* Finally set "UseReleases" property that can be used in other templates */}}
+{{- /* Finally set $.GiantSwarm.providerIntegration object that can be used in other templates */}}
 {{- $_ := set $.GiantSwarm "providerIntegration" $providerIntegration }}
 {{- end }}
 
+{{/*
+  cluster.internal.get-internal-values named helper template gets internal Helm values and sets them in the
+  $.GiantSwarm.internal object.
+
+  Some public named helper templates from cluster chart are using cluster chart's $.Values.internal Helm values, or to
+  be more precise, Helm values under 'internal' key that you can see here in the cluster chart repo in values.yaml file.
+  While all this sounds fine at the first sight, there is a caveat:
+  - This works without issues when these named helper templates are called from other templates that are rendered in the
+    cluster chart (e.g. templates for Cluster API resources). In this case Helm values root context is what you see in
+    cluster chart values.yaml.
+  - However, when these public named helper templates are called from a parent chart (e.g. cluster-aws, cluster-vsphere,
+    etc), then Helm values root context is different, because we get the root context of the parent chart, and then
+    cluster chart's internal Helm values are set in $.Values.cluster.internal Helm value (and not in $.Values.internal).
+
+  This template here checks who is making the call to the template and then reads internal Helm values from the correct
+  place and sets those values in $.GiantSwarm.internal object. This way other templates that need internal values can
+  just call this first and then use $.GiantSwarm.internal object, e.g.:
+
+    {{- $_ := include "cluster.internal.get-internal-values" $ }}
+    foo: {{ $.GiantSwarm.internal.bar }}
+*/}}
 {{- define "cluster.internal.get-internal-values" }}
 {{- $internalValues := dict }}
 {{- /* Case 1: template is called from the cluster chart itself */}}
@@ -183,15 +212,40 @@ Where `data` is the data to hash and `global` is the top level scope.
 {{- if not $.GiantSwarm }}
   {{- $_ := set $ "GiantSwarm" dict }}
 {{- end }}
-{{- /* Finally set "UseReleases" property that can be used in other templates */}}
+{{- /* Finally set ".GiantSwarm.internal" property that can be used in other templates */}}
 {{- $_ := set $.GiantSwarm "internal" $internalValues }}
 {{- end }}
 
+{{/*
+  cluster.internal.get-release-resource helper gets Release resources from the management cluster
+  and it sets it in $.GiantSwarm.Release object.
+
+  The helper will try to get a Release CR named <provider name>-<release version without 'v'>.
+
+  Release version is obtained from Helm value $.Values.global.release.version (Helm value can have
+  'v' prefix which is then stripped). Example values for $.Values.global.release.version:
+  - 25.1.0
+  - v25.1.0
+  - 26.4.0-alpha.1
+  - 27.2.0-e2e.h92f8d3456
+
+  Provider name is obtained from Helm value $.Values.providerIntegration.provider. Provider names
+  of the current providers (as of June 2024) are:
+  - aws
+  - azure
+  - vshpere
+  - cloud-director
+
+  If the Release resource is not found, then the behavior depends on the value of
+  $.GiantSwarm.internal.ephemeralConfiguration.offlineTesting.renderWithoutReleaseResource:
+  - if renderWithoutReleaseResource is false, template rendering fails,
+  - if renderWithoutReleaseResource is true, template does nothing.
+ */}}
 {{- define "cluster.internal.get-release-resource" }}
 {{- $_ := include "cluster.internal.get-internal-values" $ }}
 {{- $renderWithoutReleaseResource := ((($.GiantSwarm.internal).ephemeralConfiguration).offlineTesting).renderWithoutReleaseResource | default false }}
 {{- $releaseVersion := $.Values.global.release.version | trimPrefix "v" }}
-{{- $releaseVersion = printf "v%s" $releaseVersion }}
+{{- $releaseVersion = printf "%s-%s" $.Values.providerIntegration.provider $releaseVersion }}
 {{- $release := lookup "release.giantswarm.io/v1alpha1" "Release" "" $releaseVersion }}
 {{- if $release }}
   {{- $_ := set $.GiantSwarm "Release" $release }}
@@ -200,6 +254,16 @@ Where `data` is the data to hash and `global` is the top level scope.
 {{- end }}
 {{- end }}
 
+{{/*
+  cluster.app.version is a public named helper template that returns a version of the app that is specified under
+  property 'appName' in the object that is passed to the template.
+
+  Example usage in template:
+
+    {{- $_ := set $ "appName" "foo-bar-controller" }}
+    {{- $appVersion := include "cluster.app.version" $ }}
+    version: {{ $appVersion }}
+*/}}
 {{- define "cluster.app.version" }}
 {{- $appVersion := "N/A" }}
 {{- $_ := (include "cluster.internal.get-release-resource" $) }}
@@ -213,6 +277,16 @@ Where `data` is the data to hash and `global` is the top level scope.
 {{- $appVersion }}
 {{- end }}
 
+{{/*
+  cluster.component.version is a public named helper template that returns a version of the component that is specified
+  under property 'componentName' in the object that is passed to the template.
+
+  Example usage in template:
+
+    {{- $_ := set $ "componentName" "flatcar" }}
+    {{- $componentVersion := include "cluster.component.version" $ }}
+    version: {{ $componentVersion }}
+*/}}
 {{- define "cluster.component.version" }}
 {{- $componentVersion := "N/A" }}
 {{- $_ := (include "cluster.internal.get-release-resource" $) }}
@@ -226,6 +300,15 @@ Where `data` is the data to hash and `global` is the top level scope.
 {{- $componentVersion }}
 {{- end }}
 
+{{/*
+  cluster.component.kubernetes.version is a public named helper template that returns the Kubernetes version. If the
+  provider is using new Releases then the Kubernetes version is obtained from the Release resources, otherwise it is
+  obtained from Helm values.
+
+  Example usage in template:
+
+    version: {{ include "cluster.component.kubernetes.version" $ }}
+*/}}
 {{- define "cluster.component.kubernetes.version" }}
 {{- $_ := include "cluster.internal.get-provider-integration-values" $ }}
 {{- if $.GiantSwarm.providerIntegration.useReleases }}
@@ -238,6 +321,15 @@ Where `data` is the data to hash and `global` is the top level scope.
 {{- end }}
 {{- end }}
 
+{{/*
+  cluster.component.flatcar.version is a public named helper template that returns the Flatcar version. If the
+  provider is using new Releases then the Flatcar version is obtained from the Release resources, otherwise it is
+  obtained from Helm values.
+
+  Example usage in template:
+
+    version: {{ include "cluster.component.flatcar.version" $ }}
+*/}}
 {{- define "cluster.component.flatcar.version" }}
 {{- $_ := include "cluster.internal.get-provider-integration-values" $ }}
 {{- if $.GiantSwarm.providerIntegration.useReleases }}
@@ -251,6 +343,15 @@ Where `data` is the data to hash and `global` is the top level scope.
 {{- end }}
 {{- end }}
 
+{{/*
+  cluster.component.flatcar.version is a public named helper template that returns the Flatcar image variant. If the
+  provider is using new Releases then the Flatcar image variant is obtained from the Release resources, otherwise it is
+  obtained from Helm values.
+
+  Example usage in template:
+
+    version: {{ include "cluster.component.flatcar.variant" $ }}
+*/}}
 {{- define "cluster.component.flatcar.variant" }}
 {{- $_ := include "cluster.internal.get-provider-integration-values" $ }}
 {{- if $.GiantSwarm.providerIntegration.useReleases }}
