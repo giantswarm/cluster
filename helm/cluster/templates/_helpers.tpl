@@ -243,9 +243,10 @@ Where `data` is the data to hash and `global` is the top level scope.
  */}}
 {{- define "cluster.internal.get-release-resource" }}
 {{- $_ := include "cluster.internal.get-internal-values" $ }}
+{{- $_ = include "cluster.internal.get-provider-integration-values" $ }}
 {{- $renderWithoutReleaseResource := ((($.GiantSwarm.internal).ephemeralConfiguration).offlineTesting).renderWithoutReleaseResource | default false }}
 {{- $releaseVersion := $.Values.global.release.version | trimPrefix "v" }}
-{{- $releaseVersion = printf "%s-%s" $.Values.providerIntegration.provider $releaseVersion }}
+{{- $releaseVersion = printf "%s-%s" $.GiantSwarm.providerIntegration.provider $releaseVersion }}
 {{- $release := lookup "release.giantswarm.io/v1alpha1" "Release" "" $releaseVersion }}
 {{- if $release }}
   {{- $_ := set $.GiantSwarm "Release" $release }}
