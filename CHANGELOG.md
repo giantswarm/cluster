@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Fix `prometheus-blackbox-exporter` and `k8s-audit-metrics` apps to use the correct chart name.
+
 ## [0.30.0] - 2024-06-06
 
 ### Added

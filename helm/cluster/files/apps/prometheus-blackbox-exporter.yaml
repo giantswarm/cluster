@@ -1,5 +1,5 @@
 appName: prometheus-blackbox-exporter
-chartName: prometheus-blackbox-exporter-app
+chartName: prometheus-blackbox-exporter
 configKey: prometheusBlackboxExporter
 dependsOn: prometheus-operator-crd
 clusterValues:
@@ -7,5 +7,5 @@ clusterValues:
   secret: false
 namespace: kube-system
 # used by renovate
-# repo: giantswarm/prometheus-blackbox-exporter-app
+# repo: giantswarm/prometheus-blackbox-exporter
 version: 0.4.1
