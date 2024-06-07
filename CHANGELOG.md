@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- This PR adds support for using Release CRs and getting Kubernetes, Flatcar and apps version, catalog and dependencies
+  from there. This change is fully backward compatible, and it requires that new flag `$.Values.providerIntegration.useReleases`
+  is set to `true`. The default value of `$.Values.providerIntegration.useReleases` is `false`, so cluster chart version
+  can be safely updated.
+
 ## [0.30.1] - 2024-06-07
 
 ### Fixed
