@@ -256,7 +256,7 @@ Where `data` is the data to hash and `global` is the top level scope.
 
 {{/*
   cluster.app.version is a public named helper template that returns a version of the app that is specified under
-  property 'appName' in the object that is passed to the template.
+  property 'appName' in the object that is passed to the template. App version is obtained from the Release resource.
 
   Example usage in template:
 
@@ -279,7 +279,8 @@ Where `data` is the data to hash and `global` is the top level scope.
 
 {{/*
   cluster.component.version is a public named helper template that returns a version of the component that is specified
-  under property 'componentName' in the object that is passed to the template.
+  under property 'componentName' in the object that is passed to the template. Component version is obtained from the
+  Release resource.
 
   Example usage in template:
 
