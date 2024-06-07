@@ -12,12 +12,14 @@ global:
     coreDns: {}
     etcdKubernetesResourcesCountExporter: {}
     externalDns: {}
+    k8sAuditMetrics: {}
     k8sDnsNodeCache: {}
     metricsServer: {}
     netExporter: {}
     networkPolicies: {}
     nodeExporter: {}
     observabilityBundle: {}
+    prometheusBlackboxExporter: {}
     securityBundle: {}
     teleportKubeAgent: {}
     verticalPodAutoscaler: {}
@@ -111,6 +113,8 @@ providerIntegration:
       enable: false
     externalDns:
       enable: false
+    k8sAuditMetrics:
+      enable: false
     k8sDnsNodeCache:
       enable: false
     metricsServer:
@@ -122,6 +126,8 @@ providerIntegration:
     nodeExporter:
       enable: false
     observabilityBundle:
+      enable: false
+    prometheusBlackboxExporter:
       enable: false
     securityBundle:
       enable: false
