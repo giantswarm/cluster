@@ -40,7 +40,7 @@ spec:
         apiVersion: {{ $.Values.providerIntegration.resourcesApi.infrastructureMachinePool.group }}/{{ $.Values.providerIntegration.resourcesApi.infrastructureMachinePool.version }}
         kind: {{ $.Values.providerIntegration.resourcesApi.infrastructureMachinePool.kind }}
         name: {{ include "cluster.resource.name" $ }}-{{ $nodePoolName }}
-      version: {{ $.Values.providerIntegration.kubernetesVersion }}
+      version: v{{ include "cluster.component.kubernetes.version" $ }}
 ---
 {{- end }}
 {{- end }}

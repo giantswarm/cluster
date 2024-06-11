@@ -1003,7 +1003,8 @@
                 "components",
                 "connectivity",
                 "controlPlane",
-                "metadata"
+                "metadata",
+                "release"
             ],
             "additionalProperties": true,
             "properties": {
@@ -1548,6 +1549,20 @@
                             "default": false
                         }
                     }
+                },
+                "release": {
+                    "type": "object",
+                    "title": "Release",
+                    "description": "Information about the workload cluster release.",
+                    "required": [
+                        "version"
+                    ],
+                    "properties": {
+                        "version": {
+                            "type": "string",
+                            "title": "Version"
+                        }
+                    }
                 }
             }
         },
@@ -1894,6 +1909,19 @@
                             "patternProperties": {
                                 "[a-z][a-zA-Z]+": {
                                     "$ref": "#/$defs/appEphemeral"
+                                }
+                            }
+                        },
+                        "offlineTesting": {
+                            "type": "object",
+                            "title": "Offline testing",
+                            "description": "Configure how Helm template rendering behaves when it is running during testing (e.g. locally or in the CI) and without connection to cluster.",
+                            "additionalProperties": false,
+                            "properties": {
+                                "renderWithoutReleaseResource": {
+                                    "type": "boolean",
+                                    "title": "Render without Release resource",
+                                    "description": "Flag that indicates that Helm should render templates even when Release CR cannot be fetched from the cluster."
                                 }
                             }
                         }
@@ -2653,6 +2681,12 @@
                             "default": "14.1.3"
                         }
                     }
+                },
+                "useReleases": {
+                    "type": "boolean",
+                    "title": "Use releases",
+                    "description": "Flag that indicates if the provider is using release resources to get app and component versions.",
+                    "default": false
                 },
                 "workers": {
                     "type": "object",

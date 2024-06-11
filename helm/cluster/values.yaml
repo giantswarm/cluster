@@ -61,6 +61,7 @@ global:
     servicePriority: highest
   podSecurityStandards:
     enforced: false
+  release: {}
 internal:
   advancedConfiguration:
     cgroupsv1: false
@@ -88,7 +89,8 @@ internal:
         memory: 384Mi
     registry: gsoci.azurecr.io
     workers: {}
-  ephemeralConfiguration: {}
+  ephemeralConfiguration:
+    offlineTesting: {}
 providerIntegration:
   apps:
     capiNodeLabeler:
@@ -193,6 +195,7 @@ providerIntegration:
     enabled: true
     proxyAddr: teleport.giantswarm.io:443
     version: 14.1.3
+  useReleases: false
   workers:
     kubeadmConfig:
       ignition:

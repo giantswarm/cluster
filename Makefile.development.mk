@@ -13,7 +13,7 @@ endif
 template: ## Output the rendered Helm template
 	$(eval CHART_DIR := "helm/cluster")
 	$(eval HELM_RELEASE_NAME := $(shell yq .global.metadata.name ${CHART_DIR}/${CI_FILE}))
-	@helm template -n org-giantswarm ${HELM_RELEASE_NAME} ${CHART_DIR} --values ${CHART_DIR}/${CI_FILE} --debug
+	@helm template --dry-run=server -n org-giantswarm ${HELM_RELEASE_NAME} ${CHART_DIR} --values ${CHART_DIR}/${CI_FILE} --debug
 
 .PHONY: generate
 generate: normalize-schema validate-schema generate-docs generate-values
