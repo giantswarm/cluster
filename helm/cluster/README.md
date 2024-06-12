@@ -364,7 +364,7 @@ Properties within the `.global.metadata` object
 | `global.metadata.annotations.PATTERN` | **Annotation**|**Type:** `string`<br/>**Key pattern:**<br/>`PATTERN`=`^([a-zA-Z0-9/\.-]{1,253}/)?[a-zA-Z0-9/\._-]{1,63}$`<br/>|
 | `global.metadata.description` | **Cluster description** - User-friendly description of the cluster's purpose.|**Type:** `string`<br/>|
 | `global.metadata.labels` | **Labels** - These labels are added to all Kubernetes resources defining this cluster.|**Type:** `object`<br/>|
-| `global.metadata.labels.PATTERN` | **Label**|**Type:** `string`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-zA-Z0-9/\._-]+$`<br/>**Value pattern:** `^[a-zA-Z0-9/\._-]+$`<br/>|
+| `global.metadata.labels.PATTERN` | **Label**|**Type:** `string`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-zA-Z0-9/\._-]+$`<br/>**Value pattern:** `^[a-zA-Z0-9/\._-]*$`<br/>|
 | `global.metadata.name` | **Cluster name** - Unique identifier, cannot be changed after creation.|**Type:** `string`<br/>|
 | `global.metadata.organization` | **Organization** - The name of organization that owns the cluster.|**Type:** `string`<br/>|
 | `global.metadata.preventDeletion` | **Prevent cluster deletion** - Setting this to true will set giantswarm.io/prevent-deletion label to true, which will block cluster deletion.|**Type:** `boolean`<br/>**Default:** `false`|
@@ -386,7 +386,7 @@ Properties within the `.global.nodePools` object
 | `global.nodePools.PATTERN.customNodeTaints[*].key` | **Key**|**Type:** `string`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
 | `global.nodePools.PATTERN.customNodeTaints[*].value` | **Value**|**Type:** `string`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
 | `global.nodePools.PATTERN.labels` | **Labels** - These labels are added to all Kubernetes resources defining this node pool.|**Type:** `object`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
-| `global.nodePools.PATTERN.labels.PATTERN_2` | **Label**|**Type:** `string`<br/>**Key patterns:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>`PATTERN_2`=`^[a-zA-Z0-9/\._-]+$`<br/>**Value pattern:** `^[a-zA-Z0-9/\._-]+$`<br/>|
+| `global.nodePools.PATTERN.labels.PATTERN_2` | **Label**|**Type:** `string`<br/>**Key patterns:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>`PATTERN_2`=`^[a-zA-Z0-9/\._-]+$`<br/>**Value pattern:** `^[a-zA-Z0-9/\._-]*$`<br/>|
 | `global.nodePools.PATTERN.machineHealthCheck` | **Machine health check**|**Type:** `object`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
 | `global.nodePools.PATTERN.machineHealthCheck.enabled` | **Enable**|**Type:** `boolean`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>**Default:** `true`|
 | `global.nodePools.PATTERN.machineHealthCheck.maxUnhealthy` | **Maximum unhealthy nodes**|**Type:** `string`<br/>**Example:** `"40%"`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>**Default:** `"40%"`|
@@ -784,7 +784,7 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.workers.defaultNodePools.PATTERN.customNodeTaints[*].key` | **Key**|**Type:** `string`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
 | `providerIntegration.workers.defaultNodePools.PATTERN.customNodeTaints[*].value` | **Value**|**Type:** `string`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
 | `providerIntegration.workers.defaultNodePools.PATTERN.labels` | **Labels** - These labels are added to all Kubernetes resources defining this node pool.|**Type:** `object`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
-| `providerIntegration.workers.defaultNodePools.PATTERN.labels.PATTERN_2` | **Label**|**Type:** `string`<br/>**Key patterns:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>`PATTERN_2`=`^[a-zA-Z0-9/\._-]+$`<br/>**Value pattern:** `^[a-zA-Z0-9/\._-]+$`<br/>|
+| `providerIntegration.workers.defaultNodePools.PATTERN.labels.PATTERN_2` | **Label**|**Type:** `string`<br/>**Key patterns:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>`PATTERN_2`=`^[a-zA-Z0-9/\._-]+$`<br/>**Value pattern:** `^[a-zA-Z0-9/\._-]*$`<br/>|
 | `providerIntegration.workers.defaultNodePools.PATTERN.machineHealthCheck` | **Machine health check**|**Type:** `object`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
 | `providerIntegration.workers.defaultNodePools.PATTERN.machineHealthCheck.enabled` | **Enable**|**Type:** `boolean`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>**Default:** `true`|
 | `providerIntegration.workers.defaultNodePools.PATTERN.machineHealthCheck.maxUnhealthy` | **Maximum unhealthy nodes**|**Type:** `string`<br/>**Example:** `"40%"`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>**Default:** `"40%"`|
