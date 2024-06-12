@@ -1003,8 +1003,7 @@
                 "components",
                 "connectivity",
                 "controlPlane",
-                "metadata",
-                "release"
+                "metadata"
             ],
             "additionalProperties": true,
             "properties": {
