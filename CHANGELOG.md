@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.31.0] - 2024-06-12
+
 ### Added
 
 - This PR adds support for using Release CRs and getting Kubernetes, Flatcar and apps version, catalog and dependencies
@@ -458,7 +460,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Update and clean up the template repo.
 
-[Unreleased]: https://github.com/giantswarm/cluster/compare/v0.30.1...HEAD
+[Unreleased]: https://github.com/giantswarm/cluster/compare/v0.31.0...HEAD
+[0.31.0]: https://github.com/giantswarm/cluster/compare/v0.30.1...v0.31.0
 [0.30.1]: https://github.com/giantswarm/cluster/compare/v0.30.0...v0.30.1
 [0.30.0]: https://github.com/giantswarm/cluster/compare/v0.29.0...v0.30.0
 [0.29.0]: https://github.com/giantswarm/cluster/compare/v0.28.0...v0.29.0
