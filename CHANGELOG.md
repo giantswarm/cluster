@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Change Helm values validation so that `Values.global.release.version` object is not yet required.
+
 ## [0.31.2] - 2024-06-12
 
 ### Fixed
