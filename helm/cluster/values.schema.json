@@ -749,7 +749,7 @@
                     "description": "These annotations are added to all Kubernetes resources defining this node pool.",
                     "additionalProperties": false,
                     "patternProperties": {
-                        "^([a-zA-Z0-9\\.-]{1,253}/)?[a-zA-Z0-9\\._-]{1,63}$": {
+                        "^([a-zA-Z0-9/\\.-]{1,253}/)?[a-zA-Z0-9/\\._-]{1,63}$": {
                             "type": "string",
                             "title": "Annotation",
                             "minLength": 1
@@ -808,7 +808,7 @@
                             "title": "Label",
                             "maxLength": 63,
                             "minLength": 0,
-                            "pattern": "^[a-zA-Z0-9\\._-]+$"
+                            "pattern": "^[a-zA-Z0-9/\\._-]+$"
                         }
                     }
                 },
@@ -1475,7 +1475,7 @@
                             "description": "These annotations are added to all Kubernetes resources defining this cluster.",
                             "additionalProperties": false,
                             "patternProperties": {
-                                "^([a-zA-Z0-9\\.-]{1,253}/)?[a-zA-Z0-9\\._-]{1,63}$": {
+                                "^([a-zA-Z0-9/\\.-]{1,253}/)?[a-zA-Z0-9/\\._-]{1,63}$": {
                                     "type": "string",
                                     "title": "Annotation",
                                     "minLength": 1
@@ -1493,7 +1493,7 @@
                                     "title": "Label",
                                     "maxLength": 63,
                                     "minLength": 0,
-                                    "pattern": "^[a-zA-Z0-9\\._-]+$"
+                                    "pattern": "^[a-zA-Z0-9/\\._-]+$"
                                 }
                             }
                         },

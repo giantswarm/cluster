@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Allow forward slashes in labels and annotations
+
 ## [0.31.0] - 2024-06-12
 
 ### Added
