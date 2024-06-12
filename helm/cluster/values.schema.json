@@ -1493,7 +1493,7 @@
                                     "title": "Label",
                                     "maxLength": 63,
                                     "minLength": 0,
-                                    "pattern": "^[a-zA-Z0-9\\._-]+$"
+                                    "pattern": "^[a-zA-Z0-9/\\._-]+$"
                                 }
                             }
                         },
