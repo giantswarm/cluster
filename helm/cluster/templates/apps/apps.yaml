@@ -64,7 +64,12 @@ metadata:
   name: {{ $.Values.global.metadata.name }}-{{ $app.appName }}
   namespace: {{ $.Release.Namespace }}
 spec:
-  catalog: {{ $ephemeralConfig.catalogOverride | default $app.catalog | default "default" }}
+  {{- $appCatalog := $app.catalog -}}
+  {{- if $.Values.providerIntegration.useReleases }}
+  {{- $_ := set $ "appName" $app.appName }}
+  {{- $appCatalog = include "cluster.app.catalog" $ }}
+  {{- end }}
+  catalog: {{ $ephemeralConfig.catalogOverride | default $appCatalog | default "default" }}
   name: {{ $app.chartName | default $app.appName }}
   {{- if $app.inCluster }}
   namespace: {{ $.Release.Namespace }}
