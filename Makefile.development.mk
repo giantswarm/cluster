@@ -9,11 +9,17 @@ else
 CI_FILE ?= "ci/ci-values.yaml"
 endif
 
+RELEASE_VERSION ?=
+
 .PHONY: template
 template: ## Output the rendered Helm template
 	$(eval CHART_DIR := "helm/cluster")
 	$(eval HELM_RELEASE_NAME := $(shell yq .global.metadata.name ${CHART_DIR}/${CI_FILE}))
+ifdef RELEASE_VERSION
+	@helm template --dry-run=server -n org-giantswarm ${HELM_RELEASE_NAME} ${CHART_DIR} --values ${CHART_DIR}/${CI_FILE} --set global.release.version="${RELEASE_VERSION}" --debug
+else
 	@helm template --dry-run=server -n org-giantswarm ${HELM_RELEASE_NAME} ${CHART_DIR} --values ${CHART_DIR}/${CI_FILE} --debug
+endif
 
 .PHONY: generate
 generate: normalize-schema validate-schema generate-docs generate-values
