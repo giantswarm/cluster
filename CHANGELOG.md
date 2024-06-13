@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Use app catalog from the Release CR if new releases are used.
+- Use app dependencies from the Release CR if new releases are used.
+- Add missing k8s-audit-metrics dependency (kyverno).
+
 ## [0.32.0] - 2024-06-18
 
 ### Added
