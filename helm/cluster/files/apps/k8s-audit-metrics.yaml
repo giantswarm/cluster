@@ -1,5 +1,4 @@
 appName: k8s-audit-metrics
-chartName: k8s-audit-metrics
 configKey: k8sAuditMetrics
 clusterValues:
   configMap: true
