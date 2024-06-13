@@ -1,5 +1,4 @@
 appName: giantswarm-cluster-suite
-chartName: giantswarm-cluster-suite
 configKey: giantswarmClusterSuite
 catalog: default-test
 namespace: kube-system
