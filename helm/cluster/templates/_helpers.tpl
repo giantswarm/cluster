@@ -62,6 +62,9 @@ giantswarm.io/organization: {{ required "You must provide an existing organizati
 giantswarm.io/service-priority: {{ .Values.global.metadata.servicePriority }}
 cluster.x-k8s.io/cluster-name: {{ include "cluster.resource.name" $ | quote }}
 cluster.x-k8s.io/watch-filter: capi
+{{- if $.Values.providerIntegration.useReleases }}
+release.giantswarm.io/version: {{ .Values.global.release.version | trimPrefix "v" | quote }}
+{{- end }}
 {{- end -}}
 
 {{- define "cluster.labels.preventDeletion" }}
