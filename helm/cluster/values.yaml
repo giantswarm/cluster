@@ -120,6 +120,8 @@ providerIntegration:
       enable: false
     externalDns:
       enable: false
+    giantswarmClusterSuite:
+      enable: false
     k8sAuditMetrics:
       enable: false
     k8sDnsNodeCache:
