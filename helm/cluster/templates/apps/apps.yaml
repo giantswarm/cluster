@@ -34,7 +34,7 @@ metadata:
   {{- $dependencies := list }}
   {{- if $.Values.providerIntegration.useReleases}}
     {{- $_ := set $ "appName" $appName }}
-    {{- $dependenciesFromRelease := include "cluster.internal.app.dependencies" $ | fromYamlArray }}
+    {{- $dependenciesFromRelease := include "cluster.app.dependencies" $ | fromYamlArray }}
     {{- range $_, $dependency := $dependenciesFromRelease }}
       {{- $dependencies = append $dependencies (printf "%s-%s" $.Values.global.metadata.name $dependency) }}
     {{- end }}

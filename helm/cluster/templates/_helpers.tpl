@@ -282,17 +282,19 @@ Where `data` is the data to hash and `global` is the top level scope.
 {{- end }}
 
 {{/*
-  cluster.internal.app.dependencies is a public named helper template that renders a YAML array with app's dependencies for the
+  cluster.app.dependencies is a public named helper template that renders a YAML array with app's dependencies for the
   app that is specified under property 'appName' in the object that is passed to the template. App dependencies are
   obtained from the Release resource.
 
   Example usage in template:
 
-    {{- $_ := set $ "appName" "foo-bar-controller" }}
-    {{- $appVersion := include "cluster.app.dependencies" $ }}
-    version: {{ $appVersion }}
+    {{- $_ := set $ "appName" "foo-exporter" }}
+    {{- $dependenciesFromRelease := include "cluster.app.dependencies" $ | fromYamlArray }}
+    {{- range $_, $dependency := $dependenciesFromRelease }}
+      {{- $dependencies = append $dependencies $dependency }}
+    {{- end }}
 */}}
-{{- define "cluster.internal.app.dependencies" }}
+{{- define "cluster.app.dependencies" }}
 {{- $dependencies := list }}
 {{- $_ := (include "cluster.internal.get-release-resource" $) }}
 {{- if $.GiantSwarm.Release }}
