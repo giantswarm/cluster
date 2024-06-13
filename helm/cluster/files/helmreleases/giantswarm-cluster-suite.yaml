@@ -4,4 +4,4 @@ catalog: default-test
 namespace: kube-system
 # used by renovate
 # repo: giantswarm/giantswarm-cluster-suite
-version: 0.0.0-f685ce906c4c4186bda43e85a9c8d3d2c78a48e9
+version: 0.0.0-d73bc696c0f1238374c6f83b0f6fc3d63db6725d
