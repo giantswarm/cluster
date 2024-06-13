@@ -282,6 +282,32 @@ Where `data` is the data to hash and `global` is the top level scope.
 {{- end }}
 
 {{/*
+  cluster.internal.app.dependencies is a public named helper template that renders a YAML array with app's dependencies for the
+  app that is specified under property 'appName' in the object that is passed to the template. App dependencies are
+  obtained from the Release resource.
+
+  Example usage in template:
+
+    {{- $_ := set $ "appName" "foo-bar-controller" }}
+    {{- $appVersion := include "cluster.app.dependencies" $ }}
+    version: {{ $appVersion }}
+*/}}
+{{- define "cluster.internal.app.dependencies" }}
+{{- $dependencies := list }}
+{{- $_ := (include "cluster.internal.get-release-resource" $) }}
+{{- if $.GiantSwarm.Release }}
+  {{- range $_, $app := $.GiantSwarm.Release.spec.apps }}
+    {{- if eq $app.name $.appName }}
+      {{- range $_, $dependency := $app.dependsOn }}
+      {{- $dependencies = append $dependencies $dependency }}
+      {{- end}}
+    {{- end }}
+  {{- end }}
+{{- end }}
+{{- $dependencies | toYaml }}
+{{- end }}
+
+{{/*
   cluster.component.version is a public named helper template that returns a version of the component that is specified
   under property 'componentName' in the object that is passed to the template. Component version is obtained from the
   Release resource.
