@@ -1609,6 +1609,19 @@
                     ],
                     "additionalProperties": false,
                     "properties": {
+                        "appPlatform": {
+                            "type": "object",
+                            "title": "App Platform",
+                            "description": "Advanced configuration of App Platform.",
+                            "properties": {
+                                "fluxBackend": {
+                                    "type": "boolean"
+                                    "title": "Flux Backend",
+                                    "description": "Use Flux as App Platform backend for installing apps.",
+                                    "default": "false",
+                                },
+                            },
+                        },
                         "cgroupsv1": {
                             "type": "boolean",
                             "title": "CGroups v1",
