@@ -7,6 +7,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.31.4] - 2024-06-12
+
+### Fixed
+
+- Allow empty values in labels
+
+## [0.31.3] - 2024-06-12
+
+### Fixed
+
+- Change Helm values validation so that `Values.global.release.version` object is not yet required.
+
+## [0.31.2] - 2024-06-12
+
+### Fixed
+
+- Change Helm values validation so that `Values.global.release` object is not yet required.
+
+## [0.31.1] - 2024-06-12
+
+### Fixed
+
+- Allow forward slashes in labels and annotations
+
+## [0.31.0] - 2024-06-12
+
+### Added
+
+- This PR adds support for using Release CRs and getting Kubernetes, Flatcar and apps version, catalog and dependencies
+  from there. This change is fully backward compatible, and it requires that new flag `$.Values.providerIntegration.useReleases`
+  is set to `true`. The default value of `$.Values.providerIntegration.useReleases` is `false`, so cluster chart version
+  can be safely updated.
+
 ## [0.30.1] - 2024-06-07
 
 ### Fixed
@@ -456,7 +489,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Update and clean up the template repo.
 
-[Unreleased]: https://github.com/giantswarm/cluster/compare/v0.30.1...HEAD
+[Unreleased]: https://github.com/giantswarm/cluster/compare/v0.31.4...HEAD
+[0.31.4]: https://github.com/giantswarm/cluster/compare/v0.31.3...v0.31.4
+[0.31.3]: https://github.com/giantswarm/cluster/compare/v0.31.2...v0.31.3
+[0.31.2]: https://github.com/giantswarm/cluster/compare/v0.31.1...v0.31.2
+[0.31.1]: https://github.com/giantswarm/cluster/compare/v0.31.0...v0.31.1
+[0.31.0]: https://github.com/giantswarm/cluster/compare/v0.30.1...v0.31.0
 [0.30.1]: https://github.com/giantswarm/cluster/compare/v0.30.0...v0.30.1
 [0.30.0]: https://github.com/giantswarm/cluster/compare/v0.29.0...v0.30.0
 [0.29.0]: https://github.com/giantswarm/cluster/compare/v0.28.0...v0.29.0
