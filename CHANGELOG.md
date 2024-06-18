@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.32.0] - 2024-06-18
+
 ## [0.31.4] - 2024-06-12
 
 ### Fixed
@@ -489,7 +491,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Update and clean up the template repo.
 
-[Unreleased]: https://github.com/giantswarm/cluster/compare/v0.31.4...HEAD
+[Unreleased]: https://github.com/giantswarm/cluster/compare/v0.32.0...HEAD
+[0.32.0]: https://github.com/giantswarm/cluster/compare/v0.31.4...v0.32.0
 [0.31.4]: https://github.com/giantswarm/cluster/compare/v0.31.3...v0.31.4
 [0.31.3]: https://github.com/giantswarm/cluster/compare/v0.31.2...v0.31.3
 [0.31.2]: https://github.com/giantswarm/cluster/compare/v0.31.1...v0.31.2
