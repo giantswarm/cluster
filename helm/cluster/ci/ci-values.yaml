@@ -59,6 +59,11 @@ global:
             username: giantswarm
             password: super_secret_password
         - endpoint: giantswarm.azurecr.io
+        private.example.io:
+        - endpoint: private-example-1.azurecr.io
+          identitytoken: super_secret_identity_token
+        - endpoint: private-example-2.azurecr.io
+          auth: c3VwZXJfc2VjcmV0X2F1dGg=
   apps:
     capiNodeLabeler:
       values:

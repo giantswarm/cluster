@@ -147,6 +147,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fix CoreDNS provider-specific config (it was incorrectly reading Cilium app config instead of CoreDNS app config).
+- Fix `containerd` configuration file.
+
+### Changed
+
+- Move `.internal.localRegistryCache` to `.global.components.containerd.localRegistryCache` to publicly expose the settings.
 
 ## [0.23.0] - 2024-05-08
 
