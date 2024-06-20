@@ -299,6 +299,8 @@ providerIntegration:
     externalDns:
       enable: true
       configTemplateName: cluster.test.providerIntegration.apps.externalDns.config
+    k8sAuditMetrics:
+      enable: true
     k8sDnsNodeCache:
       enable: true
     metricsServer:
@@ -310,6 +312,8 @@ providerIntegration:
     nodeExporter:
       enable: true
     observabilityBundle:
+      enable: true
+    prometheusBlackboxExporter:
       enable: true
     securityBundle:
       enable: true

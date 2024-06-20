@@ -1,5 +1,4 @@
 appName: prometheus-blackbox-exporter
-chartName: prometheus-blackbox-exporter
 configKey: prometheusBlackboxExporter
 dependsOn: prometheus-operator-crd
 clusterValues:
