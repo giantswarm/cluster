@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.33.0] - 2024-06-20
+
 ### Fixed
 
 - Use app catalog from the Release CR if new releases are used.
@@ -502,7 +504,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Update and clean up the template repo.
 
-[Unreleased]: https://github.com/giantswarm/cluster/compare/v0.32.0...HEAD
+[Unreleased]: https://github.com/giantswarm/cluster/compare/v0.33.0...HEAD
+[0.33.0]: https://github.com/giantswarm/cluster/compare/v0.32.0...v0.33.0
 [0.32.0]: https://github.com/giantswarm/cluster/compare/v0.31.4...v0.32.0
 [0.31.4]: https://github.com/giantswarm/cluster/compare/v0.31.3...v0.31.4
 [0.31.3]: https://github.com/giantswarm/cluster/compare/v0.31.2...v0.31.3
