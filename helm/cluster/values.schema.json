@@ -2348,6 +2348,11 @@
                                             "title": "Controller manager",
                                             "description": "Configuration of controller manager",
                                             "properties": {
+                                                "externalCloudVolumePlugin": {
+                                                    "type": "string",
+                                                    "title": "External cloud volume plugin",
+                                                    "description": "The plugin to use when the controller-manager cloud provider is set to external. Most in-tree providers are deprecated and this should only be set if you really need it."
+                                                },
                                                 "featureGates": {
                                                     "$ref": "#/$defs/featureGates"
                                                 }

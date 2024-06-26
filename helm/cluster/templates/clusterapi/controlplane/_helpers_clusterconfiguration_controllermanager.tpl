@@ -8,6 +8,9 @@ extraArgs:
   cloud-config: {{ $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.cloudConfig  }}
 {{- end }}
   cluster-cidr: {{ $.Values.global.connectivity.network.pods.cidrBlocks | first }}
+{{- if $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.controllerManager.externalCloudVolumePlugin  }}
+  external-cloud-volume-plugin: {{ $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.controllerManager.externalCloudVolumePlugin  }}
+{{- end }}
   {{- if include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.controllerManager.featureGates" $ }}
   feature-gates: {{ include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.controllerManager.featureGates" $ }}
   {{- end }}
