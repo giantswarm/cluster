@@ -7,7 +7,6 @@ extraArgs:
 {{- if $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.cloudConfig  }}
   cloud-config: {{ $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.cloudConfig  }}
 {{- end }}
-  external-cloud-volume-plugin: {{ $.Values.providerIntegration.provider }}
   cluster-cidr: {{ $.Values.global.connectivity.network.pods.cidrBlocks | first }}
   {{- if include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.controllerManager.featureGates" $ }}
   feature-gates: {{ include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.controllerManager.featureGates" $ }}
