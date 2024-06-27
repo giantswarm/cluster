@@ -1,7 +1,7 @@
 appName: giantswarm-cluster-suite
 configKey: giantswarmClusterSuite
-catalog: default-test
+catalog: default
 namespace: kube-system
 # used by renovate
 # repo: giantswarm/giantswarm-cluster-suite
-version: 0.0.0-d73bc696c0f1238374c6f83b0f6fc3d63db6725d
+version: 0.1.0
