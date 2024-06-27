@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add new `giantswarm-cluster-suite` app that provides basic Kubernetes resources others apps need in workload cluster.
+- New flag that allows switching from Chart Operator backed App Platform to Flux backed App Platform.
+
 ### Changed
 
 - Made `external-cloud-volume-plugin` setting optional in the controller-manger configuration.
@@ -118,7 +123,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### ⚠️ Breaking changes for cluster-$provider apps
 
-> _Note: This is NOT a breaking change for customers. Team Turtles handles updates of cluster chart in cluster-$provider apps and updates Helm values accordingly._ 
+> _Note: This is NOT a breaking change for customers. Team Turtles handles updates of cluster chart in cluster-$provider apps and updates Helm values accordingly._
 
 - Remove deprecated `.Values.providerIntegration.resourcesApi.ciliumHelmReleaseResourceEnabled` Helm value.
 - Remove deprecated `.Values.providerIntegration.resourcesApi.coreDnsHelmReleaseResourceEnabled` Helm value.
