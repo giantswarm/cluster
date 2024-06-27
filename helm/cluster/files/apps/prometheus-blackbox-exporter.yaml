@@ -1,7 +1,6 @@
 appName: prometheus-blackbox-exporter
 configKey: prometheusBlackboxExporter
 dependsOn: prometheus-operator-crd
-catalog: default
 clusterValues:
   configMap: true
   secret: false
