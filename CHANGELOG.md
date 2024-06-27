@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Made `external-cloud-volume-plugin` setting optional in the controller-manger configuration.
+
 ## [0.33.0] - 2024-06-20
 
 ### Fixed
