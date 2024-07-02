@@ -77,8 +77,14 @@ internal:
         admissionConfiguration: {}
         auditPolicy: {}
         enablePriorityAndFairness: true
+        featureGates:
+        - name: StatefulSetAutoDeletePVC
+          enabled: true
       controllerManager:
         terminatedPodGCThreshold: 125
+        featureGates:
+        - name: StatefulSetAutoDeletePVC
+          enabled: true
       etcd:
         experimental: {}
         quotaBackendBytesGiB: 8
