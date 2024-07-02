@@ -12,6 +12,7 @@ global:
     coreDns: {}
     etcdKubernetesResourcesCountExporter: {}
     externalDns: {}
+    giantswarmClusterSuite: {}
     k8sAuditMetrics: {}
     k8sDnsNodeCache: {}
     metricsServer: {}
@@ -68,6 +69,8 @@ global:
   release: {}
 internal:
   advancedConfiguration:
+    appPlatform:
+      fluxBackend: false
     cgroupsv1: false
     controlPlane:
       apiServer:
@@ -116,6 +119,8 @@ providerIntegration:
     etcdKubernetesResourcesCountExporter:
       enable: false
     externalDns:
+      enable: false
+    giantswarmClusterSuite:
       enable: false
     k8sAuditMetrics:
       enable: false

@@ -1080,6 +1080,12 @@
                             "title": "external-dns",
                             "description": "Configuration of external-dns. For all available values see https://github.com/giantswarm/external-dns-app."
                         },
+                        "giantswarmClusterSuite": {
+                            "$ref": "#/$defs/app",
+                            "type": "object",
+                            "title": "giantswarm-cluster-suite",
+                            "description": "Configuration of giantswarm-cluster-suite. For all available values see https://github.com/giantswarm/giantswarm-cluster-suite."
+                        },
                         "k8sAuditMetrics": {
                             "$ref": "#/$defs/app",
                             "type": "object",
@@ -1609,6 +1615,19 @@
                     ],
                     "additionalProperties": false,
                     "properties": {
+                        "appPlatform": {
+                            "type": "object",
+                            "title": "App Platform",
+                            "description": "Advanced configuration of App Platform.",
+                            "properties": {
+                                "fluxBackend": {
+                                    "type": "boolean",
+                                    "title": "Flux Backend",
+                                    "description": "Use Flux as App Platform backend for installing apps.",
+                                    "default": false
+                                }
+                            }
+                        },
                         "cgroupsv1": {
                             "type": "boolean",
                             "title": "CGroups v1",
@@ -2007,6 +2026,9 @@
                             "$ref": "#/$defs/providerIntegrationAppConfig"
                         },
                         "externalDns": {
+                            "$ref": "#/$defs/providerIntegrationAppConfig"
+                        },
+                        "giantswarmClusterSuite": {
                             "$ref": "#/$defs/providerIntegrationAppConfig"
                         },
                         "k8sAuditMetrics": {

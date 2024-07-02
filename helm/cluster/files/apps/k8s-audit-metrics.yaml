@@ -3,7 +3,8 @@ configKey: k8sAuditMetrics
 clusterValues:
   configMap: true
   secret: false
-dependsOn: kyverno
+dependsOnHelmRelease: true
+dependsOn: kyverno, cilium, prometheus-operator-crd
 namespace: kube-system
 # used by renovate
 # repo: giantswarm/k8s-audit-metrics

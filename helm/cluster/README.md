@@ -95,6 +95,13 @@ Configuration of apps that are part of the cluster.
 | `global.apps.externalDns.extraConfigs[*].name` | **Name** - Name of the config map or secret. The object must exist in the same namespace as the cluster App.|**Type:** `string`<br/>|
 | `global.apps.externalDns.extraConfigs[*].priority` | **Priority**|**Type:** `integer`<br/>**Default:** `25`|
 | `global.apps.externalDns.values` | **Config map** - Helm Values to be passed to the app as user config.|**Type:** `object`<br/>|
+| `global.apps.giantswarmClusterSuite` | **App resource** - Configuration of a default app that is part of the cluster and is deployed as an App resource.|**Type:** `object`<br/>|
+| `global.apps.giantswarmClusterSuite.extraConfigs` | **Extra config maps or secrets** - Extra config maps or secrets that will be used to customize to the app. The desired values must be under configmap or secret key 'values'. The values are merged in the order given, with the later values overwriting earlier, and then inline values overwriting those. Resources must be in the same namespace as the cluster.|**Type:** `array`<br/>|
+| `global.apps.giantswarmClusterSuite.extraConfigs[*]` | **Config map or secret**|**Type:** `object`<br/>|
+| `global.apps.giantswarmClusterSuite.extraConfigs[*].kind` | **Kind** - Specifies whether the resource is a config map or a secret.|**Type:** `string`<br/>|
+| `global.apps.giantswarmClusterSuite.extraConfigs[*].name` | **Name** - Name of the config map or secret. The object must exist in the same namespace as the cluster App.|**Type:** `string`<br/>|
+| `global.apps.giantswarmClusterSuite.extraConfigs[*].priority` | **Priority**|**Type:** `integer`<br/>**Default:** `25`|
+| `global.apps.giantswarmClusterSuite.values` | **Config map** - Helm Values to be passed to the app as user config.|**Type:** `object`<br/>|
 | `global.apps.k8sAuditMetrics` | **App resource** - Configuration of a default app that is part of the cluster and is deployed as an App resource.|**Type:** `object`<br/>|
 | `global.apps.k8sAuditMetrics.extraConfigs` | **Extra config maps or secrets** - Extra config maps or secrets that will be used to customize to the app. The desired values must be under configmap or secret key 'values'. The values are merged in the order given, with the later values overwriting earlier, and then inline values overwriting those. Resources must be in the same namespace as the cluster.|**Type:** `array`<br/>|
 | `global.apps.k8sAuditMetrics.extraConfigs[*]` | **Config map or secret**|**Type:** `object`<br/>|
@@ -261,6 +268,8 @@ For Giant Swarm internal use only, not stable, or not supported by UIs.
 | **Property** | **Description** | **More Details** |
 | :----------- | :-------------- | :--------------- |
 | `internal.advancedConfiguration` | **Advanced configuration** - Advanced configuration of cluster components, to be configured by Giant Swarm staff only.|**Type:** `object`<br/>|
+| `internal.advancedConfiguration.appPlatform` | **App Platform** - Advanced configuration of App Platform.|**Type:** `object`<br/>|
+| `internal.advancedConfiguration.appPlatform.fluxBackend` | **Flux Backend** - Use Flux as App Platform backend for installing apps.|**Type:** `boolean`<br/>**Default:** `false`|
 | `internal.advancedConfiguration.cgroupsv1` | **CGroups v1** - Force use of CGroups v1 for whole cluster.|**Type:** `boolean`<br/>**Default:** `false`|
 | `internal.advancedConfiguration.controlPlane` | **Control plane** - Advanced configuration of control plane components.|**Type:** `object`<br/>|
 | `internal.advancedConfiguration.controlPlane.apiServer` | **API server** - Advanced configuration of API server.|**Type:** `object`<br/>|
@@ -452,6 +461,9 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.apps.externalDns` | **Provider integration app config** - App config used to additionally configure an app for a specific provider|**Type:** `object`<br/>|
 | `providerIntegration.apps.externalDns.configTemplateName` | **Config template name** - Name of the Helm template that has provider-specific app config. Provider-specific app config overrides provider-independent app config, while custom user config overrides both provider-independent and provider-specific default app config.|**Type:** `string`<br/>|
 | `providerIntegration.apps.externalDns.enable` | **Enable** - Flag that indicates if an app is enabled for a provider. It is false by default, which allows for more incremental and safer adoption of the cluster chart.|**Type:** `boolean`<br/>**Default:** `false`|
+| `providerIntegration.apps.giantswarmClusterSuite` | **Provider integration app config** - App config used to additionally configure an app for a specific provider|**Type:** `object`<br/>|
+| `providerIntegration.apps.giantswarmClusterSuite.configTemplateName` | **Config template name** - Name of the Helm template that has provider-specific app config. Provider-specific app config overrides provider-independent app config, while custom user config overrides both provider-independent and provider-specific default app config.|**Type:** `string`<br/>|
+| `providerIntegration.apps.giantswarmClusterSuite.enable` | **Enable** - Flag that indicates if an app is enabled for a provider. It is false by default, which allows for more incremental and safer adoption of the cluster chart.|**Type:** `boolean`<br/>**Default:** `false`|
 | `providerIntegration.apps.k8sAuditMetrics` | **Provider integration app config** - App config used to additionally configure an app for a specific provider|**Type:** `object`<br/>|
 | `providerIntegration.apps.k8sAuditMetrics.configTemplateName` | **Config template name** - Name of the Helm template that has provider-specific app config. Provider-specific app config overrides provider-independent app config, while custom user config overrides both provider-independent and provider-specific default app config.|**Type:** `string`<br/>|
 | `providerIntegration.apps.k8sAuditMetrics.enable` | **Enable** - Flag that indicates if an app is enabled for a provider. It is false by default, which allows for more incremental and safer adoption of the cluster chart.|**Type:** `boolean`<br/>**Default:** `false`|
