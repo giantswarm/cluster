@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Enable `StatefulSetAutoDeletePVC` feature gate on all clusters.
+
 ## [0.33.1] - 2024-07-02
 
 ### Added
@@ -17,7 +21,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Made `external-cloud-volume-plugin` setting optional in the controller-manger configuration.
-- Enable `StatefulSetAutoDeletePVC` feature gate on all clusters.
 
 ## [0.33.0] - 2024-06-20
 
