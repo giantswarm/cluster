@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.33.1] - 2024-07-02
+
 ### Added
 
 - Add new `giantswarm-cluster-suite` app that provides basic Kubernetes resources others apps need in workload cluster.
@@ -514,7 +516,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Update and clean up the template repo.
 
-[Unreleased]: https://github.com/giantswarm/cluster/compare/v0.33.0...HEAD
+[Unreleased]: https://github.com/giantswarm/cluster/compare/v0.33.1...HEAD
+[0.33.1]: https://github.com/giantswarm/cluster/compare/v0.33.0...v0.33.1
 [0.33.0]: https://github.com/giantswarm/cluster/compare/v0.32.0...v0.33.0
 [0.32.0]: https://github.com/giantswarm/cluster/compare/v0.31.4...v0.32.0
 [0.31.4]: https://github.com/giantswarm/cluster/compare/v0.31.3...v0.31.4
