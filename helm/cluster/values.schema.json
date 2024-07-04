@@ -1735,7 +1735,13 @@
                                             }
                                         },
                                         "featureGates": {
-                                            "$ref": "#/$defs/featureGates"
+                                            "$ref": "#/$defs/featureGates",
+                                            "default": [
+                                                {
+                                                    "enabled": true,
+                                                    "name": "StatefulSetAutoDeletePVC"
+                                                }
+                                            ]
                                         }
                                     }
                                 },
@@ -1745,7 +1751,13 @@
                                     "description": "Advanced configuration of controller manager",
                                     "properties": {
                                         "featureGates": {
-                                            "$ref": "#/$defs/featureGates"
+                                            "$ref": "#/$defs/featureGates",
+                                            "default": [
+                                                {
+                                                    "enabled": true,
+                                                    "name": "StatefulSetAutoDeletePVC"
+                                                }
+                                            ]
                                         },
                                         "terminatedPodGCThreshold": {
                                             "type": "integer",
