@@ -18,18 +18,6 @@
 #
 # To work around this, this post-delete hook suspends all HelmRelease CRs created with this chart.
 #
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: "{{ include "cluster.resource.name" $ }}-cleanup-helmreleases-hook"
-  namespace: {{ $.Release.Namespace }}
-  annotations:
-    "helm.sh/hook": "post-delete"
-    "helm.sh/hook-delete-policy": "before-hook-creation,hook-succeeded,hook-failed"
-    "helm.sh/hook-weight": "-1"
-  labels:
-    {{- include "cluster.labels.common.all" $ | nindent 4 }}
----
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
