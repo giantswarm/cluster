@@ -1735,24 +1735,7 @@
                                             }
                                         },
                                         "featureGates": {
-                                            "type": "array",
-                                            "title": "Feature Gates",
-                                            "description": "List of feature gates on every clusters.",
-                                            "items": {
-                                                "type": "object",
-                                                "properties": {
-                                                    "enabled": {
-                                                        "type": "boolean",
-                                                        "title": "Enabled",
-                                                        "description": "Enable the corresponding feature gate."
-                                                    },
-                                                    "name": {
-                                                        "type": "string",
-                                                        "title": "Name",
-                                                        "description": "Name of the feature gate."
-                                                    }
-                                                }
-                                            },
+                                            "$ref": "#/$defs/featureGates",
                                             "default": [
                                                 {
                                                     "enabled": true,
@@ -1768,24 +1751,7 @@
                                     "description": "Advanced configuration of controller manager",
                                     "properties": {
                                         "featureGates": {
-                                            "type": "array",
-                                            "title": "Feature Gates",
-                                            "description": "List of feature gates on every clusters.",
-                                            "items": {
-                                                "type": "object",
-                                                "properties": {
-                                                    "enabled": {
-                                                        "type": "boolean",
-                                                        "title": "Enabled",
-                                                        "description": "Enable the corresponding feature gate."
-                                                    },
-                                                    "name": {
-                                                        "type": "string",
-                                                        "title": "Name",
-                                                        "description": "Name of the feature gate."
-                                                    }
-                                                }
-                                            },
+                                            "$ref": "#/$defs/featureGates",
                                             "default": [
                                                 {
                                                     "enabled": true,

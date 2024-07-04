@@ -289,14 +289,14 @@ For Giant Swarm internal use only, not stable, or not supported by UIs.
 | `internal.advancedConfiguration.controlPlane.apiServer.extraArgs` | **Extra CLI args** - A map with the additional CLI flags that are appended to the default flags. Use with caution, as there is no validation for these values, so you can set incorrect or duplicate flags.|**Type:** `object`<br/>|
 | `internal.advancedConfiguration.controlPlane.apiServer.extraCertificateSANs` | **Extra certificate SANs** - The additional certificate SANs that are appended to the default SANs. Use with caution, as there is no validation for these values, so you can set incorrect or duplicate certificates.|**Type:** `array`<br/>|
 | `internal.advancedConfiguration.controlPlane.apiServer.extraCertificateSANs[*]` | **Extra certificate SAN**|**Type:** `string`<br/>|
-| `internal.advancedConfiguration.controlPlane.apiServer.featureGates` | **Feature Gates** - List of feature gates on every clusters.|**Type:** `array`<br/>**Default:** `[{"enabled":true,"name":"StatefulSetAutoDeletePVC"}]`|
-| `internal.advancedConfiguration.controlPlane.apiServer.featureGates[*]` |**None**|**Type:** `object`<br/>|
-| `internal.advancedConfiguration.controlPlane.apiServer.featureGates[*].enabled` | **Enabled** - Enable the corresponding feature gate.|**Type:** `boolean`<br/>|
+| `internal.advancedConfiguration.controlPlane.apiServer.featureGates` | **Feature gates** - A list of feature gates to enable or disable.|**Type:** `array`<br/>|
+| `internal.advancedConfiguration.controlPlane.apiServer.featureGates[*]` | **Feature gate** - A feature gate to enable or disable.|**Type:** `object`<br/>|
+| `internal.advancedConfiguration.controlPlane.apiServer.featureGates[*].enabled` | **Enabled** - Whether to enable or disable the feature gate.|**Type:** `boolean`<br/>|
 | `internal.advancedConfiguration.controlPlane.apiServer.featureGates[*].name` | **Name** - Name of the feature gate.|**Type:** `string`<br/>|
 | `internal.advancedConfiguration.controlPlane.controllerManager` | **Controller manager** - Advanced configuration of controller manager|**Type:** `object`<br/>|
-| `internal.advancedConfiguration.controlPlane.controllerManager.featureGates` | **Feature Gates** - List of feature gates on every clusters.|**Type:** `array`<br/>**Default:** `[{"enabled":true,"name":"StatefulSetAutoDeletePVC"}]`|
-| `internal.advancedConfiguration.controlPlane.controllerManager.featureGates[*]` |**None**|**Type:** `object`<br/>|
-| `internal.advancedConfiguration.controlPlane.controllerManager.featureGates[*].enabled` | **Enabled** - Enable the corresponding feature gate.|**Type:** `boolean`<br/>|
+| `internal.advancedConfiguration.controlPlane.controllerManager.featureGates` | **Feature gates** - A list of feature gates to enable or disable.|**Type:** `array`<br/>|
+| `internal.advancedConfiguration.controlPlane.controllerManager.featureGates[*]` | **Feature gate** - A feature gate to enable or disable.|**Type:** `object`<br/>|
+| `internal.advancedConfiguration.controlPlane.controllerManager.featureGates[*].enabled` | **Enabled** - Whether to enable or disable the feature gate.|**Type:** `boolean`<br/>|
 | `internal.advancedConfiguration.controlPlane.controllerManager.featureGates[*].name` | **Name** - Name of the feature gate.|**Type:** `string`<br/>|
 | `internal.advancedConfiguration.controlPlane.controllerManager.terminatedPodGCThreshold` | **Terminated pod GC threshold** - Number of terminated pods that can exist before the terminated pod garbage collector starts deleting terminated pods. If <= 0, the terminated pod garbage collector is disabled.|**Type:** `integer`<br/>**Default:** `125`|
 | `internal.advancedConfiguration.controlPlane.etcd` | **etcd** - Configuration of etcd|**Type:** `object`<br/>|
