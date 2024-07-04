@@ -1,23 +1,22 @@
 {{- if .Values.providerIntegration.resourcesApi.cleanupHelmReleaseResourcesEnabled }}
-# Because cluster provider resources are often deleted before flux has a chance
-# to uninstall helm releases for all deleted HelmRelease CRs they become
-# leftovers because there is still flux finalizer on them. This looks like
-# following:
 #
-#     $ kubectl get helmrelease -n org-multi-project
+# Because cluster resources are often deleted before Flux has a chance to uninstall the Helm releases for all deleted HelmRelease CRs,
+# they become leftovers because there is still a Flux finalizer on them.
+#
+# This looks as follows:
+#
+#     $ kubectl get helmreleases --namespace org-multi-project
 #     NAME                           AGE     READY   STATUS
 #     pawe1-cilium                   99m     False   failed to get last release revision
 #     pawe1-cloud-provider-vsphere   99m     False   failed to get last release revision
 #
-# Both HelmRelease CRs in this case have deletionTimestamp and finalizers set,
-# e.g.:
+# Both HelmRelease CRs in this case have a deletion timestamp and finalizer set, e.g.:
 #
 #     deletionTimestamp: "2023-03-02T14:34:49Z"
 #     finalizers:
-#       - finalizers.fluxcd.io
+#     - finalizers.fluxcd.io
 #
-# To work around this, post-delete Job deletes all finalizers on all HelmRelease
-# CRs created with this chart.
+# To work around this, this post-delete hook suspends all HelmRelease CRs created with this chart.
 #
 apiVersion: v1
 kind: ServiceAccount
