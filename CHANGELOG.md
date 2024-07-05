@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.34.1] - 2024-07-05
+
 ### Fixed
 
 - Restore single dependency for `k8s-audit-metrics` app.
@@ -527,7 +529,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Update and clean up the template repo.
 
-[Unreleased]: https://github.com/giantswarm/cluster/compare/v0.34.0...HEAD
+[Unreleased]: https://github.com/giantswarm/cluster/compare/v0.34.1...HEAD
+[0.34.1]: https://github.com/giantswarm/cluster/compare/v0.34.0...v0.34.1
 [0.34.0]: https://github.com/giantswarm/cluster/compare/v0.33.2...v0.34.0
 [0.33.2]: https://github.com/giantswarm/cluster/compare/v0.33.1...v0.33.2
 [0.33.1]: https://github.com/giantswarm/cluster/compare/v0.33.0...v0.33.1
