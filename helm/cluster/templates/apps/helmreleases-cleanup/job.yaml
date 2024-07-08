@@ -38,12 +38,6 @@ spec:
     spec:
       restartPolicy: Never
       serviceAccountName: {{ include "cluster.resource.name" . }}-helmreleases-cleanup
-      securityContext:
-        runAsUser: 1000
-        runAsGroup: 1000
-        runAsNonRoot: true
-        seccompProfile:
-          type: RuntimeDefault
       containers:
       - name: post-delete-job
         image: {{ .Values.internal.advancedConfiguration.registry }}/giantswarm/kubectl:{{ .Values.providerIntegration.kubernetesVersion }}
@@ -56,12 +50,15 @@ spec:
                 kubectl patch -n {{ .Release.Namespace }} "${r}" --type=merge -p '{"metadata": {"finalizers": []}}'
             done
         securityContext:
+          runAsNonRoot: true
+          runAsUser: 1000
+          runAsGroup: 1000
           allowPrivilegeEscalation: false
+          seccompProfile:
+            type: RuntimeDefault
           capabilities:
             drop:
             - ALL
-          seccompProfile:
-            type: RuntimeDefault
           readOnlyRootFilesystem: true
         resources:
           requests:
