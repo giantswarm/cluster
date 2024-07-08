@@ -11,6 +11,52 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Kubelet insecure mode
 
+## [0.34.1] - 2024-07-05
+
+### Fixed
+
+- Restore single dependency for `k8s-audit-metrics` app.
+
+## [0.34.0] - 2024-07-04
+
+### Changed
+
+- Enable `StatefulSetAutoDeletePVC` feature gate on all clusters.
+- Update observability-bundle version from 1.3.4 to 1.4.0.
+- Update cert-manager-app version from 3.7.7 to 3.7.8.
+
+## [0.33.1] - 2024-07-02
+
+### Added
+
+- Add new `giantswarm-cluster-suite` app that provides basic Kubernetes resources others apps need in workload cluster.
+- New flag that allows switching from Chart Operator backed App Platform to Flux backed App Platform.
+
+### Changed
+
+- Made `external-cloud-volume-plugin` setting optional in the controller-manger configuration.
+
+## [0.33.0] - 2024-06-20
+
+### Fixed
+
+- Use app catalog from the Release CR if new releases are used.
+- Use app dependencies from the Release CR if new releases are used.
+- Add missing k8s-audit-metrics dependency (kyverno).
+
+## [0.32.0] - 2024-06-18
+
+### Added
+
+- Add `.global.components.containerd.localRegistryCache` Helm values and support for in-cluster, local registry cache mirrors in `containerd` configuration.
+  In such cases, the registry should be exposed via node ports and `containerd` connects via that port at `127.0.0.1` via HTTP (only allowed for this single use case).
+
+## [0.31.4] - 2024-06-12
+
+### Fixed
+
+- Allow empty values in labels
+
 ## [0.31.3] - 2024-06-12
 
 ### Fixed
@@ -97,7 +143,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### ⚠️ Breaking changes for cluster-$provider apps
 
-> _Note: This is NOT a breaking change for customers. Team Turtles handles updates of cluster chart in cluster-$provider apps and updates Helm values accordingly._ 
+> _Note: This is NOT a breaking change for customers. Team Turtles handles updates of cluster chart in cluster-$provider apps and updates Helm values accordingly._
 
 - Remove deprecated `.Values.providerIntegration.resourcesApi.ciliumHelmReleaseResourceEnabled` Helm value.
 - Remove deprecated `.Values.providerIntegration.resourcesApi.coreDnsHelmReleaseResourceEnabled` Helm value.
@@ -145,6 +191,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fix CoreDNS provider-specific config (it was incorrectly reading Cilium app config instead of CoreDNS app config).
+- Fix `containerd` configuration file.
+
+### Changed
+
+- Move `.internal.localRegistryCache` to `.global.components.containerd.localRegistryCache` to publicly expose the settings.
 
 ## [0.23.0] - 2024-05-08
 
@@ -482,7 +533,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Update and clean up the template repo.
 
-[Unreleased]: https://github.com/giantswarm/cluster/compare/v0.31.3...HEAD
+[Unreleased]: https://github.com/giantswarm/cluster/compare/v0.34.1...HEAD
+[0.34.1]: https://github.com/giantswarm/cluster/compare/v0.34.0...v0.34.1
+[0.34.0]: https://github.com/giantswarm/cluster/compare/v0.33.2...v0.34.0
+[0.33.2]: https://github.com/giantswarm/cluster/compare/v0.33.1...v0.33.2
+[0.33.1]: https://github.com/giantswarm/cluster/compare/v0.33.0...v0.33.1
+[0.33.0]: https://github.com/giantswarm/cluster/compare/v0.32.0...v0.33.0
+[0.32.0]: https://github.com/giantswarm/cluster/compare/v0.31.4...v0.32.0
+[0.31.4]: https://github.com/giantswarm/cluster/compare/v0.31.3...v0.31.4
 [0.31.3]: https://github.com/giantswarm/cluster/compare/v0.31.2...v0.31.3
 [0.31.2]: https://github.com/giantswarm/cluster/compare/v0.31.1...v0.31.2
 [0.31.1]: https://github.com/giantswarm/cluster/compare/v0.31.0...v0.31.1

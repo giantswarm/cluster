@@ -54,18 +54,30 @@ spec:
   chart:
     spec:
       chart: {{ $app.chartName | default $app.appName }}
+      {{- $appCatalog := $app.catalog -}}
       {{- $appVersion := $app.version -}}
       {{- if $.Values.providerIntegration.useReleases }}
       {{- $_ := set $ "appName" $app.appName }}
+      {{- $appCatalog = include "cluster.app.catalog" $ }}
       {{- $appVersion = include "cluster.app.version" $ }}
       {{- end }}
       version: {{ $ephemeralConfig.versionOverride | default $appVersion }}
       sourceRef:
         kind: HelmRepository
-        name: {{ include "cluster.resource.name" $ }}-{{ $ephemeralConfig.catalogOverride | default $app.catalog | default "default" }}
-  {{- if $app.dependsOn }}
+        name: {{ include "cluster.resource.name" $ }}-{{ $ephemeralConfig.catalogOverride | default $appCatalog | default "default" }}
+  {{- $dependencies := list }}
+  {{- if $.Values.providerIntegration.useReleases}}
+    {{- $_ := set $ "appName" $appName }}
+    {{- $dependenciesFromRelease := include "cluster.app.dependencies" $ | fromYamlArray }}
+    {{- range $_, $dependency := $dependenciesFromRelease }}
+      {{- $dependencies = append $dependencies $dependency }}
+    {{- end }}
+  {{- else if $app.dependsOn }}
+    {{- $dependencies = $app.dependsOn }}
+  {{- end }}
+  {{- if $dependencies }}
   dependsOn:
-  {{- range $_, $dependency := $app.dependsOn }}
+  {{- range $_, $dependency := $dependencies }}
   - name: {{ include "cluster.resource.name" $ }}-{{ $dependency }}
     namespace: {{ $.Release.Namespace }}
   {{- end }}

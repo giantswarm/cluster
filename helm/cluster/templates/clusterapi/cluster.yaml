@@ -18,6 +18,9 @@ metadata:
     {{- if .Values.global.podSecurityStandards.enforced }}
     policy.giantswarm.io/psp-status: disabled
     {{- end }}
+    {{- if .Values.internal.advancedConfiguration.appPlatform.fluxBackend }}
+    app-operator.giantswarm.io/flux-backend: "true"
+    {{- end }}
   name: {{ include "cluster.resource.name" $ }}
   namespace: {{ .Release.Namespace }}
 spec:

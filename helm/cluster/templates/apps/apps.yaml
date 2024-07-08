@@ -31,7 +31,17 @@ apiVersion: application.giantswarm.io/v1alpha1
 kind: App
 metadata:
   {{- $annotations := include "cluster.annotations.common.all" $ }}
-  {{- if or $annotations $app.dependsOn }}
+  {{- $dependencies := list }}
+  {{- if $.Values.providerIntegration.useReleases}}
+    {{- $_ := set $ "appName" $appName }}
+    {{- $dependenciesFromRelease := include "cluster.app.dependencies" $ | fromYamlArray }}
+    {{- range $_, $dependency := $dependenciesFromRelease }}
+      {{- $dependencies = append $dependencies (printf "%s-%s" $.Values.global.metadata.name $dependency) }}
+    {{- end }}
+  {{- else if $app.dependsOn }}
+    {{- $dependencies = append $dependencies (printf "%s-%s" $.Values.global.metadata.name $app.dependsOn) }}
+  {{- end }}
+  {{- if or $annotations $dependencies }}
   annotations:
     {{- if $annotations }}
     {{- $annotations | indent 4 }}
@@ -40,9 +50,9 @@ metadata:
     # explicitly instruct app-operator that this App depends on a HelmRelease (otherwise it will just check App resources)
     app-operator.giantswarm.io/depends-on-helmrelease: "true"
     {{- end }}
-    {{- if $app.dependsOn }}
+    {{- if $dependencies }}
     # app-operator will make sure that the app on which it depends is installed before
-    app-operator.giantswarm.io/depends-on: {{ printf "%s-%s" $.Values.global.metadata.name $app.dependsOn -}}
+    app-operator.giantswarm.io/depends-on: {{ $dependencies | join "," | quote -}}
     {{- end }}
   {{- end }}
   labels:
@@ -54,7 +64,12 @@ metadata:
   name: {{ $.Values.global.metadata.name }}-{{ $app.appName }}
   namespace: {{ $.Release.Namespace }}
 spec:
-  catalog: {{ $ephemeralConfig.catalogOverride | default $app.catalog | default "default" }}
+  {{- $appCatalog := $app.catalog -}}
+  {{- if $.Values.providerIntegration.useReleases }}
+  {{- $_ := set $ "appName" $app.appName }}
+  {{- $appCatalog = include "cluster.app.catalog" $ }}
+  {{- end }}
+  catalog: {{ $ephemeralConfig.catalogOverride | default $appCatalog | default "default" }}
   name: {{ $app.chartName | default $app.appName }}
   {{- if $app.inCluster }}
   namespace: {{ $.Release.Namespace }}

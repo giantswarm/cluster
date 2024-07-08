@@ -1,9 +1,10 @@
 appName: k8s-audit-metrics
-chartName: k8s-audit-metrics
 configKey: k8sAuditMetrics
 clusterValues:
   configMap: true
   secret: false
+dependsOnHelmRelease: true
+dependsOn: kyverno
 namespace: kube-system
 # used by renovate
 # repo: giantswarm/k8s-audit-metrics

@@ -95,6 +95,13 @@ Configuration of apps that are part of the cluster.
 | `global.apps.externalDns.extraConfigs[*].name` | **Name** - Name of the config map or secret. The object must exist in the same namespace as the cluster App.|**Type:** `string`<br/>|
 | `global.apps.externalDns.extraConfigs[*].priority` | **Priority**|**Type:** `integer`<br/>**Default:** `25`|
 | `global.apps.externalDns.values` | **Config map** - Helm Values to be passed to the app as user config.|**Type:** `object`<br/>|
+| `global.apps.giantswarmClusterSuite` | **App resource** - Configuration of a default app that is part of the cluster and is deployed as an App resource.|**Type:** `object`<br/>|
+| `global.apps.giantswarmClusterSuite.extraConfigs` | **Extra config maps or secrets** - Extra config maps or secrets that will be used to customize to the app. The desired values must be under configmap or secret key 'values'. The values are merged in the order given, with the later values overwriting earlier, and then inline values overwriting those. Resources must be in the same namespace as the cluster.|**Type:** `array`<br/>|
+| `global.apps.giantswarmClusterSuite.extraConfigs[*]` | **Config map or secret**|**Type:** `object`<br/>|
+| `global.apps.giantswarmClusterSuite.extraConfigs[*].kind` | **Kind** - Specifies whether the resource is a config map or a secret.|**Type:** `string`<br/>|
+| `global.apps.giantswarmClusterSuite.extraConfigs[*].name` | **Name** - Name of the config map or secret. The object must exist in the same namespace as the cluster App.|**Type:** `string`<br/>|
+| `global.apps.giantswarmClusterSuite.extraConfigs[*].priority` | **Priority**|**Type:** `integer`<br/>**Default:** `25`|
+| `global.apps.giantswarmClusterSuite.values` | **Config map** - Helm Values to be passed to the app as user config.|**Type:** `object`<br/>|
 | `global.apps.k8sAuditMetrics` | **App resource** - Configuration of a default app that is part of the cluster and is deployed as an App resource.|**Type:** `object`<br/>|
 | `global.apps.k8sAuditMetrics.extraConfigs` | **Extra config maps or secrets** - Extra config maps or secrets that will be used to customize to the app. The desired values must be under configmap or secret key 'values'. The values are merged in the order given, with the later values overwriting earlier, and then inline values overwriting those. Resources must be in the same namespace as the cluster.|**Type:** `array`<br/>|
 | `global.apps.k8sAuditMetrics.extraConfigs[*]` | **Config map or secret**|**Type:** `object`<br/>|
@@ -196,6 +203,11 @@ Advanced configuration of components that are running on all nodes.
 | `global.components.containerd.containerRegistries.*[*].credentials.password` | **Password** - Used to authenticate for the registry with username/password.|**Type:** `string`<br/>|
 | `global.components.containerd.containerRegistries.*[*].credentials.username` | **Username** - Used to authenticate for the registry with username/password.|**Type:** `string`<br/>|
 | `global.components.containerd.containerRegistries.*[*].endpoint` | **Endpoint** - Endpoint for the container registry.|**Type:** `string`<br/>|
+| `global.components.containerd.localRegistryCache` | **Local registry cache** - Caching container registry within the cluster.|**Type:** `object`<br/>|
+| `global.components.containerd.localRegistryCache.enabled` | **Enable** - Enabling this will deploy the Zot registry service in the cluster. To make use of it as a pull-through cache, you also have to specify registries to cache images for.|**Type:** `boolean`<br/>**Default:** `false`|
+| `global.components.containerd.localRegistryCache.mirroredRegistries` | **Registries to cache** - Here you must specify each registry to cache container images for. Please also make sure to have an entry for each registry in Global > Components > Containerd > Container registries.|**Type:** `array`<br/>**Default:** `[]`|
+| `global.components.containerd.localRegistryCache.mirroredRegistries[*]` |**None**|**Type:** `string`<br/>|
+| `global.components.containerd.localRegistryCache.port` | **Service port** - NodePort used by the local registry service.|**Type:** `integer`<br/>**Default:** `32767`|
 | `global.components.selinux` | **SELinux** - Configuration of SELinux.|**Type:** `object`<br/>|
 | `global.components.selinux.mode` | **SELinux mode** - Configure SELinux mode: 'enforcing', 'permissive' or 'disabled'.|**Type:** `string`<br/>**Default:** `"permissive"`|
 
@@ -256,6 +268,8 @@ For Giant Swarm internal use only, not stable, or not supported by UIs.
 | **Property** | **Description** | **More Details** |
 | :----------- | :-------------- | :--------------- |
 | `internal.advancedConfiguration` | **Advanced configuration** - Advanced configuration of cluster components, to be configured by Giant Swarm staff only.|**Type:** `object`<br/>|
+| `internal.advancedConfiguration.appPlatform` | **App Platform** - Advanced configuration of App Platform.|**Type:** `object`<br/>|
+| `internal.advancedConfiguration.appPlatform.fluxBackend` | **Flux Backend** - Use Flux as App Platform backend for installing apps.|**Type:** `boolean`<br/>**Default:** `false`|
 | `internal.advancedConfiguration.cgroupsv1` | **CGroups v1** - Force use of CGroups v1 for whole cluster.|**Type:** `boolean`<br/>**Default:** `false`|
 | `internal.advancedConfiguration.controlPlane` | **Control plane** - Advanced configuration of control plane components.|**Type:** `object`<br/>|
 | `internal.advancedConfiguration.controlPlane.apiServer` | **API server** - Advanced configuration of API server.|**Type:** `object`<br/>|
@@ -365,7 +379,7 @@ Properties within the `.global.metadata` object
 | `global.metadata.annotations.PATTERN` | **Annotation**|**Type:** `string`<br/>**Key pattern:**<br/>`PATTERN`=`^([a-zA-Z0-9/\.-]{1,253}/)?[a-zA-Z0-9/\._-]{1,63}$`<br/>|
 | `global.metadata.description` | **Cluster description** - User-friendly description of the cluster's purpose.|**Type:** `string`<br/>|
 | `global.metadata.labels` | **Labels** - These labels are added to all Kubernetes resources defining this cluster.|**Type:** `object`<br/>|
-| `global.metadata.labels.PATTERN` | **Label**|**Type:** `string`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-zA-Z0-9/\._-]+$`<br/>**Value pattern:** `^[a-zA-Z0-9/\._-]+$`<br/>|
+| `global.metadata.labels.PATTERN` | **Label**|**Type:** `string`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-zA-Z0-9/\._-]+$`<br/>**Value pattern:** `^[a-zA-Z0-9/\._-]*$`<br/>|
 | `global.metadata.name` | **Cluster name** - Unique identifier, cannot be changed after creation.|**Type:** `string`<br/>|
 | `global.metadata.organization` | **Organization** - The name of organization that owns the cluster.|**Type:** `string`<br/>|
 | `global.metadata.preventDeletion` | **Prevent cluster deletion** - Setting this to true will set giantswarm.io/prevent-deletion label to true, which will block cluster deletion.|**Type:** `boolean`<br/>**Default:** `false`|
@@ -387,7 +401,7 @@ Properties within the `.global.nodePools` object
 | `global.nodePools.PATTERN.customNodeTaints[*].key` | **Key**|**Type:** `string`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
 | `global.nodePools.PATTERN.customNodeTaints[*].value` | **Value**|**Type:** `string`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
 | `global.nodePools.PATTERN.labels` | **Labels** - These labels are added to all Kubernetes resources defining this node pool.|**Type:** `object`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
-| `global.nodePools.PATTERN.labels.PATTERN_2` | **Label**|**Type:** `string`<br/>**Key patterns:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>`PATTERN_2`=`^[a-zA-Z0-9/\._-]+$`<br/>**Value pattern:** `^[a-zA-Z0-9/\._-]+$`<br/>|
+| `global.nodePools.PATTERN.labels.PATTERN_2` | **Label**|**Type:** `string`<br/>**Key patterns:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>`PATTERN_2`=`^[a-zA-Z0-9/\._-]+$`<br/>**Value pattern:** `^[a-zA-Z0-9/\._-]*$`<br/>|
 | `global.nodePools.PATTERN.machineHealthCheck` | **Machine health check**|**Type:** `object`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
 | `global.nodePools.PATTERN.machineHealthCheck.enabled` | **Enable**|**Type:** `boolean`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>**Default:** `true`|
 | `global.nodePools.PATTERN.machineHealthCheck.maxUnhealthy` | **Maximum unhealthy nodes**|**Type:** `string`<br/>**Example:** `"40%"`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>**Default:** `"40%"`|
@@ -448,6 +462,9 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.apps.externalDns` | **Provider integration app config** - App config used to additionally configure an app for a specific provider|**Type:** `object`<br/>|
 | `providerIntegration.apps.externalDns.configTemplateName` | **Config template name** - Name of the Helm template that has provider-specific app config. Provider-specific app config overrides provider-independent app config, while custom user config overrides both provider-independent and provider-specific default app config.|**Type:** `string`<br/>|
 | `providerIntegration.apps.externalDns.enable` | **Enable** - Flag that indicates if an app is enabled for a provider. It is false by default, which allows for more incremental and safer adoption of the cluster chart.|**Type:** `boolean`<br/>**Default:** `false`|
+| `providerIntegration.apps.giantswarmClusterSuite` | **Provider integration app config** - App config used to additionally configure an app for a specific provider|**Type:** `object`<br/>|
+| `providerIntegration.apps.giantswarmClusterSuite.configTemplateName` | **Config template name** - Name of the Helm template that has provider-specific app config. Provider-specific app config overrides provider-independent app config, while custom user config overrides both provider-independent and provider-specific default app config.|**Type:** `string`<br/>|
+| `providerIntegration.apps.giantswarmClusterSuite.enable` | **Enable** - Flag that indicates if an app is enabled for a provider. It is false by default, which allows for more incremental and safer adoption of the cluster chart.|**Type:** `boolean`<br/>**Default:** `false`|
 | `providerIntegration.apps.k8sAuditMetrics` | **Provider integration app config** - App config used to additionally configure an app for a specific provider|**Type:** `object`<br/>|
 | `providerIntegration.apps.k8sAuditMetrics.configTemplateName` | **Config template name** - Name of the Helm template that has provider-specific app config. Provider-specific app config overrides provider-independent app config, while custom user config overrides both provider-independent and provider-specific default app config.|**Type:** `string`<br/>|
 | `providerIntegration.apps.k8sAuditMetrics.enable` | **Enable** - Flag that indicates if an app is enabled for a provider. It is false by default, which allows for more incremental and safer adoption of the cluster chart.|**Type:** `boolean`<br/>**Default:** `false`|
@@ -572,6 +589,7 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.featureGates[*].name` | **Name** - Name of the feature gate.|**Type:** `string`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuer` | **Service account issuer** - Configuration of the identifier of the service account token issuer. You must specify either URL or clusterDomainPrefix (only one, not both).||
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.controllerManager` | **Controller manager** - Configuration of controller manager|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.controllerManager.externalCloudVolumePlugin` | **External cloud volume plugin** - The plugin to use if the controller-manager cloud provider is set to external. Most in-tree providers are deprecated and this should only be set if you really need it.|**Type:** `string`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.controllerManager.featureGates` | **Feature gates** - A list of feature gates to enable or disable.|**Type:** `array`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.controllerManager.featureGates[*]` | **Feature gate** - A feature gate to enable or disable.|**Type:** `object`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.controllerManager.featureGates[*].enabled` | **Enabled** - Whether to enable or disable the feature gate.|**Type:** `boolean`<br/>|
@@ -785,7 +803,7 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.workers.defaultNodePools.PATTERN.customNodeTaints[*].key` | **Key**|**Type:** `string`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
 | `providerIntegration.workers.defaultNodePools.PATTERN.customNodeTaints[*].value` | **Value**|**Type:** `string`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
 | `providerIntegration.workers.defaultNodePools.PATTERN.labels` | **Labels** - These labels are added to all Kubernetes resources defining this node pool.|**Type:** `object`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
-| `providerIntegration.workers.defaultNodePools.PATTERN.labels.PATTERN_2` | **Label**|**Type:** `string`<br/>**Key patterns:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>`PATTERN_2`=`^[a-zA-Z0-9/\._-]+$`<br/>**Value pattern:** `^[a-zA-Z0-9/\._-]+$`<br/>|
+| `providerIntegration.workers.defaultNodePools.PATTERN.labels.PATTERN_2` | **Label**|**Type:** `string`<br/>**Key patterns:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>`PATTERN_2`=`^[a-zA-Z0-9/\._-]+$`<br/>**Value pattern:** `^[a-zA-Z0-9/\._-]*$`<br/>|
 | `providerIntegration.workers.defaultNodePools.PATTERN.machineHealthCheck` | **Machine health check**|**Type:** `object`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
 | `providerIntegration.workers.defaultNodePools.PATTERN.machineHealthCheck.enabled` | **Enable**|**Type:** `boolean`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>**Default:** `true`|
 | `providerIntegration.workers.defaultNodePools.PATTERN.machineHealthCheck.maxUnhealthy` | **Maximum unhealthy nodes**|**Type:** `string`<br/>**Example:** `"40%"`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>**Default:** `"40%"`|

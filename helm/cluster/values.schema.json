@@ -808,7 +808,7 @@
                             "title": "Label",
                             "maxLength": 63,
                             "minLength": 0,
-                            "pattern": "^[a-zA-Z0-9/\\._-]+$"
+                            "pattern": "^[a-zA-Z0-9/\\._-]*$"
                         }
                     }
                 },
@@ -1080,6 +1080,12 @@
                             "title": "external-dns",
                             "description": "Configuration of external-dns. For all available values see https://github.com/giantswarm/external-dns-app."
                         },
+                        "giantswarmClusterSuite": {
+                            "$ref": "#/$defs/app",
+                            "type": "object",
+                            "title": "giantswarm-cluster-suite",
+                            "description": "Configuration of giantswarm-cluster-suite. For all available values see https://github.com/giantswarm/giantswarm-cluster-suite."
+                        },
                         "k8sAuditMetrics": {
                             "$ref": "#/$defs/app",
                             "type": "object",
@@ -1227,6 +1233,39 @@
                                                 "endpoint": "giantswarm.azurecr.io"
                                             }
                                         ]
+                                    }
+                                },
+                                "localRegistryCache": {
+                                    "type": "object",
+                                    "title": "Local registry cache",
+                                    "description": "Caching container registry within the cluster.",
+                                    "required": [
+                                        "enabled",
+                                        "port"
+                                    ],
+                                    "additionalProperties": false,
+                                    "properties": {
+                                        "enabled": {
+                                            "type": "boolean",
+                                            "title": "Enable",
+                                            "description": "Enabling this will deploy the Zot registry service in the cluster. To make use of it as a pull-through cache, you also have to specify registries to cache images for.",
+                                            "default": false
+                                        },
+                                        "mirroredRegistries": {
+                                            "type": "array",
+                                            "title": "Registries to cache",
+                                            "description": "Here you must specify each registry to cache container images for. Please also make sure to have an entry for each registry in Global > Components > Containerd > Container registries.",
+                                            "items": {
+                                                "type": "string"
+                                            },
+                                            "default": []
+                                        },
+                                        "port": {
+                                            "type": "integer",
+                                            "title": "Service port",
+                                            "description": "NodePort used by the local registry service.",
+                                            "default": 32767
+                                        }
                                     }
                                 }
                             }
@@ -1492,7 +1531,7 @@
                                     "title": "Label",
                                     "maxLength": 63,
                                     "minLength": 0,
-                                    "pattern": "^[a-zA-Z0-9/\\._-]+$"
+                                    "pattern": "^[a-zA-Z0-9/\\._-]*$"
                                 }
                             }
                         },
@@ -1576,6 +1615,19 @@
                     ],
                     "additionalProperties": false,
                     "properties": {
+                        "appPlatform": {
+                            "type": "object",
+                            "title": "App Platform",
+                            "description": "Advanced configuration of App Platform.",
+                            "properties": {
+                                "fluxBackend": {
+                                    "type": "boolean",
+                                    "title": "Flux Backend",
+                                    "description": "Use Flux as App Platform backend for installing apps.",
+                                    "default": false
+                                }
+                            }
+                        },
                         "cgroupsv1": {
                             "type": "boolean",
                             "title": "CGroups v1",
@@ -1683,7 +1735,13 @@
                                             }
                                         },
                                         "featureGates": {
-                                            "$ref": "#/$defs/featureGates"
+                                            "$ref": "#/$defs/featureGates",
+                                            "default": [
+                                                {
+                                                    "enabled": true,
+                                                    "name": "StatefulSetAutoDeletePVC"
+                                                }
+                                            ]
                                         }
                                     }
                                 },
@@ -1693,7 +1751,13 @@
                                     "description": "Advanced configuration of controller manager",
                                     "properties": {
                                         "featureGates": {
-                                            "$ref": "#/$defs/featureGates"
+                                            "$ref": "#/$defs/featureGates",
+                                            "default": [
+                                                {
+                                                    "enabled": true,
+                                                    "name": "StatefulSetAutoDeletePVC"
+                                                }
+                                            ]
                                         },
                                         "terminatedPodGCThreshold": {
                                             "type": "integer",
@@ -1980,6 +2044,9 @@
                             "$ref": "#/$defs/providerIntegrationAppConfig"
                         },
                         "externalDns": {
+                            "$ref": "#/$defs/providerIntegrationAppConfig"
+                        },
+                        "giantswarmClusterSuite": {
                             "$ref": "#/$defs/providerIntegrationAppConfig"
                         },
                         "k8sAuditMetrics": {
@@ -2321,6 +2388,11 @@
                                             "title": "Controller manager",
                                             "description": "Configuration of controller manager",
                                             "properties": {
+                                                "externalCloudVolumePlugin": {
+                                                    "type": "string",
+                                                    "title": "External cloud volume plugin",
+                                                    "description": "The plugin to use if the controller-manager cloud provider is set to external. Most in-tree providers are deprecated and this should only be set if you really need it."
+                                                },
                                                 "featureGates": {
                                                     "$ref": "#/$defs/featureGates"
                                                 }

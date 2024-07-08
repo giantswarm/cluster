@@ -62,6 +62,9 @@ giantswarm.io/organization: {{ required "You must provide an existing organizati
 giantswarm.io/service-priority: {{ .Values.global.metadata.servicePriority }}
 cluster.x-k8s.io/cluster-name: {{ include "cluster.resource.name" $ | quote }}
 cluster.x-k8s.io/watch-filter: capi
+{{- if $.Values.providerIntegration.useReleases }}
+release.giantswarm.io/version: {{ .Values.global.release.version | trimPrefix "v" | quote }}
+{{- end }}
 {{- end -}}
 
 {{- define "cluster.labels.preventDeletion" }}
@@ -276,6 +279,57 @@ Where `data` is the data to hash and `global` is the top level scope.
 {{- end }}
 {{- end }}
 {{- $appVersion }}
+{{- end }}
+
+{{/*
+  cluster.app.catalog is a public named helper template that returns a catalog of the app that is specified under
+  property 'appName' in the object that is passed to the template. App catalog is obtained from the Release resource.
+
+  Example usage in template:
+
+    {{- $_ := set $ "appName" "foo-bar-controller" }}
+    {{- $appCatalog := include "cluster.app.catalog" $ }}
+    catalog: {{ $appCatalog }}
+*/}}
+{{- define "cluster.app.catalog" }}
+{{- $appCatalog := "" }}
+{{- $_ := (include "cluster.internal.get-release-resource" $) }}
+{{- if $.GiantSwarm.Release }}
+{{- range $_, $app := $.GiantSwarm.Release.spec.apps }}
+{{- if eq $app.name $.appName }}
+{{- $appCatalog = $app.catalog }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- $appCatalog }}
+{{- end }}
+
+{{/*
+  cluster.app.dependencies is a public named helper template that renders a YAML array with app's dependencies for the
+  app that is specified under property 'appName' in the object that is passed to the template. App dependencies are
+  obtained from the Release resource.
+
+  Example usage in template:
+
+    {{- $_ := set $ "appName" "foo-exporter" }}
+    {{- $dependenciesFromRelease := include "cluster.app.dependencies" $ | fromYamlArray }}
+    {{- range $_, $dependency := $dependenciesFromRelease }}
+      {{- $dependencies = append $dependencies $dependency }}
+    {{- end }}
+*/}}
+{{- define "cluster.app.dependencies" }}
+{{- $dependencies := list }}
+{{- $_ := (include "cluster.internal.get-release-resource" $) }}
+{{- if $.GiantSwarm.Release }}
+  {{- range $_, $app := $.GiantSwarm.Release.spec.apps }}
+    {{- if eq $app.name $.appName }}
+      {{- range $_, $dependency := $app.dependsOn }}
+      {{- $dependencies = append $dependencies $dependency }}
+      {{- end}}
+    {{- end }}
+  {{- end }}
+{{- end }}
+{{- $dependencies | toYaml }}
 {{- end }}
 
 {{/*

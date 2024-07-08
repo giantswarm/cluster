@@ -12,6 +12,7 @@ global:
     coreDns: {}
     etcdKubernetesResourcesCountExporter: {}
     externalDns: {}
+    giantswarmClusterSuite: {}
     k8sAuditMetrics: {}
     k8sDnsNodeCache: {}
     metricsServer: {}
@@ -30,6 +31,10 @@ global:
         docker.io:
           - endpoint: registry-1.docker.io
           - endpoint: giantswarm.azurecr.io
+      localRegistryCache:
+        enabled: false
+        mirroredRegistries: []
+        port: 32767
     selinux:
       mode: permissive
   connectivity:
@@ -64,13 +69,21 @@ global:
   release: {}
 internal:
   advancedConfiguration:
+    appPlatform:
+      fluxBackend: false
     cgroupsv1: false
     controlPlane:
       apiServer:
         admissionConfiguration: {}
         auditPolicy: {}
         enablePriorityAndFairness: true
+        featureGates:
+          - enabled: true
+            name: StatefulSetAutoDeletePVC
       controllerManager:
+        featureGates:
+          - enabled: true
+            name: StatefulSetAutoDeletePVC
         terminatedPodGCThreshold: 125
       etcd:
         experimental: {}
@@ -113,6 +126,8 @@ providerIntegration:
     etcdKubernetesResourcesCountExporter:
       enable: false
     externalDns:
+      enable: false
+    giantswarmClusterSuite:
       enable: false
     k8sAuditMetrics:
       enable: false
