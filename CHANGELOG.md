@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Kubelet insecure mode
+
 ## [0.31.3] - 2024-06-12
 
 ### Fixed
