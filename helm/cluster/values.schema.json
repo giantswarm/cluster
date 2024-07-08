@@ -1875,6 +1875,12 @@
                                     "description": "Specifies the maximum size of the container log file before it is rotated. For example: \"5Mi\" or \"256Ki\".",
                                     "default": ""
                                 },
+                                "insecure": {
+                                    "type": "boolean",
+                                    "title": "Kubelet Authentication",
+                                    "description": "Disables kubelet authentication, anyone with access to the port can talk to the API.",
+                                    "default": false
+                                },
                                 "kubeReserved": {
                                     "type": "object",
                                     "title": "Kube reserved resources configuration",

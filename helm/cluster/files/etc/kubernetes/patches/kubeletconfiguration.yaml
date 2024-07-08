@@ -51,3 +51,12 @@ containerLogMaxSize: {{ $.Values.internal.advancedConfiguration.kubelet.containe
 {{- if $.Values.internal.advancedConfiguration.kubelet.containerLogMaxFiles }}
 containerLogMaxFiles: {{ $.Values.internal.advancedConfiguration.kubelet.containerLogMaxFiles }}
 {{- end }}
+{{- if $.Values.internal.advancedConfiguration.kubelet.insecure }}
+authentication:
+  anonymous:
+    enabled: true
+  webhook:
+    enabled: false
+authorization:
+  mode: AlwaysAllow
+{{- end }}

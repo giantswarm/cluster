@@ -93,6 +93,7 @@ internal:
     kubelet:
       containerLogMaxFiles: 0
       containerLogMaxSize: ""
+      insecure: false
       kubeReserved:
         cpu: 350m
         ephemeralStorage: 1024Mi
