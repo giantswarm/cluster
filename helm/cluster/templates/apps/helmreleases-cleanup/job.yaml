@@ -45,29 +45,29 @@ spec:
         seccompProfile:
           type: RuntimeDefault
       containers:
-        - name: post-delete-job
-          image: {{ .Values.internal.advancedConfiguration.registry }}/giantswarm/kubectl:{{ .Values.providerIntegration.kubernetesVersion }}
-          command:
-            - /bin/sh
-            - "-xc"
-            - |
-              for r in $(kubectl get helmrelease -n {{ .Release.Namespace }} -l "giantswarm.io/cluster={{ include "cluster.resource.name" . }}" -o name) ; do
-                  kubectl patch -n {{ .Release.Namespace }} helmchart $(kubectl get -n {{ .Release.Namespace }} "${r}" -o jsonpath='{.status.helmChart}' | cut -d/ -f2) --type=merge -p '{"metadata": {"finalizers": []}}'
-                  kubectl patch -n {{ .Release.Namespace }} "${r}" --type=merge -p '{"metadata": {"finalizers": []}}'
-              done
-          securityContext:
-            allowPrivilegeEscalation: false
-            capabilities:
-              drop:
-              - ALL
-            seccompProfile:
-              type: RuntimeDefault
-            readOnlyRootFilesystem: true
-          resources:
-            requests:
-              memory: 64Mi
-              cpu: 10m
-            limits:
-              memory: 256Mi
-              cpu: 100m
+      - name: post-delete-job
+        image: {{ .Values.internal.advancedConfiguration.registry }}/giantswarm/kubectl:{{ .Values.providerIntegration.kubernetesVersion }}
+        command:
+          - /bin/sh
+          - "-xc"
+          - |
+            for r in $(kubectl get helmrelease -n {{ .Release.Namespace }} -l "giantswarm.io/cluster={{ include "cluster.resource.name" . }}" -o name) ; do
+                kubectl patch -n {{ .Release.Namespace }} helmchart $(kubectl get -n {{ .Release.Namespace }} "${r}" -o jsonpath='{.status.helmChart}' | cut -d/ -f2) --type=merge -p '{"metadata": {"finalizers": []}}'
+                kubectl patch -n {{ .Release.Namespace }} "${r}" --type=merge -p '{"metadata": {"finalizers": []}}'
+            done
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          seccompProfile:
+            type: RuntimeDefault
+          readOnlyRootFilesystem: true
+        resources:
+          requests:
+            memory: 64Mi
+            cpu: 10m
+          limits:
+            memory: 256Mi
+            cpu: 100m
 {{- end }}
