@@ -41,14 +41,6 @@ spec:
       containers:
       - name: post-delete-job
         image: {{ .Values.internal.advancedConfiguration.registry }}/giantswarm/kubectl:{{ .Values.providerIntegration.kubernetesVersion }}
-        command:
-          - /bin/sh
-          - "-xc"
-          - |
-            for r in $(kubectl get helmrelease -n {{ .Release.Namespace }} -l "giantswarm.io/cluster={{ include "cluster.resource.name" . }}" -o name) ; do
-                kubectl patch -n {{ .Release.Namespace }} helmchart $(kubectl get -n {{ .Release.Namespace }} "${r}" -o jsonpath='{.status.helmChart}' | cut -d/ -f2) --type=merge -p '{"metadata": {"finalizers": []}}'
-                kubectl patch -n {{ .Release.Namespace }} "${r}" --type=merge -p '{"metadata": {"finalizers": []}}'
-            done
         securityContext:
           runAsNonRoot: true
           runAsUser: 1000
@@ -60,6 +52,14 @@ spec:
             drop:
             - ALL
           readOnlyRootFilesystem: true
+        command:
+          - /bin/sh
+          - "-xc"
+          - |
+            for r in $(kubectl get helmrelease -n {{ .Release.Namespace }} -l "giantswarm.io/cluster={{ include "cluster.resource.name" . }}" -o name) ; do
+                kubectl patch -n {{ .Release.Namespace }} helmchart $(kubectl get -n {{ .Release.Namespace }} "${r}" -o jsonpath='{.status.helmChart}' | cut -d/ -f2) --type=merge -p '{"metadata": {"finalizers": []}}'
+                kubectl patch -n {{ .Release.Namespace }} "${r}" --type=merge -p '{"metadata": {"finalizers": []}}'
+            done
         resources:
           requests:
             cpu: 10m
