@@ -38,7 +38,7 @@ spec:
     spec:
       serviceAccountName: {{ include "cluster.resource.name" . }}-helmreleases-cleanup
       containers:
-      - name: post-delete-job
+      - name: kubectl
         image: {{ .Values.internal.advancedConfiguration.registry }}/giantswarm/kubectl:{{ .Values.providerIntegration.kubernetesVersion }}
         securityContext:
           runAsNonRoot: true
