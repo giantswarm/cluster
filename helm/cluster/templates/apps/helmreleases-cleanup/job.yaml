@@ -21,25 +21,23 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: "{{ include "cluster.resource.name" $ }}-cleanup-helmreleases-hook"
-  namespace: {{ $.Release.Namespace }}
+  name: {{ include "cluster.resource.name" . }}-helmreleases-cleanup
+  namespace: {{ .Release.Namespace }}
   annotations:
-    "helm.sh/hook": "post-delete"
-    "helm.sh/hook-delete-policy": "before-hook-creation"
-    "helm.sh/hook-weight": "0"
+    helm.sh/hook: post-delete
+    helm.sh/hook-delete-policy: before-hook-creation
+    helm.sh/hook-weight: "0"
   labels:
-    {{- include "cluster.labels.common.all" $ | nindent 4 }}
+    {{- include "cluster.labels.common.all" . | nindent 4 }}
 spec:
   ttlSecondsAfterFinished: 86400 # 24h
   template:
     metadata:
-      name: "{{ include "cluster.resource.name" $ }}-cleanup-helmreleases-hook"
-      namespace: {{ $.Release.Namespace }}
       labels:
-        {{- include "cluster.labels.common.all" $ | nindent 8 }}
+        {{- include "cluster.labels.common.all" . | nindent 8 }}
     spec:
       restartPolicy: Never
-      serviceAccountName: "{{ include "cluster.resource.name" $ }}-cleanup-helmreleases-hook"
+      serviceAccountName: {{ include "cluster.resource.name" . }}-helmreleases-cleanup
       securityContext:
         runAsUser: 1000
         runAsGroup: 1000
@@ -48,9 +46,9 @@ spec:
           type: RuntimeDefault
       containers:
         - name: post-delete-job
-          image: "{{ .Values.internal.advancedConfiguration.registry }}/giantswarm/kubectl:{{ .Values.providerIntegration.kubernetesVersion }}"
+          image: {{ .Values.internal.advancedConfiguration.registry }}/giantswarm/kubectl:{{ .Values.providerIntegration.kubernetesVersion }}
           command:
-            - "/bin/sh"
+            - /bin/sh
             - "-xc"
             - |
               for r in $(kubectl get helmrelease -n {{ .Release.Namespace }} -l "giantswarm.io/cluster={{ include "cluster.resource.name" . }}" -o name) ; do
@@ -67,9 +65,9 @@ spec:
             readOnlyRootFilesystem: true
           resources:
             requests:
-              memory: "64Mi"
-              cpu: "10m"
+              memory: 64Mi
+              cpu: 10m
             limits:
-              memory: "256Mi"
-              cpu: "100m"
+              memory: 256Mi
+              cpu: 100m
 {{- end }}
