@@ -52,7 +52,8 @@ spec:
           readOnlyRootFilesystem: true
         command:
         - /bin/sh
-        - "-xc"
+        args:
+        - -c
         - |
           for r in $(kubectl get helmrelease -n {{ .Release.Namespace }} -l "giantswarm.io/cluster={{ include "cluster.resource.name" . }}" -o name) ; do
               kubectl patch -n {{ .Release.Namespace }} helmchart $(kubectl get -n {{ .Release.Namespace }} "${r}" -o jsonpath='{.status.helmChart}' | cut -d/ -f2) --type=merge -p '{"metadata": {"finalizers": []}}'
