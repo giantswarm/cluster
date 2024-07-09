@@ -50,15 +50,31 @@ spec:
             drop:
             - ALL
           readOnlyRootFilesystem: true
+        env:
+        - name: NAMESPACE
+          value: {{ .Release.Namespace }}
+        - name: CLUSTER
+          value: {{ include "cluster.resource.name" . }}
         command:
         - /bin/sh
         args:
         - -c
         - |
-          for r in $(kubectl get helmrelease -n {{ .Release.Namespace }} -l "giantswarm.io/cluster={{ include "cluster.resource.name" . }}" -o name) ; do
-              kubectl patch -n {{ .Release.Namespace }} helmchart $(kubectl get -n {{ .Release.Namespace }} "${r}" -o jsonpath='{.status.helmChart}' | cut -d/ -f2) --type=merge -p '{"metadata": {"finalizers": []}}'
-              kubectl patch -n {{ .Release.Namespace }} "${r}" --type=merge -p '{"metadata": {"finalizers": []}}'
-          done
+          # Print namespace & cluster.
+          echo "# Namespace: ${NAMESPACE} | Cluster: ${CLUSTER}"
+
+          # Get releases.
+          releases="$(kubectl get helmreleases.helm.toolkit.fluxcd.io --namespace "${NAMESPACE}" --selector giantswarm.io/cluster="${CLUSTER}" --output name)"
+
+          # Check releases.
+          if [ -n "${releases}" ]
+          then
+            # Patch releases.
+            kubectl patch --namespace "${NAMESPACE}" ${releases} --type merge --patch '{ "spec": { "suspend": true } }'
+          else
+            # Print info.
+            echo "No releases to patch found."
+          fi
         resources:
           requests:
             cpu: 10m
