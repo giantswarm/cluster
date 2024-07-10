@@ -16,11 +16,14 @@ import (
 )
 
 var (
-	//go:embed testfiles/containerd_zot_local_expected.toml
-	expectedContainerdZotLocalConfig string
+	//go:embed testfiles/containerd_expected_default.toml
+	expectedContainerdDefaultConfig string
 
-	//go:embed testfiles/containerd_zot_mc_expected.toml
+	//go:embed testfiles/containerd_expected_zot_mc.toml
 	expectedContainerdZotMcConfig string
+
+	//go:embed testfiles/containerd_expected_zot_local.toml
+	expectedContainerdZotLocalConfig string
 )
 
 var _ = Describe("containerd config", func() {
@@ -88,9 +91,9 @@ var _ = Describe("containerd config", func() {
 			testHelmValues = "test-required-values.yaml"
 		})
 
-		It("renders expected containerd config with default MC zot endpoints", func() {
-			expectedContainerdZotMcConfig = strings.TrimSpace(expectedContainerdZotMcConfig)
-			Expect(renderedContainerdConfig).To(Equal(expectedContainerdZotMcConfig), fmt.Sprintf("expected:\n>>>%s<<<\n, got:\n>>>%s<<<", expectedContainerdZotMcConfig, renderedContainerdConfig))
+		It("renders expected default containerd config", func() {
+			expectedContainerdDefaultConfig = strings.TrimSpace(expectedContainerdDefaultConfig)
+			Expect(renderedContainerdConfig).To(Equal(expectedContainerdDefaultConfig), fmt.Sprintf("expected:\n>>>%s<<<\n, got:\n>>>%s<<<", expectedContainerdDefaultConfig, renderedContainerdConfig))
 		})
 	})
 
