@@ -12,6 +12,7 @@ global:
         enabled: true
         mirroredRegistries:
         - docker.io
+        - gsoci.azurecr.io
       managementClusterRegistryCache:
         enabled: false
 providerIntegration:

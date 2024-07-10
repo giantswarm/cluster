@@ -13,6 +13,7 @@ global:
         enabled: true
         mirroredRegistries:
         - docker.io
+        - gsoci.azurecr.io
 providerIntegration:
   environmentVariables:
     hostName: COREOS_EC2_HOSTNAME
