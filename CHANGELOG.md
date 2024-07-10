@@ -9,7 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Add MC Zot deployment as a registry mirror for `docker.io` registry. This is the new default behavior.
+- Add MC Zot deployment as a registry mirror for `docker.io` and `gsoci.azurecr.io` registries. This is the new default behavior.
+- Add `gsoci.azurecr.io` as a mirror for `docker.io`.
 
 ### Added
 
