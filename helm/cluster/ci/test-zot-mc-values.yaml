@@ -7,12 +7,12 @@ global:
     organization: giantswarm
   connectivity:
     baseDomain: example.gigantic.io
-  nodePools:
-    def00:
-      minSize: 3
-      maxSize: 20
-    verybignodepool-1234:
-      replicas: 100
+  components:
+    containerd:
+      managementClusterRegistryCache:
+        enabled: true
+        mirroredRegistries:
+        - docker.io
 providerIntegration:
   environmentVariables:
     hostName: COREOS_EC2_HOSTNAME

@@ -29,3 +29,8 @@ endif
 
 .PHONY: generate
 generate: normalize-schema validate-schema generate-docs generate-values
+
+.PHONY: test
+test:
+	@cd helm/cluster/tests
+	@ginkgo ./...

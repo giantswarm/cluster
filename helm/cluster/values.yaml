@@ -35,6 +35,10 @@ global:
         enabled: false
         mirroredRegistries: []
         port: 32767
+      managementClusterRegistryCache:
+        enabled: true
+        mirroredRegistries:
+          - docker.io
     selinux:
       mode: permissive
   connectivity:
