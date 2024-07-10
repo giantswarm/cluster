@@ -12,14 +12,6 @@ metadata:
     {{- include "cluster.labels.common.all" . | nindent 4 }}
 rules:
 - apiGroups:
-  - source.toolkit.fluxcd.io
-  resources:
-  - helmcharts
-  verbs:
-  - list
-  - get
-  - patch
-- apiGroups:
   - helm.toolkit.fluxcd.io
   resources:
   - helmreleases
