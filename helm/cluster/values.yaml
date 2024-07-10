@@ -32,6 +32,8 @@ global:
           - endpoint: registry-1.docker.io
           - endpoint: gsoci.azurecr.io
           - endpoint: giantswarm.azurecr.io
+        gsoci.azurecr.io:
+          - endpoint: gsoci.azurecr.io
       localRegistryCache:
         enabled: false
         mirroredRegistries: []
@@ -40,6 +42,7 @@ global:
         enabled: true
         mirroredRegistries:
           - docker.io
+          - gsoci.azurecr.io
     selinux:
       mode: permissive
   connectivity:

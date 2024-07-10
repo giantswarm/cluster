@@ -1235,6 +1235,11 @@
                                             {
                                                 "endpoint": "giantswarm.azurecr.io"
                                             }
+                                        ],
+                                        "gsoci.azurecr.io": [
+                                            {
+                                                "endpoint": "gsoci.azurecr.io"
+                                            }
                                         ]
                                     }
                                 },
@@ -1294,7 +1299,8 @@
                                                 "type": "string"
                                             },
                                             "default": [
-                                                "docker.io"
+                                                "docker.io",
+                                                "gsoci.azurecr.io"
                                             ]
                                         }
                                     }
