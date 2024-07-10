@@ -33,4 +33,6 @@ generate: normalize-schema validate-schema generate-docs generate-values
 .PHONY: test
 test:
 	@cd helm/cluster/tests
+	@go get github.com/onsi/ginkgo/v2
+	@go install github.com/onsi/ginkgo/v2/ginkgo
 	@ginkgo ./...
