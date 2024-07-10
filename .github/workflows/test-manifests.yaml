@@ -18,8 +18,7 @@ jobs:
     - name: Check for changes in helm/cluster
       id: detect_changes
       run: |
-        git fetch origin main
-        if git diff --name-only main ${{ github.sha }} | grep '^helm/cluster/'; then
+        if git diff --name-only main ${{ github.event.pull_request.head.sha }} | grep '^helm/cluster/'; then
           echo "changes=true" >> $GITHUB_OUTPUT
         else
           echo "changes=false" >> $GITHUB_OUTPUT
