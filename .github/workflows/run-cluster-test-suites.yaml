@@ -1,8 +1,8 @@
 name: Cluster Chart Test Suites
 
 on:
-  pull_request:
-    types: [opened, synchronize, reopened]
+  issue_comment:
+    types: [created]
 
 jobs:
   run-cluster-test-suites:
