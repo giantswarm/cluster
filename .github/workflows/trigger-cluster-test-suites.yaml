@@ -27,7 +27,9 @@ jobs:
       run: |
         cd cluster
         git fetch --tags
-        echo "latest_release=$(git describe --tags $(git rev-list --tags --max-count=1))" >> $GITHUB_ENV
+        latest_release=$(git describe --tags $(git rev-list --tags --max-count=1))
+        echo "The latest cluster chart release is $latest_release"
+        echo "latest_release=$latest_release" >> $GITHUB_ENV
 
     - name: Extract commit SHA
       id: commit_sha
