@@ -24,8 +24,8 @@ jobs:
 
     - name: Extract latest cluster chart release
       id: latest_release
-      working-directory: ./cluster
       run: |
+        cd cluster
         git fetch --tags
         echo "latest_release=$(git describe --tags $(git rev-list --tags --max-count=1))" >> $GITHUB_ENV
 
@@ -39,31 +39,31 @@ jobs:
 
     - name: Check if branch exists in cluster-aws repo
       id: check_branch
-      working-directory: ./cluster-aws
       run: |
+        cd cluster-aws
         branch_name="test-cluster-chart-pr-${{ github.event.issue.number }}"
         if git ls-remote --heads "https://github.com/giantswarm/cluster-aws.git" $branch_name; then
-        echo "branch_exists=true" >> $GITHUB_ENV
+          echo "branch_exists=true" >> $GITHUB_ENV
         else
-        echo "branch_exists=false" >> $GITHUB_ENV
+          echo "branch_exists=false" >> $GITHUB_ENV
         fi
         echo "cluster_aws_branch_name=$branch_name" >> $GITHUB_ENV
 
     - name: Create new cluster-aws branch
       if: env.branch_exists == 'false'
-      working-directory: ./cluster-aws
       run: |
+        cd cluster-aws
         git checkout -b ${{ env.cluster_aws_branch_name }}
 
     - name: Checkout existing cluster-aws branch
-      if: env.branch_exists == 'false'
-      working-directory: ./cluster-aws
+      if: env.branch_exists == 'true'
       run: |
+        cd cluster-aws
         git checkout ${{ env.cluster_aws_branch_name }}
 
     - name: Update cluster chart version in Chart.yaml
-      working-directory: ./cluster-aws/helm/cluster-aws
       run: |
+        cd cluster-aws/helm/cluster-aws
         current_version="$(yq e '.dependencies[] | select(.name == "cluster").version' Chart.yaml)"
         new_version="${{ env.latest_release }}-${{ env.commit_sha }}"
 
@@ -100,9 +100,10 @@ jobs:
 
     - name: Commit and push changes
       if: env.cluster_chart_version_updated == 'true'
-      working-directory: ./cluster-aws
       run: |
+        cd cluster-aws
         git add helm/cluster-aws/Chart.yaml
         git add helm/cluster-aws/Chart.lock
         git commit -m "Update cluster chart version to ${{ env.latest_release }}-${{ env.commit_sha }}"
-        git push origin ${{ env.cluster_aws_branch_name }}
+        echo "Will push now"
+        # git push origin ${{ env.cluster_aws_branch_name }}
