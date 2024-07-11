@@ -17,10 +17,13 @@ var (
 	expectedContainerdDefaultConfig string
 
 	//go:embed files/containerd_expected_zot_mc.toml
-	expectedContainerdZotMcConfig string
+	expectedContainerdZotMcOnlyConfig string
 
 	//go:embed files/containerd_expected_zot_only_local.toml
-	expectedContainerdZotLocalConfig string
+	expectedContainerdZotLocalOnlyConfig string
+
+	//go:embed files/containerd_expected_zot_mc_and_local.toml
+	expectedContainerdZotBothMcAndLocalConfig string
 )
 
 var _ = Describe("containerd config", func() {
@@ -44,6 +47,8 @@ var _ = Describe("containerd config", func() {
 			Expect(renderedContainerdConfig).To(Equal(expectedConfig), fmt.Sprintf("expected:\n>>>%s<<<\n, got:\n>>>%s<<<", expectedConfig, renderedContainerdConfig))
 		},
 		Entry("when only required and default Helm values are used", "test-required-values.yaml", expectedContainerdDefaultConfig),
-		Entry("when MC Zot is enabled", "test-zot-mc-values.yaml", expectedContainerdZotMcConfig),
-		Entry("when only local zot is enabled", "test-zot-only-local-values.yaml", expectedContainerdZotLocalConfig))
+		Entry("when only MC Zot is enabled", "test-zot-mc-values.yaml", expectedContainerdZotMcOnlyConfig),
+		Entry("when only local Zot is enabled", "test-zot-only-local-values.yaml", expectedContainerdZotLocalOnlyConfig),
+		Entry("when both local Zot and MC Zot are enabled", "test-zot-mc-and-local-values.yaml", expectedContainerdZotBothMcAndLocalConfig))
+
 })

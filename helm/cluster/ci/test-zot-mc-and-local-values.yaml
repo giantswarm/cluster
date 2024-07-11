@@ -10,7 +10,10 @@ global:
   components:
     containerd:
       localRegistryCache:
-        enabled: false
+        enabled: true
+        mirroredRegistries:
+        - docker.io
+        - gsoci.azurecr.io
       managementClusterRegistryCache:
         enabled: true
         mirroredRegistries:
