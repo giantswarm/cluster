@@ -26,64 +26,103 @@ jobs:
       id: commit_sha
       run: echo "commit_sha=${{ github.event.pull_request.head.sha }}" >> $GITHUB_ENV
 
+    - name: Clone cluster-aws repository
+      run: |
+        git clone https://github.com/giantswarm/cluster-aws.git
+
     - name: Check if branch exists in cluster-aws repo
       id: check_branch
       run: |
-        branch_name="cluster-chart-pr-${{ github.event.issue.number }}"
+        branch_name="test-cluster-chart-pr-${{ github.event.issue.number }}"
         if git ls-remote --heads "https://github.com/giantswarm/cluster-aws.git" $branch_name; then
           echo "branch_exists=true" >> $GITHUB_ENV
         else
           echo "branch_exists=false" >> $GITHUB_ENV
         fi
+        echo "cluster_aws_branch_name=$branch_name" >> $GITHUB_ENV
 
-    - name: Clone cluster-aws repository
+    - name: Create new cluster-aws branch
       if: env.branch_exists == 'false'
       run: |
-        git clone https://github.com/giantswarm/cluster-aws.git
-        cd cluster-aws
-        git checkout -b cluster-chart-pr-${{ github.event.issue.number }}
+        git checkout -b ${{ env.cluster_aws_branch_name }}
+
+    - name: Checkout existing cluster-aws branch
+      if: env.branch_exists == 'false'
+      run: |
+        git checkout ${{ env.cluster_aws_branch_name }}
 
     - name: Update cluster chart version in Chart.yaml
-      if: env.branch_exists == 'false'
       run: |
-        cd helm/cluster-aws
-        sed -i "s/^version:.*/version: ${{ env.latest_release }}-${{ env.commit_sha }}/" Chart.yaml
-        helm dependency update
+        cd cluster-aws/helm/cluster-aws
+        current_version="$(yq e '.dependencies[] | select(.name == "cluster").version' Chart.yaml)"
+        new_version="${{ env.latest_release }}-${{ env.commit_sha }}"
+        
+        if [ $new_version != $current_version ]; then
+          echo "Updating cluster chart version"
+          yq e '.dependencies[] |= select(.name == "cluster") * {"version": strenv(new_version)}' -i Chart.yaml
+          
+          # Retry logic for helm dependency update
+          retry=0
+          max_retries=20
+          success=false
+          
+          while [ $retry -lt $max_retries ]; do
+            if helm dependency update; then
+              success=true
+              break
+            else
+              retry=$((retry + 1))
+              echo "Retry $retry/$max_retries: helm dependency update failed, retrying in 15 seconds..."
+              sleep 15
+            fi
+          done
+          
+          if [ "$success" = false ]; then
+            echo "helm dependency update failed after $max_retries retries"
+            exit 1
+          fi
+          
+          echo "cluster_chart_version_updated=true" >> $GITHUB_ENV
+        else
+          echo "Cluster chart version is already up-to-date."
+          echo "cluster_chart_version_updated=false" >> $GITHUB_ENV
+        fi
 
     - name: Commit and push changes
-      if: env.branch_exists == 'false'
+      if: env.cluster_chart_version_updated == 'true'
       run: |
         cd cluster-aws
         git add helm/cluster-aws/Chart.yaml
         git commit -m "Update cluster chart version to ${{ env.latest_release }}-${{ env.commit_sha }}"
-        git push origin cluster-chart-pr-${{ github.event.issue.number }}
+        git push origin ${{ env.cluster_aws_branch_name }}
 
     - name: Create a draft pull request
       if: env.branch_exists == 'false'
       run: |
-        gh pr create --repo giantswarm/cluster-aws --head cluster-chart-pr-${{ github.event.issue.number }} --title "[DO NOT MERGE] Update cluster chart for PR #${{ github.event.issue.number }}" --body "This PR updates the cluster chart version to ${{ env.latest_release }}-${{ env.commit_sha }}." --draft
+        gh pr create --repo giantswarm/cluster-aws --head ${{ env.cluster_aws_branch_name }} --title "[DO NOT MERGE] Testing cluster chart PR #${{ github.event.issue.number }}" --body "This PR updates the cluster chart version to ${{ env.latest_release }}-${{ env.commit_sha }} in order to test cluster chart PR #${{ github.event.issue.number }}.\n\nThis PR will be closed automatically when cluster chart PR is closed." --draft
       env:
         GITHUB_TOKEN: ${{ secrets.TAYLORBOT_GITHUB_ACTION }}
 
     - name: Comment on the PR
       run: |
-        pr_number=$(gh pr list --repo giantswarm/cluster-aws --head cluster-chart-pr-${{ github.event.issue.number }} --json number --jq '.[0].number')
-        gh pr comment $pr_number --repo giantswarm/cluster-aws --body "${{ github.event.comment.body }}"
+        pr_number=$(gh pr list --repo giantswarm/cluster-aws --head ${{ env.cluster_aws_branch_name }} --json number --jq '.[0].number')
+        echo "Post comment on cluster-aws PR $pr_number: ${{ github.event.comment.body }}"
+        # gh pr comment $pr_number --repo giantswarm/cluster-aws --body "${{ github.event.comment.body }}"
       env:
         GITHUB_TOKEN: ${{ secrets.TAYLORBOT_GITHUB_ACTION }}
 
-  close-cluster-aws-pr:
-    if: github.event.pull_request.closed
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-
-    - name: Set up GitHub CLI
-      run: |
-        gh pr list --repo giantswarm/cluster-aws --head cluster-chart-pr-${{ github.event.pull_request.number }} --json number --jq '.[].number' | while read pr_number; do
-          gh pr close $pr_number --repo giantswarm/cluster-aws
-        done
-      env:
-        GITHUB_TOKEN: ${{ secrets.TAYLORBOT_GITHUB_ACTION }}
+#  close-cluster-aws-pr:
+#    if: github.event.pull_request.closed
+#    runs-on: ubuntu-latest
+#
+#    steps:
+#    - name: Checkout repository
+#      uses: actions/checkout@v4
+#
+#    - name: Close cluster-aws PR
+#      run: |
+#        gh pr list --repo giantswarm/cluster-aws --head test-cluster-chart-pr-${{ github.event.pull_request.number }} --json number --jq '.[].number' | while read pr_number; do
+#          gh pr close $pr_number --repo giantswarm/cluster-aws
+#        done
+#      env:
+#        GITHUB_TOKEN: ${{ secrets.TAYLORBOT_GITHUB_ACTION }}
