@@ -3,10 +3,13 @@ name: Trigger cluster-test-suites
 on:
   issue_comment:
     types: [created]
+  # temporary for the sake of testing
+  pull_request:
+    types: [opened, synchronize, reopened]
 
 jobs:
   trigger-cluster-test-suites:
-    if: startsWith(github.event.comment.body, '/run cluster-test-suites') && github.event.issue.pull_request != ''
+    # if: startsWith(github.event.comment.body, '/run cluster-test-suites') && github.event.issue.pull_request != ''
     runs-on: ubuntu-latest
 
     steps:
@@ -22,18 +25,15 @@ jobs:
       run: |
         git clone https://github.com/giantswarm/cluster.git
 
-    - name: Extract latest cluster chart release
+    - name: Get custom cluster chart version
       id: latest_release
       run: |
         cd cluster
         git fetch --tags
         latest_release=$(git describe --tags $(git rev-list --tags --max-count=1))
-        echo "The latest cluster chart release is $latest_release"
-        echo "latest_release=$latest_release" >> $GITHUB_ENV
-
-    - name: Extract commit SHA
-      id: commit_sha
-      run: echo "commit_sha=${{ github.event.pull_request.head.sha }}" >> $GITHUB_ENV
+        latest_commit_sha=$(git rev-parse --verify HEAD)
+        echo "Custom cluster chart version is $latest_release-latest_commit_sha"
+        echo "custom_cluster_chart_version=$latest_release-latest_commit_sha" >> $GITHUB_ENV
 
     - name: Clone cluster-aws repository
       run: |
@@ -67,7 +67,7 @@ jobs:
       run: |
         cd cluster-aws/helm/cluster-aws
         current_version="$(yq e '.dependencies[] | select(.name == "cluster").version' Chart.yaml)"
-        new_version="${{ env.latest_release }}-${{ env.commit_sha }}"
+        new_version="${{ env.custom_cluster_chart_version }}"
 
         if [ $new_version != $current_version ]; then
           echo "Updating cluster chart version"
@@ -106,6 +106,6 @@ jobs:
         cd cluster-aws
         git add helm/cluster-aws/Chart.yaml
         git add helm/cluster-aws/Chart.lock
-        git commit -m "Update cluster chart version to ${{ env.latest_release }}-${{ env.commit_sha }}"
+        git commit -m "Update cluster chart version to ${{ env.custom_cluster_chart_version }}"
         echo "Will push now"
         # git push origin ${{ env.cluster_aws_branch_name }}
