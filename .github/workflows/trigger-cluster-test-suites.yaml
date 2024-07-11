@@ -137,6 +137,8 @@ jobs:
         git add helm/cluster-aws/Chart.lock
         git commit -m "Update cluster chart version to ${{ env.custom_cluster_chart_version }}"
         git push origin ${{ env.cluster_aws_branch_name }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.TAYLORBOT_GITHUB_ACTION }}
 
     - name: Create a draft pull request
       if: env.branch_exists == 'false'
