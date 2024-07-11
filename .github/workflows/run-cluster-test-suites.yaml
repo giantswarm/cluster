@@ -17,9 +17,16 @@ jobs:
         git config --local user.email "dev@giantswarm.io"
         git config --local user.name "taylorbot"
 
+    - name: Clone cluster chart repository
+      run: |
+        git clone https://github.com/giantswarm/cluster.git
+
     - name: Extract latest cluster chart release
       id: latest_release
-      run: echo "latest_release=$(git describe --tags $(git rev-list --tags --max-count=1))" >> $GITHUB_ENV
+      run: |
+        cd cluster
+        git fetch --tags
+        echo "latest_release=$(git describe --tags $(git rev-list --tags --max-count=1))" >> $GITHUB_ENV
 
     - name: Extract commit SHA
       id: commit_sha
