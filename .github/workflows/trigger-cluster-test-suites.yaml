@@ -43,7 +43,13 @@ jobs:
       id: check_branch
       run: |
         cd cluster-aws
-        branch_name="test-cluster-chart-pr-${{ github.event.issue.number }}"
+        pr_number="${{ github.event.issue.number }}"
+        if [ -z "$pr_number" ]; then
+          pr_number="${{ github.event.number }}"
+        fi
+        echo "Pull request number is $pr_number."
+        
+        branch_name="test-cluster-chart-pr-$pr_number"
         if git ls-remote --heads "https://github.com/giantswarm/cluster-aws.git" $branch_name; then
           echo "branch_exists=true" >> $GITHUB_ENV
         else
