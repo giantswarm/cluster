@@ -26,7 +26,7 @@ sandbox_image = "gsoci.azurecr.io/giantswarm/pause:3.9"
 [plugins."io.containerd.grpc.v1.cri".registry]
   [plugins."io.containerd.grpc.v1.cri".registry.mirrors]
     [plugins."io.containerd.grpc.v1.cri".registry.mirrors."docker.io"]
-      endpoint = ["http://127.0.0.1:32767","https://zot.giantmc.example.gigantic.io","https://registry-1.docker.io","https://gsoci.azurecr.io","https://giantswarm.azurecr.io",]
+      endpoint = ["https://registry-1.docker.io","https://giantswarm.azurecr.io",]
     [plugins."io.containerd.grpc.v1.cri".registry.mirrors."gsoci.azurecr.io"]
       endpoint = ["http://127.0.0.1:32767","https://zot.giantmc.example.gigantic.io","https://gsoci.azurecr.io",]
 [plugins."io.containerd.grpc.v1.cri".registry.configs]

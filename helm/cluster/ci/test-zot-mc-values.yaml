@@ -14,7 +14,6 @@ global:
       managementClusterRegistryCache:
         enabled: true
         mirroredRegistries:
-        - docker.io
         - gsoci.azurecr.io
 providerIntegration:
   environmentVariables:

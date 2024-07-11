@@ -16,10 +16,10 @@ var (
 	//go:embed files/containerd_expected_default.toml
 	expectedContainerdDefaultConfig string
 
-	//go:embed files/containerd_expected_zot_mc.toml
+	//go:embed files/containerd_expected_zot_mc_only.toml
 	expectedContainerdZotMcOnlyConfig string
 
-	//go:embed files/containerd_expected_zot_only_local.toml
+	//go:embed files/containerd_expected_zot_local_only.toml
 	expectedContainerdZotLocalOnlyConfig string
 
 	//go:embed files/containerd_expected_zot_mc_and_local.toml
