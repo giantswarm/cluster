@@ -1,0 +1,89 @@
+name: Cluster Chart Test Suites
+
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  run-cluster-test-suites:
+    if: startsWith(github.event.comment.body, '/run cluster-test-suites') && github.event.issue.pull_request != ''
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Git
+      run: |
+        git config --local user.email "dev@giantswarm.io"
+        git config --local user.name "taylorbot"
+
+    - name: Extract latest cluster chart release
+      id: latest_release
+      run: echo "latest_release=$(git describe --tags $(git rev-list --tags --max-count=1))" >> $GITHUB_ENV
+
+    - name: Extract commit SHA
+      id: commit_sha
+      run: echo "commit_sha=${{ github.event.pull_request.head.sha }}" >> $GITHUB_ENV
+
+    - name: Check if branch exists in cluster-aws repo
+      id: check_branch
+      run: |
+        branch_name="cluster-chart-pr-${{ github.event.issue.number }}"
+        if git ls-remote --heads "https://github.com/giantswarm/cluster-aws.git" $branch_name; then
+          echo "branch_exists=true" >> $GITHUB_ENV
+        else
+          echo "branch_exists=false" >> $GITHUB_ENV
+        fi
+
+    - name: Clone cluster-aws repository
+      if: env.branch_exists == 'false'
+      run: |
+        git clone https://github.com/giantswarm/cluster-aws.git
+        cd cluster-aws
+        git checkout -b cluster-chart-pr-${{ github.event.issue.number }}
+
+    - name: Update cluster chart version in Chart.yaml
+      if: env.branch_exists == 'false'
+      run: |
+        cd helm/cluster-aws
+        sed -i "s/^version:.*/version: ${{ env.latest_release }}-${{ env.commit_sha }}/" Chart.yaml
+        helm dependency update
+
+    - name: Commit and push changes
+      if: env.branch_exists == 'false'
+      run: |
+        cd cluster-aws
+        git add helm/cluster-aws/Chart.yaml
+        git commit -m "Update cluster chart version to ${{ env.latest_release }}-${{ env.commit_sha }}"
+        git push origin cluster-chart-pr-${{ github.event.issue.number }}
+
+    - name: Create a draft pull request
+      if: env.branch_exists == 'false'
+      run: |
+        gh pr create --repo giantswarm/cluster-aws --head cluster-chart-pr-${{ github.event.issue.number }} --title "[DO NOT MERGE] Update cluster chart for PR #${{ github.event.issue.number }}" --body "This PR updates the cluster chart version to ${{ env.latest_release }}-${{ env.commit_sha }}." --draft
+      env:
+        GITHUB_TOKEN: ${{ secrets.TAYLORBOT_GITHUB_ACTION }}
+
+    - name: Comment on the PR
+      run: |
+        pr_number=$(gh pr list --repo giantswarm/cluster-aws --head cluster-chart-pr-${{ github.event.issue.number }} --json number --jq '.[0].number')
+        gh pr comment $pr_number --repo giantswarm/cluster-aws --body "${{ github.event.comment.body }}"
+      env:
+        GITHUB_TOKEN: ${{ secrets.TAYLORBOT_GITHUB_ACTION }}
+
+  close-cluster-aws-pr:
+    if: github.event.pull_request.closed
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up GitHub CLI
+      run: |
+        gh pr list --repo giantswarm/cluster-aws --head cluster-chart-pr-${{ github.event.pull_request.number }} --json number --jq '.[].number' | while read pr_number; do
+          gh pr close $pr_number --repo giantswarm/cluster-aws
+        done
+      env:
+        GITHUB_TOKEN: ${{ secrets.TAYLORBOT_GITHUB_ACTION }}
