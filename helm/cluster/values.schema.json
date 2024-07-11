@@ -1230,9 +1230,6 @@
                                                 "endpoint": "registry-1.docker.io"
                                             },
                                             {
-                                                "endpoint": "gsoci.azurecr.io"
-                                            },
-                                            {
                                                 "endpoint": "giantswarm.azurecr.io"
                                             }
                                         ],
@@ -1299,7 +1296,6 @@
                                                 "type": "string"
                                             },
                                             "default": [
-                                                "docker.io",
                                                 "gsoci.azurecr.io"
                                             ]
                                         }
