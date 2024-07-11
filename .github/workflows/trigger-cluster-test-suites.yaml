@@ -1,4 +1,4 @@
-name: Cluster Chart Test Suites
+name: Trigger cluster-test-suites
 
 on:
   issue_comment:
