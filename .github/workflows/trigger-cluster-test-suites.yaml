@@ -49,13 +49,17 @@ jobs:
         fi
         echo "Pull request number is $pr_number."
         
+        # Check if branch exists
         branch_name="test-cluster-chart-pr-$pr_number"
-        if git ls-remote --heads "https://github.com/giantswarm/cluster-aws.git" $branch_name; then
+        echo "cluster_aws_branch_name=$branch_name" >> $GITHUB_ENV
+        repo_url="https://github.com/giantswarm/cluster-aws"
+        if git ls-remote --heads "$repo_url" | grep -q "refs/heads/$branch_name"; then
+          echo "Found that cluster-aws already has the branch $branch_name. Will update it if needed."
           echo "branch_exists=true" >> $GITHUB_ENV
         else
+          echo "Found that cluster-aws does not have the branch $branch_name. Will create it."
           echo "branch_exists=false" >> $GITHUB_ENV
         fi
-        echo "cluster_aws_branch_name=$branch_name" >> $GITHUB_ENV
 
     - name: Create new cluster-aws branch
       if: env.branch_exists == 'false'
