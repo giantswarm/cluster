@@ -81,7 +81,10 @@ jobs:
 
         if [ $new_version != $current_version ]; then
           echo "Updating cluster chart version"
-          yq e '.dependencies[] |= select(.name == "cluster") * {"version": strenv(new_version)}' -i Chart.yaml
+          new_version="$new_version" yq e '.dependencies[] |= select(.name == "cluster") * {"version": strenv(new_version)}' -i Chart.yaml
+          
+          echo "Updated cluster chart version. Chart.yaml content is now:\n"
+          cat Chart.yaml
 
           # Retry logic for helm dependency update
           retry=0
