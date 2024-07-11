@@ -32,8 +32,8 @@ jobs:
         git fetch --tags
         latest_release=$(git describe --tags $(git rev-list --tags --max-count=1))
         latest_commit_sha=$(git rev-parse --verify HEAD)
-        echo "Custom cluster chart version is $latest_release-latest_commit_sha"
-        echo "custom_cluster_chart_version=$latest_release-latest_commit_sha" >> $GITHUB_ENV
+        echo "Custom cluster chart version is $latest_release-$latest_commit_sha"
+        echo "custom_cluster_chart_version=$latest_release-$latest_commit_sha" >> $GITHUB_ENV
 
     - name: Clone cluster-aws repository
       run: |
