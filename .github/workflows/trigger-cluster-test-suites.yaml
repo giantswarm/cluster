@@ -1,0 +1,50 @@
+name: Trigger cluster-test-suites
+
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  trigger-cluster-test-suites:
+    if: startsWith(github.event.comment.body, '/run cluster-test-suites') && github.event.issue.pull_request != ''
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Git
+      run: |
+        git config --local user.email "dev@giantswarm.io"
+        git config --local user.name "taylorbot"
+
+    - name: Clone cluster chart repository
+      run: |
+        git clone https://github.com/giantswarm/cluster.git
+
+    - name: Extract latest cluster chart release
+      id: latest_release
+      run: |
+        cd cluster
+        git fetch --tags
+        echo "latest_release=$(git describe --tags $(git rev-list --tags --max-count=1))" >> $GITHUB_ENV
+
+    - name: Extract commit SHA
+      id: commit_sha
+      run: echo "commit_sha=${{ github.event.pull_request.head.sha }}" >> $GITHUB_ENV
+
+    - name: Clone cluster-aws repository
+      run: |
+        git clone https://github.com/giantswarm/cluster-aws.git
+
+    - name: Update cluster chart version in Chart.yaml
+      run: |
+        cd cluster-aws/helm/cluster-aws
+        current_version="$(yq e '.dependencies[] | select(.name == "cluster").version' Chart.yaml)"
+        new_version="${{ env.latest_release }}-${{ env.commit_sha }}"
+        
+        if [ $new_version != $current_version ]; then
+          echo "Updating cluster chart version from $current_version to $new_version"
+        else
+          echo "Cluster chart version $current_version is already up-to-date."
+        fi
