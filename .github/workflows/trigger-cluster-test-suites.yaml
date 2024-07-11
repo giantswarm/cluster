@@ -5,7 +5,7 @@ on:
     types: [created]
 
 jobs:
-  run-cluster-test-suites:
+  trigger-cluster-test-suites:
     if: startsWith(github.event.comment.body, '/run cluster-test-suites') && github.event.issue.pull_request != ''
     runs-on: ubuntu-latest
 
