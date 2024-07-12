@@ -41,7 +41,7 @@ jobs:
         echo "Pull request number is $cluster_chart_pr_number."
         echo "cluster_chart_pr_number=$cluster_chart_pr_number" >> $GITHUB_ENV
 
-    - name: Get custom cluster chart version
+    - name: Get custom cluster chart version and PR author
       id: latest_release
       env:
         GITHUB_TOKEN: "${{ secrets.TAYLORBOT_GITHUB_ACTION }}"
@@ -55,7 +55,11 @@ jobs:
         
         # Now let's get the SHA of the latest commit on the tested branch
         # Fetch the PR details using GitHub CLI
-        pr_details=$(gh pr view ${{ env.cluster_chart_pr_number }} --json headRefName)
+        pr_details=$(gh pr view ${{ env.cluster_chart_pr_number }} --json "author,headRefName")
+        
+        author=$(echo $pr_details | jq -r '.author')
+        echo "cluster_chart_pr_author=$author" >> $GITHUB_ENV
+        
         branch_name=$(echo $pr_details | jq -r '.headRefName')
         git checkout $branch_name
         latest_commit_sha=$(git rev-parse --verify HEAD)
@@ -152,6 +156,13 @@ jobs:
     - name: Create a draft pull request
       if: env.branch_exists == 'false'
       run: |
-        gh pr create --repo giantswarm/cluster-aws --head ${{ env.cluster_aws_branch_name }} --title "[DO NOT MERGE] Testing cluster chart PR #${{ github.event.issue.number }}" --body "Update the cluster chart version to ${{ env.custom_cluster_chart_version }} in order to test cluster chart PR #${{ github.event.issue.number }}.\n\nThis PR will be closed automatically when cluster chart PR is closed." --draft
+        title="[DO NOT MERGE] Testing cluster chart PR #${{ env.cluster_chart_pr_number }}"
+        
+        body="> [!WARNING]"
+        body="$body\n> DO NOT MERGE! This PR has been created automatically by @taylorbot on behalf of @{{ env.cluster_chart_pr_author }}"
+        body="$body\n\nUpdate the cluster chart version to ${{ env.custom_cluster_chart_version }} in order to test @{{ env.cluster_chart_pr_author }}'s' cluster chart PR https://github.com/giantswarm/cluster/pull/${{ env.cluster_chart_pr_number }}."
+        body="$body\n\nThis PR will be closed automatically when the cluster chart PR is closed."
+        
+        echo -e "$body" | gh pr create --repo giantswarm/cluster-aws --head ${{ env.cluster_aws_branch_name }} --title "$title" --draft -
       env:
         GITHUB_TOKEN: ${{ secrets.TAYLORBOT_GITHUB_ACTION }}
