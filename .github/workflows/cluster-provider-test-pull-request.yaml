@@ -1,11 +1,12 @@
-name: Create or update cluster-$provider test pull requests
+name: cluster-$provider test pull requests
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened]
+    types: [opened, synchronize, reopened, closed]
 
 jobs:
   create-or-update-test-pull-request:
+    if: github.event.action != 'closed'
     runs-on: ubuntu-latest
 
     steps:
@@ -29,6 +30,7 @@ jobs:
         git clone https://github.com/giantswarm/cluster.git
 
     - name: Get cluster chart pull request details
+      id: cluster_chart_pr
       env:
         GITHUB_TOKEN: ${{ secrets.TAYLORBOT_GITHUB_ACTION }}
       run: |
@@ -183,3 +185,31 @@ jobs:
           --body-file -
       env:
         GITHUB_TOKEN: ${{ secrets.TAYLORBOT_GITHUB_ACTION }}
+
+  close-cluster-aws-pr:
+    if: github.event.action == 'closed'
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Get cluster chart pull request number
+      env:
+        GITHUB_TOKEN: ${{ secrets.TAYLORBOT_GITHUB_ACTION }}
+      run: |
+        # Get pull request number
+        cluster_chart_pr_number="${{ github.event.issue.number }}"
+        if [ -z "$cluster_chart_pr_number" ]; then
+          cluster_chart_pr_number="${{ github.event.number }}"
+        fi
+        echo "Pull request number is $cluster_chart_pr_number."
+        echo "cluster_chart_pr_number=$cluster_chart_pr_number" >> $GITHUB_ENV
+
+    - name: Close cluster-aws pull requests
+      env:
+        GITHUB_TOKEN: ${{ secrets.TAYLORBOT_GITHUB_ACTION }}
+      run: |
+        gh pr list --repo giantswarm/cluster-aws --head test-cluster-chart-pr-${{ env.cluster_chart_pr_number }} --json number --jq '.[].number' | while read pr_number; do
+          gh pr close $pr_number \
+            --repo giantswarm/cluster-aws \
+            --comment "Closing this pull request after closing/merging cluster chart pull request."
+            --delete-branch
+        done
