@@ -166,8 +166,8 @@ jobs:
         body="$body\n> DO NOT MERGE! This PR has been created automatically by @taylorbot on behalf of {{ env.cluster_chart_pr_author_name }} (@{{ env.cluster_chart_pr_author_username }})"
         body="$body\n\n### Changes"
         body="$body\n\nUpdate the cluster chart version to ${{ env.custom_cluster_chart_version }} in order to test @{{ env.cluster_chart_pr_author_username }}'s cluster chart PR https://github.com/giantswarm/cluster/pull/${{ env.cluster_chart_pr_number }}."
-#        body="$body\n\n> [!NOTE]"
-#        body="$body\n> This PR will be closed automatically when the cluster chart PR is closed."
+        # body="$body\n\n> [!NOTE]"
+        # body="$body\n> This PR will be closed automatically when the cluster chart PR is closed."
         
         echo -e "$body" | gh pr create --repo giantswarm/cluster-aws --head ${{ env.cluster_aws_branch_name }} --title "$title" --draft --label testing --label do-not-merge/hold -
       env:
