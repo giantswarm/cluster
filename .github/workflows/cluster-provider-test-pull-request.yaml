@@ -210,6 +210,6 @@ jobs:
         gh pr list --repo giantswarm/cluster-aws --head test-cluster-chart-pr-${{ env.cluster_chart_pr_number }} --json number --jq '.[].number' | while read pr_number; do
           gh pr close $pr_number \
             --repo giantswarm/cluster-aws \
-            --comment "Closing this pull request after closing/merging cluster chart pull request."
+            --comment "Closing this pull request after closing/merging cluster chart pull request." \
             --delete-branch
         done
