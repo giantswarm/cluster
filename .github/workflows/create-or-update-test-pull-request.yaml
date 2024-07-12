@@ -40,7 +40,11 @@ jobs:
         echo "Pull request number is $cluster_chart_pr_number."
         echo "cluster_chart_pr_number=$cluster_chart_pr_number" >> $GITHUB_ENV
         
-        cluster_chart_pr_details=$(gh pr view $cluster_chart_pr_number --json "author,headRefName")
+        cluster_chart_pr_details=$(gh pr view $cluster_chart_pr_number --json "title,author,headRefName")
+        
+        # Get pull request title
+        cluster_chart_pr_title=$(echo $cluster_chart_pr_details | jq -r '.title')
+        echo "cluster_chart_pr_title=$cluster_chart_pr_title" >> $GITHUB_ENV
         
         # Get pull request author details
         cluster_chart_pr_author_username=$(echo $cluster_chart_pr_details | jq -r '.author.login')
@@ -163,7 +167,8 @@ jobs:
         body="> [!WARNING]"
         body="$body\n> DO NOT MERGE! This PR has been created automatically by @taylorbot on behalf of ${{ env.cluster_chart_pr_author_name }} (@${{ env.cluster_chart_pr_author_username }})."
         body="$body\n\n### Changes"
-        body="$body\n\nUpdate the cluster chart version from \`${{ env.cluster_chart_current_version }}\` to \`${{ env.custom_cluster_chart_new_version }}\` in order to test @{{ env.cluster_chart_pr_author_username }}'s cluster chart PR https://github.com/giantswarm/cluster/pull/${{ env.cluster_chart_pr_number }}."
+        body="$body\n\nUpdate the cluster chart version from \`${{ env.cluster_chart_current_version }}\` to \`${{ env.custom_cluster_chart_new_version }}\` in order to test @${{ env.cluster_chart_pr_author_username }}'s cluster chart pull request https://github.com/giantswarm/cluster/pull/${{ env.cluster_chart_pr_number }}."
+        body="$body\n\nCluster chart pull request title: \`${{ env.cluster_chart_pr_title }}\`."
         body="$body\n\n### Testing"
         body="$body\n\nPlease comment this pull request with \`/run cluster-test-suites\` in order to run e2e tests."
         # body="$body\n\n> [!NOTE]"
