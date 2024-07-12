@@ -114,8 +114,9 @@ jobs:
           new_version="$new_version" yq e '.dependencies[] |= select(.name == "cluster") * {"version": strenv(new_version)}' -i Chart.yaml
           yq e '.dependencies[] |= select(.name == "cluster") * {"repository": "https://giantswarm.github.io/cluster-test-catalog"}' -i Chart.yaml
           
-          echo "Updated cluster chart version. Chart.yaml content is now:\n"
+          echo -e "Updated cluster chart version. Chart.yaml content is now:\n---"
           cat Chart.yaml
+          echo -e "---\n"
 
           # Retry logic for helm dependency update
           retry=0
@@ -169,6 +170,12 @@ jobs:
         # body="$body\n\n> [!NOTE]"
         # body="$body\n> This PR will be closed automatically when the cluster chart PR is closed."
         
-        echo -e "$body" | gh pr create --repo giantswarm/cluster-aws --head ${{ env.cluster_aws_branch_name }} --title "$title" --draft --label testing --label do-not-merge/hold -
+        echo -e "$body" | gh pr create --repo giantswarm/cluster-aws \
+          --head ${{ env.cluster_aws_branch_name }} \
+          --title "$title" \
+          --draft \
+          --label testing \
+          --label do-not-merge/hold \
+          --body-file -
       env:
         GITHUB_TOKEN: ${{ secrets.TAYLORBOT_GITHUB_ACTION }}
