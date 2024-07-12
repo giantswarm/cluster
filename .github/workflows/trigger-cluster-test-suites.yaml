@@ -1,15 +1,11 @@
-name: Trigger cluster-test-suites
+name: Create or update cluster-$provider test pull requests
 
 on:
-  issue_comment:
-    types: [created]
-  # temporary for the sake of testing
   pull_request:
     types: [opened, synchronize, reopened]
 
 jobs:
-  trigger-cluster-test-suites:
-    # if: startsWith(github.event.comment.body, '/run cluster-test-suites') && github.event.issue.pull_request != ''
+  create-or-update-test-pull-request:
     runs-on: ubuntu-latest
 
     steps:
@@ -69,7 +65,7 @@ jobs:
         latest_commit_sha=$(git rev-parse --verify HEAD)
         
         echo "Custom cluster chart version is $latest_release-$latest_commit_sha"
-        echo "custom_cluster_chart_version=$latest_release-$latest_commit_sha" >> $GITHUB_ENV
+        echo "custom_cluster_chart_new_version=$latest_release-$latest_commit_sha" >> $GITHUB_ENV
 
     - name: Clone cluster-aws repository
       run: |
@@ -107,7 +103,8 @@ jobs:
       run: |
         cd cluster-aws/helm/cluster-aws
         current_version="$(yq e '.dependencies[] | select(.name == "cluster").version' Chart.yaml)"
-        new_version="${{ env.custom_cluster_chart_version }}"
+        echo "cluster_chart_current_version=$current_version" >> $GITHUB_ENV
+        new_version="${{ env.custom_cluster_chart_new_version }}"
 
         if [ $new_version != $current_version ]; then
           echo "Updating cluster chart version"
@@ -151,7 +148,7 @@ jobs:
         cd cluster-aws
         git add helm/cluster-aws/Chart.yaml
         git add helm/cluster-aws/Chart.lock
-        git commit -m "Update cluster chart version to ${{ env.custom_cluster_chart_version }}"
+        git commit -m "Update cluster chart version to ${{ env.custom_cluster_chart_new_version }}"
 
         git remote set-url origin https://${{ env.GITHUB_TOKEN }}@github.com/giantswarm/cluster-aws.git
         git push origin ${{ env.cluster_aws_branch_name }}
@@ -164,9 +161,9 @@ jobs:
         title="Test cluster chart PR #${{ env.cluster_chart_pr_number }}"
         
         body="> [!WARNING]"
-        body="$body\n> DO NOT MERGE! This PR has been created automatically by @taylorbot on behalf of {{ env.cluster_chart_pr_author_name }} (@{{ env.cluster_chart_pr_author_username }})"
+        body="$body\n> DO NOT MERGE! This PR has been created automatically by @taylorbot on behalf of ${{ env.cluster_chart_pr_author_name }} (@${{ env.cluster_chart_pr_author_username }})."
         body="$body\n\n### Changes"
-        body="$body\n\nUpdate the cluster chart version to ${{ env.custom_cluster_chart_version }} in order to test @{{ env.cluster_chart_pr_author_username }}'s cluster chart PR https://github.com/giantswarm/cluster/pull/${{ env.cluster_chart_pr_number }}."
+        body="$body\n\nUpdate the cluster chart version from \`${{ env.cluster_chart_current_version }}\` to \`${{ env.custom_cluster_chart_new_version }}\` in order to test @{{ env.cluster_chart_pr_author_username }}'s cluster chart PR https://github.com/giantswarm/cluster/pull/${{ env.cluster_chart_pr_number }}."
         body="$body\n\n### Testing"
         body="$body\n\nPlease comment this pull request with \`/run cluster-test-suites\` in order to run e2e tests."
         # body="$body\n\n> [!NOTE]"
