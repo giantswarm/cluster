@@ -1,0 +1,222 @@
+name: cluster-$provider test pull requests
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+
+jobs:
+  create-or-update-test-pull-request:
+    if: github.event.action != 'closed'
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Git
+      run: |
+        git config --global user.email "dev@giantswarm.io"
+        git config --global user.name "taylorbot"
+    
+    - uses: oleksiyrudenko/gha-git-credentials@v2.1.2
+      with:
+        global: true
+        actor: 'taylorbot'
+        email: 'dev@giantswarm.io'
+        token: '${{ secrets.TAYLORBOT_GITHUB_ACTION }}'
+
+    - name: Clone cluster chart repository
+      run: |
+        git clone https://github.com/giantswarm/cluster.git
+
+    - name: Get cluster chart pull request details
+      id: cluster_chart_pr
+      env:
+        GITHUB_TOKEN: ${{ secrets.TAYLORBOT_GITHUB_ACTION }}
+      run: |
+        # Get pull request number
+        cluster_chart_pr_number="${{ github.event.issue.number }}"
+        if [ -z "$cluster_chart_pr_number" ]; then
+          cluster_chart_pr_number="${{ github.event.number }}"
+        fi
+        echo "Pull request number is $cluster_chart_pr_number."
+        echo "cluster_chart_pr_number=$cluster_chart_pr_number" >> $GITHUB_ENV
+        
+        cluster_chart_pr_details=$(gh pr view $cluster_chart_pr_number --json "title,author,headRefName")
+        
+        # Get pull request title
+        cluster_chart_pr_title=$(echo $cluster_chart_pr_details | jq -r '.title')
+        echo "cluster_chart_pr_title=$cluster_chart_pr_title" >> $GITHUB_ENV
+        
+        # Get pull request author details
+        cluster_chart_pr_author_username=$(echo $cluster_chart_pr_details | jq -r '.author.login')
+        cluster_chart_pr_author_name=$(echo $cluster_chart_pr_details | jq -r '.author.name')
+        echo "cluster_chart_pr_author_username=$cluster_chart_pr_author_username" >> $GITHUB_ENV
+        echo "cluster_chart_pr_author_name=$cluster_chart_pr_author_name" >> $GITHUB_ENV
+        
+        # Get pull request head branch name (the branch that has changes)
+        cluster_chart_pr_branch_name=$(echo $cluster_chart_pr_details | jq -r '.headRefName')
+        echo "cluster_chart_pr_branch_name=$cluster_chart_pr_branch_name" >> $GITHUB_ENV
+
+    - name: Get cluster chart custom version for the pull request
+      run: |
+        cd cluster
+        git fetch --tags
+        
+        # get the latest tag and trim 'v' prefix
+        latest_release=$(git describe --tags $(git rev-list --tags --max-count=1))
+        latest_release="${latest_release#v}"
+        
+        git checkout "${{ env.cluster_chart_pr_branch_name }}"
+        latest_commit_sha=$(git rev-parse --verify HEAD)
+        
+        echo "Custom cluster chart version is $latest_release-$latest_commit_sha"
+        echo "custom_cluster_chart_new_version=$latest_release-$latest_commit_sha" >> $GITHUB_ENV
+
+    - name: Clone cluster-aws repository
+      run: |
+        git clone https://github.com/giantswarm/cluster-aws.git
+
+    - name: Check if branch exists in cluster-aws repo
+      id: check_branch
+      run: |
+        cd cluster-aws
+        # Check if branch exists
+        branch_name="test-cluster-chart-pr-${{ env.cluster_chart_pr_number }}"
+        echo "cluster_aws_branch_name=$branch_name" >> $GITHUB_ENV
+        repo_url="https://github.com/giantswarm/cluster-aws"
+        if git ls-remote --heads "$repo_url" | grep -q "refs/heads/$branch_name"; then
+          echo "Found that cluster-aws already has the branch $branch_name. Will update it if needed."
+          echo "branch_exists=true" >> $GITHUB_ENV
+        else
+          echo "Found that cluster-aws does not have the branch $branch_name. Will create it."
+          echo "branch_exists=false" >> $GITHUB_ENV
+        fi
+
+    - name: Create new cluster-aws branch
+      if: env.branch_exists == 'false'
+      run: |
+        cd cluster-aws
+        git checkout -b ${{ env.cluster_aws_branch_name }}
+
+    - name: Checkout existing cluster-aws branch
+      if: env.branch_exists == 'true'
+      run: |
+        cd cluster-aws
+        git checkout ${{ env.cluster_aws_branch_name }}
+
+    - name: Update cluster chart version in Chart.yaml
+      run: |
+        cd cluster-aws/helm/cluster-aws
+        current_version="$(yq e '.dependencies[] | select(.name == "cluster").version' Chart.yaml)"
+        echo "cluster_chart_current_version=$current_version" >> $GITHUB_ENV
+        new_version="${{ env.custom_cluster_chart_new_version }}"
+
+        if [ $new_version != $current_version ]; then
+          echo "Updating cluster chart version"
+          new_version="$new_version" yq e '.dependencies[] |= select(.name == "cluster") * {"version": strenv(new_version)}' -i Chart.yaml
+          yq e '.dependencies[] |= select(.name == "cluster") * {"repository": "https://giantswarm.github.io/cluster-test-catalog"}' -i Chart.yaml
+          
+          echo -e "Updated cluster chart version. Chart.yaml content is now:\n---"
+          cat Chart.yaml
+          echo -e "---\n"
+
+          # Retry logic for helm dependency update
+          retry=0
+          max_retries=20
+          success=false
+
+          while [ $retry -lt $max_retries ]; do
+            if helm dependency update; then
+              success=true
+              break
+            else
+              retry=$((retry + 1))
+              echo "Retry $retry/$max_retries: helm dependency update failed, retrying in 15 seconds..."
+              sleep 15
+            fi
+          done
+
+          if [ "$success" = false ]; then
+            echo "helm dependency update failed after $max_retries retries"
+            exit 1
+          fi
+
+          echo "cluster_chart_version_updated=true" >> $GITHUB_ENV
+        else
+          echo "Cluster chart version is already up-to-date."
+          echo "cluster_chart_version_updated=false" >> $GITHUB_ENV
+        fi
+
+    - name: Commit and push changes
+      if: env.cluster_chart_version_updated == 'true'
+      run: |
+        cd cluster-aws
+        git add helm/cluster-aws/Chart.yaml
+        git add helm/cluster-aws/Chart.lock
+        git commit -m "Update cluster chart version to ${{ env.custom_cluster_chart_new_version }}"
+
+        git remote set-url origin https://${{ env.GITHUB_TOKEN }}@github.com/giantswarm/cluster-aws.git
+        git push origin ${{ env.cluster_aws_branch_name }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.TAYLORBOT_GITHUB_ACTION }}
+
+    - name: Create a draft pull request
+      if: env.branch_exists == 'false'
+      run: |
+        title="Test cluster chart PR #${{ env.cluster_chart_pr_number }}"
+        
+        body="> [!WARNING]"
+        body="$body\n> DO NOT MERGE! This PR has been created automatically by @taylorbot on behalf of ${{ env.cluster_chart_pr_author_name }} (@${{ env.cluster_chart_pr_author_username }})."
+        body="$body\n\n### Changes"
+        body="$body\n\nUpdate the cluster chart version from \`${{ env.cluster_chart_current_version }}\` to \`${{ env.custom_cluster_chart_new_version }}\` in order to test @${{ env.cluster_chart_pr_author_username }}'s cluster chart pull request https://github.com/giantswarm/cluster/pull/${{ env.cluster_chart_pr_number }}."
+        body="$body\n\nCluster chart pull request title: \`${{ env.cluster_chart_pr_title }}\`."
+        body="$body\n\n### Testing"
+        body="$body\n\nPlease comment this pull request with \`/run cluster-test-suites\` in order to run e2e tests."
+        # body="$body\n\n> [!NOTE]"
+        # body="$body\n> This PR will be closed automatically when the cluster chart PR is closed."
+        
+        echo -e "$body" | gh pr create --repo giantswarm/cluster-aws \
+          --head ${{ env.cluster_aws_branch_name }} \
+          --title "$title" \
+          --draft \
+          --label testing \
+          --label do-not-merge/hold \
+          --body-file -
+        
+        cluster_aws_pr_number=$(gh pr list --repo giantswarm/cluster-aws --head ${{ env.cluster_aws_branch_name }} --json number | jq ".[0].number")
+        cluster_chart_comment="Hey @${{ env.cluster_chart_pr_author_username }}, a test pull request has been created for you in cluster-aws repo! Go to pull request https://github.com/giantswarm/cluster-aws/pull/$cluster_aws_pr_number in order to test you cluster chart changes on AWS."
+        echo -e "$cluster_chart_comment" | gh pr comment \
+          --repo giantswarm/cluster \
+          --body "$cluster_chart_comment" \
+          ${{ env.cluster_chart_pr_number }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.TAYLORBOT_GITHUB_ACTION }}
+
+  close-cluster-aws-pr:
+    if: github.event.action == 'closed'
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Get cluster chart pull request number
+      env:
+        GITHUB_TOKEN: ${{ secrets.TAYLORBOT_GITHUB_ACTION }}
+      run: |
+        # Get pull request number
+        cluster_chart_pr_number="${{ github.event.issue.number }}"
+        if [ -z "$cluster_chart_pr_number" ]; then
+          cluster_chart_pr_number="${{ github.event.number }}"
+        fi
+        echo "Pull request number is $cluster_chart_pr_number."
+        echo "cluster_chart_pr_number=$cluster_chart_pr_number" >> $GITHUB_ENV
+
+    - name: Close cluster-aws pull requests
+      env:
+        GITHUB_TOKEN: ${{ secrets.TAYLORBOT_GITHUB_ACTION }}
+      run: |
+        gh pr list --repo giantswarm/cluster-aws --head test-cluster-chart-pr-${{ env.cluster_chart_pr_number }} --json number --jq '.[].number' | while read pr_number; do
+          gh pr close $pr_number \
+            --repo giantswarm/cluster-aws \
+            --comment "Closing this pull request after closing/merging cluster chart pull request." \
+            --delete-branch
+        done
