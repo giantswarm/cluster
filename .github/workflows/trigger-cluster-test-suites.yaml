@@ -32,19 +32,29 @@ jobs:
       run: |
         git clone https://github.com/giantswarm/cluster.git
 
-    - name: Get cluster chart PR number
+    - name: Get cluster chart pull request details
       run: |
+        # Get pull request number
         cluster_chart_pr_number="${{ github.event.issue.number }}"
         if [ -z "$cluster_chart_pr_number" ]; then
           cluster_chart_pr_number="${{ github.event.number }}"
         fi
         echo "Pull request number is $cluster_chart_pr_number."
         echo "cluster_chart_pr_number=$cluster_chart_pr_number" >> $GITHUB_ENV
+        
+        cluster_chart_pr_details=$(gh pr view $cluster_chart_pr_number --json "author,headRefName")
+        
+        # Get pull request author details
+        cluster_chart_pr_author_username=$(echo $cluster_chart_pr_details | jq -r '.author.login')
+        cluster_chart_pr_author_name=$(echo $cluster_chart_pr_details | jq -r '.author.name')
+        echo "cluster_chart_pr_author_username=$cluster_chart_pr_author_username" >> $GITHUB_ENV
+        echo "cluster_chart_pr_author_name=$cluster_chart_pr_author_name" >> $GITHUB_ENV
+        
+        # Get pull request head branch name (the branch that has changes)
+        cluster_chart_pr_branch_name=$(echo $cluster_chart_pr_details | jq -r '.headRefName')
+        echo "cluster_chart_pr_branch_name=$cluster_chart_pr_branch_name" >> $GITHUB_ENV
 
-    - name: Get custom cluster chart version and PR author
-      id: latest_release
-      env:
-        GITHUB_TOKEN: "${{ secrets.TAYLORBOT_GITHUB_ACTION }}"
+    - name: Get cluster chart custom version for the pull request
       run: |
         cd cluster
         git fetch --tags
@@ -53,15 +63,7 @@ jobs:
         latest_release=$(git describe --tags $(git rev-list --tags --max-count=1))
         latest_release="${latest_release#v}"
         
-        # Now let's get the SHA of the latest commit on the tested branch
-        # Fetch the PR details using GitHub CLI
-        pr_details=$(gh pr view ${{ env.cluster_chart_pr_number }} --json "author,headRefName")
-        
-        author=$(echo $pr_details | jq -r '.author')
-        echo "cluster_chart_pr_author=$author" >> $GITHUB_ENV
-        
-        branch_name=$(echo $pr_details | jq -r '.headRefName')
-        git checkout $branch_name
+        git checkout "${{ env.cluster_chart_pr_branch_name }}"
         latest_commit_sha=$(git rev-parse --verify HEAD)
         
         echo "Custom cluster chart version is $latest_release-$latest_commit_sha"
@@ -159,9 +161,11 @@ jobs:
         title="[DO NOT MERGE] Testing cluster chart PR #${{ env.cluster_chart_pr_number }}"
         
         body="> [!WARNING]"
-        body="$body\n> DO NOT MERGE! This PR has been created automatically by @taylorbot on behalf of @{{ env.cluster_chart_pr_author }}"
-        body="$body\n\nUpdate the cluster chart version to ${{ env.custom_cluster_chart_version }} in order to test @{{ env.cluster_chart_pr_author }}'s' cluster chart PR https://github.com/giantswarm/cluster/pull/${{ env.cluster_chart_pr_number }}."
-        body="$body\n\nThis PR will be closed automatically when the cluster chart PR is closed."
+        body="$body\n> DO NOT MERGE! This PR has been created automatically by @taylorbot on behalf of {{ env.cluster_chart_pr_author_name }} (@{{ env.cluster_chart_pr_author_username }})"
+        body="$body\n\n### Changes"
+        body="$body\n\nUpdate the cluster chart version to ${{ env.custom_cluster_chart_version }} in order to test @{{ env.cluster_chart_pr_author_username }}'s cluster chart PR https://github.com/giantswarm/cluster/pull/${{ env.cluster_chart_pr_number }}."
+        body="$body\n\n> [!NOTE]"
+        body="$body\n> This PR will be closed automatically when the cluster chart PR is closed."
         
         echo -e "$body" | gh pr create --repo giantswarm/cluster-aws --head ${{ env.cluster_aws_branch_name }} --title "$title" --draft -
       env:
