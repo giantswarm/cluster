@@ -20,6 +20,13 @@ jobs:
       run: |
         git config --global user.email "dev@giantswarm.io"
         git config --global user.name "taylorbot"
+    
+    - uses: oleksiyrudenko/gha-git-credentials@v2.1.2
+      with:
+        global: true
+        actor: 'taylorbot'
+        email: 'dev@giantswarm.io'
+        token: '${{ secrets.TAYLORBOT_GITHUB_ACTION }}'
 
     - name: Clone cluster chart repository
       run: |
@@ -136,6 +143,8 @@ jobs:
         git add helm/cluster-aws/Chart.yaml
         git add helm/cluster-aws/Chart.lock
         git commit -m "Update cluster chart version to ${{ env.custom_cluster_chart_version }}"
+
+        git remote set-url origin https://${{ env.GITHUB_TOKEN }}@github.com/giantswarm/cluster-aws.git
         git push origin ${{ env.cluster_aws_branch_name }}
       env:
         GITHUB_TOKEN: ${{ secrets.TAYLORBOT_GITHUB_ACTION }}
@@ -143,6 +152,6 @@ jobs:
     - name: Create a draft pull request
       if: env.branch_exists == 'false'
       run: |
-        gh pr create --repo giantswarm/cluster-aws --head ${{ env.cluster_aws_branch_name }} --title "[DO NOT MERGE] Testing cluster chart PR #${{ github.event.issue.number }}" --body "This PR updates the cluster chart version to ${{ env.latest_release }}-${{ env.commit_sha }} in order to test cluster chart PR #${{ github.event.issue.number }}.\n\nThis PR will be closed automatically when cluster chart PR is closed." --draft
+        gh pr create --repo giantswarm/cluster-aws --head ${{ env.cluster_aws_branch_name }} --title "[DO NOT MERGE] Testing cluster chart PR #${{ github.event.issue.number }}" --body "Update the cluster chart version to ${{ env.custom_cluster_chart_version }} in order to test cluster chart PR #${{ github.event.issue.number }}.\n\nThis PR will be closed automatically when cluster chart PR is closed." --draft
       env:
         GITHUB_TOKEN: ${{ secrets.TAYLORBOT_GITHUB_ACTION }}
