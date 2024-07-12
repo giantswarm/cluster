@@ -185,7 +185,7 @@ jobs:
           --body-file -
         
         cluster_aws_pr_number=$(gh pr list --repo giantswarm/cluster-aws --head ${{ env.cluster_aws_branch_name }} --json number | jq ".[0].number")
-        cluster_chart_comment="Test pull request has been created in cluster-aws repo. Go to pull request https://github.com/giantswarm/cluster-aws/pull/$cluster_aws_pr_number to test you cluster chart changes on AWS."
+        cluster_chart_comment="Hey @${{ env.cluster_chart_pr_author_username }}, a test pull request has been created for you in cluster-aws repo! Go to pull request https://github.com/giantswarm/cluster-aws/pull/$cluster_aws_pr_number in order to test you cluster chart changes on AWS."
         echo -e "$cluster_chart_comment" | gh pr comment \
           --repo giantswarm/cluster \
           --body "$cluster_chart_comment" \
