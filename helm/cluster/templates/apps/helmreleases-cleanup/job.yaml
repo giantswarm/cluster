@@ -1,0 +1,87 @@
+{{- if .Values.providerIntegration.resourcesApi.cleanupHelmReleaseResourcesEnabled }}
+#
+# Because cluster resources are often deleted before Flux has a chance to uninstall the Helm releases for all deleted HelmRelease CRs,
+# they become leftovers because there is still a Flux finalizer on them.
+#
+# This looks as follows:
+#
+#     $ kubectl get helmreleases --namespace org-multi-project
+#     NAME                           AGE     READY   STATUS
+#     pawe1-cilium                   99m     False   failed to get last release revision
+#     pawe1-cloud-provider-vsphere   99m     False   failed to get last release revision
+#
+# Both HelmRelease CRs in this case have a deletion timestamp and finalizer set, e.g.:
+#
+#     deletionTimestamp: "2023-03-02T14:34:49Z"
+#     finalizers:
+#     - finalizers.fluxcd.io
+#
+# To work around this, this post-delete hook suspends all HelmRelease CRs created with this chart.
+#
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "cluster.resource.name" . }}-helmreleases-cleanup
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    helm.sh/hook: post-delete
+    helm.sh/hook-delete-policy: before-hook-creation
+    helm.sh/hook-weight: "0"
+  labels:
+    {{- include "cluster.labels.common.all" . | nindent 4 }}
+spec:
+  template:
+    metadata:
+      labels:
+        {{- include "cluster.labels.common.all" . | nindent 8 }}
+    spec:
+      serviceAccountName: {{ include "cluster.resource.name" . }}-helmreleases-cleanup
+      containers:
+      - name: kubectl
+        image: {{ .Values.internal.advancedConfiguration.registry }}/giantswarm/kubectl:{{ .Values.providerIntegration.kubernetesVersion }}
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1000
+          runAsGroup: 1000
+          allowPrivilegeEscalation: false
+          seccompProfile:
+            type: RuntimeDefault
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+        env:
+        - name: NAMESPACE
+          value: {{ .Release.Namespace }}
+        - name: CLUSTER
+          value: {{ include "cluster.resource.name" . }}
+        command:
+        - /bin/sh
+        args:
+        - -c
+        - |
+          # Print namespace & cluster.
+          echo "# Namespace: ${NAMESPACE} | Cluster: ${CLUSTER}"
+
+          # Get releases.
+          releases="$(kubectl get helmreleases.helm.toolkit.fluxcd.io --namespace "${NAMESPACE}" --selector giantswarm.io/cluster="${CLUSTER}" --output name)"
+
+          # Check releases.
+          if [ -n "${releases}" ]
+          then
+            # Patch releases.
+            kubectl patch --namespace "${NAMESPACE}" ${releases} --type merge --patch '{ "spec": { "suspend": true } }'
+          else
+            # Print info.
+            echo "No releases to patch found."
+          fi
+        resources:
+          requests:
+            cpu: 10m
+            memory: 64Mi
+          limits:
+            cpu: 100m
+            memory: 256Mi
+      restartPolicy: Never
+  ttlSecondsAfterFinished: 86400 # 24h
+{{- end }}
