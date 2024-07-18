@@ -11,7 +11,6 @@ nodeRegistration:
     cgroup-driver: cgroupfs
     {{- end }}
     cloud-provider: external
-    feature-gates: CronJobTimeZone=true
     healthz-bind-address: 0.0.0.0
     node-ip: {{ printf "${%s}" $.Values.providerIntegration.environmentVariables.ipv4 }}
     node-labels: ip={{ printf "${%s}" $.Values.providerIntegration.environmentVariables.ipv4 }}

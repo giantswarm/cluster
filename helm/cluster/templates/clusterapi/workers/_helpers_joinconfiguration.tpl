@@ -20,7 +20,6 @@ nodeRegistration:
     {{- if $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.cloudConfig  }}
     cloud-config: {{ $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.cloudConfig  }}
     {{- end }}
-    feature-gates: CronJobTimeZone=true
     healthz-bind-address: 0.0.0.0
     node-ip: {{ printf "${%s}" $.Values.providerIntegration.environmentVariables.ipv4 }}
     node-labels: ip={{ printf "${%s}" $.Values.providerIntegration.environmentVariables.ipv4 }},role=worker,giantswarm.io/machine-pool={{ include "cluster.resource.name" $ }}-{{ $nodePool.name }},{{- join "," $nodePool.config.customNodeLabels }}

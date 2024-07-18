@@ -25,11 +25,10 @@ extraVolumes:
 {{- end }}
 
 {{- define "cluster.internal.controlPlane.kubeadm.clusterConfiguration.controllerManager.featureGates" }}
-{{- $defaultFeatureGates := list (dict "name" "CronJobTimeZone" "enabled" true) }}
 {{- $providerFeatureGates := $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.controllerManager.featureGates | default list }}
 {{- $internalFeatureGates := $.Values.internal.advancedConfiguration.controlPlane.controllerManager.featureGates | default list }}
 {{- $mergedFeatureGates := dict }}
-{{- range (concat $defaultFeatureGates $providerFeatureGates $internalFeatureGates) }}
+{{- range (concat $providerFeatureGates $internalFeatureGates) }}
 {{- $_ := set $mergedFeatureGates (trim .name) .enabled }}
 {{- end }}
 {{- $featureGates := list }}
