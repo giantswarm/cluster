@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+This release removes the `CronJobTimeZone` feature gate as it becomes stable and is included in Kubernetes v1.29.
+
+For Kubernetes <v1.29, you will need to re-enable it using the respective values.
+
+### Removed
+
+- Feature Gates: Remove `CronJobTimeZone`. ([#267](https://github.com/giantswarm/cluster/pull/267))
+
 ## [0.35.0] - 2024-07-08
 
 ### Added

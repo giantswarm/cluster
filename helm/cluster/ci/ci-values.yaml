@@ -363,8 +363,6 @@ providerIntegration:
           apiAudiences:
             templateName: "cluster.test.kubeadmControlPlane.kubeadmConfigSpec.clusterConfiguration.apiServer.apiAudiences"
           featureGates:
-          - name: CronJobTimeZone
-            enabled: true
           - name: DownwardAPIHugePages
             enabled: false
           serviceAccountIssuer:

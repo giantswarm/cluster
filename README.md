@@ -130,8 +130,8 @@ cluster:
             apiAudiences:
               templateName: awsApiServerApiAudiences # name of the Helm template that renders api-audiences value
             featureGates:
-              - enabled: true
-                name: CronJobTimeZone
+            - name: StatefulSetAutoDeletePVC
+              enabled: true
             serviceAccountIssuer:
               clusterDomainPrefix: irsa # which sets service-account-issuer to irsa.<cluster name>.<base domain>
 ```

@@ -9,7 +9,6 @@ nodeRegistration:
     cgroup-driver: cgroupfs
     {{- end }}
     cloud-provider: external
-    feature-gates: CronJobTimeZone=true
     node-ip: {{ printf "${%s}" $.Values.providerIntegration.environmentVariables.ipv4 }}
     node-labels: ip={{ printf "${%s}" $.Values.providerIntegration.environmentVariables.ipv4 }}
   name: {{ printf "${%s}" $.Values.providerIntegration.environmentVariables.hostName }}
