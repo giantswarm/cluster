@@ -769,7 +769,7 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.osImage.variant` | **Variant**|**Type:** `string`<br/>|
 | `providerIntegration.osImage.version` | **Version**|**Type:** `string`<br/>|
 | `providerIntegration.pauseProperties` | **Pause properties** - A map of property names and their values that will affect setting pause annotation|**Type:** `object`<br/>|
-| `providerIntegration.pauseProperties.*` |**None**|**Types:** `string, number, integer, boolean`<br/>|
+| `providerIntegration.pauseProperties.*` |**None**|**Types:** `string, number, integer, boolean, null`<br/>|
 | `providerIntegration.provider` | **Provider** - The name of the Cluster API provider. The name here must match the name of the provider in cluster-<provider> app name.|**Type:** `string`<br/>|
 | `providerIntegration.registry` | **Registry** - The registry to use for pulling images. If not set, the default registry is used.|**Type:** `object`<br/>|
 | `providerIntegration.registry.templateName` | **Template name**|**Type:** `string`<br/>|

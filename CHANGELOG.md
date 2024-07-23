@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Support `pauseProperties` with `null` values.
+
 ## [0.36.0] - 2024-07-19
 
 This release removes the `CronJobTimeZone` feature gate as it becomes stable and is included in Kubernetes v1.29.
