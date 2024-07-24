@@ -10,12 +10,7 @@ metadata:
     {{- $annotations | indent 4 }}
   {{- end }}
   labels:
-    {{- include "cluster.labels.common" $ | nindent 4 }}
-    {{- if $.Values.global.metadata.labels }}
-    {{- range $key, $val := $.Values.global.metadata.labels }}
-    {{ $key }}: {{ $val | quote }}
-    {{- end }}
-    {{- end }}
+    {{- include "cluster.labels.common.all" $ | nindent 4 }}
   name: {{ include "cluster.resource.name" . }}-control-plane
   namespace: {{ $.Release.Namespace }}
 spec:
