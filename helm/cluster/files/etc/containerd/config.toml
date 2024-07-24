@@ -31,6 +31,9 @@ sandbox_image = "{{ include "cluster.image.registry" $ }}/{{ $.Values.providerIn
         {{- if and $.Values.global.components.containerd.localRegistryCache.enabled (has $host $.Values.global.components.containerd.localRegistryCache.mirroredRegistries) -}}
         "http://127.0.0.1:{{ $.Values.global.components.containerd.localRegistryCache.port }}",
         {{- end -}}
+        {{- if and $.Values.global.components.containerd.managementClusterRegistryCache.enabled (has $host $.Values.global.components.containerd.managementClusterRegistryCache.mirroredRegistries) -}}
+        "https://zot.{{ $.Values.global.managementCluster }}.{{ $.Values.global.connectivity.baseDomain }}",
+        {{- end -}}
         {{- range $value := $config -}}
         "https://{{$value.endpoint}}",
         {{- end -}}

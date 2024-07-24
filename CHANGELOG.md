@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Support `pauseProperties` with `null` values.
+- Add MC Zot deployment as a registry mirror for `gsoci.azurecr.io` registry. This is the new default behavior.
+
+### Added
+
+- Tests for checking rendered containerd config.
 
 ## [0.36.0] - 2024-07-19
 
