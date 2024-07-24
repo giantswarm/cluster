@@ -29,3 +29,14 @@ endif
 
 .PHONY: generate
 generate: normalize-schema validate-schema generate-docs generate-values
+
+.PHONY: ginkgo
+ginkgo:
+	@cd helm/cluster/tests && \
+		go install github.com/onsi/ginkgo/v2/ginkgo && \
+    	go get github.com/onsi/gomega/...
+
+.PHONY: test
+test: ginkgo
+	@cd helm/cluster/tests && \
+		ginkgo -v ./...
