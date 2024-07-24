@@ -2604,7 +2604,8 @@
                             "string",
                             "number",
                             "integer",
-                            "boolean"
+                            "boolean",
+                            "null"
                         ]
                     }
                 },
