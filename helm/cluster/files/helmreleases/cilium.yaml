@@ -10,7 +10,7 @@ defaultValues:
     mode: kubernetes
   k8sServiceHost: api.{{ include "cluster.resource.name" $ }}.{{ .Values.global.connectivity.baseDomain }}
   k8sServicePort: '{{ .Values.global.controlPlane.apiServerPort }}'
-  kubeProxyReplacement: strict
+  kubeProxyReplacement: 'true'
   hubble:
     relay:
       enabled: true
