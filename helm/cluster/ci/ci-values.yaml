@@ -313,6 +313,8 @@ providerIntegration:
       enable: true
     observabilityBundle:
       enable: true
+    observabilityPolicies:
+      enable: true
     prometheusBlackboxExporter:
       enable: true
     securityBundle:

@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Tests for checking rendered containerd config.
+- Add `observability-policies` app.
 
 ## [0.36.0] - 2024-07-19
 

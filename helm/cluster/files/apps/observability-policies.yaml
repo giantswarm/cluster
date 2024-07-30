@@ -1,0 +1,11 @@
+appName: observability-policies
+configKey: observabilityPolicies
+enabled: true
+clusterValues:
+  configMap: false
+  secret: false
+dependsOn: kyverno-crds
+namespace: kube-system
+# used by renovate
+# repo: giantswarm/observability-policies-app
+version: 0.0.1
