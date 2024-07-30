@@ -142,6 +142,12 @@ global:
       extraConfigs:
       - name: my-observability-bundle-extra-config
         kind: configMap
+    observabilityPolicies:
+      values:
+        foo: bar
+      extraConfigs:
+      - name: my-observability-policies-extra-config
+        kind: configMap
     securityBundle:
       values:
         foo: bar

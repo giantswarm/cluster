@@ -1131,7 +1131,7 @@
                         "observabilityPolicies": {
                             "$ref": "#/$defs/app",
                             "type": "object",
-                            "title": "Observability Stack Kyverno Policies",
+                            "title": "observability-policies",
                             "description": "Configuration of observability-policies. For all available values see https://github.com/giantswarm/observability-policies-app."
                         },
                         "prometheusBlackboxExporter": {
