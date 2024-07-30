@@ -20,6 +20,7 @@ global:
     networkPolicies: {}
     nodeExporter: {}
     observabilityBundle: {}
+    observabilityPolicies: {}
     prometheusBlackboxExporter: {}
     securityBundle: {}
     teleportKubeAgent: {}
@@ -148,6 +149,8 @@ providerIntegration:
     nodeExporter:
       enable: false
     observabilityBundle:
+      enable: false
+    observabilityPolicies:
       enable: false
     prometheusBlackboxExporter:
       enable: false

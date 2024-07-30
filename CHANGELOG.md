@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Apps: Add `observability-policies` v0.0.1. ([#283](https://github.com/giantswarm/cluster/pull/283))
+
 ### Fixed
 
 - Use already existing helper function to render all common labels in the `MachineHealthCheck` CR.
