@@ -32,8 +32,8 @@ room for such suffix.
   - Custom labels specified in .Values.global.metadata.labels.
 */}}
 {{- define "cluster.labels.common.all" -}}
-{{ include "cluster.labels.common" $ }}
-{{ include "cluster.labels.custom" $ }}
+{{ include "cluster.labels.common" $ -}}
+{{ include "cluster.labels.custom" $ -}}
 {{- end -}}
 
 {{/*
@@ -58,7 +58,7 @@ cluster.x-k8s.io/cluster-name: {{ include "cluster.resource.name" $ | quote }}
 cluster.x-k8s.io/watch-filter: capi
 {{- if $.Values.providerIntegration.useReleases }}
 release.giantswarm.io/version: {{ .Values.global.release.version | trimPrefix "v" | quote }}
-{{- end -}}
+{{- end }}
 {{- end -}}
 
 {{- define "cluster.labels.preventDeletion" }}

@@ -8,8 +8,7 @@ metadata:
     {{- include "cluster.annotations.custom" $ | indent 4 }}
   labels:
     cluster.x-k8s.io/role: bastion
-    {{- include "cluster.labels.common" $ | nindent 4 }}
-    {{- include "cluster.labels.custom" $ | indent 4 }}
+    {{- include "cluster.labels.common.all" $ | nindent 4 }}
   name: {{ include "cluster.resource.name" $ }}-bastion
   namespace: {{ $.Release.Namespace }}
 spec:
@@ -31,8 +30,7 @@ spec:
       labels:
         cluster.x-k8s.io/role: bastion
         cluster.x-k8s.io/deployment-name: {{ include "cluster.resource.name" $ }}-bastion
-        {{- include "cluster.labels.common" $ | nindent 8 }}
-        {{- include "cluster.labels.custom" $ | indent 4 }}
+        {{- include "cluster.labels.common.all" $ | nindent 8 }}
     spec:
       bootstrap:
         configRef:
