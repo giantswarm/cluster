@@ -4,7 +4,7 @@ configKey: nodeExporter
 clusterValues:
   configMap: true
   secret: false
-dependsOn: kyverno
+dependsOn: kyverno-crds
 namespace: kube-system
 # used by renovate
 # repo: giantswarm/node-exporter-app
