@@ -56,7 +56,7 @@ metadata:
     {{- end }}
   {{- end }}
   labels:
-    {{- include "cluster.labels.common.all" $ | indent 4 }}
+    {{- include "cluster.labels.common.all" $ | nindent 4 }}
     giantswarm.io/managed-by: {{ .Chart.Name }}
     {{- if $app.inCluster }}
     app-operator.giantswarm.io/version: 0.0.0
