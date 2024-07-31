@@ -4,7 +4,7 @@ configKey: clusterAutoscaler
 clusterValues:
   configMap: true
   secret: true
-dependsOn: kyverno
+dependsOn: kyverno-crds
 namespace: kube-system
 # used by renovate
 # repo: giantswarm/cluster-autoscaler-app
