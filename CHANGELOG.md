@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Remove unnecessary new lines before and after the labels field in the CRs.
 - Apps: Depend on `kyverno-crds` instead of `kyverno`. ([#285](https://github.com/giantswarm/cluster/pull/285))
 - Set `kubeProxyReplacement` to `'true'` instead of deprecated value `strict` in cilium values.
+- Apps: Bump `cluster-autoscaler` to v1.29.3-gs1. ([#286](https://github.com/giantswarm/cluster/pull/286))
 
 ## [1.0.0] - 2024-07-24
 
