@@ -2,7 +2,7 @@ appName: k8s-dns-node-cache
 chartName: k8s-dns-node-cache-app
 configKey: k8sDnsNodeCache
 enabled: true
-dependsOn: kyverno
+dependsOn: kyverno-crds
 namespace: kube-system
 # used by renovate
 # repo: giantswarm/k8s-dns-node-cache-app

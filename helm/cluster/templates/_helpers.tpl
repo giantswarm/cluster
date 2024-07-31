@@ -31,16 +31,10 @@ room for such suffix.
   - Common pre-defined labels from "cluster.labels.common" template,
   - Custom labels specified in .Values.global.metadata.labels.
 */}}
-{{- define "cluster.labels.common.all" }}
-{{ include "cluster.labels.common" $ }}
-{{- $labels := dict }}
-{{- if .Values.global.metadata.labels }}
-{{- $labels = .Values.global.metadata.labels }}
-{{- end }}
-{{- range $key, $val := $labels }}
-{{ $key }}: {{ $val | quote }}
-{{- end }}
-{{- end }}
+{{- define "cluster.labels.common.all" -}}
+{{ include "cluster.labels.common" $ -}}
+{{ include "cluster.labels.custom" $ -}}
+{{- end -}}
 
 {{/*
 Common labels
@@ -73,13 +67,13 @@ giantswarm.io/prevent-deletion: "true"
 {{- end }}
 {{- end }}
 
-{{- define "cluster.labels.custom" }}
+{{- define "cluster.labels.custom" -}}
 {{- if .Values.global.metadata.labels }}
 {{- range $key, $val := .Values.global.metadata.labels }}
 {{ $key }}: {{ $val | quote }}
-{{- end }}
-{{- end }}
-{{- end }}
+{{- end -}}
+{{- end -}}
+{{- end -}}
 
 {{/*
   Render all annotations that are common for all resources.

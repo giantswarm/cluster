@@ -7,8 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Apps: Add `observability-policies` v0.0.1. ([#283](https://github.com/giantswarm/cluster/pull/283))
+
 ### Changed
 
+- Use already existing helper function to render all common labels in the `MachineHealthCheck` CR.
+- Remove unnecessary new lines before and after the labels field in the CRs.
+- Apps: Depend on `kyverno-crds` instead of `kyverno`. ([#285](https://github.com/giantswarm/cluster/pull/285))
 - Set `kubeProxyReplacement` to `'true'` instead of deprecated value `strict` in cilium values.
 
 ## [1.0.0] - 2024-07-24

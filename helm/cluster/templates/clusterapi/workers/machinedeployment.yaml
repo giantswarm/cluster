@@ -14,8 +14,7 @@ metadata:
     {{- end }}
     {{- end }}
   labels:
-    {{- include "cluster.labels.common" $ | nindent 4 }}
-    {{- include "cluster.labels.custom" $ | indent 4 }}
+    {{- include "cluster.labels.common.all" $ | nindent 4 }}
     giantswarm.io/machine-deployment: {{ include "cluster.resource.name" $ }}-{{ $nodePoolName }}
     {{- if $nodePoolConfig.labels }}
     {{- range $key, $val := $nodePoolConfig.labels }}

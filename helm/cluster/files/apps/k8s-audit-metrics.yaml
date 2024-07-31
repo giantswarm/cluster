@@ -4,7 +4,7 @@ clusterValues:
   configMap: true
   secret: false
 dependsOnHelmRelease: true
-dependsOn: kyverno
+dependsOn: kyverno-crds
 namespace: kube-system
 # used by renovate
 # repo: giantswarm/k8s-audit-metrics
