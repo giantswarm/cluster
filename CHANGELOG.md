@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Use already existing helper function to render all common labels in the `MachineHealthCheck` CR.
+- Remove unnecessary new lines before and after the labels field in the CRs.
 
 ## [1.0.0] - 2024-07-24
 

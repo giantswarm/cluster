@@ -10,7 +10,7 @@ metadata:
     {{- $annotations | indent 4 }}
   {{- end }}
   labels:
-    {{- include "cluster.labels.common.all" $ | indent 4 }}
+    {{- include "cluster.labels.common.all" $ | nindent 4 }}
 spec:
   interval: 5m
   url: https://giantswarm.github.io/default-catalog
@@ -25,7 +25,7 @@ metadata:
     {{- $annotations | indent 4 }}
   {{- end }}
   labels:
-    {{- include "cluster.labels.common.all" $ | indent 4 }}
+    {{- include "cluster.labels.common.all" $ | nindent 4 }}
 spec:
   interval: 5m
   url: https://giantswarm.github.io/default-test-catalog
@@ -41,7 +41,7 @@ metadata:
     {{- $annotations | indent 4 }}
   {{- end }}
   labels:
-    {{- include "cluster.labels.common.all" $ | indent 4 }}
+    {{- include "cluster.labels.common.all" $ | nindent 4 }}
 spec:
   interval: 10m
   url: https://giantswarm.github.io/cluster-catalog
@@ -57,7 +57,7 @@ metadata:
     {{- $annotations | indent 4 }}
   {{- end }}
   labels:
-    {{- include "cluster.labels.common.all" $ | indent 4 }}
+    {{- include "cluster.labels.common.all" $ | nindent 4 }}
 spec:
   interval: 10m
   url: https://giantswarm.github.io/cluster-test-catalog

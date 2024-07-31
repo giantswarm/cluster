@@ -46,7 +46,7 @@ metadata:
     {{- $annotations | indent 4 }}
   {{- end }}
   labels:
-    {{- include "cluster.labels.common.all" $ | indent 4 }}
+    {{- include "cluster.labels.common.all" $ | nindent 4 }}
 spec:
   releaseName: {{ $appName }}
   targetNamespace: {{ $app.namespace }}
@@ -125,4 +125,3 @@ spec:
 {{- end }}
 {{- /* end outer range */}}
 {{- end }}
-
