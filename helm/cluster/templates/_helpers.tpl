@@ -394,7 +394,9 @@ Where `data` is the data to hash and `global` is the top level scope.
 {{- end }}
 
 {{/*
-  cluster.component.flatcar.version is a public named helper template that returns the Flatcar image variant. If the
+  DEPRECATED, use cluster.os.tooling.version instead.
+
+  cluster.component.flatcar.variant is a public named helper template that returns the Flatcar image variant. If the
   provider is using new Releases then the Flatcar image variant is obtained from the Release resources, otherwise it is
   obtained from Helm values.
 
@@ -412,5 +414,24 @@ Where `data` is the data to hash and `global` is the top level scope.
 {{- $.GiantSwarm.providerIntegration.osImage.variant }}
 {{- else }}
 {{- fail "Cannot determine Flatcar image variant" }}
+{{- end }}
+{{- end }}
+
+{{/*
+  cluster.os.tooling.version is a public named helper template that returns the OS tooling version.
+
+  If the provider is using new releases with the Release resource, then the OS tooling version is obtained from the
+  Release resource, otherwise it is obtained from the provider integration Helm values.
+*/}}
+{{- define "cluster.os.tooling.version" }}
+{{- $_ := include "cluster.internal.get-provider-integration-values" $ }}
+{{- $_ = include "cluster.internal.get-internal-values" $ }}
+{{- $renderWithoutReleaseResource := ((($.GiantSwarm.internal).ephemeralConfiguration).offlineTesting).renderWithoutReleaseResource | default false }}
+{{- if $.GiantSwarm.providerIntegration.useReleases }}
+    {{- $_ := set $ "componentName" "os-tooling" }}
+    {{- $osToolingVersion := include "cluster.component.version" $ | trimPrefix "v" }}
+    {{- $osToolingVersion }}
+{{- else if not $renderWithoutReleaseResource }}
+    {{- fail "Cannot determine OS tooling version" }}
 {{- end }}
 {{- end }}

@@ -2576,8 +2576,8 @@
                 },
                 "osImage": {
                     "type": "object",
-                    "title": "OS image",
-                    "description": "OS image properties",
+                    "title": "OS image (deprecated)",
+                    "description": "OS image Helm values have been deprecated. All OS-related information should now be obtained from the Release resource.",
                     "properties": {
                         "channel": {
                             "type": "string",
@@ -2594,9 +2594,15 @@
                             "type": "string",
                             "title": "Name"
                         },
+                        "toolingVersion": {
+                            "type": "string",
+                            "title": "Tooling version",
+                            "description": "Version of tooling that is used to build the OS image. In practice, this is the capi-image-builder version."
+                        },
                         "variant": {
                             "type": "string",
-                            "title": "Variant"
+                            "title": "Variant (deprecated)",
+                            "description": "The usage of variant has been deprecated, use toolingVersion instead. See cluster.component.os.tooling.version helper in order to use the new OS tooling version."
                         },
                         "version": {
                             "type": "string",
