@@ -431,6 +431,8 @@ Where `data` is the data to hash and `global` is the top level scope.
     {{- $_ := set $ "componentName" "os-tooling" }}
     {{- $osToolingVersion := include "cluster.component.version" $ | trimPrefix "v" }}
     {{- $osToolingVersion }}
+{{- else if $.GiantSwarm.providerIntegration.osImage }}
+    {{- $.GiantSwarm.providerIntegration.osImage.toolingVersion }}
 {{- else if not $renderWithoutReleaseResource }}
     {{- fail "Cannot determine OS tooling version" }}
 {{- end }}
