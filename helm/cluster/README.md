@@ -1,4 +1,9 @@
-# Values schema documentation
+# Cluster chart API documentation
+
+This document includes information about everything that is considered to be an API of the cluster chart, including
+Helm values and Helm helpers that can be used from other charts that include cluster chart as a subchart.
+
+## Values schema documentation
 
 This page lists all available configuration options, based on the [configuration values schema](values.schema.json).
 
@@ -912,3 +917,23 @@ Information about the workload cluster release.
 
 
 <!-- DOCS_END -->
+
+## Helm named templates
+
+All named templates that we have in the cluster chart can be divided into public, internal and test templates.
+
+Internal templates are those whose name has `cluster.internal.` prefix. Similarly, test templates are those with
+`cluster.test.` prefix in the name. All other named templates are public.
+
+This section contains the documentation for the public named templates. Templates are documented in multiple
+subsections, each covering a specific topic.
+
+### Operating system
+
+#### `cluster.os.tooling.version`
+
+Named template that returns the OS tooling version.
+
+If the provider is using new releases with the Release resource, then the OS tooling version is obtained from the
+Release resource, otherwise it is obtained from the provider integration Helm value
+`.Values.providerIntegration.osImage.toolingVersion`.
