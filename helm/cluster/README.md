@@ -930,6 +930,35 @@ subsections, each covering a specific topic.
 
 ### Operating system
 
+#### `cluster.os.name`
+
+Named template that returns the operating system name.
+
+It returns a fixed value "flatcar".
+
+cluster-\<provider\> charts should use this template when building the operating system image name.
+
+#### `cluster.os.releaseChannel`
+
+Named template that returns the operating system release channel.
+
+It returns "stable" for all providers by default.
+
+In case some provider temporarily needs to use a different OS release channel, the value can be overridden in the
+cluster-\<provider\> chart with cluster chart Helm value `.Values.providerIntegration.osImage.channel`. A change like
+this requires a new cluster-\<provider\> chart version and then a new workload cluster release version.
+
+cluster-\<provider\> charts should use this template when building the operating system image name.
+
+#### `cluster.os.version`
+
+Named template that returns the operating system version.
+
+If the provider is using the new releases with the Release resource, then the operating system version is obtained
+from the Release resource, otherwise it is obtained from the provider integration Helm value .
+
+cluster-\<provider\> charts should use this template when building the operating system image name.
+
 #### `cluster.os.tooling.version`
 
 Named template that returns the OS tooling version.
@@ -937,3 +966,5 @@ Named template that returns the OS tooling version.
 If the provider is using new releases with the Release resource, then the OS tooling version is obtained from the
 Release resource, otherwise it is obtained from the provider integration Helm value
 `.Values.providerIntegration.osImage.toolingVersion`.
+
+cluster-\<provider\> charts should use this template when building the operating system image name.
