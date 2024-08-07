@@ -532,6 +532,8 @@ providerIntegration:
   kubernetesVersion: 1.25.16
   pauseProperties:
     global.connectivity.vpcMode: private
+  osImage:
+    toolingVersion: 1.2.3
   resourcesApi:
     clusterResourceEnabled: true
     controlPlaneResourceEnabled: true
