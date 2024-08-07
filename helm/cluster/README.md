@@ -955,7 +955,7 @@ cluster-\<provider\> charts should use this template when building the operating
 Named template that returns the operating system version.
 
 If the provider is using the new releases with the Release resource, then the operating system version is obtained
-from the Release resource, otherwise it is obtained from the provider integration Helm value .
+from the Release resource, otherwise it is obtained from the provider integration Helm value `.Values.providerIntegration.osImage.version`.
 
 cluster-\<provider\> charts should use this template when building the operating system image name.
 
