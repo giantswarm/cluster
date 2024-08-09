@@ -1372,7 +1372,8 @@
                             "properties": {
                                 "allowAllEgress": {
                                     "type": "boolean",
-                                    "title": "Allow all egress",
+                                    "title": "Allow all egress (DEPRECATED)",
+                                    "description": "This flag has been deprecated. Currently the default value is false, which means that network-policies app will get installed. Setting this flag to true means that network-policies app is not installed, and that should not be done anymore.",
                                     "default": false
                                 },
                                 "pods": {

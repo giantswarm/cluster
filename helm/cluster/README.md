@@ -238,7 +238,7 @@ Configuration of connectivity and networking options.
 | `global.connectivity.bastion.enabled` | **Enable**|**Type:** `boolean`<br/>**Default:** `true`|
 | `global.connectivity.bastion.replicas` | **Number of hosts**|**Type:** `integer`<br/>**Default:** `1`|
 | `global.connectivity.network` | **Network**|**Type:** `object`<br/>|
-| `global.connectivity.network.allowAllEgress` | **Allow all egress**|**Type:** `boolean`<br/>**Default:** `false`|
+| `global.connectivity.network.allowAllEgress` | **Allow all egress (DEPRECATED)** - This flag has been deprecated. Currently the default value is false, which means that network-policies app will get installed. Setting this flag to true means that network-policies app is not installed, and that should not be done anymore.|**Type:** `boolean`<br/>**Default:** `false`|
 | `global.connectivity.network.pods` | **Pods**|**Type:** `object`<br/>|
 | `global.connectivity.network.pods.cidrBlocks` | **Pod subnets**|**Type:** `array`<br/>**Default:** `["100.64.0.0/12"]`|
 | `global.connectivity.network.pods.cidrBlocks[*]` | **Pod subnet** - IPv4 address range for pods, in CIDR notation.|**Type:** `string`<br/>**Example:** `"10.244.0.0/16"`<br/>|
