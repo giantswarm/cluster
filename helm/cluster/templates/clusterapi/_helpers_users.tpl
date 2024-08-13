@@ -1,9 +1,7 @@
 {{- define "cluster.internal.kubeadm.users" }}
-{{- if $.Values.providerIntegration.resourcesApi.bastionResourceEnabled }}
-{{- if .Values.global.connectivity.bastion.enabled }}
+{{- if or (and $.Values.providerIntegration.resourcesApi.bastionResourceEnabled .Values.global.connectivity.bastion.enabled) $.Values.providerIntegration.kubeadmConfig.users }}
 - name: giantswarm
   groups: sudo
   sudo: ALL=(ALL) NOPASSWD:ALL
-{{- end }}
 {{- end }}
 {{- end }}

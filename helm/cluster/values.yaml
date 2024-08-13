@@ -203,6 +203,7 @@ providerIntegration:
         additionalConfig:
           storage: {}
           systemd: {}
+    users: false
   kubernetesVersion: 1.25.16
   osImage:
     channel: stable

@@ -781,6 +781,7 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.kubeadmConfig.postKubeadmCommands[*]` |**None**|**Type:** `string`<br/>|
 | `providerIntegration.kubeadmConfig.preKubeadmCommands` | **Pre-kubeadm commands** - Extra commands to run before kubeadm runs.|**Type:** `array`<br/>|
 | `providerIntegration.kubeadmConfig.preKubeadmCommands[*]` |**None**|**Type:** `string`<br/>|
+| `providerIntegration.kubeadmConfig.users` | **Users** - If enabled, the giantswarm user will be created on all nodes.|**Type:** `boolean`<br/>**Default:** `false`|
 | `providerIntegration.kubernetesVersion` | **Kubernetes version**|**Type:** `string`<br/>**Default:** `"1.25.16"`|
 | `providerIntegration.osImage` | **OS image (deprecated)** - OS image Helm values have been deprecated. All OS-related information should now be obtained from the Release resource.|**Type:** `object`<br/>|
 | `providerIntegration.osImage.channel` | **Channel**|**Type:** `string`<br/>**Default:** `"stable"`|

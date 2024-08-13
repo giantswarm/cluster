@@ -2567,6 +2567,12 @@
                         },
                         "preKubeadmCommands": {
                             "$ref": "#/$defs/preKubeadmCommands"
+                        },
+                        "users": {
+                            "type": "boolean",
+                            "title": "Users",
+                            "description": "If enabled, the giantswarm user will be created on all nodes.",
+                            "default": false
                         }
                     }
                 },
