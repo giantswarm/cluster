@@ -198,6 +198,7 @@ providerIntegration:
       infrastructureMachineTemplate: {}
   environmentVariables: {}
   kubeadmConfig:
+    enableGiantswarmUser: false
     ignition:
       containerLinuxConfig:
         additionalConfig:

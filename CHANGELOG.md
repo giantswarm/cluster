@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add toggle to enable creation of `giantswarm` user on nodes.
+
 ### Changed
 
 - Deprecate usage of `.Values.global.connectivity.network.allowAllEgress`.
