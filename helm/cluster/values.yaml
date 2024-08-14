@@ -198,12 +198,12 @@ providerIntegration:
       infrastructureMachineTemplate: {}
   environmentVariables: {}
   kubeadmConfig:
+    enableGiantswarmUser: false
     ignition:
       containerLinuxConfig:
         additionalConfig:
           storage: {}
           systemd: {}
-    users: false
   kubernetesVersion: 1.25.16
   osImage:
     channel: stable

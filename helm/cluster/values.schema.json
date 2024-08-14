@@ -2551,6 +2551,12 @@
                     "description": "Provider-specific kubeadm config that is common for all nodes, including both control plane and workers.",
                     "additionalProperties": false,
                     "properties": {
+                        "enableGiantswarmUser": {
+                            "type": "boolean",
+                            "title": "Enable giantswarm User",
+                            "description": "If enabled, the giantswarm user will be created on all nodes.",
+                            "default": false
+                        },
                         "files": {
                             "type": "array",
                             "title": "Files",
@@ -2567,12 +2573,6 @@
                         },
                         "preKubeadmCommands": {
                             "$ref": "#/$defs/preKubeadmCommands"
-                        },
-                        "users": {
-                            "type": "boolean",
-                            "title": "Users",
-                            "description": "If enabled, the giantswarm user will be created on all nodes.",
-                            "default": false
                         }
                     }
                 },
