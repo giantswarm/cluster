@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Ensure SSH config is deployed to nodes when `giantswarm` user creation is enabled.
+
 ## [1.2.0] - 2024-08-14
 
 ### Added

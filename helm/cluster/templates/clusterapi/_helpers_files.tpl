@@ -45,8 +45,7 @@
 {{- end }}
 
 {{- define "cluster.internal.kubeadm.files.ssh" }}
-{{- if $.Values.providerIntegration.resourcesApi.bastionResourceEnabled }}
-{{- if .Values.global.connectivity.bastion.enabled }}
+{{- if or (and .Values.providerIntegration.resourcesApi.bastionResourceEnabled .Values.global.connectivity.bastion.enabled) .Values.providerIntegration.kubeadmConfig.enableGiantswarmUser }}
 - path: /etc/ssh/trusted-user-ca-keys.pem
   permissions: "0600"
   encoding: base64
@@ -55,7 +54,6 @@
   permissions: "0600"
   encoding: base64
   content: {{ $.Files.Get "files/etc/ssh/sshd_config" | b64enc }}
-{{- end }}
 {{- end }}
 {{- end }}
 
