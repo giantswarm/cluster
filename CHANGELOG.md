@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.1] - 2024-08-16
+
 ### Fixed
 
 - Ensure SSH config is deployed to nodes when `giantswarm` user creation is enabled.
@@ -589,7 +591,8 @@ For Kubernetes <v1.29, you will need to re-enable it using the respective values
 
 - Update and clean up the template repo.
 
-[Unreleased]: https://github.com/giantswarm/cluster/compare/v1.2.0...HEAD
+[Unreleased]: https://github.com/giantswarm/cluster/compare/v1.2.1...HEAD
+[1.2.1]: https://github.com/giantswarm/cluster/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/giantswarm/cluster/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/giantswarm/cluster/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/giantswarm/cluster/compare/v0.36.0...v1.0.0
