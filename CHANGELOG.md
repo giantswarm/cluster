@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Set `"cluster.component.kubernetes.version"` from release on MachineDeployments.
+
 ## [1.2.1] - 2024-08-16
 
 ### Fixed
