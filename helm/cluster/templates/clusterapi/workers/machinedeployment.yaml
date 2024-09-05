@@ -43,7 +43,7 @@ spec:
         {{- $_ := set $ "osImage" $.Values.providerIntegration.osImage }}
         {{- $_ = set $ "kubernetesVersion" $.Values.providerIntegration.kubernetesVersion }}
         name: {{ include "cluster.resource.name" $ }}-{{ $nodePoolName }}-{{ include "cluster.data.hash" (dict "data" (include $.Values.providerIntegration.workers.resources.infrastructureMachineTemplateSpecTemplateName $) "salt" $.Values.providerIntegration.hashSalt) }}
-      version: {{ $.Values.providerIntegration.kubernetesVersion }}
+      version: v{{ include "cluster.component.kubernetes.version" $ }}
       {{- if hasKey $nodePoolConfig "failureDomain" }}
       failureDomain: "{{ $nodePoolConfig.failureDomain }}"
       {{- end }}
