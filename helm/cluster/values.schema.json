@@ -1172,16 +1172,16 @@
                     "description": "Advanced configuration of components that are running on all nodes.",
                     "additionalProperties": false,
                     "properties": {
-                        "audit": {
+                        "auditd": {
                             "type": "object",
-                            "title": "Audit",
-                            "description": "Enable Audit rules service.",
+                            "title": "Auditd",
+                            "description": "Enable Auditd rules service.",
                             "additionalProperties": false,
                             "properties": {
                                 "enabled": {
                                     "type": "boolean",
                                     "title": "Enabled",
-                                    "description": "Whether or not the Audit rules service shall be enabled. When true, the Audit rules service is enabled. When false, the Audit rules service is disabled.",
+                                    "description": "Whether or not the Auditd rules service shall be enabled. When true, the Auditd rules service is enabled. When false, the Auditd rules service is disabled.",
                                     "default": false
                                 }
                             }

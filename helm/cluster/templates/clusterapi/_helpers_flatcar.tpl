@@ -181,7 +181,7 @@
       CPUAccounting=true
       MemoryAccounting=true
       Slice=kubereserved.slice
-{{- if $.Values.global.components.audit.enabled }}
+{{- if $.Values.global.components.auditd.enabled }}
 - name: audit-rules.service
   enabled: true
   dropins:

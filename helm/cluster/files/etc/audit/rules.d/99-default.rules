@@ -1,4 +1,4 @@
-{{- if ($.Values.global.components.audit).enabled -}}
+{{- if ($.Values.global.components.auditd).enabled -}}
 # Overridden by Giant Swarm.
 -a exit,always -F arch=b64 -S execve -k auditing
 -a exit,always -F arch=b32 -S execve -k auditing

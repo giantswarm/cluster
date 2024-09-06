@@ -27,7 +27,7 @@ global:
     verticalPodAutoscaler: {}
     verticalPodAutoscalerCrd: {}
   components:
-    audit:
+    auditd:
       enabled: false
     containerd:
       containerRegistries:
