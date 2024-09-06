@@ -181,6 +181,7 @@
       CPUAccounting=true
       MemoryAccounting=true
       Slice=kubereserved.slice
+{{- if $.Values.global.components.audit.enabled }}
 - name: audit-rules.service
   enabled: true
   dropins:
@@ -189,6 +190,7 @@
       [Service]
       ExecStartPre=/bin/bash -c "while [ ! -f /etc/audit/rules.d/containerd.rules ]; do echo 'Waiting for /etc/audit/rules.d/containerd.rules to be written' && sleep 1; done"
       Restart=on-failure
+{{- end }}
 {{- end }}
 
 {{- define "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units.teleport" }}

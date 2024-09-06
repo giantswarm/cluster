@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Allow to enable `audit-rules` service through `global.components.audit.enabled`.
+
 ## [1.2.2] - 2024-09-05
 
 ### Fixed
