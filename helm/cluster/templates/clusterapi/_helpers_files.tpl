@@ -121,7 +121,7 @@ and is used to join the node to the teleport cluster.
 
 {{/* Audit rules for all nodes */}}
 {{- define "cluster.internal.kubeadm.files.auditrules" }}
-{{- if $.Values.global.components.auditd.enabled -}}
+{{- if $.Values.global.components.auditd.enabled }}
 - path: /etc/audit/rules.d/99-default.rules
   permissions: "0640"
   encoding: base64

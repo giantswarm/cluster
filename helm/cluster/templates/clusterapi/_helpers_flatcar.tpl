@@ -190,7 +190,7 @@
       [Service]
       ExecStartPre=/bin/bash -c "while [ ! -f /etc/audit/rules.d/containerd.rules ]; do echo 'Waiting for /etc/audit/rules.d/containerd.rules to be written' && sleep 1; done"
       Restart=on-failure
-{{ else }}
+{{- else }}
 - name: auditd.service
   enabled: false
 {{- end }}
