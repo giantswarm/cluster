@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Allow configuring `kube-controller-manager` `--node-cidr-mask-size` flag.
+
 ## [1.3.0] - 2024-09-06
 
 ### Added
