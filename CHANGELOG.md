@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.35.1] - 2024-09-13
+
 ### Added
 
 - Allow configuring `kube-controller-manager` `--node-cidr-mask-size` flag.
@@ -607,7 +609,8 @@ For Kubernetes <v1.29, you will need to re-enable it using the respective values
 
 - Update and clean up the template repo.
 
-[Unreleased]: https://github.com/giantswarm/cluster/compare/v1.3.0...HEAD
+[Unreleased]: https://github.com/giantswarm/cluster/compare/v0.35.1...HEAD
+[0.35.1]: https://github.com/giantswarm/cluster/compare/v1.3.0...v0.35.1
 [1.3.0]: https://github.com/giantswarm/cluster/compare/v1.2.2...v1.3.0
 [1.2.2]: https://github.com/giantswarm/cluster/compare/v1.2.1...v1.2.2
 [1.2.1]: https://github.com/giantswarm/cluster/compare/v1.2.0...v1.2.1
