@@ -52,8 +52,9 @@ extraArgs:
   {{- end }}
   profiling: "false"
   runtime-config: api/all=true
-  {{- if .Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuer }}
-  service-account-issuer: "{{ include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.serviceAccountIssuer" $ }}"
+  {{- /* Additional `--service-account-issuer` values are applied via patch file (see `kube-apiserver1serviceaccountissuers+json.yaml.tpl`) if there are multiple such parameters. Since Kubernetes defaults to the parameter `--service-account-issuer=https://kubernetes.default.svc.cluster.local` (not desired), we must set the *first* issuer *here*. This becomes easier with the switch to v1beta4 kubeadm config which supports multiple parameters (array instead of map). */}}
+  {{- if .Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuers }}
+  service-account-issuer: {{ (include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.serviceAccountIssuer" (dict "Values" $.Values "Release" $.Release "serviceAccountIssuer" (.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuers | first))) | quote }}
   {{- end }}
   service-account-lookup: "true"
   service-cluster-ip-range: {{ .Values.global.connectivity.network.services.cidrBlocks | first }}
@@ -76,7 +77,7 @@ extraVolumes:
 {{- end }}
 {{- if $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.cloudConfig }}
 - name: cloud-config
-  hostPath: {{ $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.cloudConfig  }} 
+  hostPath: {{ $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.cloudConfig  }}
   mountPath: {{ $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.cloudConfig  }}
   readOnly: true
 {{- end }}
@@ -118,12 +119,12 @@ extraVolumes:
 {{- end }}
 
 {{- define "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.serviceAccountIssuer" }}
-{{- if .Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuer.clusterDomainPrefix -}}
-https://{{ .Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuer.clusterDomainPrefix }}.{{ include "cluster.resource.name" $ }}.{{ required "The baseDomain value is required" $.Values.global.connectivity.baseDomain }}
-{{- else if .Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuer.templateName -}}
-{{- include .Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuer.templateName $ -}}
+{{- if .serviceAccountIssuer.clusterDomainPrefix -}}
+https://{{ .serviceAccountIssuer.clusterDomainPrefix }}.{{ include "cluster.resource.name" $ }}.{{ required "The baseDomain value is required" $.Values.global.connectivity.baseDomain }}
+{{- else if .serviceAccountIssuer.templateName -}}
+{{- include .serviceAccountIssuer.templateName $ -}}
 {{- else -}}
-{{ .Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuer.url }}
+{{ .serviceAccountIssuer.url }}
 {{- end }}
 {{- end }}
 

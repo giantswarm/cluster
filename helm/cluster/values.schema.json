@@ -2370,70 +2370,70 @@
                                                 "featureGates": {
                                                     "$ref": "#/$defs/featureGates"
                                                 },
-                                                "serviceAccountIssuer": {
-                                                    "title": "Service account issuer",
-                                                    "description": "Configuration of the identifier of the service account token issuer. You must specify either URL or clusterDomainPrefix (only one, not both).",
-                                                    "oneOf": [
-                                                        {
-                                                            "type": "null"
-                                                        },
-                                                        {
-                                                            "type": "object",
-                                                            "additionalProperties": false,
-                                                            "properties": {
-                                                                "clusterDomainPrefix": {
-                                                                    "type": "string",
-                                                                    "title": "Cluster domain prefix",
-                                                                    "description": "Prefix that is prepended to the cluster domain name, so that resulting URL is used as the identifier of the service account token issuer."
-                                                                },
-                                                                "templateName": {
-                                                                    "type": "string",
-                                                                    "title": "Template name",
-                                                                    "description": "The name of the Helm template which renders the 'url' value"
-                                                                },
-                                                                "url": {
-                                                                    "type": "string",
-                                                                    "title": "URL",
-                                                                    "description": "This URL is used as the identifier of the service account token issuer."
-                                                                }
-                                                            },
-                                                            "oneOf": [
-                                                                {
-                                                                    "required": [
-                                                                        "url"
-                                                                    ],
-                                                                    "not": {
-                                                                        "required": [
-                                                                            "clusterDomainPrefix",
-                                                                            "templateName"
-                                                                        ]
+                                                "serviceAccountIssuers": {
+                                                    "type": "array",
+                                                    "title": "Service account issuers",
+                                                    "description": "Configuration of the identifier of the service account token issuer. For each issuer, you must specify either `url`, `clusterDomainPrefix` or `templateName`. The first issuer is used by Kubernetes to issue tokens, while the second and further issuers, if any, are trusted regarding tokens. Specifying multiple issuers can make sense for migrations.",
+                                                    "items": {
+                                                        "oneOf": [
+                                                            {
+                                                                "type": "object",
+                                                                "additionalProperties": false,
+                                                                "properties": {
+                                                                    "clusterDomainPrefix": {
+                                                                        "type": "string",
+                                                                        "title": "Cluster domain prefix",
+                                                                        "description": "Prefix that is prepended to the cluster domain name, so that resulting URL is used as the identifier of the service account token issuer."
+                                                                    },
+                                                                    "templateName": {
+                                                                        "type": "string",
+                                                                        "title": "Template name",
+                                                                        "description": "The name of the Helm template which renders the 'url' value"
+                                                                    },
+                                                                    "url": {
+                                                                        "type": "string",
+                                                                        "title": "URL",
+                                                                        "description": "This URL is used as the identifier of the service account token issuer."
                                                                     }
                                                                 },
-                                                                {
-                                                                    "required": [
-                                                                        "clusterDomainPrefix"
-                                                                    ],
-                                                                    "not": {
+                                                                "oneOf": [
+                                                                    {
                                                                         "required": [
-                                                                            "url",
-                                                                            "templateName"
-                                                                        ]
-                                                                    }
-                                                                },
-                                                                {
-                                                                    "required": [
-                                                                        "templateName"
-                                                                    ],
-                                                                    "not": {
+                                                                            "url"
+                                                                        ],
+                                                                        "not": {
+                                                                            "required": [
+                                                                                "clusterDomainPrefix",
+                                                                                "templateName"
+                                                                            ]
+                                                                        }
+                                                                    },
+                                                                    {
                                                                         "required": [
-                                                                            "url",
                                                                             "clusterDomainPrefix"
-                                                                        ]
+                                                                        ],
+                                                                        "not": {
+                                                                            "required": [
+                                                                                "url",
+                                                                                "templateName"
+                                                                            ]
+                                                                        }
+                                                                    },
+                                                                    {
+                                                                        "required": [
+                                                                            "templateName"
+                                                                        ],
+                                                                        "not": {
+                                                                            "required": [
+                                                                                "url",
+                                                                                "clusterDomainPrefix"
+                                                                            ]
+                                                                        }
                                                                     }
-                                                                }
-                                                            ]
-                                                        }
-                                                    ]
+                                                                ]
+                                                            }
+                                                        ]
+                                                    }
                                                 }
                                             },
                                             "default": {}
