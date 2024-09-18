@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Chart: Allow to enable `auditd` service through `global.components.auditd.enabled`.
+- Chart: Allow configuring `node-cidr-mask-size` flag on `kube-controller-manager`.
 
 ## [1.0.0] - 2024-07-24
 
