@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Chart: Allow to enable `auditd` service through `global.components.auditd.enabled`.
+
 ## [0.35.1] - 2024-09-13
 
 ### Added
