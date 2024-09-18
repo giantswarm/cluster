@@ -79,6 +79,14 @@
   encoding: base64
   content: {{ tpl ($.Files.Get "files/etc/ssl/certs/oidc.pem") . | b64enc }}
 {{- end }}
+{{- if .Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuers }}
+{{- if gt (len .Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuers) 1 }}
+- path: /etc/kubernetes/patches/kube-apiserver1serviceaccountissuers+json.yaml
+  permissions: "0644"
+  encoding: base64
+  content: {{ tpl ($.Files.Get "files/etc/kubernetes/patches/kube-apiserver1serviceaccountissuers+json.yaml.tpl") . | b64enc }}
+{{- end }}
+{{- end }}
 {{- end }}
 
 {{/* Provider-specific files for control plane nodes */}}
