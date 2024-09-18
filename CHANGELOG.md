@@ -11,6 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Chart: Allow to enable `auditd` service through `global.components.auditd.enabled`.
 
+### Changed
+
+- Chart: Support multiple service account issuers.\
+  Change `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuer` to plural `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuers` and render them in the specified order as `--service-account-issuer` parameters for the API server.
+
 ## [0.35.1] - 2024-09-13
 
 ### Added
