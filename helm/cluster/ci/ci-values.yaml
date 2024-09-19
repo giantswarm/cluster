@@ -373,8 +373,9 @@ providerIntegration:
           featureGates:
           - name: DownwardAPIHugePages
             enabled: false
-          serviceAccountIssuer:
-            clusterDomainPrefix: irsa
+          serviceAccountIssuers:
+            - clusterDomainPrefix: irsa
+            - url: http://secondary.issuer.example.org
       files:
       - path: /etc/aws/control-plane/node/file.yaml
         permissions: "0644"

@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Allow configuring `kube-controller-manager` `--node-cidr-mask-size` flag.
+- Chart: Support multiple service account issuers.\
+  Change `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuer` to plural `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuers` and render them in the specified order as `--service-account-issuer` parameters for the API server.
 
 ## [1.3.0] - 2024-09-06
 
