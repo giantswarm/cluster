@@ -12,6 +12,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Chart: Allow to enable `auditd` service through `global.components.auditd.enabled`.
 - Chart: Allow configuring `node-cidr-mask-size` flag on `kube-controller-manager`.
 
+### Changed
+
+- Chart: Support multiple service account issuers.\
+  Change `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuer` to plural `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuers` and render them in the specified order as `--service-account-issuer` parameters for the API server.
+
 ## [1.0.0] - 2024-07-24
 
 ### Changed
