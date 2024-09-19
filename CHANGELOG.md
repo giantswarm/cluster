@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.1] - 2024-09-19
+
 ### Added
 
 - Chart: Allow to enable `auditd` service through `global.components.auditd.enabled`.
@@ -566,7 +568,8 @@ For Kubernetes <v1.29, you will need to re-enable it using the respective values
 
 - Update and clean up the template repo.
 
-[Unreleased]: https://github.com/giantswarm/cluster/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/giantswarm/cluster/compare/v1.0.1...HEAD
+[1.0.1]: https://github.com/giantswarm/cluster/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/giantswarm/cluster/compare/v0.36.0...v1.0.0
 [0.36.0]: https://github.com/giantswarm/cluster/compare/v0.35.0...v0.36.0
 [0.35.0]: https://github.com/giantswarm/cluster/compare/v0.34.1...v0.35.0
