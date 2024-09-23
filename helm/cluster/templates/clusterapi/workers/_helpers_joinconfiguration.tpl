@@ -22,7 +22,7 @@ nodeRegistration:
     {{- end }}
     healthz-bind-address: 0.0.0.0
     node-ip: {{ printf "${%s}" $.Values.providerIntegration.environmentVariables.ipv4 }}
-    node-labels: ip={{ printf "${%s}" $.Values.providerIntegration.environmentVariables.ipv4 }},role=worker,giantswarm.io/machine-pool={{ include "cluster.resource.name" $ }}-{{ $nodePool.name }},{{- join "," $nodePool.config.customNodeLabels }}
+    node-labels: ip={{ printf "${%s}" $.Values.providerIntegration.environmentVariables.ipv4 }},role=worker,giantswarm.io/machine-pool={{ include "cluster.resource.name" $ }}-{{ $nodePool.name }}{{- if $nodePool.config.customNodeLabels }},{{ join "," $nodePool.config.customNodeLabels }}{{- end }}
     v: "2"
   {{- if $nodePool.config.customNodeTaints }}
   taints:
