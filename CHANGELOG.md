@@ -13,6 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Chart: Support multiple service account issuers.\
   Change `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuer` to plural `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuers` and render them in the specified order as `--service-account-issuer` parameters for the API server.
 
+### Changed
+
+- Only add the `customNodeLabels` value to the kubelet `node-labels` argument in the `KubeadmConfig` when `customNodeLabels` is defined.
+
 ## [1.3.0] - 2024-09-06
 
 ### Added
