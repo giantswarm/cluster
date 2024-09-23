@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Remove deprecation message for `customNodeLabels` and `customNodeTaints`, because they are not deprecated.
+
 ## [1.4.0] - 2024-09-23
 
 ### Added
