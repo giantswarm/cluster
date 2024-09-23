@@ -412,9 +412,9 @@ Properties within the `.global.nodePools` object
 | `global.nodePools.PATTERN` | **Node pool**|**Type:** `object`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
 | `global.nodePools.PATTERN.annotations` | **Annotations** - These annotations are added to all Kubernetes resources defining this node pool.|**Type:** `object`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
 | `global.nodePools.PATTERN.annotations.PATTERN_2` | **Annotation**|**Type:** `string`<br/>**Key patterns:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>`PATTERN_2`=`^([a-zA-Z0-9/\.-]{1,253}/)?[a-zA-Z0-9/\._-]{1,63}$`<br/>|
-| `global.nodePools.PATTERN.customNodeLabels` | **Node labels. Deprecated: use nodeLabels instead.** - Labels that are passed to kubelet argument 'node-labels'.|**Type:** `array`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
+| `global.nodePools.PATTERN.customNodeLabels` | **Node labels** - Labels that are passed to kubelet argument 'node-labels'.|**Type:** `array`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
 | `global.nodePools.PATTERN.customNodeLabels[*]` | **Label**|**Type:** `string`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
-| `global.nodePools.PATTERN.customNodeTaints` | **Custom node taints. Deprecated: use nodeTaints instead.**|**Type:** `array`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
+| `global.nodePools.PATTERN.customNodeTaints` | **Custom node taints**|**Type:** `array`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
 | `global.nodePools.PATTERN.customNodeTaints[*]` |**None**|**Type:** `object`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
 | `global.nodePools.PATTERN.customNodeTaints[*].effect` | **Effect**|**Type:** `string`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
 | `global.nodePools.PATTERN.customNodeTaints[*].key` | **Key**|**Type:** `string`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
@@ -820,9 +820,9 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.workers.defaultNodePools.PATTERN` | **Node pool**|**Type:** `object`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
 | `providerIntegration.workers.defaultNodePools.PATTERN.annotations` | **Annotations** - These annotations are added to all Kubernetes resources defining this node pool.|**Type:** `object`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
 | `providerIntegration.workers.defaultNodePools.PATTERN.annotations.PATTERN_2` | **Annotation**|**Type:** `string`<br/>**Key patterns:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>`PATTERN_2`=`^([a-zA-Z0-9/\.-]{1,253}/)?[a-zA-Z0-9/\._-]{1,63}$`<br/>|
-| `providerIntegration.workers.defaultNodePools.PATTERN.customNodeLabels` | **Node labels. Deprecated: use nodeLabels instead.** - Labels that are passed to kubelet argument 'node-labels'.|**Type:** `array`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
+| `providerIntegration.workers.defaultNodePools.PATTERN.customNodeLabels` | **Node labels** - Labels that are passed to kubelet argument 'node-labels'.|**Type:** `array`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
 | `providerIntegration.workers.defaultNodePools.PATTERN.customNodeLabels[*]` | **Label**|**Type:** `string`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
-| `providerIntegration.workers.defaultNodePools.PATTERN.customNodeTaints` | **Custom node taints. Deprecated: use nodeTaints instead.**|**Type:** `array`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
+| `providerIntegration.workers.defaultNodePools.PATTERN.customNodeTaints` | **Custom node taints**|**Type:** `array`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
 | `providerIntegration.workers.defaultNodePools.PATTERN.customNodeTaints[*]` |**None**|**Type:** `object`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
 | `providerIntegration.workers.defaultNodePools.PATTERN.customNodeTaints[*].effect` | **Effect**|**Type:** `string`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
 | `providerIntegration.workers.defaultNodePools.PATTERN.customNodeTaints[*].key` | **Key**|**Type:** `string`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|

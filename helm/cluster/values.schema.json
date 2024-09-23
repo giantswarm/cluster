@@ -758,7 +758,7 @@
                 },
                 "customNodeLabels": {
                     "type": "array",
-                    "title": "Node labels. Deprecated: use nodeLabels instead.",
+                    "title": "Node labels",
                     "description": "Labels that are passed to kubelet argument 'node-labels'.",
                     "items": {
                         "type": "string",
@@ -767,7 +767,7 @@
                 },
                 "customNodeTaints": {
                     "type": "array",
-                    "title": "Custom node taints. Deprecated: use nodeTaints instead.",
+                    "title": "Custom node taints",
                     "items": {
                         "type": "object",
                         "required": [
