@@ -1,5 +1,7 @@
 {{- define "cluster.internal.workers.kubeadm.files" }}
 {{- include "cluster.internal.kubeadm.files" $ }}
+{{- include "cluster.internal.kubeadm.files.cgroupv1" $ }}
+{{- include "cluster.internal.workers.kubeadm.files.cri" $ }}
 {{- include "cluster.internal.workers.kubeadm.files.provider" $ }}
 {{- include "cluster.internal.workers.kubeadm.files.custom" $ }}
 {{- include "cluster.internal.workers.kubeadm.files.cloudConfig" $ }}
@@ -32,4 +34,16 @@
       key: worker-node-{{ $.Values.providerIntegration.provider }}.json
   owner: root:root
 {{- end }}
+{{- end }}
+
+{{/* containerd configuration for the worker nodes
+When we don't support cgroups v1 anymore we can get rid of the logic to generate different configuration for
+different node pools, and use the same cgroups configuration in the containerd config file both for workers and control plane nodes */}}
+{{- define "cluster.internal.workers.kubeadm.files.cri" }}
+- path: /etc/containerd/config.toml
+  permissions: "0644"
+  contentFrom:
+    secret:
+      name: {{ include "cluster.resource.name" $ }}-{{ $.nodePool.name }}-containerd-{{ include "cluster.data.hash" (dict "data" (tpl ($.Files.Get "files/etc/containerd/workers-config.toml") $) "salt" $.Values.providerIntegration.hashSalt) }}
+      key: config.toml
 {{- end }}

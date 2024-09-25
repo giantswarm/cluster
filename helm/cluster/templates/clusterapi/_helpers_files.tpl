@@ -2,9 +2,7 @@
 {{- include "cluster.internal.kubeadm.files.sysctl" $ }}
 {{- include "cluster.internal.kubeadm.files.selinux" $ }}
 {{- include "cluster.internal.kubeadm.files.systemd" $ }}
-{{- include "cluster.internal.kubeadm.files.cgroupv1" $ }}
 {{- include "cluster.internal.kubeadm.files.ssh" $ }}
-{{- include "cluster.internal.kubeadm.files.cri" $ }}
 {{- include "cluster.internal.kubeadm.files.kubelet" $ }}
 {{- include "cluster.internal.kubeadm.files.proxy" $ }}
 {{- include "cluster.internal.kubeadm.files.teleport" $ }}
@@ -37,7 +35,7 @@
 {{- end }}
 
 {{- define "cluster.internal.kubeadm.files.cgroupv1" }}
-{{- if $.Values.internal.advancedConfiguration.cgroupsv1 }}
+{{- if $.nodePool.config.cgroupsv1 }}
 - path: /etc/flatcar-cgroupv1
   filesystem: root
   permissions: "0444"
@@ -55,15 +53,6 @@
   encoding: base64
   content: {{ $.Files.Get "files/etc/ssh/sshd_config" | b64enc }}
 {{- end }}
-{{- end }}
-
-{{- define "cluster.internal.kubeadm.files.cri" }}
-- path: /etc/containerd/config.toml
-  permissions: "0644"
-  contentFrom:
-    secret:
-      name: {{ include "cluster.resource.name" $ }}-containerd-{{ include "cluster.data.hash" (dict "data" (tpl ($.Files.Get "files/etc/containerd/config.toml") $) "salt" $.Values.providerIntegration.hashSalt) }}
-      key: config.toml
 {{- end }}
 
 {{- define "cluster.internal.kubeadm.files.kubelet" }}
