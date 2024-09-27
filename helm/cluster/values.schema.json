@@ -926,6 +926,38 @@
                                 }
                             }
                         },
+                        "service": {
+                            "type": "object",
+                            "title": "Service",
+                            "description": "Configuration of the [Service] section.",
+                            "required": [
+                                "type",
+                                "remainAfterExit"
+                            ],
+                            "additionalProperties": false,
+                            "properties": {
+                                "type": {
+                                    "type": "string",
+                                    "title": "Type",
+                                    "description": "systemd service Type."
+                                },
+                                "additionalFields": {
+                                    "type": "string",
+                                    "title": "AdditionalFields",
+                                    "description": "any extra fields to add to the systemd [Service] section."
+                                },
+                                "execStart": {
+                                    "type": "string",
+                                    "title": "ExecStart",
+                                    "description": "systemd service ExecStart."
+                                },
+                                "remainAfterExit": {
+                                    "type": "string",
+                                    "title": "RemainAfterExit",
+                                    "description": "systemd service RemainAfterExit."
+                                }
+                            }
+                        },
                         "unit": {
                             "type": "object",
                             "title": "Unit",
@@ -939,6 +971,16 @@
                                     "type": "string",
                                     "title": "Description",
                                     "description": "systemd unit description."
+                                },
+                                "after": {
+                                    "type": "string",
+                                    "title": "After",
+                                    "description": "systemd unit After."
+                                },
+                                "bindsTo": {
+                                    "type": "string",
+                                    "title": "BindsTo",
+                                    "description": "systemd unit BindsTo."
                                 },
                                 "defaultDependencies": {
                                     "type": "boolean",

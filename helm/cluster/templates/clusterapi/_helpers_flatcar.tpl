@@ -21,6 +21,23 @@
     {{- if hasKey .contents.unit "defaultDependencies" }}
     DefaultDependencies={{ if .contents.unit.defaultDependencies }}yes{{ else }}no{{ end }}
     {{- end }}
+    {{- if hasKey .contents.unit "after" }}
+    After={{ .contents.unit.after }}
+    {{- end }}
+    {{- if hasKey .contents.unit "bindsTo" }}
+    BindsTo={{ .contents.unit.bindsTo }}
+    {{- end }}
+    {{- end }}
+    {{- if .contents.service }}
+    [Service]
+    Type={{ .contents.service.type }}
+    RemainAfterExit={{ .contents.service.remainAfterExit }}
+    {{- if hasKey .contents.service "execStart" }}
+    ExecStart={{ .contents.service.execStart }}
+    {{- end }}
+    {{- if hasKey .contents.service "additionalFields" }}
+    {{ tpl .contents.service.additionalFields $ | nindent 4 }}
+    {{- end }}
     {{- end }}
     {{- if .contents.mount }}
     [Mount]
