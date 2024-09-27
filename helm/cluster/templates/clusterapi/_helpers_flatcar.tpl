@@ -22,7 +22,19 @@
     DefaultDependencies={{ if .contents.unit.defaultDependencies }}yes{{ else }}no{{ end }}
     {{- end }}
     {{- if .contents.unit.after }}
-    After={{ .contents.unit.after }}
+    {{- range $after := .contents.unit.after }}
+    After={{ $after }}
+    {{- end }}
+    {{- end }}
+    {{- if .contents.unit.requires }}
+    {{- range $requires := .contents.unit.requires }}
+    Requires={{ $requires }}
+    {{- end }}
+    {{- end }}
+    {{- if .contents.unit.wants }}
+    {{- range $wants := .contents.unit.wants }}
+    Wants={{ $wants }}
+    {{- end }}
     {{- end }}
     {{- if .contents.unit.bindsTo }}
     BindsTo={{ .contents.unit.bindsTo }}

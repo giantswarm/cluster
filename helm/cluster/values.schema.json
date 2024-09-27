@@ -973,9 +973,12 @@
                                     "description": "systemd unit description."
                                 },
                                 "after": {
-                                    "type": "string",
+                                    "type": "array",
                                     "title": "After",
-                                    "description": "systemd unit After."
+                                    "description": "systemd unit After.",
+                                    "items": {
+                                        "type": "string"
+                                    }
                                 },
                                 "bindsTo": {
                                     "type": "string",
@@ -986,6 +989,22 @@
                                     "type": "boolean",
                                     "title": "DefaultDependencies",
                                     "description": "Flag that indicates if this systemd unit should have the default systemd unit dependencies."
+                                },
+                                "requires": {
+                                    "type": "array",
+                                    "title": "Requires",
+                                    "description": "systemd unit Requires.",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                },
+                                "wants": {
+                                    "type": "array",
+                                    "title": "Wants",
+                                    "description": "systemd unit Wants.",
+                                    "items": {
+                                        "type": "string"
+                                    }
                                 }
                             }
                         }
