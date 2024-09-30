@@ -758,7 +758,7 @@
                 },
                 "cgroupsv1": {
                     "type": "boolean",
-                    "title": "cgroups v1",
+                    "title": "Cgroups v1",
                     "description": "Flag that indicates if cgroups v1 should be used.",
                     "default": false
                 },
@@ -1695,7 +1695,7 @@
                         },
                         "cgroupsv1": {
                             "type": "boolean",
-                            "title": "cgroups v1",
+                            "title": "Cgroups v1",
                             "description": "Force use of cgroups v1 for whole cluster. Deprecated: Use the node pool level setting instead.",
                             "default": false
                         },
