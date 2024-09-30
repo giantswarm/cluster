@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Chart: Add OS tooling named template.
+  - `cluster.os.name` named template that returns the operating system name.
+  - `cluster.os.releaseChannel` named template that returns the operating system release channel.
+  - `cluster.os.version` named template that returns the operating system version.
+  - `cluster.os.tooling.version` named template which is used to obtain the OS tooling (capi-image-builder) version.
+
+### Changed
+
+- Chart: Add OS tooling named template.
+  - Deprecate `cluster.component.flatcar.version` named template in favor of `cluster.os.version`.
+
 ## [1.0.1] - 2024-09-19
 
 ### Added

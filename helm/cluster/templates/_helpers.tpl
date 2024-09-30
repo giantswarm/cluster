@@ -378,6 +378,8 @@ Where `data` is the data to hash and `global` is the top level scope.
 {{- end }}
 
 {{/*
+  DEPRECATED, use cluster.os.version instead.
+
   cluster.component.flatcar.version is a public named helper template that returns the Flatcar version. If the
   provider is using new Releases then the Flatcar version is obtained from the Release resources, otherwise it is
   obtained from Helm values.
@@ -400,7 +402,9 @@ Where `data` is the data to hash and `global` is the top level scope.
 {{- end }}
 
 {{/*
-  cluster.component.flatcar.version is a public named helper template that returns the Flatcar image variant. If the
+  DEPRECATED, use cluster.os.tooling.version instead.
+
+  cluster.component.flatcar.variant is a public named helper template that returns the Flatcar image variant. If the
   provider is using new Releases then the Flatcar image variant is obtained from the Release resources, otherwise it is
   obtained from Helm values.
 
@@ -418,5 +422,72 @@ Where `data` is the data to hash and `global` is the top level scope.
 {{- $.GiantSwarm.providerIntegration.osImage.variant }}
 {{- else }}
 {{- fail "Cannot determine Flatcar image variant" }}
+{{- end }}
+{{- end }}
+
+{{/*
+  cluster.os.name is a public named template that returns the operating system name.
+
+  It returns a fixed value "flatcar".
+
+  cluster-\<provider\> charts should use this template when building the operating system image name.
+*/}}
+{{- define "cluster.os.name" }}
+{{- print "flatcar" }}
+{{- end }}
+
+{{/*
+  cluster.os.releaseChannel is a public named template that returns the operating system release channel.
+
+  It returns "stable" for all providers by default.
+
+  In case some provider temporarily needs to use a different OS release channel, the value can be overridden in the
+  cluster-<provider> chart with cluster chart Helm value .Values.providerIntegration.osImage.channel. A change like this
+  requires a new cluster-<provider> chart version and then a new workload cluster release version.
+
+  cluster-\<provider\> charts should use this template when building the operating system image name.
+*/}}
+{{- define "cluster.os.releaseChannel" }}
+{{- $_ := include "cluster.internal.get-provider-integration-values" $ }}
+{{- $.GiantSwarm.providerIntegration.osImage.channel | default "stable" }}
+{{- end }}
+
+{{/*
+  cluster.os.version is a public named template that returns the operating system version.
+
+  If the provider is using the new releases with the Release resource, then the operating system version is obtained
+  from the Release resource, otherwise it is obtained from the provider integration Helm value.
+
+  Example usage in template:
+
+    version: {{ include "cluster.os.version" $ }}
+
+  cluster-\<provider\> charts should use this template when building the operating system image name.
+*/}}
+{{- define "cluster.os.version" }}
+{{- include "cluster.component.flatcar.version" $ }}
+{{- end }}
+
+{{/*
+  cluster.os.tooling.version is a public named template that returns the OS tooling version.
+
+  If the provider is using the new releases with the Release resource, then the OS tooling version is obtained from the
+  Release resource, otherwise it is obtained from the provider integration Helm value
+  .Values.providerIntegration.osImage.toolingVersion.
+
+  cluster-\<provider\> charts should use this template when building the operating system image name.
+*/}}
+{{- define "cluster.os.tooling.version" }}
+{{- $_ := include "cluster.internal.get-provider-integration-values" $ }}
+{{- $_ = include "cluster.internal.get-internal-values" $ }}
+{{- $renderWithoutReleaseResource := ((($.GiantSwarm.internal).ephemeralConfiguration).offlineTesting).renderWithoutReleaseResource | default false }}
+{{- if $.GiantSwarm.providerIntegration.useReleases }}
+    {{- $_ := set $ "componentName" "os-tooling" }}
+    {{- $osToolingVersion := include "cluster.component.version" $ | trimPrefix "v" }}
+    {{- $osToolingVersion }}
+{{- else if $.GiantSwarm.providerIntegration.osImage }}
+    {{- $.GiantSwarm.providerIntegration.osImage.toolingVersion }}
+{{- else if not $renderWithoutReleaseResource }}
+    {{- fail "Cannot determine OS tooling version" }}
 {{- end }}
 {{- end }}
