@@ -1,14 +1,11 @@
 {{/*
-CAPA reconciliation currently has a shortcoming that doesn't lead to rolling AWSMachinePool nodes
-if the referenced `KubeadmConfig` changes (such as `KubeadmConfig.spec.{files,preKubeadmCommands,...}`).
-While not solved by our long-term involvement in this bug, we hash `KubeadmConfig.spec` and rename
-the `KubeadmConfig` name since that enforces a new bootstrap secret name, triggering a rollout of
-nodes in CAPA's `AWSMachinePool` reconciler. Mind that CAPI also has a bug where CAPA only
-gets triggered after a few minutes.
-
-All of this is detailed in https://github.com/giantswarm/roadmap/issues/2217 and
-https://github.com/kubernetes-sigs/cluster-api/issues/8858, so please follow
-the issues to find out when we can get rid of our own checksum workaround.
+CAPA reconciliation does not roll AWSMachinePool nodes if the referenced `KubeadmConfig` changes
+(such as `KubeadmConfig.spec.{files,preKubeadmCommands,...}`).
+We append a hash of `KubeadmConfig.spec` to the `KubeadmConfig` name since that enforces a new bootstrap
+secret name, triggering a rollout of nodes in CAPA's `AWSMachinePool` reconciler.
+See https://github.com/giantswarm/roadmap/issues/2217 and
+https://github.com/kubernetes-sigs/cluster-api/issues/8858 – detecting a changed data secret name
+became a feature and we need to keep the hashing in place.
 
 Full-line comments are excluded from the hash so that simple changes will not lead to
 node rollouts and thus possibly interruped workloads for customers.
