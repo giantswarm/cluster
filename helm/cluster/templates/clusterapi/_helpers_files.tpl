@@ -34,14 +34,6 @@
 {{- end }}
 {{- end }}
 
-{{- define "cluster.internal.kubeadm.files.cgroupv1" }}
-{{- if $.nodePool.config.cgroupsv1 }}
-- path: /etc/flatcar-cgroupv1
-  filesystem: root
-  permissions: "0444"
-{{- end }}
-{{- end }}
-
 {{- define "cluster.internal.kubeadm.files.ssh" }}
 {{- if or (and .Values.providerIntegration.resourcesApi.bastionResourceEnabled .Values.global.connectivity.bastion.enabled) .Values.providerIntegration.kubeadmConfig.enableGiantswarmUser }}
 - path: /etc/ssh/trusted-user-ca-keys.pem

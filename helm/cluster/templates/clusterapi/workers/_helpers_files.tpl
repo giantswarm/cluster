@@ -1,6 +1,6 @@
 {{- define "cluster.internal.workers.kubeadm.files" }}
 {{- include "cluster.internal.kubeadm.files" $ }}
-{{- include "cluster.internal.kubeadm.files.cgroupv1" $ }}
+{{- include "cluster.internal.workers.kubeadm.files.cgroupv1" $ }}
 {{- include "cluster.internal.workers.kubeadm.files.cri" $ }}
 {{- include "cluster.internal.workers.kubeadm.files.provider" $ }}
 {{- include "cluster.internal.workers.kubeadm.files.custom" $ }}
@@ -46,4 +46,13 @@ different node pools, and use the same cgroups configuration in the containerd c
     secret:
       name: {{ include "cluster.resource.name" $ }}-{{ $.nodePool.name }}-containerd-{{ include "cluster.data.hash" (dict "data" (tpl ($.Files.Get "files/etc/containerd/workers-config.toml") $) "salt" $.Values.providerIntegration.hashSalt) }}
       key: config.toml
+{{- end }}
+
+{{/* flatcare configuration to use cgroupsv1 for the worker nodes. When we don't support cgroups v1 anymore we can remove it */}}
+{{- define "cluster.internal.workers.kubeadm.files.cgroupv1" }}
+{{- if $.nodePool.config.cgroupsv1 }}
+- path: /etc/flatcar-cgroupv1
+  filesystem: root
+  permissions: "0444"
+{{- end }}
 {{- end }}
