@@ -289,7 +289,7 @@ For Giant Swarm internal use only, not stable, or not supported by UIs.
 | `internal.advancedConfiguration` | **Advanced configuration** - Advanced configuration of cluster components, to be configured by Giant Swarm staff only.|**Type:** `object`<br/>|
 | `internal.advancedConfiguration.appPlatform` | **App Platform** - Advanced configuration of App Platform.|**Type:** `object`<br/>|
 | `internal.advancedConfiguration.appPlatform.fluxBackend` | **Flux Backend** - Use Flux as App Platform backend for installing apps.|**Type:** `boolean`<br/>**Default:** `false`|
-| `internal.advancedConfiguration.cgroupsv1` | **CGroups v1** - Force use of CGroups v1 for whole cluster. Deprecated: use the node pool setting instead.|**Type:** `boolean`<br/>**Default:** `false`|
+| `internal.advancedConfiguration.cgroupsv1` | **Cgroups v1** - Force use of cgroups v1 for whole cluster. Deprecated: Use the node pool level setting instead.|**Type:** `boolean`<br/>**Default:** `false`|
 | `internal.advancedConfiguration.controlPlane` | **Control plane** - Advanced configuration of control plane components.|**Type:** `object`<br/>|
 | `internal.advancedConfiguration.controlPlane.apiServer` | **API server** - Advanced configuration of API server.|**Type:** `object`<br/>|
 | `internal.advancedConfiguration.controlPlane.apiServer.additionalAdmissionPlugins` | **Additional admission plugins** - A list of plugins to enable, in addition to the default ones that include DefaultStorageClass, DefaultTolerationSeconds, LimitRanger, MutatingAdmissionWebhook, NamespaceLifecycle, PersistentVolumeClaimResize, Priority, ResourceQuota, ServiceAccount and ValidatingAdmissionWebhook.|**Type:** `array`<br/>|
