@@ -5,7 +5,7 @@
 {{- end }}
 
 {{- define "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units" }}
-{{- range . }}
+{{- range .units }}
 - name: {{ .name }}
   {{- if hasKey . "enabled" }}
   enabled: {{ .enabled }}
