@@ -55,7 +55,9 @@
     Type={{ .contents.service.type }}
     RemainAfterExit={{ .contents.service.remainAfterExit }}
     {{- if .contents.service.execStart }}
-    ExecStart={{ .contents.service.execStart }}
+    {{- range $execStart := .contents.service.execStart }}
+    ExecStart={{ $execStart }}
+    {{- end }}
     {{- end }}
     {{- if .contents.service.additionalFields }}
     {{ tpl .contents.service.additionalFields $ | nindent 4 }}

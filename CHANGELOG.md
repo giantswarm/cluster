@@ -14,6 +14,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support for passing Helm templating from provider chart values through to systemd unit templates
 - Added support for `Before` and `PartOf` within unit section of custom systemd configuration
 
+### Changed
+
+- Switch systemd Service ExecStart to an array to support multiple commands
+
 ## [1.4.1] - 2024-09-23
 
 ### Fixed

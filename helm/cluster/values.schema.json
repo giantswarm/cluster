@@ -947,9 +947,12 @@
                                     "description": "any extra fields to add to the systemd [Service] section."
                                 },
                                 "execStart": {
-                                    "type": "string",
+                                    "type": "array",
                                     "title": "ExecStart",
-                                    "description": "systemd service ExecStart."
+                                    "description": "systemd service ExecStart.",
+                                    "items": {
+                                        "type": "string"
+                                    }
                                 },
                                 "remainAfterExit": {
                                     "type": "string",
