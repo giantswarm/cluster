@@ -53,7 +53,9 @@
     {{- if .contents.service }}
     [Service]
     {{- if .contents.service.environment }}
-    Environment={{ .contents.service.environment }}
+    {{- range $environment := .contents.service.environment }}
+    Environment={{ $environment }}
+    {{- end }}
     {{- end }}
     Type={{ .contents.service.type }}
     RemainAfterExit={{ .contents.service.remainAfterExit }}

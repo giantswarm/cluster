@@ -947,9 +947,12 @@
                                     "description": "any extra fields to add to the systemd [Service] section."
                                 },
                                 "environment": {
-                                    "type": "string",
+                                    "type": "array",
                                     "title": "Environment",
-                                    "description": "systemd service Environment."
+                                    "description": "systemd service Environment.",
+                                    "items": {
+                                        "type": "string"
+                                    }
                                 },
                                 "execStart": {
                                     "type": "array",
