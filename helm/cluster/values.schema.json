@@ -980,6 +980,14 @@
                                         "type": "string"
                                     }
                                 },
+                                "before": {
+                                    "type": "array",
+                                    "title": "Before",
+                                    "description": "systemd unit Before.",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                },
                                 "bindsTo": {
                                     "type": "string",
                                     "title": "BindsTo",
@@ -989,6 +997,14 @@
                                     "type": "boolean",
                                     "title": "DefaultDependencies",
                                     "description": "Flag that indicates if this systemd unit should have the default systemd unit dependencies."
+                                },
+                                "partOf": {
+                                    "type": "array",
+                                    "title": "PartOf",
+                                    "description": "systemd unit PartOf.",
+                                    "items": {
+                                        "type": "string"
+                                    }
                                 },
                                 "requires": {
                                     "type": "array",

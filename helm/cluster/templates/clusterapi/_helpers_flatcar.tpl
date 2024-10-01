@@ -26,6 +26,16 @@
     After={{ $after }}
     {{- end }}
     {{- end }}
+    {{- if .contents.unit.before }}
+    {{- range $before := .contents.unit.before }}
+    Before={{ $before }}
+    {{- end }}
+    {{- end }}
+    {{- if .contents.unit.partOf }}
+    {{- range $partOf := .contents.unit.partOf }}
+    PartOf={{ $partOf }}
+    {{- end }}
+    {{- end }}
     {{- if .contents.unit.requires }}
     {{- range $requires := .contents.unit.requires }}
     Requires={{ $requires }}
