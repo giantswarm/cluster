@@ -57,6 +57,11 @@
     Environment={{ $environment }}
     {{- end }}
     {{- end }}
+    {{- if .contents.service.environmentFile }}
+    {{- range $environmentFile := .contents.service.environmentFile }}
+    EnvironmentFile={{ $environmentFile }}
+    {{- end }}
+    {{- end }}
     Type={{ .contents.service.type }}
     RemainAfterExit={{ .contents.service.remainAfterExit }}
     {{- if .contents.service.restart }}

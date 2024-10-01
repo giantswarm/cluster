@@ -954,6 +954,14 @@
                                         "type": "string"
                                     }
                                 },
+                                "environmentFile": {
+                                    "type": "array",
+                                    "title": "environmentFile",
+                                    "description": "systemd service EnvironmentFile.",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                },
                                 "execStart": {
                                     "type": "array",
                                     "title": "ExecStart",

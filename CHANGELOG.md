@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support for `After`, `Requires`, `Wants` and `BindsTo` within unit section of custom systemd configuration
 - Added support for passing Helm templating from provider chart values through to systemd unit templates
 - Added support for `Before` and `PartOf` within unit section of custom systemd configuration
-- Added support for `Restart` and `Environment` within service section of custom systemd configuration
+- Added support for `Restart`, `Environment` and `EnvironmentFile` within service section of custom systemd configuration
 
 ### Changed
 

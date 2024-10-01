@@ -573,6 +573,8 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service` | **Service** - Configuration of the [Service] section.|**Type:** `object`<br/>|
 | `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.additionalFields` | **AdditionalFields** - any extra fields to add to the systemd [Service] section.|**Type:** `string`<br/>|
 | `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.environment` | **Environment** - systemd service Environment.|**Type:** `array`<br/>|
+| `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.environmentFile` | **environmentFile** - systemd service EnvironmentFile.|**Type:** `array`<br/>|
+| `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.environmentFile[*]` |**None**|**Type:** `string`<br/>|
 | `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.environment[*]` |**None**|**Type:** `string`<br/>|
 | `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.execStart` | **ExecStart** - systemd service ExecStart.|**Type:** `array`<br/>|
 | `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.execStart[*]` |**None**|**Type:** `string`<br/>|
@@ -705,6 +707,8 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service` | **Service** - Configuration of the [Service] section.|**Type:** `object`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.additionalFields` | **AdditionalFields** - any extra fields to add to the systemd [Service] section.|**Type:** `string`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.environment` | **Environment** - systemd service Environment.|**Type:** `array`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.environmentFile` | **environmentFile** - systemd service EnvironmentFile.|**Type:** `array`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.environmentFile[*]` |**None**|**Type:** `string`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.environment[*]` |**None**|**Type:** `string`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.execStart` | **ExecStart** - systemd service ExecStart.|**Type:** `array`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.execStart[*]` |**None**|**Type:** `string`<br/>|
@@ -814,6 +818,8 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service` | **Service** - Configuration of the [Service] section.|**Type:** `object`<br/>|
 | `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.additionalFields` | **AdditionalFields** - any extra fields to add to the systemd [Service] section.|**Type:** `string`<br/>|
 | `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.environment` | **Environment** - systemd service Environment.|**Type:** `array`<br/>|
+| `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.environmentFile` | **environmentFile** - systemd service EnvironmentFile.|**Type:** `array`<br/>|
+| `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.environmentFile[*]` |**None**|**Type:** `string`<br/>|
 | `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.environment[*]` |**None**|**Type:** `string`<br/>|
 | `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.execStart` | **ExecStart** - systemd service ExecStart.|**Type:** `array`<br/>|
 | `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.execStart[*]` |**None**|**Type:** `string`<br/>|
@@ -956,6 +962,8 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service` | **Service** - Configuration of the [Service] section.|**Type:** `object`<br/>|
 | `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.additionalFields` | **AdditionalFields** - any extra fields to add to the systemd [Service] section.|**Type:** `string`<br/>|
 | `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.environment` | **Environment** - systemd service Environment.|**Type:** `array`<br/>|
+| `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.environmentFile` | **environmentFile** - systemd service EnvironmentFile.|**Type:** `array`<br/>|
+| `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.environmentFile[*]` |**None**|**Type:** `string`<br/>|
 | `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.environment[*]` |**None**|**Type:** `string`<br/>|
 | `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.execStart` | **ExecStart** - systemd service ExecStart.|**Type:** `array`<br/>|
 | `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.execStart[*]` |**None**|**Type:** `string`<br/>|
