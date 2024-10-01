@@ -926,6 +926,38 @@
                                 }
                             }
                         },
+                        "service": {
+                            "type": "object",
+                            "title": "Service",
+                            "description": "Configuration of the [Service] section.",
+                            "required": [
+                                "type",
+                                "remainAfterExit"
+                            ],
+                            "additionalProperties": false,
+                            "properties": {
+                                "type": {
+                                    "type": "string",
+                                    "title": "Type",
+                                    "description": "systemd service Type."
+                                },
+                                "additionalFields": {
+                                    "type": "string",
+                                    "title": "AdditionalFields",
+                                    "description": "any extra fields to add to the systemd [Service] section."
+                                },
+                                "execStart": {
+                                    "type": "string",
+                                    "title": "ExecStart",
+                                    "description": "systemd service ExecStart."
+                                },
+                                "remainAfterExit": {
+                                    "type": "string",
+                                    "title": "RemainAfterExit",
+                                    "description": "systemd service RemainAfterExit."
+                                }
+                            }
+                        },
                         "unit": {
                             "type": "object",
                             "title": "Unit",
@@ -940,10 +972,39 @@
                                     "title": "Description",
                                     "description": "systemd unit description."
                                 },
+                                "after": {
+                                    "type": "array",
+                                    "title": "After",
+                                    "description": "systemd unit After.",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                },
+                                "bindsTo": {
+                                    "type": "string",
+                                    "title": "BindsTo",
+                                    "description": "systemd unit BindsTo."
+                                },
                                 "defaultDependencies": {
                                     "type": "boolean",
                                     "title": "DefaultDependencies",
                                     "description": "Flag that indicates if this systemd unit should have the default systemd unit dependencies."
+                                },
+                                "requires": {
+                                    "type": "array",
+                                    "title": "Requires",
+                                    "description": "systemd unit Requires.",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                },
+                                "wants": {
+                                    "type": "array",
+                                    "title": "Wants",
+                                    "description": "systemd unit Wants.",
+                                    "items": {
+                                        "type": "string"
+                                    }
                                 }
                             }
                         }

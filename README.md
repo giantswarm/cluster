@@ -430,6 +430,64 @@ cluster:
         - echo "workers command after kubeadm"
 ```
 
+### Systemd unit templating
+
+You can pass Helm templating syntax through from cluster-\<provider\> charts which will be rendered by the cluster chart. This is
+written as plain text within the cluster-\<provider\> chart values under the `additionalFields` key. Consider the following:
+
+```
+global:
+  connectivity:
+    network:
+      staticRoutes:
+        - destination: 10.2.3.0/24
+          via: 10.9.8.7
+        - destination: 10.20.30.0/24
+          via: 10.9.8.7
+cluster:
+  providerIntegration:
+    kubeadmConfig:
+      # ignition for both control plane and worker nodes
+      ignition:
+        containerLinuxConfig:
+          additionalConfig:
+            systemd:
+              units:
+                - contents:
+                    install:
+                      wantedBy:
+                        - multi-user.target
+                    service:
+                      additionalFields: |-
+                        {{- if $.global.connectivity.network.staticRoutes }}
+                        {{- range $.global.connectivity.network.staticRoutes }}
+                        ExecStart=/usr/bin/bash -cv 'ip route add {{ .destination }} via {{ .via }}'
+                        {{- end }}
+                        {{- end }}
+                    unit:
+                      requires:
+                        - coreos-metadata.service
+```
+
+This results in the following unit:
+
+```
+[Unit]
+Requires=coreos-metadata.service
+[Service]
+ExecStart=/usr/bin/bash -cv 'ip route add 10.2.3.0/24 via 10.9.8.7'
+ExecStart=/usr/bin/bash -cv 'ip route add 10.20.30.0/24 via 10.9.8.7'
+[Install]
+WantedBy=multi-user.target
+```
+
+The Helm templating syntax is treated as plain text by the provider chart. The cluster chart's templating function has
+access to the values under the provider chart's `.global` key so any values referenced in the template must exist 
+under `.global`.
+
+Note that variable scoping is important here - the templating function does not have access to the root `$.Values` object,
+so any variables under `.global` must be referenced as `$.global.some.var` (not `$.Values.global.some.var`).
+
 ## Workload cluster configuration
 
 Workload clusters can be configured by setting Helm values in two top-level objects:

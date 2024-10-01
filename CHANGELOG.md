@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Added support for `Service` section in custom systemd configuration
+- Added support for `After`, `Requires`, `Wants` and `BindsTo` within unit section of custom systemd configuration
+- Added support for passing Helm templating from provider chart values through to systemd unit templates
+
 ## [1.4.1] - 2024-09-23
 
 ### Fixed

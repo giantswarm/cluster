@@ -16,10 +16,12 @@ containerLinuxConfig:
 
 {{- define "cluster.internal.workers.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units" }}
 {{- if ((((($.Values.providerIntegration.kubeadmConfig).ignition).containerLinuxConfig).additionalConfig).systemd).units }}
-{{- include "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units" $.Values.providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units }}
+{{- $systemdUnitValues := dict "global" $.Values.global "units" $.Values.providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units }}
+{{- include "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units" $systemdUnitValues }}
 {{- end }}
 {{- if (((((($.Values.providerIntegration.workers).kubeadmConfig).ignition).containerLinuxConfig).additionalConfig).systemd).units }}
-{{- include "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units" $.Values.providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units }}
+{{- $systemdUnitValues := dict "global" $.Values.global "units" $.Values.providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units }}
+{{- include "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units" $systemdUnitValues }}
 {{- end }}
 {{- end }}
 
