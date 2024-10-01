@@ -486,7 +486,7 @@ access to the values under the provider chart's `.global` key so any values refe
 under `.global`.
 
 Note that variable scoping is important here - the templating function does not have access to the root `$.Values` object,
-so any variables under `.global` must be referenced as `.global.some.var` (not `$.Values.global.some.var`).
+so any variables under `.global` must be referenced as `$.global.some.var` (not `$.Values.global.some.var`).
 
 ## Workload cluster configuration
 
