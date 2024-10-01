@@ -5,7 +5,7 @@
 {{- end }}
 
 {{- define "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units" }}
-{{- range . }}
+{{- range .units }}
 - name: {{ .name }}
   {{- if hasKey . "enabled" }}
   enabled: {{ .enabled }}
@@ -20,6 +20,35 @@
     Description={{ .contents.unit.description }}
     {{- if hasKey .contents.unit "defaultDependencies" }}
     DefaultDependencies={{ if .contents.unit.defaultDependencies }}yes{{ else }}no{{ end }}
+    {{- end }}
+    {{- if .contents.unit.after }}
+    {{- range $after := .contents.unit.after }}
+    After={{ $after }}
+    {{- end }}
+    {{- end }}
+    {{- if .contents.unit.requires }}
+    {{- range $requires := .contents.unit.requires }}
+    Requires={{ $requires }}
+    {{- end }}
+    {{- end }}
+    {{- if .contents.unit.wants }}
+    {{- range $wants := .contents.unit.wants }}
+    Wants={{ $wants }}
+    {{- end }}
+    {{- end }}
+    {{- if .contents.unit.bindsTo }}
+    BindsTo={{ .contents.unit.bindsTo }}
+    {{- end }}
+    {{- end }}
+    {{- if .contents.service }}
+    [Service]
+    Type={{ .contents.service.type }}
+    RemainAfterExit={{ .contents.service.remainAfterExit }}
+    {{- if .contents.service.execStart }}
+    ExecStart={{ .contents.service.execStart }}
+    {{- end }}
+    {{- if .contents.service.additionalFields }}
+    {{ tpl .contents.service.additionalFields $ | nindent 4 }}
     {{- end }}
     {{- end }}
     {{- if .contents.mount }}
