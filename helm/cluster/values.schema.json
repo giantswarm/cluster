@@ -946,6 +946,11 @@
                                     "title": "AdditionalFields",
                                     "description": "any extra fields to add to the systemd [Service] section."
                                 },
+                                "environment": {
+                                    "type": "string",
+                                    "title": "Environment",
+                                    "description": "systemd service Environment."
+                                },
                                 "execStart": {
                                     "type": "array",
                                     "title": "ExecStart",
@@ -958,6 +963,11 @@
                                     "type": "string",
                                     "title": "RemainAfterExit",
                                     "description": "systemd service RemainAfterExit."
+                                },
+                                "restart": {
+                                    "type": "string",
+                                    "title": "Restart",
+                                    "description": "systemd service Restart."
                                 }
                             }
                         },

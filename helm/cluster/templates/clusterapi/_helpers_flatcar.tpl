@@ -52,8 +52,14 @@
     {{- end }}
     {{- if .contents.service }}
     [Service]
+    {{- if .contents.service.environment }}
+    Environment={{ .contents.service.environment }}
+    {{- end }}
     Type={{ .contents.service.type }}
     RemainAfterExit={{ .contents.service.remainAfterExit }}
+    {{- if .contents.service.restart }}
+    Restart={{ .contents.service.restart }}
+    {{- end }}
     {{- if .contents.service.execStart }}
     {{- range $execStart := .contents.service.execStart }}
     ExecStart={{ $execStart }}
