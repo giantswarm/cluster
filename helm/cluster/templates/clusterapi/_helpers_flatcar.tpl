@@ -26,6 +26,16 @@
     After={{ $after }}
     {{- end }}
     {{- end }}
+    {{- if .contents.unit.before }}
+    {{- range $before := .contents.unit.before }}
+    Before={{ $before }}
+    {{- end }}
+    {{- end }}
+    {{- if .contents.unit.partOf }}
+    {{- range $partOf := .contents.unit.partOf }}
+    PartOf={{ $partOf }}
+    {{- end }}
+    {{- end }}
     {{- if .contents.unit.requires }}
     {{- range $requires := .contents.unit.requires }}
     Requires={{ $requires }}
@@ -42,10 +52,25 @@
     {{- end }}
     {{- if .contents.service }}
     [Service]
+    {{- if .contents.service.environment }}
+    {{- range $environment := .contents.service.environment }}
+    Environment={{ $environment }}
+    {{- end }}
+    {{- end }}
+    {{- if .contents.service.environmentFile }}
+    {{- range $environmentFile := .contents.service.environmentFile }}
+    EnvironmentFile={{ $environmentFile }}
+    {{- end }}
+    {{- end }}
     Type={{ .contents.service.type }}
     RemainAfterExit={{ .contents.service.remainAfterExit }}
+    {{- if .contents.service.restart }}
+    Restart={{ .contents.service.restart }}
+    {{- end }}
     {{- if .contents.service.execStart }}
-    ExecStart={{ .contents.service.execStart }}
+    {{- range $execStart := .contents.service.execStart }}
+    ExecStart={{ $execStart }}
+    {{- end }}
     {{- end }}
     {{- if .contents.service.additionalFields }}
     {{ tpl .contents.service.additionalFields $ | nindent 4 }}

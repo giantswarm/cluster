@@ -946,15 +946,39 @@
                                     "title": "AdditionalFields",
                                     "description": "any extra fields to add to the systemd [Service] section."
                                 },
+                                "environment": {
+                                    "type": "array",
+                                    "title": "Environment",
+                                    "description": "systemd service Environment.",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                },
+                                "environmentFile": {
+                                    "type": "array",
+                                    "title": "environmentFile",
+                                    "description": "systemd service EnvironmentFile.",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                },
                                 "execStart": {
-                                    "type": "string",
+                                    "type": "array",
                                     "title": "ExecStart",
-                                    "description": "systemd service ExecStart."
+                                    "description": "systemd service ExecStart.",
+                                    "items": {
+                                        "type": "string"
+                                    }
                                 },
                                 "remainAfterExit": {
                                     "type": "string",
                                     "title": "RemainAfterExit",
                                     "description": "systemd service RemainAfterExit."
+                                },
+                                "restart": {
+                                    "type": "string",
+                                    "title": "Restart",
+                                    "description": "systemd service Restart."
                                 }
                             }
                         },
@@ -980,6 +1004,14 @@
                                         "type": "string"
                                     }
                                 },
+                                "before": {
+                                    "type": "array",
+                                    "title": "Before",
+                                    "description": "systemd unit Before.",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                },
                                 "bindsTo": {
                                     "type": "string",
                                     "title": "BindsTo",
@@ -989,6 +1021,14 @@
                                     "type": "boolean",
                                     "title": "DefaultDependencies",
                                     "description": "Flag that indicates if this systemd unit should have the default systemd unit dependencies."
+                                },
+                                "partOf": {
+                                    "type": "array",
+                                    "title": "PartOf",
+                                    "description": "systemd unit PartOf.",
+                                    "items": {
+                                        "type": "string"
+                                    }
                                 },
                                 "requires": {
                                     "type": "array",
