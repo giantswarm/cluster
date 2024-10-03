@@ -11,11 +11,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Allow configuring `cgroups` v1 or v2 compatibility per node pool, instead of the whole cluster. Control plane nodes always use cgroups v2.
 
+## [1.5.0] - 2024-10-03
+
 ### Added
 
 - Added support for `Service` section in custom systemd configuration
 - Added support for `After`, `Requires`, `Wants` and `BindsTo` within unit section of custom systemd configuration
 - Added support for passing Helm templating from provider chart values through to systemd unit templates
+- Added support for `Before` and `PartOf` within unit section of custom systemd configuration
+- Added support for `Restart`, `Environment` and `EnvironmentFile` within service section of custom systemd configuration
+
+### Changed
+
+- Switch systemd Service ExecStart to an array to support multiple commands
 
 ## [1.4.1] - 2024-09-23
 
@@ -631,7 +639,8 @@ For Kubernetes <v1.29, you will need to re-enable it using the respective values
 
 - Update and clean up the template repo.
 
-[Unreleased]: https://github.com/giantswarm/cluster/compare/v1.4.1...HEAD
+[Unreleased]: https://github.com/giantswarm/cluster/compare/v1.5.0...HEAD
+[1.5.0]: https://github.com/giantswarm/cluster/compare/v1.4.1...v1.5.0
 [1.4.1]: https://github.com/giantswarm/cluster/compare/v1.4.0...v1.4.1
 [1.4.0]: https://github.com/giantswarm/cluster/compare/v1.3.0...v1.4.0
 [1.3.0]: https://github.com/giantswarm/cluster/compare/v1.2.2...v1.3.0

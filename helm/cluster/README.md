@@ -573,15 +573,25 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.mount.where` | **Where** - An absolute path of a file or directory for the mount point; in particular, the destination cannot be a symbolic link.|**Type:** `string`<br/>|
 | `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service` | **Service** - Configuration of the [Service] section.|**Type:** `object`<br/>|
 | `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.additionalFields` | **AdditionalFields** - any extra fields to add to the systemd [Service] section.|**Type:** `string`<br/>|
-| `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.execStart` | **ExecStart** - systemd service ExecStart.|**Type:** `string`<br/>|
+| `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.environment` | **Environment** - systemd service Environment.|**Type:** `array`<br/>|
+| `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.environmentFile` | **environmentFile** - systemd service EnvironmentFile.|**Type:** `array`<br/>|
+| `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.environmentFile[*]` |**None**|**Type:** `string`<br/>|
+| `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.environment[*]` |**None**|**Type:** `string`<br/>|
+| `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.execStart` | **ExecStart** - systemd service ExecStart.|**Type:** `array`<br/>|
+| `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.execStart[*]` |**None**|**Type:** `string`<br/>|
 | `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.remainAfterExit` | **RemainAfterExit** - systemd service RemainAfterExit.|**Type:** `string`<br/>|
+| `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.restart` | **Restart** - systemd service Restart.|**Type:** `string`<br/>|
 | `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.type` | **Type** - systemd service Type.|**Type:** `string`<br/>|
 | `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit` | **Unit** - Configuration of the [Unit] section.|**Type:** `object`<br/>|
 | `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.after` | **After** - systemd unit After.|**Type:** `array`<br/>|
 | `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.after[*]` |**None**|**Type:** `string`<br/>|
+| `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.before` | **Before** - systemd unit Before.|**Type:** `array`<br/>|
+| `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.before[*]` |**None**|**Type:** `string`<br/>|
 | `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.bindsTo` | **BindsTo** - systemd unit BindsTo.|**Type:** `string`<br/>|
 | `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.defaultDependencies` | **DefaultDependencies** - Flag that indicates if this systemd unit should have the default systemd unit dependencies.|**Type:** `boolean`<br/>|
 | `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.description` | **Description** - systemd unit description.|**Type:** `string`<br/>|
+| `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.partOf` | **PartOf** - systemd unit PartOf.|**Type:** `array`<br/>|
+| `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.partOf[*]` |**None**|**Type:** `string`<br/>|
 | `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.requires` | **Requires** - systemd unit Requires.|**Type:** `array`<br/>|
 | `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.requires[*]` |**None**|**Type:** `string`<br/>|
 | `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.wants` | **Wants** - systemd unit Wants.|**Type:** `array`<br/>|
@@ -697,15 +707,25 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.mount.where` | **Where** - An absolute path of a file or directory for the mount point; in particular, the destination cannot be a symbolic link.|**Type:** `string`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service` | **Service** - Configuration of the [Service] section.|**Type:** `object`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.additionalFields` | **AdditionalFields** - any extra fields to add to the systemd [Service] section.|**Type:** `string`<br/>|
-| `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.execStart` | **ExecStart** - systemd service ExecStart.|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.environment` | **Environment** - systemd service Environment.|**Type:** `array`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.environmentFile` | **environmentFile** - systemd service EnvironmentFile.|**Type:** `array`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.environmentFile[*]` |**None**|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.environment[*]` |**None**|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.execStart` | **ExecStart** - systemd service ExecStart.|**Type:** `array`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.execStart[*]` |**None**|**Type:** `string`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.remainAfterExit` | **RemainAfterExit** - systemd service RemainAfterExit.|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.restart` | **Restart** - systemd service Restart.|**Type:** `string`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.type` | **Type** - systemd service Type.|**Type:** `string`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit` | **Unit** - Configuration of the [Unit] section.|**Type:** `object`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.after` | **After** - systemd unit After.|**Type:** `array`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.after[*]` |**None**|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.before` | **Before** - systemd unit Before.|**Type:** `array`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.before[*]` |**None**|**Type:** `string`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.bindsTo` | **BindsTo** - systemd unit BindsTo.|**Type:** `string`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.defaultDependencies` | **DefaultDependencies** - Flag that indicates if this systemd unit should have the default systemd unit dependencies.|**Type:** `boolean`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.description` | **Description** - systemd unit description.|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.partOf` | **PartOf** - systemd unit PartOf.|**Type:** `array`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.partOf[*]` |**None**|**Type:** `string`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.requires` | **Requires** - systemd unit Requires.|**Type:** `array`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.requires[*]` |**None**|**Type:** `string`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.wants` | **Wants** - systemd unit Wants.|**Type:** `array`<br/>|
@@ -798,15 +818,25 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.mount.where` | **Where** - An absolute path of a file or directory for the mount point; in particular, the destination cannot be a symbolic link.|**Type:** `string`<br/>|
 | `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service` | **Service** - Configuration of the [Service] section.|**Type:** `object`<br/>|
 | `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.additionalFields` | **AdditionalFields** - any extra fields to add to the systemd [Service] section.|**Type:** `string`<br/>|
-| `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.execStart` | **ExecStart** - systemd service ExecStart.|**Type:** `string`<br/>|
+| `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.environment` | **Environment** - systemd service Environment.|**Type:** `array`<br/>|
+| `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.environmentFile` | **environmentFile** - systemd service EnvironmentFile.|**Type:** `array`<br/>|
+| `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.environmentFile[*]` |**None**|**Type:** `string`<br/>|
+| `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.environment[*]` |**None**|**Type:** `string`<br/>|
+| `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.execStart` | **ExecStart** - systemd service ExecStart.|**Type:** `array`<br/>|
+| `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.execStart[*]` |**None**|**Type:** `string`<br/>|
 | `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.remainAfterExit` | **RemainAfterExit** - systemd service RemainAfterExit.|**Type:** `string`<br/>|
+| `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.restart` | **Restart** - systemd service Restart.|**Type:** `string`<br/>|
 | `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.type` | **Type** - systemd service Type.|**Type:** `string`<br/>|
 | `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit` | **Unit** - Configuration of the [Unit] section.|**Type:** `object`<br/>|
 | `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.after` | **After** - systemd unit After.|**Type:** `array`<br/>|
 | `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.after[*]` |**None**|**Type:** `string`<br/>|
+| `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.before` | **Before** - systemd unit Before.|**Type:** `array`<br/>|
+| `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.before[*]` |**None**|**Type:** `string`<br/>|
 | `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.bindsTo` | **BindsTo** - systemd unit BindsTo.|**Type:** `string`<br/>|
 | `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.defaultDependencies` | **DefaultDependencies** - Flag that indicates if this systemd unit should have the default systemd unit dependencies.|**Type:** `boolean`<br/>|
 | `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.description` | **Description** - systemd unit description.|**Type:** `string`<br/>|
+| `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.partOf` | **PartOf** - systemd unit PartOf.|**Type:** `array`<br/>|
+| `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.partOf[*]` |**None**|**Type:** `string`<br/>|
 | `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.requires` | **Requires** - systemd unit Requires.|**Type:** `array`<br/>|
 | `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.requires[*]` |**None**|**Type:** `string`<br/>|
 | `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.wants` | **Wants** - systemd unit Wants.|**Type:** `array`<br/>|
@@ -933,15 +963,25 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.mount.where` | **Where** - An absolute path of a file or directory for the mount point; in particular, the destination cannot be a symbolic link.|**Type:** `string`<br/>|
 | `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service` | **Service** - Configuration of the [Service] section.|**Type:** `object`<br/>|
 | `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.additionalFields` | **AdditionalFields** - any extra fields to add to the systemd [Service] section.|**Type:** `string`<br/>|
-| `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.execStart` | **ExecStart** - systemd service ExecStart.|**Type:** `string`<br/>|
+| `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.environment` | **Environment** - systemd service Environment.|**Type:** `array`<br/>|
+| `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.environmentFile` | **environmentFile** - systemd service EnvironmentFile.|**Type:** `array`<br/>|
+| `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.environmentFile[*]` |**None**|**Type:** `string`<br/>|
+| `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.environment[*]` |**None**|**Type:** `string`<br/>|
+| `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.execStart` | **ExecStart** - systemd service ExecStart.|**Type:** `array`<br/>|
+| `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.execStart[*]` |**None**|**Type:** `string`<br/>|
 | `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.remainAfterExit` | **RemainAfterExit** - systemd service RemainAfterExit.|**Type:** `string`<br/>|
+| `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.restart` | **Restart** - systemd service Restart.|**Type:** `string`<br/>|
 | `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.service.type` | **Type** - systemd service Type.|**Type:** `string`<br/>|
 | `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit` | **Unit** - Configuration of the [Unit] section.|**Type:** `object`<br/>|
 | `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.after` | **After** - systemd unit After.|**Type:** `array`<br/>|
 | `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.after[*]` |**None**|**Type:** `string`<br/>|
+| `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.before` | **Before** - systemd unit Before.|**Type:** `array`<br/>|
+| `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.before[*]` |**None**|**Type:** `string`<br/>|
 | `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.bindsTo` | **BindsTo** - systemd unit BindsTo.|**Type:** `string`<br/>|
 | `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.defaultDependencies` | **DefaultDependencies** - Flag that indicates if this systemd unit should have the default systemd unit dependencies.|**Type:** `boolean`<br/>|
 | `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.description` | **Description** - systemd unit description.|**Type:** `string`<br/>|
+| `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.partOf` | **PartOf** - systemd unit PartOf.|**Type:** `array`<br/>|
+| `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.partOf[*]` |**None**|**Type:** `string`<br/>|
 | `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.requires` | **Requires** - systemd unit Requires.|**Type:** `array`<br/>|
 | `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.requires[*]` |**None**|**Type:** `string`<br/>|
 | `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.wants` | **Wants** - systemd unit Wants.|**Type:** `array`<br/>|
