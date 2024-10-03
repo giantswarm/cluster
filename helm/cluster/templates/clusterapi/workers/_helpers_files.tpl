@@ -48,7 +48,7 @@ different node pools, and use the same cgroups configuration in the containerd c
       key: config.toml
 {{- end }}
 
-{{/* flatcare configuration to use cgroupsv1 for the worker nodes. When we don't support cgroups v1 anymore we can remove it */}}
+{{/* flatcar configuration to use cgroupsv1 for the worker nodes. When we don't support cgroups v1 anymore we can remove it */}}
 {{- define "cluster.internal.workers.kubeadm.files.cgroupv1" }}
 {{- if $.nodePool.config.cgroupsv1 }}
 - path: /etc/flatcar-cgroupv1
