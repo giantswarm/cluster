@@ -593,6 +593,8 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.partOf[*]` |**None**|**Type:** `string`<br/>|
 | `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.requires` | **Requires** - systemd unit Requires.|**Type:** `array`<br/>|
 | `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.requires[*]` |**None**|**Type:** `string`<br/>|
+| `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.upholds` | **Upholds** - systemd unit Upholds.|**Type:** `array`<br/>|
+| `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.upholds[*]` |**None**|**Type:** `string`<br/>|
 | `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.wants` | **Wants** - systemd unit Wants.|**Type:** `array`<br/>|
 | `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.wants[*]` |**None**|**Type:** `string`<br/>|
 | `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].dropins` | **Unit drop-ins** - The list of drop-ins for the unit|**Type:** `array`<br/>|
@@ -727,6 +729,8 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.partOf[*]` |**None**|**Type:** `string`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.requires` | **Requires** - systemd unit Requires.|**Type:** `array`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.requires[*]` |**None**|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.upholds` | **Upholds** - systemd unit Upholds.|**Type:** `array`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.upholds[*]` |**None**|**Type:** `string`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.wants` | **Wants** - systemd unit Wants.|**Type:** `array`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.wants[*]` |**None**|**Type:** `string`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].dropins` | **Unit drop-ins** - The list of drop-ins for the unit|**Type:** `array`<br/>|
@@ -838,6 +842,8 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.partOf[*]` |**None**|**Type:** `string`<br/>|
 | `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.requires` | **Requires** - systemd unit Requires.|**Type:** `array`<br/>|
 | `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.requires[*]` |**None**|**Type:** `string`<br/>|
+| `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.upholds` | **Upholds** - systemd unit Upholds.|**Type:** `array`<br/>|
+| `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.upholds[*]` |**None**|**Type:** `string`<br/>|
 | `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.wants` | **Wants** - systemd unit Wants.|**Type:** `array`<br/>|
 | `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.wants[*]` |**None**|**Type:** `string`<br/>|
 | `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].dropins` | **Unit drop-ins** - The list of drop-ins for the unit|**Type:** `array`<br/>|
@@ -982,6 +988,8 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.partOf[*]` |**None**|**Type:** `string`<br/>|
 | `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.requires` | **Requires** - systemd unit Requires.|**Type:** `array`<br/>|
 | `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.requires[*]` |**None**|**Type:** `string`<br/>|
+| `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.upholds` | **Upholds** - systemd unit Upholds.|**Type:** `array`<br/>|
+| `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.upholds[*]` |**None**|**Type:** `string`<br/>|
 | `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.wants` | **Wants** - systemd unit Wants.|**Type:** `array`<br/>|
 | `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].contents.unit.wants[*]` |**None**|**Type:** `string`<br/>|
 | `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].dropins` | **Unit drop-ins** - The list of drop-ins for the unit|**Type:** `array`<br/>|

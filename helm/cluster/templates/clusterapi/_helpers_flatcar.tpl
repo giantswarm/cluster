@@ -41,6 +41,11 @@
     Requires={{ $requires }}
     {{- end }}
     {{- end }}
+    {{- if .contents.unit.upholds }}
+    {{- range $upholds := .contents.unit.upholds }}
+    Upholds={{ $upholds }}
+    {{- end }}
+    {{- end }}
     {{- if .contents.unit.wants }}
     {{- range $wants := .contents.unit.wants }}
     Wants={{ $wants }}
