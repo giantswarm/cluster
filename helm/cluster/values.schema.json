@@ -1038,6 +1038,14 @@
                                         "type": "string"
                                     }
                                 },
+                                "upholds": {
+                                    "type": "array",
+                                    "title": "Upholds",
+                                    "description": "systemd unit Upholds.",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                },
                                 "wants": {
                                     "type": "array",
                                     "title": "Wants",
