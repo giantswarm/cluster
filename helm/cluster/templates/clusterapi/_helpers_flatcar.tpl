@@ -78,7 +78,7 @@
     {{- end }}
     {{- end }}
     {{- if .contents.service.additionalFields }}
-    {{ tpl .contents.service.additionalFields $ | nindent 4 }}
+    {{- tpl .contents.service.additionalFields $ | nindent 4 }}
     {{- end }}
     {{- end }}
     {{- if .contents.mount }}
