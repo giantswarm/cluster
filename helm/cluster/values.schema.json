@@ -1635,6 +1635,10 @@
                                     "type": "string",
                                     "title": "Groups claim"
                                 },
+                                "groupsPrefix": {
+                                    "type": "string",
+                                    "title": "Groups prefix"
+                                },
                                 "issuerUrl": {
                                     "type": "string",
                                     "title": "Issuer URL",
@@ -1643,6 +1647,10 @@
                                 "usernameClaim": {
                                     "type": "string",
                                     "title": "Username claim"
+                                },
+                                "usernamePrefix": {
+                                    "type": "string",
+                                    "title": "Username prefix"
                                 }
                             }
                         },

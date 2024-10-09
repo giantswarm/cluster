@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Added support for `groupsPrefix` and `usernamePrefix` to OIDC configuration
+
 ## [1.5.2] - 2024-10-05
 
 ### Added
