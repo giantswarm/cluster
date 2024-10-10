@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Allow configuring `cgroups` v1 or v2 compatibility per node pool, instead of the whole cluster. Control plane nodes always use cgroups v2.
+
 ## [0.35.2] - 2024-09-18
 
 ### Added

@@ -19,7 +19,7 @@ no_shim = false
 # setting runc.options unsets parent settings
 runtime_type = "io.containerd.runc.v2"
 [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc.options]
-SystemdCgroup = {{ if $.Values.internal.advancedConfiguration.cgroupsv1 }}false{{else}}true{{end}}
+SystemdCgroup = {{ if or $.nodePool.config.cgroupsv1 $.Values.internal.advancedConfiguration.cgroupsv1 }}false{{else}}true{{end}}
 [plugins."io.containerd.grpc.v1.cri"]
 sandbox_image = "{{ include "cluster.image.registry" $ }}/{{ $.Values.providerIntegration.components.containerd.sandboxContainerImage.name }}:{{ $.Values.providerIntegration.components.containerd.sandboxContainerImage.tag }}"
 
@@ -30,6 +30,9 @@ sandbox_image = "{{ include "cluster.image.registry" $ }}/{{ $.Values.providerIn
       endpoint = [
         {{- if and $.Values.global.components.containerd.localRegistryCache.enabled (has $host $.Values.global.components.containerd.localRegistryCache.mirroredRegistries) -}}
         "http://127.0.0.1:{{ $.Values.global.components.containerd.localRegistryCache.port }}",
+        {{- end -}}
+        {{- if and $.Values.global.components.containerd.managementClusterRegistryCache.enabled (has $host $.Values.global.components.containerd.managementClusterRegistryCache.mirroredRegistries) -}}
+        "https://zot.{{ $.Values.global.managementCluster }}.{{ $.Values.global.connectivity.baseDomain }}",
         {{- end -}}
         {{- range $value := $config -}}
         "https://{{$value.endpoint}}",
