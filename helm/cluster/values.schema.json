@@ -756,6 +756,12 @@
                         }
                     }
                 },
+                "cgroupsv1": {
+                    "type": "boolean",
+                    "title": "Cgroups v1",
+                    "description": "Flag that indicates if cgroups v1 should be used.",
+                    "default": false
+                },
                 "customNodeLabels": {
                     "type": "array",
                     "title": "Node labels. Deprecated: use nodeLabels instead.",
@@ -1665,9 +1671,6 @@
                     "type": "object",
                     "title": "Advanced configuration",
                     "description": "Advanced configuration of cluster components, to be configured by Giant Swarm staff only.",
-                    "required": [
-                        "cgroupsv1"
-                    ],
                     "additionalProperties": false,
                     "properties": {
                         "appPlatform": {
@@ -1685,8 +1688,8 @@
                         },
                         "cgroupsv1": {
                             "type": "boolean",
-                            "title": "CGroups v1",
-                            "description": "Force use of CGroups v1 for whole cluster.",
+                            "title": "Cgroups v1",
+                            "description": "Force use of cgroups v1 for whole cluster. Deprecated: Use the node pool level setting instead.",
                             "default": false
                         },
                         "controlPlane": {
