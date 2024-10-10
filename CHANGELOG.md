@@ -9,7 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Allow configuring `cgroups` v1 or v2 compatibility per node pool, instead of the whole cluster. Control plane nodes always use cgroups v2.
 - Fix new line in additionalFields.
+
+### Added
+
+- Added support for `groupsPrefix` and `usernamePrefix` to OIDC configuration
 
 ## [1.5.2] - 2024-10-05
 
