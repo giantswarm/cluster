@@ -276,8 +276,10 @@ Configuration of the control plane.
 | `global.controlPlane.oidc.caPem` | **Certificate authority** - Identity provider's CA certificate in PEM format.|**Type:** `string`<br/>|
 | `global.controlPlane.oidc.clientId` | **Client ID**|**Type:** `string`<br/>|
 | `global.controlPlane.oidc.groupsClaim` | **Groups claim**|**Type:** `string`<br/>|
+| `global.controlPlane.oidc.groupsPrefix` | **Groups prefix**|**Type:** `string`<br/>|
 | `global.controlPlane.oidc.issuerUrl` | **Issuer URL** - Exact issuer URL that will be included in identity tokens.|**Type:** `string`<br/>|
 | `global.controlPlane.oidc.usernameClaim` | **Username claim**|**Type:** `string`<br/>|
+| `global.controlPlane.oidc.usernamePrefix` | **Username prefix**|**Type:** `string`<br/>|
 | `global.controlPlane.replicas` | **Replicas** - The number of control plane nodes.|**Type:** `integer`<br/>**Default:** `3`|
 
 ### Internal

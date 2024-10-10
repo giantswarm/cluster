@@ -47,8 +47,14 @@ extraArgs:
   {{- end }}
   oidc-client-id: {{ $.Values.global.controlPlane.oidc.clientId | quote }}
   oidc-groups-claim: {{ $.Values.global.controlPlane.oidc.groupsClaim | quote }}
+  {{- if $.Values.global.controlPlane.oidc.groupsPrefix }}
+  oidc-groups-prefix: {{ $.Values.global.controlPlane.oidc.groupsPrefix | quote }}
+  {{- end }}
   oidc-issuer-url: {{ $.Values.global.controlPlane.oidc.issuerUrl | quote }}
   oidc-username-claim: {{ $.Values.global.controlPlane.oidc.usernameClaim | quote }}
+  {{- if $.Values.global.controlPlane.oidc.usernamePrefix }}
+  oidc-username-prefix: {{ $.Values.global.controlPlane.oidc.usernamePrefix | quote }}
+  {{- end }}
   {{- end }}
   profiling: "false"
   runtime-config: api/all=true
