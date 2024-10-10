@@ -5,9 +5,6 @@ controlPlane:
     bindPort: {{ $.Values.internal.advancedConfiguration.controlPlane.apiServer.bindPort | default 6443 }}
 nodeRegistration:
   kubeletExtraArgs:
-    {{- if $.Values.internal.advancedConfiguration.cgroupsv1 }}
-    cgroup-driver: cgroupfs
-    {{- end }}
     cloud-provider: external
     feature-gates: CronJobTimeZone=true
     node-ip: {{ printf "${%s}" $.Values.providerIntegration.environmentVariables.ipv4 }}

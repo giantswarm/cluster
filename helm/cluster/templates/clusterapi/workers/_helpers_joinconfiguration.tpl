@@ -13,7 +13,7 @@ nodeRegistration:
     {{- if eq $.Values.providerIntegration.provider "azure" }}
     azure-container-registry-config: {{ $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.cloudConfig  }}
     {{- end }}
-    {{- if $.Values.internal.advancedConfiguration.cgroupsv1 }}
+    {{- if or $nodePool.config.cgroupsv1 $.Values.internal.advancedConfiguration.cgroupsv1 }}
     cgroup-driver: cgroupfs
     {{- end }}
     cloud-provider: external
