@@ -1,6 +1,6 @@
 {{- define "cluster.internal.workers.kubeadm.ignition" }}
 containerLinuxConfig:
-  additionalConfig: |
+  additionalConfig: |-
     systemd:
       units:
       {{- $_ := set $ "nodeRole" "worker" }}
