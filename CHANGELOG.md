@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.6.0] - 2024-10-10
+
 ### Changed
 
 - Allow configuring `cgroups` v1 or v2 compatibility per node pool, instead of the whole cluster. Control plane nodes always use cgroups v2.
@@ -656,7 +658,8 @@ For Kubernetes <v1.29, you will need to re-enable it using the respective values
 
 - Update and clean up the template repo.
 
-[Unreleased]: https://github.com/giantswarm/cluster/compare/v1.5.2...HEAD
+[Unreleased]: https://github.com/giantswarm/cluster/compare/v1.6.0...HEAD
+[1.6.0]: https://github.com/giantswarm/cluster/compare/v1.5.2...v1.6.0
 [1.5.2]: https://github.com/giantswarm/cluster/compare/v1.5.1...v1.5.2
 [1.5.1]: https://github.com/giantswarm/cluster/compare/v1.5.0...v1.5.1
 [1.5.0]: https://github.com/giantswarm/cluster/compare/v1.4.1...v1.5.0
