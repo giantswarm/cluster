@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.35.3] - 2024-10-14
+
 ### Changed
 
 - Allow configuring `cgroups` v1 or v2 compatibility per node pool, instead of the whole cluster. Control plane nodes always use cgroups v2.
@@ -556,7 +558,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Update and clean up the template repo.
 
-[Unreleased]: https://github.com/giantswarm/cluster/compare/v0.35.2...HEAD
+[Unreleased]: https://github.com/giantswarm/cluster/compare/v0.35.3...HEAD
+[0.35.3]: https://github.com/giantswarm/cluster/compare/v0.35.2...v0.35.3
 [0.35.2]: https://github.com/giantswarm/cluster/compare/v0.35.1...v0.35.2
 [0.35.1]: https://github.com/giantswarm/cluster/compare/v0.35.0...v0.35.1
 [0.35.0]: https://github.com/giantswarm/cluster/compare/v0.34.1...v0.35.0
