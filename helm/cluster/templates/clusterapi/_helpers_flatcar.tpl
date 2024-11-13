@@ -266,6 +266,11 @@
     [Service]
     Type=simple
     Restart=on-failure
+    # If kubelet is active, wait for token secret and swap config
+    ExecStartPre=/bin/sh -c 'if systemctl is-active kubelet.service; then \
+      while ! test -f /etc/teleport-join-token; do sleep 1; done; \
+      sed -i "s/auth_token:.*/join_params:\\n    token_name: \\/etc\\/teleport-join-token\\n    method: token/" /etc/teleport.yaml; \
+    fi'
     ExecStart=/opt/bin/teleport start --roles=node --config=/etc/teleport.yaml --pid-file=/run/teleport.pid
     ExecReload=/bin/kill -HUP $MAINPID
     PIDFile=/run/teleport.pid

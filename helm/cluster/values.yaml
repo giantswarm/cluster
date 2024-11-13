@@ -223,7 +223,8 @@ providerIntegration:
   teleport:
     enabled: true
     proxyAddr: teleport.giantswarm.io:443
-    version: 14.1.3
+    version: 16.1.7
+    initialJoinToken: ""
   useReleases: false
   workers:
     kubeadmConfig:
