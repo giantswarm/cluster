@@ -887,8 +887,9 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.resourcesApi.machinePoolResourcesEnabled` | **Machine pool resources enabled** - Flag that indicates if the machine pool resources are enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.|**Type:** `boolean`<br/>**Default:** `true`|
 | `providerIntegration.teleport` | **Teleport**|**Type:** `object`<br/>|
 | `providerIntegration.teleport.enabled` | **Enable teleport**|**Type:** `boolean`<br/>**Default:** `true`|
+| `providerIntegration.teleport.initialJoinToken` | **Teleport initial Node Join Token**|**Type:** `string`<br/>**Default:** `""`|
 | `providerIntegration.teleport.proxyAddr` | **Teleport proxy address**|**Type:** `string`<br/>**Default:** `"teleport.giantswarm.io:443"`|
-| `providerIntegration.teleport.version` | **Teleport version**|**Type:** `string`<br/>**Default:** `"14.1.3"`|
+| `providerIntegration.teleport.version` | **Teleport version**|**Type:** `string`<br/>**Default:** `"16.1.7"`|
 | `providerIntegration.useReleases` | **Use releases** - Flag that indicates if the provider is using release resources to get app and component versions.|**Type:** `boolean`<br/>**Default:** `false`|
 | `providerIntegration.workers` | **Provider-specific workers configuration**|**Type:** `object`<br/>|
 | `providerIntegration.workers.defaultNodePools` | **Default node pools**|**Type:** `object`<br/>|
