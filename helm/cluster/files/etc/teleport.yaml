@@ -1,15 +1,9 @@
 version: v3
 teleport:
   data_dir: /var/lib/teleport
-  {{- if $.Values.providerIntegration.teleport.initialJoinToken }}
-  # Use initial token before Kubernetes is ready
-  auth_token: {{ $.Values.providerIntegration.teleport.initialJoinToken }}
-  {{- else }}
-  # Use token from secret file once Kubernetes is ready
   join_params:
     token_name: /etc/teleport-join-token
     method: token
-  {{- end }}
   proxy_server: {{ .Values.providerIntegration.teleport.proxyAddr }}
   log:
     output: stderr

@@ -9,10 +9,17 @@
 */}}
 {{- define "cluster.internal.kubeadm.preKubeadmCommands" }}
 {{- include "cluster.internal.kubeadm.preKubeadmCommands.flatcar" $ }}
+{{- include "cluster.internal.kubeadm.preKubeadmCommands.teleport" $ }}
 {{- include "cluster.internal.kubeadm.preKubeadmCommands.ssh" $ }}
 {{- include "cluster.internal.kubeadm.preKubeadmCommands.proxy" $ }}
 {{- include "cluster.internal.kubeadm.preKubeadmCommands.provider" $ }}
 {{- include "cluster.internal.kubeadm.preKubeadmCommands.custom" $ }}
+{{- end }}
+
+{{- define "cluster.internal.kubeadm.preKubeadmCommands.teleport" }}
+{{- if and $.Values.providerIntegration.teleport.enabled $.Values.providerIntegration.teleport.initialJoinToken }}
+- echo {{ $.Values.providerIntegration.teleport.initialJoinToken | quote }} > /etc/teleport-join-token
+{{- end }}
 {{- end }}
 
 {{- define "cluster.internal.kubeadm.preKubeadmCommands.flatcar" }}
