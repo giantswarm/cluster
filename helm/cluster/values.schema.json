@@ -2936,29 +2936,33 @@
                 "teleport": {
                     "type": "object",
                     "title": "Teleport",
+                    "description": "Teleport configuration for cluster access",
+                    "required": ["enabled", "proxyAddr", "initialJoinToken"],
                     "properties": {
-                        "enabled": {
-                            "type": "boolean",
-                            "title": "Enable teleport",
-                            "default": true
-                        },
-                        "initialJoinToken": {
-                            "type": "string",
-                            "title": "Teleport initial Node Join Token",
-                            "default": ""
-                        },
-                        "proxyAddr": {
-                            "type": "string",
-                            "title": "Teleport proxy address",
-                            "default": "teleport.giantswarm.io:443"
-                        },
-                        "version": {
-                            "type": "string",
-                            "title": "Teleport version",
-                            "default": "16.1.7"
-                        }
+                      "enabled": {
+                        "type": "boolean",
+                        "title": "Enable teleport"
+                      },
+                      "initialJoinToken": {
+                        "type": "string",
+                        "title": "Teleport initial Node Join Token"
+                      },
+                      "proxyAddr": {
+                        "type": "string",
+                        "title": "Teleport proxy address"
+                      },
+                      "version": {
+                        "type": "string",
+                        "title": "Teleport version"
+                      }
+                    },
+                    "default": {
+                      "enabled": true,
+                      "proxyAddr": "teleport.giantswarm.io:443",
+                      "initialJoinToken": "",
+                      "version": "16.1.7"
                     }
-                },
+                  },
                 "useReleases": {
                     "type": "boolean",
                     "title": "Use releases",
