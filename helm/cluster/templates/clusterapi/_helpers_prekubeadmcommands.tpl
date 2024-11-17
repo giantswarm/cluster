@@ -9,7 +9,6 @@
 */}}
 {{- define "cluster.internal.kubeadm.preKubeadmCommands" }}
 {{- include "cluster.internal.kubeadm.preKubeadmCommands.flatcar" $ }}
-{{- include "cluster.internal.kubeadm.preKubeadmCommands.teleport" $ }}
 {{- include "cluster.internal.kubeadm.preKubeadmCommands.ssh" $ }}
 {{- include "cluster.internal.kubeadm.preKubeadmCommands.proxy" $ }}
 {{- include "cluster.internal.kubeadm.preKubeadmCommands.provider" $ }}
