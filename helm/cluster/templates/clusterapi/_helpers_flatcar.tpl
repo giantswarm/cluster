@@ -255,6 +255,23 @@
 {{- end }}
 {{- end }}
 
+{{- define "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units.teleport-init" }}
+{{- if and $.Values.providerIntegration.teleport.enabled $.Values.providerIntegration.teleport.initialJoinToken }}
+- name: teleport-init.service
+  enabled: true
+  contents: |
+    [Unit]
+    Description=Initialize Teleport Token
+    Before=teleport.service
+    [Service]
+    Type=oneshot
+    ExecStart=/bin/bash -c 'echo {{ $.Values.providerIntegration.teleport.initialJoinToken | quote }} > /etc/teleport-join-token'
+    RemainAfterExit=yes
+    [Install]
+    WantedBy=multi-user.target
+{{- end }}
+{{- end }}
+
 {{- define "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units.teleport" }}
 {{- if $.Values.providerIntegration.teleport.enabled }}
 - name: teleport.service
@@ -263,6 +280,10 @@
     [Unit]
     Description=Teleport Service
     After=network.target
+    {{- if $.Values.providerIntegration.teleport.initialJoinToken }}
+    After=network.target teleport-init.service
+    Requires=teleport-init.service
+    {{- end }}
     [Service]
     Type=simple
     Restart=on-failure
