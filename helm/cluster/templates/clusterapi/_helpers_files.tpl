@@ -89,14 +89,6 @@ and is used to join the node to the teleport cluster.
     secret:
       name: {{ include "cluster.resource.name" $ }}-teleport-join-token
       key: joinToken
-- path: /opt/teleport-node-role.sh
-  permissions: "0755"
-  encoding: base64
-  content: {{ $.Files.Get "files/opt/teleport-node-role.sh" | b64enc }}
-- path: /etc/teleport.yaml
-  permissions: "0644"
-  encoding: base64
-  content: {{ tpl ($.Files.Get "files/etc/teleport.yaml") . | b64enc }}
 {{- end }}
 {{- end }}
 

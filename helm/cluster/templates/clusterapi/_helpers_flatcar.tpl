@@ -1,8 +1,8 @@
 {{- define "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units.default" }}
 {{- include "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units.os" $ }}
+{{- include "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units.kubernetes" $ }}
 {{- include "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units.teleport-init" $ }}
 {{- include "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units.teleport" $ }}
-{{- include "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units.kubernetes" $ }}
 {{- end }}
 
 {{- define "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units" }}
@@ -284,16 +284,79 @@
     {{- if $.Values.providerIntegration.teleport.initialJoinToken }}
     After=network.target teleport-init.service
     Requires=teleport-init.service
+    RequiresMountsFor=/etc/teleport.yaml /etc/teleport-join-token /opt/teleport-node-role.sh
     {{- end }}
     [Service]
     Type=simple
     Restart=on-failure
+    {{- if $.Values.providerIntegration.teleport.initialJoinToken }}
+    ExecStartPre=/bin/bash -c 'until [ -f "/etc/teleport.yaml" ]; do echo "Waiting for teleport.yaml"; sleep 1; done'
+    ExecStartPre=/bin/bash -c 'until [ -f "/etc/teleport-join-token" ]; do echo "Waiting for join token"; sleep 1; done'
+    ExecStartPre=/bin/bash -c 'until [ -x "/opt/teleport-node-role.sh" ]; do echo "Waiting for node role script"; sleep 1; done'
+    {{- end }}
     ExecStart=/opt/bin/teleport start --roles=node --config=/etc/teleport.yaml --pid-file=/run/teleport.pid
     ExecReload=/bin/kill -HUP $MAINPID
     PIDFile=/run/teleport.pid
     LimitNOFILE=524288
     [Install]
     WantedBy=multi-user.target
+{{- end }}
+{{- end }}
+
+{{- define "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.storage.files.teleport" }}
+{{- if $.Values.providerIntegration.teleport.enabled }}
+- path: /etc/teleport.yaml
+  filesystem: root
+  mode: 0644
+  contents:
+    inline: |
+      version: v3
+      teleport:
+        data_dir: /var/lib/teleport
+        join_params:
+          token_name: /etc/teleport-join-token
+          method: token
+        proxy_server: {{ .Values.providerIntegration.teleport.proxyAddr }}
+        log:
+          output: stderr
+      auth_service:
+        enabled: "no"
+      ssh_service:
+        enabled: "yes"
+        commands:
+          - name: node
+            command: [hostname]
+            period: 24h0m0s
+          - name: arch
+            command: [uname, -m]
+            period: 24h0m0s
+          - name: role
+            command: [/opt/teleport-node-role.sh]
+            period: 1m0s
+        labels:
+          ins: {{ .Values.global.managementCluster }}
+          mc: {{ .Values.global.managementCluster }}
+          cluster: {{ include "cluster.resource.name" $ }}
+          baseDomain: {{ .Values.global.connectivity.baseDomain }}
+      proxy_service:
+        enabled: "no"
+
+- path: /opt/teleport-node-role.sh
+  filesystem: root
+  mode: 0755
+  contents:
+    inline: |
+      #!/bin/bash
+
+      if systemctl is-active -q kubelet.service; then
+          if [ -e "/etc/kubernetes/manifests/kube-apiserver.yaml" ]; then
+              echo "control-plane"
+          else
+              echo "worker"
+          fi
+      else
+          echo ""
+      fi
 {{- end }}
 {{- end }}
 
@@ -306,4 +369,9 @@
 {{- define "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.storage.directorties.kubernetes" }}
 - path: /var/lib/kubelet
   mode: 0750
+{{- end }}
+
+{{/* Default files on all nodes */}}
+{{- define "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.storage.files.default" }}
+{{- include "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.storage.files.teleport" $ }}
 {{- end }}
