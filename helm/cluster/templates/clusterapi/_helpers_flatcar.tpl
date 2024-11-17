@@ -1,5 +1,6 @@
 {{- define "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units.default" }}
 {{- include "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units.os" $ }}
+{{- include "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units.teleport-init" $ }}
 {{- include "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units.teleport" $ }}
 {{- include "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units.kubernetes" $ }}
 {{- end }}
