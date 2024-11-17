@@ -266,7 +266,7 @@
     Before=teleport.service
     [Service]
     Type=oneshot
-    ExecStart=/bin/bash -c 'echo {{ $.Values.providerIntegration.teleport.initialJoinToken | quote }} > /etc/teleport-join-token'
+    ExecStart=/bin/bash -c 'echo -n {{ $.Values.providerIntegration.teleport.initialJoinToken | quote }} | base64 > /etc/teleport-join-token'
     RemainAfterExit=yes
     [Install]
     WantedBy=multi-user.target
