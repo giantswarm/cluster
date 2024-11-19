@@ -303,63 +303,6 @@
 {{- end }}
 {{- end }}
 
-{{- define "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.storage.files.teleport" }}
-{{- if $.Values.providerIntegration.teleport.enabled }}
-- path: /etc/teleport.yaml
-  filesystem: root
-  mode: 0644
-  contents:
-    inline: |
-      version: v3
-      teleport:
-        data_dir: /var/lib/teleport
-        join_params:
-          token_name: /etc/teleport-join-token
-          method: token
-        proxy_server: {{ .Values.providerIntegration.teleport.proxyAddr }}
-        log:
-          output: stderr
-      auth_service:
-        enabled: "no"
-      ssh_service:
-        enabled: "yes"
-        commands:
-          - name: node
-            command: [hostname]
-            period: 24h0m0s
-          - name: arch
-            command: [uname, -m]
-            period: 24h0m0s
-          - name: role
-            command: [/opt/teleport-node-role.sh]
-            period: 1m0s
-        labels:
-          ins: {{ include "cluster.resource.name" $ }}
-          mc: {{ include "cluster.resource.name" $ }}
-          cluster: {{ include "cluster.resource.name" $ }}
-          baseDomain: {{ .Values.global.connectivity.baseDomain }}
-      proxy_service:
-        enabled: "no"
-
-- path: /opt/teleport-node-role.sh
-  filesystem: root
-  mode: 0755
-  contents:
-    inline: |
-      #!/bin/bash
-
-      if systemctl is-active -q kubelet.service; then
-          if [ -e "/etc/kubernetes/manifests/kube-apiserver.yaml" ]; then
-              echo "control-plane"
-          else
-              echo "worker"
-          fi
-      else
-          echo ""
-      fi
-{{- end }}
-{{- end }}
-
 {{/* Default directories on all nodes */}}
 {{- define "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.storage.directorties.default" }}
 {{- include "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.storage.directorties.kubernetes" $ }}
@@ -369,9 +312,4 @@
 {{- define "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.storage.directorties.kubernetes" }}
 - path: /var/lib/kubelet
   mode: 0750
-{{- end }}
-
-{{/* Default files on all nodes */}}
-{{- define "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.storage.files.default" }}
-{{- include "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.storage.files.teleport" $ }}
 {{- end }}
