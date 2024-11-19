@@ -266,7 +266,7 @@
     Before=teleport.service
     [Service]
     Type=oneshot
-    ExecStart=/bin/bash -c 'echo -n {{ $.Values.providerIntegration.teleport.initialJoinToken | quote }} | base64 > /etc/teleport-join-token'
+    ExecStart=/bin/bash -c 'echo {{ $.Values.providerIntegration.teleport.initialJoinToken | quote }} > /etc/teleport-join-token'
     RemainAfterExit=yes
     [Install]
     WantedBy=multi-user.target
@@ -334,8 +334,8 @@
             command: [/opt/teleport-node-role.sh]
             period: 1m0s
         labels:
-          ins: {{ .Values.global.managementCluster }}
-          mc: {{ .Values.global.managementCluster }}
+          ins: {{ include "cluster.resource.name" $ }}
+          mc: {{ include "cluster.resource.name" $ }}
           cluster: {{ include "cluster.resource.name" $ }}
           baseDomain: {{ .Values.global.connectivity.baseDomain }}
       proxy_service:
