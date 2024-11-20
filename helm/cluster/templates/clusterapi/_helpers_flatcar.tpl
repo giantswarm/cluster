@@ -280,11 +280,12 @@
   contents: |
     [Unit]
     Description=Teleport Service
-    After=network.target
     {{- if $.Values.providerIntegration.teleport.initialJoinToken }}
     After=network.target teleport-init.service
     Requires=teleport-init.service
     RequiresMountsFor=/etc/teleport.yaml /etc/teleport-join-token /opt/teleport-node-role.sh
+    {{- else }}
+    After=network.target
     {{- end }}
     [Service]
     Type=simple
