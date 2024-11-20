@@ -1,7 +1,8 @@
 {{- define "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units.default" }}
 {{- include "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units.os" $ }}
-{{- include "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units.teleport" $ }}
 {{- include "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units.kubernetes" $ }}
+{{- include "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units.teleport-init" $ }}
+{{- include "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units.teleport" $ }}
 {{- end }}
 
 {{- define "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units" }}
@@ -255,6 +256,23 @@
 {{- end }}
 {{- end }}
 
+{{- define "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units.teleport-init" }}
+{{- if and $.Values.providerIntegration.teleport.enabled $.Values.providerIntegration.teleport.initialJoinToken }}
+- name: teleport-init.service
+  enabled: true
+  contents: |
+    [Unit]
+    Description=Initialize Teleport Token
+    Before=teleport.service
+    [Service]
+    Type=oneshot
+    ExecStart=/bin/bash -c 'echo {{ $.Values.providerIntegration.teleport.initialJoinToken | quote }} > /etc/teleport-join-token'
+    RemainAfterExit=yes
+    [Install]
+    WantedBy=multi-user.target
+{{- end }}
+{{- end }}
+
 {{- define "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units.teleport" }}
 {{- if $.Values.providerIntegration.teleport.enabled }}
 - name: teleport.service
@@ -262,10 +280,21 @@
   contents: |
     [Unit]
     Description=Teleport Service
+    {{- if $.Values.providerIntegration.teleport.initialJoinToken }}
+    After=network.target teleport-init.service
+    Requires=teleport-init.service
+    RequiresMountsFor=/etc/teleport.yaml /etc/teleport-join-token /opt/teleport-node-role.sh
+    {{- else }}
     After=network.target
+    {{- end }}
     [Service]
     Type=simple
     Restart=on-failure
+    {{- if $.Values.providerIntegration.teleport.initialJoinToken }}
+    ExecStartPre=/bin/bash -c 'until [ -f "/etc/teleport.yaml" ]; do echo "Waiting for teleport.yaml"; sleep 1; done'
+    ExecStartPre=/bin/bash -c 'until [ -f "/etc/teleport-join-token" ]; do echo "Waiting for join token"; sleep 1; done'
+    ExecStartPre=/bin/bash -c 'until [ -x "/opt/teleport-node-role.sh" ]; do echo "Waiting for node role script"; sleep 1; done'
+    {{- end }}
     ExecStart=/opt/bin/teleport start --roles=node --config=/etc/teleport.yaml --pid-file=/run/teleport.pid
     ExecReload=/bin/kill -HUP $MAINPID
     PIDFile=/run/teleport.pid

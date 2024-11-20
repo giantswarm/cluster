@@ -885,10 +885,11 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.resourcesApi.infrastructureCluster.version` | **API version**|**Type:** `string`<br/>**Examples:** `"v1alpha1", "v1beta1", "v1beta2", "v1", "v2"`<br/>|
 | `providerIntegration.resourcesApi.machineHealthCheckResourceEnabled` | **MachineHealthCheck resource enabled** - Flag that indicates if the MachineHealthCheck resource is enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.|**Type:** `boolean`<br/>**Default:** `true`|
 | `providerIntegration.resourcesApi.machinePoolResourcesEnabled` | **Machine pool resources enabled** - Flag that indicates if the machine pool resources are enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.|**Type:** `boolean`<br/>**Default:** `true`|
-| `providerIntegration.teleport` | **Teleport**|**Type:** `object`<br/>|
-| `providerIntegration.teleport.enabled` | **Enable teleport**|**Type:** `boolean`<br/>**Default:** `true`|
-| `providerIntegration.teleport.proxyAddr` | **Teleport proxy address**|**Type:** `string`<br/>**Default:** `"teleport.giantswarm.io:443"`|
-| `providerIntegration.teleport.version` | **Teleport version**|**Type:** `string`<br/>**Default:** `"14.1.3"`|
+| `providerIntegration.teleport` | **Teleport** - Teleport configuration for cluster access|**Type:** `object`<br/>**Default:** `{"enabled":true,"initialJoinToken":"","proxyAddr":"teleport.giantswarm.io:443","version":"16.1.7"}`|
+| `providerIntegration.teleport.enabled` | **Enable teleport**|**Type:** `boolean`<br/>|
+| `providerIntegration.teleport.initialJoinToken` | **Teleport initial Node Join Token**|**Type:** `string`<br/>|
+| `providerIntegration.teleport.proxyAddr` | **Teleport proxy address**|**Type:** `string`<br/>|
+| `providerIntegration.teleport.version` | **Teleport version**|**Type:** `string`<br/>|
 | `providerIntegration.useReleases` | **Use releases** - Flag that indicates if the provider is using release resources to get app and component versions.|**Type:** `boolean`<br/>**Default:** `false`|
 | `providerIntegration.workers` | **Provider-specific workers configuration**|**Type:** `object`<br/>|
 | `providerIntegration.workers.defaultNodePools` | **Default node pools**|**Type:** `object`<br/>|
