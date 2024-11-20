@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+
+### Added
+
+- Add `teleport-init` systemd unit to handle initial token setup before `teleport` service starts
+
+### Changed
+
+- Improve `teleport` service reliability by adding proper file and service dependencies and pre-start checks
+
 ## [1.6.0] - 2024-10-10
 
 ### Changed
