@@ -17,7 +17,7 @@ jobs:
       run: |
         git config --global user.email "dev@giantswarm.io"
         git config --global user.name "taylorbot"
-    
+
     - uses: oleksiyrudenko/gha-git-credentials@v2.1.2
       with:
         global: true
@@ -41,19 +41,19 @@ jobs:
         fi
         echo "Pull request number is $cluster_chart_pr_number."
         echo "cluster_chart_pr_number=$cluster_chart_pr_number" >> $GITHUB_ENV
-        
+
         cluster_chart_pr_details=$(gh pr view $cluster_chart_pr_number --json "title,author,headRefName")
-        
+
         # Get pull request title
         cluster_chart_pr_title=$(echo $cluster_chart_pr_details | jq -r '.title')
         echo "cluster_chart_pr_title=$cluster_chart_pr_title" >> $GITHUB_ENV
-        
+
         # Get pull request author details
         cluster_chart_pr_author_username=$(echo $cluster_chart_pr_details | jq -r '.author.login')
         cluster_chart_pr_author_name=$(echo $cluster_chart_pr_details | jq -r '.author.name')
         echo "cluster_chart_pr_author_username=$cluster_chart_pr_author_username" >> $GITHUB_ENV
         echo "cluster_chart_pr_author_name=$cluster_chart_pr_author_name" >> $GITHUB_ENV
-        
+
         # Get pull request head branch name (the branch that has changes)
         cluster_chart_pr_branch_name=$(echo $cluster_chart_pr_details | jq -r '.headRefName')
         echo "cluster_chart_pr_branch_name=$cluster_chart_pr_branch_name" >> $GITHUB_ENV
@@ -61,15 +61,14 @@ jobs:
     - name: Get cluster chart custom version for the pull request
       run: |
         cd cluster
-        git fetch --tags
-        
+
         # get the latest tag and trim 'v' prefix
-        latest_release=$(git describe --tags $(git rev-list --tags --max-count=1))
+        latest_release=$(gh -R giantswarm/cluster release view --json tagName --jq ".tagName")
         latest_release="${latest_release#v}"
-        
+
         git checkout "${{ env.cluster_chart_pr_branch_name }}"
         latest_commit_sha=$(git rev-parse --verify HEAD)
-        
+
         echo "Custom cluster chart version is $latest_release-$latest_commit_sha"
         echo "custom_cluster_chart_new_version=$latest_release-$latest_commit_sha" >> $GITHUB_ENV
 
@@ -116,7 +115,7 @@ jobs:
           echo "Updating cluster chart version"
           new_version="$new_version" yq e '.dependencies[] |= select(.name == "cluster") * {"version": strenv(new_version)}' -i Chart.yaml
           yq e '.dependencies[] |= select(.name == "cluster") * {"repository": "https://giantswarm.github.io/cluster-test-catalog"}' -i Chart.yaml
-          
+
           echo -e "Updated cluster chart version. Chart.yaml content is now:\n---"
           cat Chart.yaml
           echo -e "---\n"
@@ -165,7 +164,7 @@ jobs:
       if: env.branch_exists == 'false'
       run: |
         title="Test cluster chart PR #${{ env.cluster_chart_pr_number }}"
-        
+
         body="> [!WARNING]"
         body="$body\n> DO NOT MERGE! This PR has been created automatically by @taylorbot on behalf of ${{ env.cluster_chart_pr_author_name }} (@${{ env.cluster_chart_pr_author_username }})."
         body="$body\n\n### Changes"
@@ -175,7 +174,7 @@ jobs:
         body="$body\n\nPlease comment this pull request with \`/run cluster-test-suites\` in order to run e2e tests."
         # body="$body\n\n> [!NOTE]"
         # body="$body\n> This PR will be closed automatically when the cluster chart PR is closed."
-        
+
         echo -e "$body" | gh pr create --repo giantswarm/cluster-aws \
           --head ${{ env.cluster_aws_branch_name }} \
           --title "$title" \
@@ -183,7 +182,7 @@ jobs:
           --label testing \
           --label do-not-merge/hold \
           --body-file -
-        
+
         cluster_aws_pr_number=$(gh pr list --repo giantswarm/cluster-aws --head ${{ env.cluster_aws_branch_name }} --json number | jq ".[0].number")
         cluster_chart_comment="Hey @${{ env.cluster_chart_pr_author_username }}, a test pull request has been created for you in the cluster-aws repo! Go to pull request https://github.com/giantswarm/cluster-aws/pull/$cluster_aws_pr_number in order to test your cluster chart changes on AWS."
         echo -e "$cluster_chart_comment" | gh pr comment \
