@@ -59,11 +59,13 @@ jobs:
         echo "cluster_chart_pr_branch_name=$cluster_chart_pr_branch_name" >> $GITHUB_ENV
 
     - name: Get cluster chart custom version for the pull request
+      env:
+        GITHUB_TOKEN: ${{ secrets.TAYLORBOT_GITHUB_ACTION }}
       run: |
         cd cluster
 
         # get the latest tag and trim 'v' prefix
-        latest_release=$(gh -R giantswarm/cluster release view --json tagName --jq ".tagName")
+        latest_release=$(gh release view --json tagName --jq ".tagName")
         latest_release="${latest_release#v}"
 
         git checkout "${{ env.cluster_chart_pr_branch_name }}"
