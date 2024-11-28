@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improve `teleport` service reliability by adding proper file and service dependencies and pre-start checks
+- Allow users to configure `retries` of `.spec.install.remediation` of HelmReleases
+- Increase install and upgrade retries of cilium HelmRelease to 40
 
 ## [1.6.0] - 2024-10-10
 

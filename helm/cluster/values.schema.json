@@ -328,6 +328,14 @@
                         }
                     }
                 },
+                "installRetries": {
+                    "type": "integer",
+                    "description": ".spec.install.remediation.retries for the HelmRelease"
+                },
+                "upgradeRetries": {
+                    "type": "integer",
+                    "description": ".spec.upgrade.remediation.retries for the HelmRelease"
+                },
                 "values": {
                     "type": "object",
                     "title": "Values",

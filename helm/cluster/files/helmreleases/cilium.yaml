@@ -4,6 +4,8 @@ namespace: kube-system
 # used by renovate
 # repo: giantswarm/cilium-app
 version: 0.29.0
+installRetries: 40
+upgradeRetries: 40
 defaultValues:
   # For all available values see https://github.com/giantswarm/cilium-app/blob/main/helm/cilium/values.yaml
   ipam:
