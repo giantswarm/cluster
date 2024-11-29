@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improve `teleport` service reliability by adding proper file and service dependencies and pre-start checks
-- :warning: **Remove outdated TLS cipher suites `TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305`.**
+- :warning: Kubernetes >= v1.30 **Remove outdated TLS cipher suites `TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305`.**
 
 ## [1.6.0] - 2024-10-10
 
