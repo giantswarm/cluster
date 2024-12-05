@@ -86,9 +86,6 @@ spec:
     secretRef:
       name: {{ include "cluster.resource.name" $ }}-kubeconfig
   interval: {{ $app.interval | default "5m" }}
-  install:
-    remediation:
-      retries: 30
   {{- /* We have multiple layers of app Helm values, where every next layer overwrites the previous one. */}}
   {{- /* Layer 1: default provider-independent app Helm values */}}
   {{- $appHelmValues := $app.defaultValues | default dict -}}
@@ -109,6 +106,12 @@ spec:
   {{- if $appHelmValues }}
   values: {{- $appHelmValues | toYaml | nindent 4 }}
   {{- end }}
+  install:
+    remediation:
+      retries: {{ coalesce $userConfig.installRetries $app.installRetries 30 }}
+  upgrade:
+    remediation:
+      retries: {{ coalesce $userConfig.upgradeRetries $app.upgradeRetries 30 }}
   {{- $extraConfigs := concat ($app.extraConfigs | default list) ($userConfig.extraConfigs | default list) }}
   {{- if $extraConfigs }}
   valuesFrom:
