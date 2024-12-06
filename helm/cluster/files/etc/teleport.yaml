@@ -1,6 +1,6 @@
 version: v3
 teleport:
-  data_dir: /var/lib/teleport
+  data_dir: /teleport
   join_params:
     token_name: /etc/teleport-join-token
     method: token
