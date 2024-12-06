@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - :warning: Kubernetes >= v1.30 **Remove outdated TLS cipher suites `TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305`.**
 - Changed `teleport` data directory to `/`
+- Check that apps requested by `include "cluster.app.catalog"` are listed in the `Release` since else, empty catalog names are produced and the chart deploys fine but fails later at `App`/`HelmRelease` deployment
 
 ## [1.7.0] - 2024-12-06
 

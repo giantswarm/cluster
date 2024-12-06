@@ -295,7 +295,14 @@ Where `data` is the data to hash and `global` is the top level scope.
 {{- end }}
 {{- end }}
 {{- end }}
+{{- $renderWithoutReleaseResource := ((($.GiantSwarm.internal).ephemeralConfiguration).offlineTesting).renderWithoutReleaseResource | default false }}
+{{- if $appCatalog }}
 {{- $appCatalog }}
+{{- else if $renderWithoutReleaseResource }}
+fake-app-catalog-from-offline-cluster-chart-rendering
+{{- else }}
+{{- fail (printf "Application not found in Release/%s: %s" (($.GiantSwarm.Release).metadata).name $.appName) }}
+{{- end }}
 {{- end }}
 
 {{/*
