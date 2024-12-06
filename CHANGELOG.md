@@ -7,8 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.7.0] - 2024-12-06
+### Fixed
 
+- Check that apps requested by `include "cluster.app.catalog"` are listed in the `Release` since else, empty catalog names are produced and the chart deploys fine but fails later at `App`/`HelmRelease` deployment
+
+## [1.7.0] - 2024-12-06
 
 ### Added
 
