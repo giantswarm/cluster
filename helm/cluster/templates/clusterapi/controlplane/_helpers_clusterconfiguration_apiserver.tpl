@@ -64,7 +64,8 @@ extraArgs:
   {{- end }}
   service-account-lookup: "true"
   service-cluster-ip-range: {{ .Values.global.connectivity.network.services.cidrBlocks | first }}
-  tls-cipher-suites: {{ include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.tlsCipherSuites" $ }}
+  {{- /* returning the tls cipher suites map object use fromYamlArray when converting to string */ }}
+  tls-cipher-suites: {{ include "cluster.internal.kubeadm.tlsCipherSuites" $ | fromYamlArray | join "," }}
   {{- range $argName, $argValue := $.Values.internal.advancedConfiguration.controlPlane.apiServer.extraArgs }}
   {{ $argName }}: {{ if kindIs "string" $argValue }}{{ $argValue | quote }}{{ else }}{{ $argValue }}{{ end }}
   {{- end }}
@@ -136,33 +137,6 @@ https://{{ .serviceAccountIssuer.clusterDomainPrefix }}.{{ include "cluster.reso
 
 {{- define "cluster.test.kubeadmControlPlane.kubeadmConfigSpec.clusterConfiguration.apiServer.apiAudiences" }}
 api-audiences-example.giantswarm.io
-{{- end }}
-
-{{- define "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.tlsCipherSuites" }}
-{{- $k8sVersion := include "cluster.component.kubernetes.version" . -}}
-{{- $preferredCiphers := list
-  "TLS_AES_128_GCM_SHA256"
-  "TLS_AES_256_GCM_SHA384"
-  "TLS_CHACHA20_POLY1305_SHA256"
-  "TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA"
-  "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256"
-  "TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA"
-  "TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384"
-  "TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256"
-  "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA"
-  "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
-  "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA"
-  "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384"
-  "TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256"
-  "TLS_RSA_WITH_AES_128_CBC_SHA"
-  "TLS_RSA_WITH_AES_128_GCM_SHA256"
-  "TLS_RSA_WITH_AES_256_CBC_SHA"
-  "TLS_RSA_WITH_AES_256_GCM_SHA384"
--}}
-{{- if semverCompare "<1.30.0" $k8sVersion }}
-{{- $preferredCiphers = append $preferredCiphers "TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305" "TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305" }}
-{{- end }}
-{{- join "," (compact $preferredCiphers) }}
 {{- end }}
 
 {{- define "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.featureGates" }}

@@ -21,8 +21,7 @@ systemReserved:
   cpu: {{ $.Values.internal.advancedConfiguration.kubelet.systemReserved.cpu }}
   memory: {{ $.Values.internal.advancedConfiguration.kubelet.systemReserved.memory }}
 systemReservedCgroup: /system.slice
-tlsCipherSuites:
-{{ include "kubelet.tlsCipherSuites" . | indent 2 }}
+tlsCipherSuites: {{ include "cluster.internal.kubeadm.tlsCipherSuites" $ | nindent 2 }}
 serializeImagePulls: false
 streamingConnectionIdleTimeout: 1h
 allowedUnsafeSysctls:
