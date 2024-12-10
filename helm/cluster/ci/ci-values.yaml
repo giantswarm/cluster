@@ -282,6 +282,7 @@ internal:
     offlineTesting:
       renderWithoutReleaseResource: true
 providerIntegration:
+  kubernetesVersion: "1.30.0"
   apps:
     capiNodeLabeler:
       enable: true
@@ -530,7 +531,7 @@ providerIntegration:
     - echo "aws nodes command before kubeadm"
     postKubeadmCommands:
     - echo "aws nodes command after kubeadm"
-  kubernetesVersion: 1.25.16
+  kubernetesVersion: 1.30.0
   pauseProperties:
     global.connectivity.vpcMode: private
   osImage:
