@@ -621,4 +621,4 @@ providerIntegration:
       - echo "aws workers command before kubeadm"
       postKubeadmCommands:
       - echo "aws workers command after kubeadm"
-  useReleases: true
+  useReleases: false
