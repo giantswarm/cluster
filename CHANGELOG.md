@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - :warning: Kubernetes >= v1.30 **Remove outdated TLS cipher suites `TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305`.**
+- Changed `teleport` data directory to `/`
+
 
 ## [1.7.0] - 2024-12-06
 
@@ -18,8 +20,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add `teleport-init` systemd unit to handle initial token setup before `teleport` service starts
 
 ### Changed
-
-- Changed `teleport` data directory to `/`
 
 - Improve `teleport` service reliability by adding proper file and service dependencies and pre-start checks
 
