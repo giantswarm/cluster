@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - :warning: Kubernetes >= v1.30 **Remove outdated TLS cipher suites `TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305`.**
 - Changed `teleport` data directory to `/`
 
+### Fixed
+
+- Evaluate semver check for tls cipher suites helper in case value is "N/A".
+
 ## [1.7.0] - 2024-12-06
 
 ### Added
