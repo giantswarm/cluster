@@ -152,45 +152,47 @@ jobs:
     - name: Commit and push changes
       if: env.cluster_chart_version_updated == 'true'
       run: |
+        set -u
         cd cluster-aws
         git add helm/cluster-aws/Chart.yaml
         git add helm/cluster-aws/Chart.lock
-        git commit -m "Update cluster chart version to ${{ env.custom_cluster_chart_new_version }}"
+        git commit -m "Update cluster chart version to ${custom_cluster_chart_new_version}"
 
-        git remote set-url origin https://${{ env.GITHUB_TOKEN }}@github.com/giantswarm/cluster-aws.git
-        git push origin ${{ env.cluster_aws_branch_name }}
+        git remote set-url origin "https://${GITHUB_TOKEN}@github.com/giantswarm/cluster-aws.git"
+        git push origin "${cluster_aws_branch_name}"
       env:
         GITHUB_TOKEN: ${{ secrets.TAYLORBOT_GITHUB_ACTION }}
 
     - name: Create a draft pull request
       if: env.branch_exists == 'false'
       run: |
-        title="Test cluster chart PR #${{ env.cluster_chart_pr_number }}"
+        set -u
+        title="Test cluster chart PR #${cluster_chart_pr_number}"
 
         body="> [!WARNING]"
-        body="$body\n> DO NOT MERGE! This PR has been created automatically by @taylorbot on behalf of ${{ env.cluster_chart_pr_author_name }} (@${{ env.cluster_chart_pr_author_username }})."
+        body="$body\n> DO NOT MERGE! This PR has been created automatically by @taylorbot on behalf of ${cluster_chart_pr_author_name} (@${cluster_chart_pr_author_username})."
         body="$body\n\n### Changes"
-        body="$body\n\nUpdate the cluster chart version from \`${{ env.cluster_chart_current_version }}\` to \`${{ env.custom_cluster_chart_new_version }}\` in order to test @${{ env.cluster_chart_pr_author_username }}'s cluster chart pull request https://github.com/giantswarm/cluster/pull/${{ env.cluster_chart_pr_number }}."
-        body="$body\n\nCluster chart pull request title: \`${{ env.cluster_chart_pr_title }}\`."
+        body="$body\n\nUpdate the cluster chart version from \`${cluster_chart_current_version}\` to \`${custom_cluster_chart_new_version}\` in order to test @${cluster_chart_pr_author_username}'s cluster chart pull request https://github.com/giantswarm/cluster/pull/${cluster_chart_pr_number}."
+        body="$body\n\nCluster chart pull request title: \`${cluster_chart_pr_title}\`."
         body="$body\n\n### Testing"
         body="$body\n\nPlease comment this pull request with \`/run cluster-test-suites\` in order to run e2e tests."
         # body="$body\n\n> [!NOTE]"
         # body="$body\n> This PR will be closed automatically when the cluster chart PR is closed."
 
         echo -e "$body" | gh pr create --repo giantswarm/cluster-aws \
-          --head ${{ env.cluster_aws_branch_name }} \
+          --head "${cluster_aws_branch_name}" \
           --title "$title" \
           --draft \
           --label testing \
           --label do-not-merge/hold \
           --body-file -
 
-        cluster_aws_pr_number=$(gh pr list --repo giantswarm/cluster-aws --head ${{ env.cluster_aws_branch_name }} --json number | jq ".[0].number")
-        cluster_chart_comment="Hey @${{ env.cluster_chart_pr_author_username }}, a test pull request has been created for you in the cluster-aws repo! Go to pull request https://github.com/giantswarm/cluster-aws/pull/$cluster_aws_pr_number in order to test your cluster chart changes on AWS."
+        cluster_aws_pr_number=$(gh pr list --repo giantswarm/cluster-aws --head "${cluster_aws_branch_name}" --json number | jq ".[0].number")
+        cluster_chart_comment="Hey @${cluster_chart_pr_author_username}, a test pull request has been created for you in the cluster-aws repo! Go to pull request https://github.com/giantswarm/cluster-aws/pull/$cluster_aws_pr_number in order to test your cluster chart changes on AWS."
         echo -e "$cluster_chart_comment" | gh pr comment \
           --repo giantswarm/cluster \
           --body "$cluster_chart_comment" \
-          ${{ env.cluster_chart_pr_number }}
+          "${cluster_chart_pr_number}"
       env:
         GITHUB_TOKEN: ${{ secrets.TAYLORBOT_GITHUB_ACTION }}
 
@@ -215,7 +217,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.TAYLORBOT_GITHUB_ACTION }}
       run: |
-        gh pr list --repo giantswarm/cluster-aws --head test-cluster-chart-pr-${{ env.cluster_chart_pr_number }} --json number --jq '.[].number' | while read pr_number; do
+        set -u
+        gh pr list --repo giantswarm/cluster-aws --head "test-cluster-chart-pr-${cluster_chart_pr_number}" --json number --jq '.[].number' | while read pr_number; do
           gh pr close $pr_number \
             --repo giantswarm/cluster-aws \
             --comment "Closing this pull request after closing/merging cluster chart pull request." \
