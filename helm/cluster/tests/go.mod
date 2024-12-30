@@ -3,7 +3,7 @@ module github.com/giantswarm/cluster/helm/cluster/tests
 go 1.22.4
 
 require (
-	github.com/onsi/ginkgo/v2 v2.22.1
+	github.com/onsi/ginkgo/v2 v2.22.2
 	github.com/onsi/gomega v1.36.2
 )
 
