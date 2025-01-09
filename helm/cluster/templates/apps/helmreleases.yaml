@@ -88,7 +88,10 @@ spec:
   interval: {{ $app.interval | default "5m" }}
   install:
     remediation:
-      retries: 30
+      retries: -1
+  upgrade:
+    remediation:
+      retries: -1
   {{- /* We have multiple layers of app Helm values, where every next layer overwrites the previous one. */}}
   {{- /* Layer 1: default provider-independent app Helm values */}}
   {{- $appHelmValues := $app.defaultValues | default dict -}}
