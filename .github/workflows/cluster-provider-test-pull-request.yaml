@@ -68,7 +68,7 @@ jobs:
         latest_release=$(gh release view --json tagName --jq ".tagName")
         latest_release="${latest_release#v}"
 
-        git checkout "${{ env.cluster_chart_pr_branch_name }}"
+        git checkout "${cluster_chart_pr_branch_name}"
         latest_commit_sha=$(git rev-parse --verify HEAD)
 
         echo "Custom cluster chart version is $latest_release-$latest_commit_sha"
