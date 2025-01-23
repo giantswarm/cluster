@@ -30,6 +30,7 @@ containerLinuxConfig:
 
 {{/* Default systemd units on control plane nodes */}}
 {{- define "cluster.internal.controlPlane.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units.default" }}
+{{- if not $.Values.providerIntegration.apps.etcdDefrag.enable }}
 - name: etcd3-defragmentation.service
   enabled: false
   contents: |
@@ -59,6 +60,7 @@ containerLinuxConfig:
     Unit=etcd3-defragmentation.service
     [Install]
     WantedBy=multi-user.target
+{{- end }}
 {{- end }}
 
 {{- define "cluster.internal.controlPlane.kubeadm.ignition.containerLinuxConfig.additionalConfig.storage.filesystems" }}
