@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Changed `teleport` data directory to `/`
 - Check that apps requested by `include "cluster.app.catalog"` are listed in the `Release` since else, empty catalog names are produced and the chart deploys fine but fails later at `App`/`HelmRelease` deployment
 - Set `.install.remediation.retries` of `.spec.install` and `.spec.upgrade` of HelmReleases to -1
+- Make `nodeCidrMaskSize` default to 25 instead of 24.
 
 ## [1.7.0] - 2024-12-06
 
