@@ -10,6 +10,7 @@ global:
     ciliumServiceMonitors: {}
     clusterAutoscaler: {}
     coreDns: {}
+    etcdDefrag: {}
     etcdKubernetesResourcesCountExporter: {}
     externalDns: {}
     giantswarmClusterSuite: {}
@@ -132,6 +133,8 @@ providerIntegration:
     clusterAutoscaler:
       enable: false
     coreDns:
+      enable: false
+    etcdDefrag:
       enable: false
     etcdKubernetesResourcesCountExporter:
       enable: false
