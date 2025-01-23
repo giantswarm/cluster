@@ -5,7 +5,6 @@ containerLinuxConfig:
       units:
       {{- $_ := set $ "nodeRole" "controlplane" }}
       {{- include "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units.default" $ | indent 6 }}
-      {{- include "cluster.internal.controlPlane.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units.default" $ | indent 6 }}
       {{- include "cluster.internal.controlPlane.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units" $ | indent 6 }}
     storage:
       filesystems:
@@ -26,39 +25,6 @@ containerLinuxConfig:
 {{- $systemdUnitValues := dict "global" $.Values.global "Template" $.Template "units" $.Values.providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units }}
 {{- include "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units" $systemdUnitValues }}
 {{- end }}
-{{- end }}
-
-{{/* Default systemd units on control plane nodes */}}
-{{- define "cluster.internal.controlPlane.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units.default" }}
-- name: etcd3-defragmentation.service
-  enabled: false
-  contents: |
-    [Unit]
-    Description=etcd defragmentation job
-    After=containerd.service kubelet.service
-    Requires=containerd.service kubelet.service
-    [Service]
-    Type=oneshot
-    ExecStart=/bin/sh -c "crictl exec $(crictl ps --name=^etcd$ -q) etcdctl \
-      --cacert=/etc/kubernetes/pki/etcd/ca.crt \
-      --cert=/etc/kubernetes/pki/etcd/peer.crt \
-      --key=/etc/kubernetes/pki/etcd/peer.key \
-      defrag \
-      --command-timeout=60s \
-      --dial-timeout=60s \
-      --keepalive-timeout=25s"
-- name: etcd3-defragmentation.timer
-  enabled: true
-  contents: |
-    [Unit]
-    Description=Execute etcd3-defragmentation hourly
-    [Timer]
-    OnCalendar=hourly
-    RandomizedDelaySec=55m
-    FixedRandomDelay=true
-    Unit=etcd3-defragmentation.service
-    [Install]
-    WantedBy=multi-user.target
 {{- end }}
 
 {{- define "cluster.internal.controlPlane.kubeadm.ignition.containerLinuxConfig.additionalConfig.storage.filesystems" }}

@@ -14,6 +14,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Check that apps requested by `include "cluster.app.catalog"` are listed in the `Release` since else, empty catalog names are produced and the chart deploys fine but fails later at `App`/`HelmRelease` deployment
 - Set `.install.remediation.retries` of `.spec.install` and `.spec.upgrade` of HelmReleases to -1
 
+### Removed
+
+- Chart: Replace etcd defragmentation systemd unit by in-cluster cron job. ([#417](https://github.com/giantswarm/cluster/pull/417))
+  - Control Plane: Remove etcd defragmentation service.
+
 ## [1.7.0] - 2024-12-06
 
 ### Added
