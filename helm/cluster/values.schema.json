@@ -1183,6 +1183,12 @@
                             "title": "CoreDNS",
                             "description": "Configuration of coredns-app. For all available values see https://github.com/giantswarm/coredns-app."
                         },
+                        "coreDnsExtensions": {
+                            "$ref": "#/$defs/helmRelease",
+                            "type": "object",
+                            "title": "CoreDNS Extensions",
+                            "description": "Configuration of coredns-extensions-app. For all available values see https://github.com/giantswarm/coredns-extensions-app."
+                        },
                         "etcdDefrag": {
                             "$ref": "#/$defs/app",
                             "type": "object",
@@ -2226,6 +2232,9 @@
                             "$ref": "#/$defs/providerIntegrationAppConfig"
                         },
                         "coreDns": {
+                            "$ref": "#/$defs/providerIntegrationAppConfig"
+                        },
+                        "coreDnsExtensions": {
                             "$ref": "#/$defs/providerIntegrationAppConfig"
                         },
                         "etcdDefrag": {
