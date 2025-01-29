@@ -1,0 +1,12 @@
+appName: coredns-extensions
+chartName: coredns-extensions-app
+configKey: coreDnsExtensions
+clusterValues:
+  configMap: true
+  secret: false
+dependsOnHelmRelease: true
+dependsOn: vertical-pod-autoscaler-crd
+namespace: kube-system
+# used by renovate
+# repo: giantswarm/coredns-extensions-app
+version: 0.1.1

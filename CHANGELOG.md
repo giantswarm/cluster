@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Apps: Add `etcd-defrag`. ([#418](https://github.com/giantswarm/cluster/pull/418))
+- Apps: Add `coredns-extensions`. 
 
 ### Changed
 
