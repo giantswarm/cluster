@@ -1,5 +1,5 @@
 appName: coredns-extensions
-chartName: coredns-extensions-app
+chartName: coredns-extensions
 configKey: coreDnsExtensions
 clusterValues:
   configMap: true
