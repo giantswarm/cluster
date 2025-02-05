@@ -7,6 +7,6 @@ dependsOn: kyverno-crds
 namespace: kube-system
 # used by renovate
 # repo: giantswarm/etcd-defrag-app
-version: 0.1.1
+version: 1.0.0
 defaultValues:
   etcdStorageQuotaBytes: {{ mul $.Values.internal.advancedConfiguration.controlPlane.etcd.quotaBackendBytesGiB 1024 1024 1024 }}
