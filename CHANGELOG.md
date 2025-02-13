@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Add NVIDIA container runtime support in containerd config
 - Apps: Add `etcd-defrag`. ([#418](https://github.com/giantswarm/cluster/pull/418))
 - Apps: Add `coredns-extensions`. ([#423](https://github.com/giantswarm/cluster/pull/423)) 
 
