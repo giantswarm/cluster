@@ -40,7 +40,7 @@ spec:
         {{- if $nodePoolConfig.infrastructureRef }}
         apiVersion: {{ $nodePoolConfig.infrastructureRef.group }}/{{ $nodePoolConfig.infrastructureRef.version }}
         kind: {{ $nodePoolConfig.infrastructureRef.kind  }}
-        {{ - else }}
+        {{- else }}
         apiVersion: {{ $.Values.providerIntegration.resourcesApi.infrastructureMachinePool.group }}/{{ $.Values.providerIntegration.resourcesApi.infrastructureMachinePool.version }}
         kind: {{ $.Values.providerIntegration.resourcesApi.infrastructureMachinePool.kind }}
         {{- end }}
