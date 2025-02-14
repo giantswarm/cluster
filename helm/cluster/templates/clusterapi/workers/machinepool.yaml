@@ -37,8 +37,13 @@ spec:
           name: {{ include "cluster.resource.name" $ }}-{{ $nodePoolName }}-{{ include "cluster.internal.workers.kubeadmConfig.spec.hash" $ }}
       clusterName: {{ include "cluster.resource.name" $ }}
       infrastructureRef:
-        apiVersion: {{ $nodePoolConfig.infrastructureRef.group | default $.Values.providerIntegration.resourcesApi.infrastructureMachinePool.group }}/{{ $nodePoolConfig.infrastructureRef.version | default $.Values.providerIntegration.resourcesApi.infrastructureMachinePool.version }}
-        kind: {{ $nodePoolConfig.infrastructureRef.kind | default $.Values.providerIntegration.resourcesApi.infrastructureMachinePool.kind }}
+        {{- if $nodePoolConfig.infrastructureRef }}
+        apiVersion: {{ $nodePoolConfig.infrastructureRef.group }}/{{ $nodePoolConfig.infrastructureRef.version }}
+        kind: {{ $nodePoolConfig.infrastructureRef.kind  }}
+        {{ - else }}
+        apiVersion: {{ $.Values.providerIntegration.resourcesApi.infrastructureMachinePool.group }}/{{ $.Values.providerIntegration.resourcesApi.infrastructureMachinePool.version }}
+        kind: {{ $.Values.providerIntegration.resourcesApi.infrastructureMachinePool.kind }}
+        {{- end }}
         name: {{ include "cluster.resource.name" $ }}-{{ $nodePoolName }}
       version: v{{ include "cluster.component.kubernetes.version" $ }}
 ---
