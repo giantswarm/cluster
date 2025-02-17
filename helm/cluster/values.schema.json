@@ -1184,7 +1184,7 @@
                             "description": "Configuration of coredns-app. For all available values see https://github.com/giantswarm/coredns-app."
                         },
                         "coreDnsExtensions": {
-                            "$ref": "#/$defs/helmRelease",
+                            "$ref": "#/$defs/app",
                             "type": "object",
                             "title": "CoreDNS Extensions",
                             "description": "Configuration of coredns-extensions. For all available values see https://github.com/giantswarm/coredns-extensions-app."
