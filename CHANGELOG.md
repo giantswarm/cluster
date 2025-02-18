@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.1] - 2025-02-18
+
 ### Changed
 
 - Values: Fix `coredns-extensions` type. ([#437](https://github.com/giantswarm/cluster/pull/437))
@@ -688,7 +690,8 @@ For Kubernetes <v1.29, you will need to re-enable it using the respective values
 
 - Update and clean up the template repo.
 
-[Unreleased]: https://github.com/giantswarm/cluster/compare/v2.0.0...HEAD
+[Unreleased]: https://github.com/giantswarm/cluster/compare/v2.0.1...HEAD
+[2.0.1]: https://github.com/giantswarm/cluster/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/giantswarm/cluster/compare/v1.7.0...v2.0.0
 [1.7.0]: https://github.com/giantswarm/cluster/compare/v1.6.0...v1.7.0
 [1.6.0]: https://github.com/giantswarm/cluster/compare/v1.5.2...v1.6.0
