@@ -1184,7 +1184,7 @@
                             "description": "Configuration of coredns-app. For all available values see https://github.com/giantswarm/coredns-app."
                         },
                         "coreDnsExtensions": {
-                            "$ref": "#/$defs/helmRelease",
+                            "$ref": "#/$defs/app",
                             "type": "object",
                             "title": "CoreDNS Extensions",
                             "description": "Configuration of coredns-extensions. For all available values see https://github.com/giantswarm/coredns-extensions-app."
@@ -1208,7 +1208,7 @@
                             "description": "Configuration of external-dns. For all available values see https://github.com/giantswarm/external-dns-app."
                         },
                         "giantswarmClusterSuite": {
-                            "$ref": "#/$defs/app",
+                            "$ref": "#/$defs/helmRelease",
                             "type": "object",
                             "title": "giantswarm-cluster-suite",
                             "description": "Configuration of giantswarm-cluster-suite. For all available values see https://github.com/giantswarm/giantswarm-cluster-suite."
@@ -1238,7 +1238,7 @@
                             "description": "Configuration of net-exporter. For all available values see https://github.com/giantswarm/net-exporter."
                         },
                         "networkPolicies": {
-                            "$ref": "#/$defs/app",
+                            "$ref": "#/$defs/helmRelease",
                             "type": "object",
                             "title": "NetworkPolicies",
                             "description": "Configuration of network-policies-app. For all available values see https://github.com/giantswarm/network-policies-app."

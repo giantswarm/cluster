@@ -8,7 +8,7 @@ dependsOn: kyverno-crds
 namespace: kube-system
 # used by renovate
 # repo: giantswarm/metrics-server-app
-version: 2.4.2
+version: 2.5.0
 defaultValues:
   ciliumNetworkPolicy:
     enabled: true

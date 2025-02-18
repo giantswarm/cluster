@@ -1,6 +1,5 @@
 appName: giantswarm-cluster-suite
 configKey: giantswarmClusterSuite
 namespace: kube-system
-# used by renovate
-# repo: giantswarm/giantswarm-cluster-suite
+# Renovate is disabled for now, because this is a private repo.
 version: 0.1.1
