@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Values: Fix `coredns-extensions` type. ([#437](https://github.com/giantswarm/cluster/pull/437))
+- Values: Fix `giantswarm-cluster-suite` and `network-policies` type. ([#439](https://github.com/giantswarm/cluster/pull/439))
+
 ## [2.0.0] - 2025-02-17
 
 ### Added
