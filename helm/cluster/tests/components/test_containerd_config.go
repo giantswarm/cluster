@@ -26,9 +26,12 @@ var (
 	expectedContainerdZotBothMcAndLocalConfig string
 
 	//go:embed files/containerd_expected_without_cgroupsv1.toml
+	expectedContainerdWithoutCgroupsv1Config string
+
+	//go:embed files/containerd_nodepool_expected_without_cgroupsv1.toml
 	expectedContainerdNodePoolWithoutCgroupsv1Config string
 
-	//go:embed files/containerd_expected_with_cgroupsv1.toml
+	//go:embed files/containerd_nodepool_expected_with_cgroupsv1.toml
 	expectedContainerdNodePoolWithCgroupsv1Config string
 )
 
@@ -56,7 +59,7 @@ var _ = Describe("containerd config", func() {
 		Entry("when only MC Zot is enabled", "test-zot-mc-values.yaml", expectedContainerdZotMcOnlyConfig),
 		Entry("when only local Zot is enabled", "test-zot-only-local-values.yaml", expectedContainerdZotLocalOnlyConfig),
 		Entry("when both local Zot and MC Zot are enabled", "test-zot-mc-and-local-values.yaml", expectedContainerdZotBothMcAndLocalConfig),
-		Entry("when node pools use cgroups v1, control plane always uses cgroups v2", "test-cgroupsv1-values.yaml", expectedContainerdNodePoolWithoutCgroupsv1Config))
+		Entry("when node pools use cgroups v1, control plane always uses cgroups v2", "test-cgroupsv1-values.yaml", expectedContainerdWithoutCgroupsv1Config))
 
 	DescribeTable("rendered node pools config file",
 		func(helmValuesFile, nodepoolName, expectedConfig string) {

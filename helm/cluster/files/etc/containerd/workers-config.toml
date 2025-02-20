@@ -54,3 +54,10 @@ sandbox_image = "{{ include "cluster.image.registry" $ }}/{{ $.Values.providerIn
       {{- end }}
     {{- end }}
   {{- end }}
+
+# add Nvidia container runtime to support GPUs
+[plugins."io.containerd.grpc.v1.cri".containerd.runtimes.nvidia]
+  runtime_type = "io.containerd.runc.v2"
+  privileged_without_host_devices = false
+  [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.nvidia.options]
+    BinaryName = "/usr/bin/nvidia-container-runtime"
