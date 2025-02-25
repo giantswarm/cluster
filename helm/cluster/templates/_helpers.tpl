@@ -299,10 +299,40 @@ Where `data` is the data to hash and `global` is the top level scope.
 {{- if $appCatalog }}
 {{- $appCatalog }}
 {{- else if $renderWithoutReleaseResource -}}
-fake-app-catalog-from-offline-cluster-chart-rendering
+{{- printf "fake-app-catalog-from-offline-cluster-chart-rendering" }}
 {{- else }}
-{{- fail (printf "Application not found in Release/%s: %s" (($.GiantSwarm.Release).metadata).name $.appName) }}
+{{- printf "no-catalog-found" }}
 {{- end }}
+{{- end }}
+
+{{/*
+  cluster.app.in-release is a public named helper template that checks if the app that is specified under
+  property 'appName' in the object that is passed to the template exists in the Release.
+
+  Example usage in template:
+
+    {{- $_ := set $ "appName" "foo-bar-controller" }}
+    {{- $appInRelease := include "cluster.app.in-release" $ }}
+    {{- if $appInRelease }}
+    {{!-- Do logic here... --}}
+    {{- end }}
+*/}}
+{{- define "cluster.app.in-release" }}
+{{- $inRelease := false }}
+{{- $renderWithoutReleaseResource := ((($.GiantSwarm.internal).ephemeralConfiguration).offlineTesting).renderWithoutReleaseResource | default false }}
+{{- if $renderWithoutReleaseResource }}
+{{- $inRelease = true }}
+{{- else }}
+{{- $_ := (include "cluster.internal.get-release-resource" $) }}
+{{- if $.GiantSwarm.Release }}
+{{- range $_, $app := $.GiantSwarm.Release.spec.apps }}
+{{- if eq $app.name $.appName }}
+{{- $inRelease = true }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{ $inRelease }}
 {{- end }}
 
 {{/*

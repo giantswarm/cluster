@@ -2,6 +2,9 @@
 {{- range $path, $_ := .Files.Glob "files/helmreleases/**.yaml" }}
 {{- with $rootScope }}
 {{- $app := tpl (.Files.Get $path) $ | fromYaml }}
+{{- $_ := set $ "appName" $app.appName }}
+{{- $appInRelease := (include "cluster.app.in-release" $) | default false }}
+{{- if $appInRelease }}
 {{- $appName := $app.appName }}
 {{- $appKey := $app.configKey | default $appName }}
 {{- /*
@@ -57,7 +60,6 @@ spec:
       {{- $appCatalog := $app.catalog -}}
       {{- $appVersion := $app.version -}}
       {{- if $.Values.providerIntegration.useReleases }}
-      {{- $_ := set $ "appName" $app.appName }}
       {{- $appCatalog = include "cluster.app.catalog" $ }}
       {{- $appVersion = include "cluster.app.version" $ }}
       {{- end }}
@@ -67,7 +69,6 @@ spec:
         name: {{ include "cluster.resource.name" $ }}-{{ $ephemeralConfig.catalogOverride | default $appCatalog | default "default" }}
   {{- $dependencies := list }}
   {{- if $.Values.providerIntegration.useReleases}}
-    {{- $_ := set $ "appName" $appName }}
     {{- $dependenciesFromRelease := include "cluster.app.dependencies" $ | fromYamlArray }}
     {{- range $_, $dependency := $dependenciesFromRelease }}
       {{- $dependencies = append $dependencies $dependency }}
@@ -127,4 +128,5 @@ spec:
 {{- /* end with $rootScope */}}
 {{- end }}
 {{- /* end outer range */}}
+{{- end }}
 {{- end }}

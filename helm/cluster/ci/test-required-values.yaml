@@ -13,6 +13,10 @@ global:
       maxSize: 20
     verybignodepool-1234:
       replicas: 100
+internal:
+  ephemeralConfiguration:
+    offlineTesting:
+      renderWithoutReleaseResource: true
 providerIntegration:
   environmentVariables:
     hostName: COREOS_EC2_HOSTNAME

@@ -3,6 +3,9 @@
 {{- $app := dict }}
 {{- with $rootScope }}
 {{- $app = (tpl (.Files.Get $path) $) | fromYaml }}
+{{- $_ := set $ "appName" $app.appName }}
+{{- $appInRelease := (include "cluster.app.in-release" $) | default false }}
+{{- if $appInRelease }}
 {{- $appName := $app.appName }}
 {{- $appKey := $app.configKey | default $appName }}
 {{- /* Get provider-integration app config */}}
@@ -33,7 +36,6 @@ metadata:
   {{- $annotations := include "cluster.annotations.common.all" $ }}
   {{- $dependencies := list }}
   {{- if $.Values.providerIntegration.useReleases}}
-    {{- $_ := set $ "appName" $appName }}
     {{- $dependenciesFromRelease := include "cluster.app.dependencies" $ | fromYamlArray }}
     {{- range $_, $dependency := $dependenciesFromRelease }}
       {{- $dependencies = append $dependencies (printf "%s-%s" $.Values.global.metadata.name $dependency) }}
@@ -66,7 +68,6 @@ metadata:
 spec:
   {{- $appCatalog := $app.catalog -}}
   {{- if $.Values.providerIntegration.useReleases }}
-  {{- $_ := set $ "appName" $app.appName }}
   {{- $appCatalog = include "cluster.app.catalog" $ }}
   {{- end }}
   catalog: {{ $ephemeralConfig.catalogOverride | default $appCatalog | default "default" }}
@@ -87,7 +88,6 @@ spec:
   {{- end }}
   {{- $appVersion := $app.version -}}
   {{- if $.Values.providerIntegration.useReleases }}
-  {{- $_ := set $ "appName" $app.appName }}
   {{ $appVersion = include "cluster.app.version" $ }}
   {{- end }}
   version: {{ $ephemeralConfig.versionOverride | default $appVersion | trim | trimPrefix "v" }}
@@ -161,4 +161,5 @@ data:
 {{- /* end with $rootScope */}}
 {{- end }}
 {{- /* end outer range */}}
+{{- end }}
 {{- end }}

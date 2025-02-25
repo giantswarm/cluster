@@ -15,6 +15,10 @@ global:
         - gsoci.azurecr.io
       managementClusterRegistryCache:
         enabled: false
+internal:
+  ephemeralConfiguration:
+    offlineTesting:
+      renderWithoutReleaseResource: true
 providerIntegration:
   environmentVariables:
     hostName: COREOS_EC2_HOSTNAME
