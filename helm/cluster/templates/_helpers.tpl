@@ -320,7 +320,7 @@ Where `data` is the data to hash and `global` is the top level scope.
 {{- define "cluster.app.in-release" }}
 {{- $inRelease := false }}
 {{- $renderWithoutReleaseResource := ((($.GiantSwarm.internal).ephemeralConfiguration).offlineTesting).renderWithoutReleaseResource | default false }}
-{{- if or $renderWithoutReleaseResource (eq $.Values.providerIntegration.useReleases false)) }}
+{{- if or $renderWithoutReleaseResource (eq $.Values.providerIntegration.useReleases false) }}
 {{- $inRelease = true }}
 {{- else }}
 {{- $_ := (include "cluster.internal.get-release-resource" $) }}
