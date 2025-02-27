@@ -1,12 +1,16 @@
 {{- $rootScope := . }}
+
 {{- range $path, $_ := .Files.Glob "files/helmreleases/**.yaml" }}
+
+{{- $app := dict }}
 {{- with $rootScope }}
+
+{{- /* Configure App values */}}
 {{- $app := tpl (.Files.Get $path) $ | fromYaml }}
 {{- $_ := set $ "appName" $app.appName }}
-{{- $appInRelease := (include "cluster.app.in-release" $) | default false }}
-{{- if $appInRelease }}
 {{- $appName := $app.appName }}
 {{- $appKey := $app.configKey | default $appName }}
+
 {{- /*
     Get provider-specific app config where we have:
     - name of Helm template that renders provider-specific Helm values for the app
@@ -20,6 +24,7 @@
        always a dict, for the sake of cleaner template code. */}}
 {{- $providerIntegrationAppConfig = $providerIntegrationAppConfigRaw }}
 {{- end }}
+
 {{- /*
     Get (optional) ephemeral app config where we have:
     - flag that indicates if the app is enabled or not
@@ -36,7 +41,14 @@
 {{- $ephemeralConfig = $ephemeralConfigRaw }}
 {{- end }}
 {{- end }}
-{{- if and (not $app.disable) $providerIntegrationAppConfig.enable (not $ephemeralConfig.disable) }}
+
+
+{{- /* Determine if the App CR should be rendered or not */}}
+{{- $shouldRenderApp := not (or $app.disable $ephemeralConfig.disable) /* Cluster chart */ }}
+{{- $shouldRenderApp = and $shouldRenderApp $providerIntegrationAppConfig.enable /* Provider chart */ }}
+{{- $shouldRenderApp = and $shouldRenderApp (or (not $.Values.providerIntegration.useReleases) (include "cluster.app.in-release" $)) /* Releases */ }}
+
+{{- if $shouldRenderApp }}
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
@@ -123,10 +135,9 @@ spec:
     optional: {{ $extraConfig.optional | default false  }}
     {{- end }}
   {{- end }}
-{{- /* end if and $providerIntegrationAppConfig.enable (not $ephemeralConfig.disable) */}}
+{{- /* end if $shouldRenderApp */}}
 {{- end }}
 {{- /* end with $rootScope */}}
 {{- end }}
 {{- /* end outer range */}}
-{{- end }}
 {{- end }}

@@ -1,13 +1,16 @@
 {{- $rootScope := . }}
+
 {{- range $path, $_ := .Files.Glob "files/apps/**.yaml" }}
+
 {{- $app := dict }}
 {{- with $rootScope }}
+
+{{- /* Configure App values */}}
 {{- $app = (tpl (.Files.Get $path) $) | fromYaml }}
 {{- $_ := set $ "appName" $app.appName }}
-{{- $appInRelease := (include "cluster.app.in-release" $) | default false }}
-{{- if $appInRelease }}
 {{- $appName := $app.appName }}
 {{- $appKey := $app.configKey | default $appName }}
+
 {{- /* Get provider-integration app config */}}
 {{- $providerIntegrationAppConfig := dict }}
 {{- $providerIntegrationAppConfigRaw := get $.Values.providerIntegration.apps $appKey }}
@@ -17,6 +20,7 @@
        always a dict, for the sake of cleaner template code. */}}
 {{- $providerIntegrationAppConfig = $providerIntegrationAppConfigRaw }}
 {{- end }}
+
 {{- /* Get ephemeral app config */}}
 {{- $ephemeralConfig := dict }}
 {{- if ($.Values.internal.ephemeralConfiguration).apps }}
@@ -28,7 +32,13 @@
 {{- $ephemeralConfig = $ephemeralConfigRaw }}
 {{- end }}
 {{- end }}
-{{- if and $providerIntegrationAppConfig.enable (not $ephemeralConfig.disable) }}
+
+{{- /* Determine if the App CR should be rendered or not */}}
+{{- $shouldRenderApp := not (or $app.disable $ephemeralConfig.disable) /* Cluster chart */ }}
+{{- $shouldRenderApp = and $shouldRenderApp $providerIntegrationAppConfig.enable /* Provider chart */ }}
+{{- $shouldRenderApp = and $shouldRenderApp (or (not $.Values.providerIntegration.useReleases) (include "cluster.app.in-release" $)) /* Releases */ }}
+
+{{- if $shouldRenderApp }}
 ---
 apiVersion: application.giantswarm.io/v1alpha1
 kind: App
@@ -156,10 +166,9 @@ data:
   {{- (tpl ($userValues | toYaml | toString) $) | nindent 4 }}
 {{- /* end if $hasUserValues */}}
 {{- end }}
-{{- /* end if and $providerIntegrationAppConfig.enable (not $ephemeralConfig.disable) */}}
+{{- /* end if $shouldRenderApp */}}
 {{- end }}
 {{- /* end with $rootScope */}}
 {{- end }}
 {{- /* end outer range */}}
-{{- end }}
 {{- end }}
