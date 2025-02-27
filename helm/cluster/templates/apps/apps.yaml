@@ -17,7 +17,8 @@
 {{- if $providerIntegrationAppConfigRaw }}
 {{- /* Sometimes, when provider app config is not set, $providerIntegrationAppConfigRaw gets parsed as an empty string,
        and sometimes as an empty dict. And we want $providerIntegrationAppConfigRaw, which is used in template, to be
-       always a dict, for the sake of cleaner template code. */}}
+       always a dict, for the sake of cleaner template code.
+*/}}
 {{- $providerIntegrationAppConfig = $providerIntegrationAppConfigRaw }}
 {{- end }}
 
@@ -28,7 +29,8 @@
 {{- if $ephemeralConfigRaw }}
 {{- /* Sometimes, when ephemeral config is not set, $ephemeralConfigRaw gets parsed as an empty string,
        and sometimes as an empty dict. And we want $ephemeralConfig, which is used in template, to be
-       always a dict, for the sake of cleaner template code. */}}
+       always a dict, for the sake of cleaner template code.
+*/}}
 {{- $ephemeralConfig = $ephemeralConfigRaw }}
 {{- end }}
 {{- end }}

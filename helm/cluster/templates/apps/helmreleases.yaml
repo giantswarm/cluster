@@ -14,13 +14,15 @@
 {{- /*
     Get provider-specific app config where we have:
     - name of Helm template that renders provider-specific Helm values for the app
-    - flag that indicates if the app is enabled for the provider */}}
+    - flag that indicates if the app is enabled for the provider
+*/}}
 {{- $providerIntegrationAppConfig := dict }}
 {{- $providerIntegrationAppConfigRaw := get $.Values.providerIntegration.apps $appKey }}
 {{- if $providerIntegrationAppConfigRaw }}
 {{- /* Sometimes, when provider app config is not set, $providerIntegrationAppConfigRaw gets parsed as an empty string,
        and sometimes as an empty dict. And we want $providerIntegrationAppConfigRaw, which is used in template, to be
-       always a dict, for the sake of cleaner template code. */}}
+       always a dict, for the sake of cleaner template code.
+*/}}
 {{- $providerIntegrationAppConfig = $providerIntegrationAppConfigRaw }}
 {{- end }}
 
@@ -28,14 +30,16 @@
     Get (optional) ephemeral app config where we have:
     - flag that indicates if the app is enabled or not
     - version override
-    - catalog override */}}
+    - catalog override
+*/}}
 {{- $ephemeralConfig := dict }}
 {{- if ($.Values.internal.ephemeralConfiguration).apps }}
 {{- $ephemeralConfigRaw := get $.Values.internal.ephemeralConfiguration.apps $appKey }}
 {{- if $ephemeralConfigRaw }}
 {{- /* Sometimes, when ephemeral config is not set, $ephemeralConfigRaw gets parsed as an empty string,
        and sometimes as an empty dict. And we want $ephemeralConfig, which is used in template, to be
-       always a dict, for the sake of cleaner template code. */}}
+       always a dict, for the sake of cleaner template code.
+*/}}
 {{- $ephemeralConfig = $ephemeralConfigRaw }}
 {{- end }}
 {{- end }}
