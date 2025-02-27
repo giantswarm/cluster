@@ -34,9 +34,12 @@
 {{- end }}
 
 {{- /* Determine if the App CR should be rendered or not */}}
-{{- $shouldRenderApp := not (or $app.disable $ephemeralConfig.disable) /* Cluster chart */ }}
-{{- $shouldRenderApp = and $shouldRenderApp $providerIntegrationAppConfig.enable /* Provider chart */ }}
-{{- $shouldRenderApp = and $shouldRenderApp (or (not $.Values.providerIntegration.useReleases) (include "cluster.app.in-release" $)) /* Releases */ }}
+{{- /* Cluster chart */}}
+{{- $shouldRenderApp := not (or $app.disable $ephemeralConfig.disable) }}
+{{- /* Provider chart */}}
+{{- $shouldRenderApp = and $shouldRenderApp $providerIntegrationAppConfig.enable }}
+{{- /* Releases */}}
+{{- $shouldRenderApp = and $shouldRenderApp (or (not $.Values.providerIntegration.useReleases) (include "cluster.app.in-release" $)) }}
 
 {{- if $shouldRenderApp }}
 ---
