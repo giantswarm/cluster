@@ -1,19 +1,27 @@
 {{- $rootScope := . }}
+
 {{- range $path, $_ := .Files.Glob "files/apps/**.yaml" }}
+
 {{- $app := dict }}
 {{- with $rootScope }}
+
+{{- /* Configure App values */}}
 {{- $app = (tpl (.Files.Get $path) $) | fromYaml }}
 {{- $appName := $app.appName }}
+{{- $_ := set $ "appName" $appName }}
 {{- $appKey := $app.configKey | default $appName }}
+
 {{- /* Get provider-integration app config */}}
 {{- $providerIntegrationAppConfig := dict }}
 {{- $providerIntegrationAppConfigRaw := get $.Values.providerIntegration.apps $appKey }}
 {{- if $providerIntegrationAppConfigRaw }}
 {{- /* Sometimes, when provider app config is not set, $providerIntegrationAppConfigRaw gets parsed as an empty string,
        and sometimes as an empty dict. And we want $providerIntegrationAppConfigRaw, which is used in template, to be
-       always a dict, for the sake of cleaner template code. */}}
+       always a dict, for the sake of cleaner template code.
+*/}}
 {{- $providerIntegrationAppConfig = $providerIntegrationAppConfigRaw }}
 {{- end }}
+
 {{- /* Get ephemeral app config */}}
 {{- $ephemeralConfig := dict }}
 {{- if ($.Values.internal.ephemeralConfiguration).apps }}
@@ -21,11 +29,21 @@
 {{- if $ephemeralConfigRaw }}
 {{- /* Sometimes, when ephemeral config is not set, $ephemeralConfigRaw gets parsed as an empty string,
        and sometimes as an empty dict. And we want $ephemeralConfig, which is used in template, to be
-       always a dict, for the sake of cleaner template code. */}}
+       always a dict, for the sake of cleaner template code.
+*/}}
 {{- $ephemeralConfig = $ephemeralConfigRaw }}
 {{- end }}
 {{- end }}
-{{- if and $providerIntegrationAppConfig.enable (not $ephemeralConfig.disable) }}
+
+{{- /* Determine if the App CR should be rendered or not */}}
+{{- /* Cluster chart */}}
+{{- $shouldRenderApp := not (or $app.disable $ephemeralConfig.disable) }}
+{{- /* Provider chart */}}
+{{- $shouldRenderApp = and $shouldRenderApp $providerIntegrationAppConfig.enable }}
+{{- /* Releases */}}
+{{- $shouldRenderApp = and $shouldRenderApp (or (not $.Values.providerIntegration.useReleases) (include "cluster.app.in-release" $)) }}
+
+{{- if $shouldRenderApp }}
 ---
 apiVersion: application.giantswarm.io/v1alpha1
 kind: App
@@ -33,7 +51,6 @@ metadata:
   {{- $annotations := include "cluster.annotations.common.all" $ }}
   {{- $dependencies := list }}
   {{- if $.Values.providerIntegration.useReleases}}
-    {{- $_ := set $ "appName" $appName }}
     {{- $dependenciesFromRelease := include "cluster.app.dependencies" $ | fromYamlArray }}
     {{- range $_, $dependency := $dependenciesFromRelease }}
       {{- $dependencies = append $dependencies (printf "%s-%s" $.Values.global.metadata.name $dependency) }}
@@ -66,7 +83,6 @@ metadata:
 spec:
   {{- $appCatalog := $app.catalog -}}
   {{- if $.Values.providerIntegration.useReleases }}
-  {{- $_ := set $ "appName" $app.appName }}
   {{- $appCatalog = include "cluster.app.catalog" $ }}
   {{- end }}
   catalog: {{ $ephemeralConfig.catalogOverride | default $appCatalog | default "default" }}
@@ -87,7 +103,6 @@ spec:
   {{- end }}
   {{- $appVersion := $app.version -}}
   {{- if $.Values.providerIntegration.useReleases }}
-  {{- $_ := set $ "appName" $app.appName }}
   {{ $appVersion = include "cluster.app.version" $ }}
   {{- end }}
   version: {{ $ephemeralConfig.versionOverride | default $appVersion | trim | trimPrefix "v" }}
@@ -156,7 +171,7 @@ data:
   {{- (tpl ($userValues | toYaml | toString) $) | nindent 4 }}
 {{- /* end if $hasUserValues */}}
 {{- end }}
-{{- /* end if and $providerIntegrationAppConfig.enable (not $ephemeralConfig.disable) */}}
+{{- /* end if $shouldRenderApp */}}
 {{- end }}
 {{- /* end with $rootScope */}}
 {{- end }}
