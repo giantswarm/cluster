@@ -301,7 +301,7 @@ Where `data` is the data to hash and `global` is the top level scope.
 {{- else if $renderWithoutReleaseResource -}}
 {{- printf "fake-app-catalog-from-offline-cluster-chart-rendering" }}
 {{- else }}
-{{- printf "no-catalog-found" }}
+{{- fail (printf "Application not found in Release/%s: %s" (($.GiantSwarm.Release).metadata).name $.appName) }}
 {{- end }}
 {{- end }}
 
