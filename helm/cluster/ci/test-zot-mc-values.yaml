@@ -15,10 +15,6 @@ global:
         enabled: true
         mirroredRegistries:
         - gsoci.azurecr.io
-internal:
-  ephemeralConfiguration:
-    offlineTesting:
-      renderWithoutReleaseResource: true
 providerIntegration:
   environmentVariables:
     hostName: COREOS_EC2_HOSTNAME

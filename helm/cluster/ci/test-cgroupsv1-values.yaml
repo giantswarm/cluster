@@ -18,10 +18,6 @@ global:
     def02:
       cgroupsv1: false
       replicas: 3
-internal:
-  ephemeralConfiguration:
-    offlineTesting:
-      renderWithoutReleaseResource: true
 providerIntegration:
   provider: aws
   workers:
