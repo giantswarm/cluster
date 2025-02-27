@@ -322,7 +322,7 @@ Where `data` is the data to hash and `global` is the top level scope.
 {{- $renderWithoutReleaseResource := ((($.GiantSwarm.internal).ephemeralConfiguration).offlineTesting).renderWithoutReleaseResource | default false }}
 {{- if $renderWithoutReleaseResource }}
 {{- $inRelease = true }}
-{{- else }}
+{{- else if $.Values.providerIntegration.useReleases }}
 {{- $_ := (include "cluster.internal.get-release-resource" $) }}
 {{- if $.GiantSwarm.Release }}
 {{- range $_, $app := $.GiantSwarm.Release.spec.apps }}
