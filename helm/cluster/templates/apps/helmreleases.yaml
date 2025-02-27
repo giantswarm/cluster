@@ -7,8 +7,8 @@
 
 {{- /* Configure App values */}}
 {{- $app := tpl (.Files.Get $path) $ | fromYaml }}
-{{- $_ := set $ "appName" $app.appName }}
 {{- $appName := $app.appName }}
+{{- $_ := set $ "appName" $appName }}
 {{- $appKey := $app.configKey | default $appName }}
 
 {{- /*
@@ -39,7 +39,6 @@
 {{- $ephemeralConfig = $ephemeralConfigRaw }}
 {{- end }}
 {{- end }}
-
 
 {{- /* Determine if the App CR should be rendered or not */}}
 {{- /* Cluster chart */}}
