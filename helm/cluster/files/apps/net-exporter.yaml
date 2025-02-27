@@ -7,7 +7,7 @@ dependsOn: prometheus-operator-crd
 namespace: kube-system
 # used by renovate
 # repo: giantswarm/net-exporter
-version: 1.21.0
+version: 1.22.0
 defaultValues:
   ciliumNetworkPolicy:
     enabled: true
