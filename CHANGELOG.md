@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Helpers: Fix `cluster.app.in-release`. ([#452](https://github.com/giantswarm/cluster/pull/452))
+
 ## [2.1.0] - 2025-02-27
 
 ### Changed

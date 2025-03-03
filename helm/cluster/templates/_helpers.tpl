@@ -332,7 +332,7 @@ Where `data` is the data to hash and `global` is the top level scope.
 {{- end }}
 {{- end }}
 {{- end }}
-{{ $inRelease }}
+{{- $inRelease }}
 {{- end }}
 
 {{/*
