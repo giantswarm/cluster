@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.1] - 2025-03-03
+
 ### Changed
 
 - Helpers: Fix `cluster.app.in-release`. ([#452](https://github.com/giantswarm/cluster/pull/452))
@@ -701,7 +703,8 @@ For Kubernetes <v1.29, you will need to re-enable it using the respective values
 
 - Update and clean up the template repo.
 
-[Unreleased]: https://github.com/giantswarm/cluster/compare/v2.1.0...HEAD
+[Unreleased]: https://github.com/giantswarm/cluster/compare/v2.1.1...HEAD
+[2.1.1]: https://github.com/giantswarm/cluster/compare/v2.1.0...v2.1.1
 [2.1.0]: https://github.com/giantswarm/cluster/compare/v2.0.1...v2.1.0
 [2.0.1]: https://github.com/giantswarm/cluster/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/giantswarm/cluster/compare/v1.7.0...v2.0.0
