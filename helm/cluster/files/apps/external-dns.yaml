@@ -17,7 +17,5 @@ defaultValues:
   txtPrefix: {{ $.Values.global.metadata.name }}
   registry: txt
   annotationFilter: giantswarm.io/external-dns=managed
-  sources:
-  - service
   ciliumNetworkPolicy:
     enabled: true
