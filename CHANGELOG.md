@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Preventing container with Nvidia runtime taking down the whole node going OOM by properly isolating the container.
+
 ### Removed
 
 - Apps: Remove source config from external-dns defaults.

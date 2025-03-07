@@ -61,3 +61,4 @@ sandbox_image = "{{ include "cluster.image.registry" $ }}/{{ $.Values.providerIn
   privileged_without_host_devices = false
   [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.nvidia.options]
     BinaryName = "/usr/bin/nvidia-container-runtime"
+    SystemdCgroup = true
