@@ -37,3 +37,4 @@ sandbox_image = "gsoci.azurecr.io/giantswarm/pause:3.9"
   privileged_without_host_devices = false
   [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.nvidia.options]
     BinaryName = "/usr/bin/nvidia-container-runtime"
+    SystemdCgroup = true
