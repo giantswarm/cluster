@@ -3,7 +3,7 @@ configKey: cilium
 namespace: kube-system
 # used by renovate
 # repo: giantswarm/cilium-app
-version: 0.31.0
+version: 0.32.0
 defaultValues:
   # For all available values see https://github.com/giantswarm/cilium-app/blob/main/helm/cilium/values.yaml
   ipam:
