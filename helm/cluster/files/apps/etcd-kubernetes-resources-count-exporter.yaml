@@ -8,7 +8,7 @@ dependsOn: kyverno-crds
 namespace: kube-system
 # used by renovate
 # repo: giantswarm/etcd-kubernetes-resources-count-exporter
-version: 1.10.2
+version: 1.10.3
 defaultValues:
   etcd:
     hostPath: "/etc/kubernetes/pki/etcd/"
