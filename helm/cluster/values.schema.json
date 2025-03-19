@@ -1151,7 +1151,7 @@
                             "$ref": "#/$defs/app",
                             "type": "object",
                             "title": "cert-manager",
-                            "description": "Configuration of cert-manager. For all available values see https://github.com/giantswarm/cert-manager-app."
+                            "description": "Configuration of cert-manager. For all available values see https://github.com/giantswarm/cert-manager-bundle."
                         },
                         "chartOperatorExtensions": {
                             "$ref": "#/$defs/app",
