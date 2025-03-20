@@ -1,4 +1,4 @@
-appName: cert-manager
+appName: cert-manager-bundle
 chartName: cert-manager-bundle
 configKey: certManager
 clusterValues:
