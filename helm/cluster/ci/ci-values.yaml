@@ -77,7 +77,6 @@ global:
         priority: 120
     certManager:
       values:
-        version: "0.0.1"
         ingressShim:
           defaultIssuerName: encrypt-giantswarm
           defaultIssuerKind: ClusterIssuer
