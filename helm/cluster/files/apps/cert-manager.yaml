@@ -21,5 +21,3 @@ defaultValues:
     defaultIssuerGroup: cert-manager.io
   ciliumNetworkPolicy:
     enabled: true
-  route53IRSA:
-    enabled: true
