@@ -522,3 +522,28 @@ Where `data` is the data to hash and `global` is the top level scope.
     {{- fail "Cannot determine OS tooling version" }}
 {{- end }}
 {{- end }}
+
+{{/*
+  cluster.internal.hasKarpenterNodePool is a public named template that returns true if the cluster has a Karpenter
+  node pool, otherwise it returns false.
+*/}}
+{{- define "cluster.internal.hasKarpenterNodePool" -}}
+{{- range $name, $value := (coalesce $.Values.global.nodePools $.Values.providerIntegration.workers.defaultNodePools) -}}
+  {{- if eq $value.nodepoolType "karpenter" -}}
+    {{- print "true" -}}
+    {{- break -}}
+  {{- end -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+  cluster.internal.isMC is a public named template that returns true if the cluster is a management cluster, otherwise
+  it returns false.
+*/}}
+{{- define "cluster.internal.isMC" -}}
+{{- if eq $.Values.global.managementCluster (include "cluster.resource.name" $) -}}
+  {{- print "true" -}}
+{{- else -}}
+  {{- print "false" -}}
+{{- end -}}
+{{- end -}}

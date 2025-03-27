@@ -11,3 +11,44 @@ namespace: kube-system
 # used by renovate
 # repo: giantswarm/observability-bundle
 version: 1.12.0
+defaultValues:
+  kubeStateMetricsCustomResources:
+    {{- if include "cluster.internal.hasKarpenterNodePool" $ }}
+    karpenter_machine_v1: true
+    {{- end }}
+    {{- if include "cluster.internal.isMC" $ }}
+    flux_kustomization_v1: true
+    flux_helmrelease_v2beta1: true
+    flux_gitrepository_v1: true
+    flux_bucket_v1beta2: true
+    flux_helmrepository_v1beta1: true
+    flux_helmchart_v1beta2: true
+    flux_ocirepository_v1beta2: true
+    flux_alert_v1beta2: true
+    flux_provider_v1beta2: true
+    flux_receiver_v1: true
+    flux_imagerepository_v1beta2: true
+    flux_imagepolicy_v1beta2: true
+    flux_imageupdateautomation_v1beta1: true
+    capi_machinehealthcheck_v1beta1: true
+    capi_machinedeployment_v1beta1: true
+    capi_machine_v1beta1: true
+    capi_cluster_v1beta1: true
+    capi_kubeadmcontrolplane_v1beta1: true
+    capi_kubeadmconfig_v1beta1: true
+    capi_machineset_v1beta1: true
+    capi_machinepool_v1beta1: true
+    {{- if eq $.Values.providerIntegration.provider "azure" }}
+    capi_azurecluster_v1beta1: true
+    capi_azuremachine_v1beta1: true
+    capi_azuremachinepool_v1beta1: true
+    capi_azuremachinepoolmachine_v1beta1: true
+    {{- else if eq $.Values.providerIntegration.provider "cloud-director" }}
+    capi_vcdcluster_v1beta2: true
+    capi_vcdmachine_v1beta2: true
+    {{- else if eq $.Values.providerIntegration.provider "vsphere" }}
+    capi_vspherecluster_v1beta1: true
+    capi_vspheremachine_v1beta1: true
+    capi_vspherevm_v1beta1: true
+    {{- end }}
+    {{- end }}
