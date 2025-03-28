@@ -16,7 +16,7 @@ defaultValues:
     {{- if include "cluster.internal.hasKarpenterNodePool" $ }}
     karpenter_machine_v1: true
     {{- end }}
-    {{- if include "cluster.internal.isMC" $ }}
+    {{- if include "cluster.internal.isManagementCluster" $ }}
     flux_kustomization_v1: true
     flux_helmrelease_v2beta1: true
     flux_gitrepository_v1: true
