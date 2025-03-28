@@ -10,7 +10,8 @@ dependsOn: coredns
 namespace: kube-system
 # used by renovate
 # repo: giantswarm/observability-bundle
-version: 1.12.0
+version: 1.12.0-632d76d83cf2f25a07bd8aa933891ea5848fc384
+catalog: default-test
 defaultValues:
   kubeStateMetricsCustomResources:
     {{- if include "cluster.internal.isManagementCluster" $ }}
