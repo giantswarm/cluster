@@ -522,3 +522,15 @@ Where `data` is the data to hash and `global` is the top level scope.
     {{- fail "Cannot determine OS tooling version" }}
 {{- end }}
 {{- end }}
+
+{{/*
+  cluster.internal.isManagementCluster is a public named template that returns true if the cluster is a management cluster, otherwise
+  it returns false.
+*/}}
+{{- define "cluster.internal.isManagementCluster" -}}
+{{- if eq $.Values.global.managementCluster (include "cluster.resource.name" $) -}}
+  {{- print "true" -}}
+{{- else -}}
+  {{- print "false" -}}
+{{- end -}}
+{{- end -}}
