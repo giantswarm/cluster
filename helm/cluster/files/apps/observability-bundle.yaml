@@ -13,9 +13,6 @@ namespace: kube-system
 version: 1.12.0
 defaultValues:
   kubeStateMetricsCustomResources:
-    {{- if include "cluster.internal.hasKarpenterNodePool" $ }}
-    karpenter_machine_v1: true
-    {{- end }}
     {{- if include "cluster.internal.isManagementCluster" $ }}
     flux_kustomization_v1: true
     flux_helmrelease_v2beta1: true
