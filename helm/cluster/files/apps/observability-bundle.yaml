@@ -14,7 +14,7 @@ version: 1.12.0-632d76d83cf2f25a07bd8aa933891ea5848fc384
 catalog: default-test
 defaultValues:
   kubeStateMetricsCustomResources:
-    {{- if include "cluster.internal.isManagementCluster" $ }}
+    {{- if eq (include "cluster.internal.isManagementCluster" $) "true" }}
     flux_kustomization_v1: true
     flux_helmrelease_v2beta1: true
     flux_gitrepository_v1: true
