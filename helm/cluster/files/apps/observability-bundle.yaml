@@ -1,3 +1,16 @@
+{{- $ksmCustomResources := list -}}
+{{- if eq (include "cluster.internal.isManagementCluster" $) "true" }}
+  {{- $ksmCustomResources = concat $ksmCustomResources (list "flux_kustomization_v1" "flux_helmrelease_v2beta1" "flux_gitrepository_v1" "flux_bucket_v1beta2" "flux_helmrepository_v1beta1" "flux_helmchart_v1beta2" "flux_ocirepository_v1beta2" "flux_alert_v1beta2" "flux_provider_v1beta2" "flux_receiver_v1" "flux_imagerepository_v1beta2" "flux_imagepolicy_v1beta2" "flux_imageupdateautomation_v1beta1" "capi_machinehealthcheck_v1beta1" "capi_machinedeployment_v1beta1" "capi_machine_v1beta1" "capi_cluster_v1beta1" "capi_kubeadmcontrolplane_v1beta1" "capi_kubeadmconfig_v1beta1" "capi_machineset_v1beta1" "capi_machinepool_v1beta1") -}}
+
+  {{- if eq $.Values.providerIntegration.provider "azure" }}
+    {{- $ksmCustomResources = concat $ksmCustomResources (list "capi_azurecluster_v1beta1" "capi_azuremachine_v1beta1" "capi_azuremachinepool_v1beta1" "capi_azuremachinepoolmachine_v1beta1") -}}
+  {{- else if eq $.Values.providerIntegration.provider "cloud-director" }}
+    {{- $ksmCustomResources = concat $ksmCustomResources (list "capi_vcdcluster_v1beta2" "capi_vcdmachine_v1beta2") -}}
+  {{- else if eq $.Values.providerIntegration.provider "vsphere" }}
+    {{- $ksmCustomResources = concat $ksmCustomResources (list "capi_vspherecluster_v1beta1" "capi_vspheremachine_v1beta1" "capi_vspherevm_v1beta1") -}}
+  {{- end -}}
+{{- end -}}
+
 # Includes prometheus-operator-crd
 appName: observability-bundle
 configKey: observabilityBundle
@@ -10,43 +23,12 @@ dependsOn: coredns
 namespace: kube-system
 # used by renovate
 # repo: giantswarm/observability-bundle
-version: 1.12.0-632d76d83cf2f25a07bd8aa933891ea5848fc384
+version: 1.12.0-2bc911131b445bd48bdd35a4d55f195df3e7d9ef
 catalog: default-test
 defaultValues:
+  {{- if $ksmCustomResources }}
   kubeStateMetricsCustomResources:
-    {{- if eq (include "cluster.internal.isManagementCluster" $) "true" }}
-    flux_kustomization_v1: true
-    flux_helmrelease_v2beta1: true
-    flux_gitrepository_v1: true
-    flux_bucket_v1beta2: true
-    flux_helmrepository_v1beta1: true
-    flux_helmchart_v1beta2: true
-    flux_ocirepository_v1beta2: true
-    flux_alert_v1beta2: true
-    flux_provider_v1beta2: true
-    flux_receiver_v1: true
-    flux_imagerepository_v1beta2: true
-    flux_imagepolicy_v1beta2: true
-    flux_imageupdateautomation_v1beta1: true
-    capi_machinehealthcheck_v1beta1: true
-    capi_machinedeployment_v1beta1: true
-    capi_machine_v1beta1: true
-    capi_cluster_v1beta1: true
-    capi_kubeadmcontrolplane_v1beta1: true
-    capi_kubeadmconfig_v1beta1: true
-    capi_machineset_v1beta1: true
-    capi_machinepool_v1beta1: true
-    {{- if eq $.Values.providerIntegration.provider "azure" }}
-    capi_azurecluster_v1beta1: true
-    capi_azuremachine_v1beta1: true
-    capi_azuremachinepool_v1beta1: true
-    capi_azuremachinepoolmachine_v1beta1: true
-    {{- else if eq $.Values.providerIntegration.provider "cloud-director" }}
-    capi_vcdcluster_v1beta2: true
-    capi_vcdmachine_v1beta2: true
-    {{- else if eq $.Values.providerIntegration.provider "vsphere" }}
-    capi_vspherecluster_v1beta1: true
-    capi_vspheremachine_v1beta1: true
-    capi_vspherevm_v1beta1: true
+    {{- range $r := $ksmCustomResources }}
+    {{ $r }}: true
     {{- end }}
-    {{- end }}
+  {{- end }}
