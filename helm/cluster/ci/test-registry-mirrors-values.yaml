@@ -45,5 +45,5 @@ providerIntegration:
         maxSize: 3
         minSize: 3
   registry:
-    templateName: cluster.test.awsContainerImageRegistry
-    mirrorsTemplateName: cluster.test.awsContainerMirrorRegistry
+    templateName: cluster.internal.test.awsContainerImageRegistry
+    mirrorsTemplateName: cluster.internal.test.awsContainerMirrorRegistry
