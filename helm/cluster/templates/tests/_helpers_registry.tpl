@@ -1,4 +1,4 @@
-{{- define "test.cluster.awsContainerImageRegistry" -}}
+{{- define "cluster.test.awsContainerImageRegistry" -}}
 {{- if hasPrefix "cn-" $.Values.global.providerSpecific.region -}}
 giantswarm-registry.cn-shanghai.cr.aliyuncs.com
 {{- else -}}
@@ -6,7 +6,7 @@ gsoci.azurecr.io
 {{- end }}
 {{- end }}
 
-{{- define "test.cluster.awsContainerMirrorRegistry" -}}
+{{- define "cluster.test.awsContainerMirrorRegistry" -}}
 {{- if hasPrefix "cn-" $.Values.global.providerSpecific.region -}}
 docker.io:
 - endpoint: giantswarm-registry.cn-shanghai.cr.aliyuncs.com
