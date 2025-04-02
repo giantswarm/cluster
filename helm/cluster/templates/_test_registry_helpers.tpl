@@ -1,3 +1,4 @@
+{{/* Test helpers for registry configuration */}}
 {{- define "cluster.test.awsContainerImageRegistry" -}}
 {{- if hasPrefix "cn-" $.Values.global.providerSpecific.region -}}
 giantswarm-registry.cn-shanghai.cr.aliyuncs.com
