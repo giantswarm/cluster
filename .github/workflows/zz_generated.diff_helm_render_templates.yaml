@@ -98,6 +98,12 @@ jobs:
               continue
             fi
 
+            # Skip registry mirrors test for old code since it requires template functions not present there
+            if [[ "${test_file_path}" == *"test-registry-mirrors-values.yaml" ]]; then
+              echo "Skipping registry mirrors test for old code"
+              continue
+            fi
+
             helm template -n org-giantswarm -f "old/helm/${{ github.event.repository.name }}/ci/ci-values.yaml" -f "${test_file_path}" "old/helm/${{ github.event.repository.name }}" > "/tmp/${test_file_path}/render-old.yaml"
           done
       - name: get the diffs
