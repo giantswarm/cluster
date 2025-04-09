@@ -150,6 +150,15 @@ Where `data` is the data to hash and `global` is the top level scope.
 {{- $registry -}}
 {{- end -}}
 
+{{/* Function to get the container registry mirror configuration based on location */}}
+{{- define "cluster.container.mirrors" -}}
+{{- if $.Values.providerIntegration.registry.mirrorsTemplateName -}}
+  {{- include $.Values.providerIntegration.registry.mirrorsTemplateName $ -}}
+{{- else -}}
+  {{- $.Values.global.components.containerd.containerRegistries | toYaml -}}
+{{- end -}}
+{{- end -}}
+
 {{/*
   cluster.internal.get-provider-integration-values named helper template gets provider-integration Helm values and sets
   them in the $.GiantSwarm.providerIntegration object.
