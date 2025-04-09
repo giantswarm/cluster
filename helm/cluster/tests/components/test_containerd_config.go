@@ -63,7 +63,7 @@ var _ = Describe("containerd config", func() {
 		Entry("when only local Zot is enabled", "test-zot-only-local-values.yaml", expectedContainerdZotLocalOnlyConfig),
 		Entry("when both local Zot and MC Zot are enabled", "test-zot-mc-and-local-values.yaml", expectedContainerdZotBothMcAndLocalConfig),
 		Entry("when node pools use cgroups v1, control plane always uses cgroups v2", "test-cgroupsv1-values.yaml", expectedContainerdWithoutCgroupsv1Config),
-		Entry("when registry templates area used", "test-registry-mirrors-values.yaml", expectedContainerdDifferentMirrorsConfig))
+		Entry("when registry templates are used", "test-registry-mirrors-values.yaml", expectedContainerdDifferentMirrorsConfig))
 
 	DescribeTable("rendered node pools config file",
 		func(helmValuesFile, nodepoolName, expectedConfig string) {
