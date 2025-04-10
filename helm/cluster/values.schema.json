@@ -2388,9 +2388,9 @@
                                                         ],
                                                         "properties": {
                                                             "address": {
+                                                                "type": "string",
                                                                 "title": "address",
-                                                                "description": "Address or FQDN of NTP server.",
-                                                                "type": "string"
+                                                                "description": "Address or FQDN of NTP server."
                                                             },
                                                             "maxpoll": {
                                                                 "type": "integer",
