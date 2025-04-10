@@ -183,14 +183,6 @@ providerIntegration:
       sandboxContainerImage:
         name: giantswarm/pause
         tag: "3.9"
-    systemd:
-      ntpd:
-        enabled: false
-        servers:
-          - address: 0.flatcar.pool.ntp.org
-          - address: 1.flatcar.pool.ntp.org
-          - address: 2.flatcar.pool.ntp.org
-          - address: 3.flatcar.pool.ntp.org
   connectivity:
     proxy:
       noProxy: {}
