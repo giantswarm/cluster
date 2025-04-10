@@ -112,11 +112,13 @@ and is used to join the node to the teleport cluster.
 {{- end }}
 
 {{- define "cluster.internal.kubeadm.files.ntpd" }}
+{{- if ($.Values.providerIntegration.components.systemd).ntpd }}
 {{- if $.Values.providerIntegration.components.systemd.ntpd.enabled }}
 - path: /etc/ntp.conf
   permissions: "0644"
   encoding: base64
   content: {{ tpl ($.Files.Get "files/etc/ntp.conf") . | b64enc }}
+{{- end }}
 {{- end }}
 {{- end }}
 

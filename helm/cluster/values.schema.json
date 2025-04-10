@@ -2372,6 +2372,7 @@
                                             "type": "object",
                                             "title": "ntpd",
                                             "description": "ntpd daemon that synchronizes the system clock with NTP servers.",
+                                            "additionalProperties": false,
                                             "properties": {
                                                 "enabled": {
                                                     "type": "boolean",

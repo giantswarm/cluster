@@ -306,6 +306,7 @@
 {{- end }}
 
 {{- define "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units.ntpd" }}
+{{- if ($.Values.providerIntegration.components.systemd).ntpd }}
 {{- if $.Values.providerIntegration.components.systemd.ntpd.enabled }}
 - name: systemd-timesyncd.service
   enabled: false
@@ -315,6 +316,7 @@
   mask: true
 - name: ntpd.service
   enabled: true
+{{- end }}
 {{- end }}
 {{- end }}
 
