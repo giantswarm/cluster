@@ -2383,6 +2383,38 @@
                                                     }
                                                 }
                                             }
+                                        },
+                                        "ntpd": {
+                                            "type": "object",
+                                            "properties": {
+                                                "enabled": {
+                                                    "type": "boolean",
+                                                    "title": "Enable",
+                                                    "default": false
+                                                },
+                                                "servers": {
+                                                    "type": "array",
+                                                    "items": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "address": {
+                                                        "type": "string"
+                                                        },
+                                                        "minpoll": {
+                                                        "type": "integer",
+                                                        "minimum": 0,
+                                                        "maximum": 17
+                                                        },
+                                                        "maxpoll": {
+                                                        "type": "integer",
+                                                        "minimum": 0,
+                                                        "maximum": 17
+                                                        }
+                                                    },
+                                                    "required": ["address"]
+                                                    }
+                                                }
+                                            }
                                         }
                                     }
                                 }

@@ -8,6 +8,7 @@
 {{- include "cluster.internal.kubeadm.files.teleport" $ }}
 {{- include "cluster.internal.kubeadm.files.auditrules" $ }}
 {{- include "cluster.internal.kubeadm.files.provider" $ }}
+{{- include "cluster.internal.kubeadm.files.ntpd" $ }}
 {{- include "cluster.internal.kubeadm.files.custom" $ }}
 {{- end }}
 
@@ -107,6 +108,15 @@ and is used to join the node to the teleport cluster.
   permissions: "0640"
   encoding: base64
   content: {{ $.Files.Get "files/etc/audit/rules.d/99-default.rules" | b64enc }}
+{{- end }}
+{{- end }}
+
+{{- define "cluster.internal.kubeadm.files.ntpd" }}
+{{- if $.Values.providerIntegration.components.systemd.ntpd.enabled }}
+- path: /etc/ntp.conf
+  permissions: "0644"
+  encoding: base64
+  content: {{ tpl ($.Files.Get "files/etc/ntp.conf") . | b64enc }}
 {{- end }}
 {{- end }}
 
