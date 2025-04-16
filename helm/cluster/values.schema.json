@@ -2368,6 +2368,50 @@
                                     "type": "object",
                                     "additionalProperties": false,
                                     "properties": {
+                                        "ntpd": {
+                                            "type": "object",
+                                            "title": "ntpd",
+                                            "description": "ntpd daemon that synchronizes the system clock with NTP servers.",
+                                            "additionalProperties": false,
+                                            "properties": {
+                                                "enabled": {
+                                                    "type": "boolean",
+                                                    "title": "enable",
+                                                    "description": "If true, the ntpd daemon is enabled and other clients are disabled.",
+                                                    "default": false
+                                                },
+                                                "servers": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "required": [
+                                                            "address"
+                                                        ],
+                                                        "properties": {
+                                                            "address": {
+                                                                "type": "string",
+                                                                "title": "address",
+                                                                "description": "Address or FQDN of NTP server."
+                                                            },
+                                                            "maxpoll": {
+                                                                "type": "integer",
+                                                                "title": "maxpoll",
+                                                                "description": "maximum poll intervals for NTP message in power of 2 seconds.",
+                                                                "maximum": 17,
+                                                                "minimum": 0
+                                                            },
+                                                            "minpoll": {
+                                                                "type": "integer",
+                                                                "title": "minpoll",
+                                                                "description": "minimum poll intervals for NTP messages in power of 2 seconds.",
+                                                                "maximum": 17,
+                                                                "minimum": 0
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
                                         "timesyncd": {
                                             "type": "object",
                                             "title": "timesyncd",
