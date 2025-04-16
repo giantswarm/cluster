@@ -2843,11 +2843,17 @@
                 "registry": {
                     "type": "object",
                     "title": "Registry",
-                    "description": "The registry to use for pulling images. If not set, the default registry is used.",
+                    "description": "Configuration for container image registries",
                     "properties": {
+                        "mirrorsTemplateName": {
+                            "type": "string",
+                            "title": "Registry Mirrors Configuration Template",
+                            "description": "Name of a template that returns the containerd registry mirrors configuration. Defines how different registries (docker.io, gsoci.azurecr.io) should be mirrored to improve pull reliability, especially in regions with network restrictions."
+                        },
                         "templateName": {
                             "type": "string",
-                            "title": "Template name"
+                            "title": "Registry URL Template",
+                            "description": "Name of a template that returns the base URL for the container image registry (e.g., 'gsoci.azurecr.io'). Used for the sandbox image and other container images."
                         }
                     }
                 },
