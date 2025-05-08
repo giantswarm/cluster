@@ -106,11 +106,19 @@ spec:
   timeout: {{ $app.timeout | default "5m" }}
   install:
     remediation:
-      retries: {{ $app.remediationRetries | default -1 }}
+      {{- if hasKey $app "remediationRetries" }}
+      retries: {{ $app.remediationRetries }}
+      {{- else }}
+      retries: -1
+      {{- end }}
   upgrade:
     disableWait: {{ $app.disableWait | default false }}
     remediation:
-      retries: {{ $app.remediationRetries | default -1 }}
+      {{- if hasKey $app "remediationRetries" }}
+      retries: {{ $app.remediationRetries }}
+      {{- else }}
+      retries: -1
+      {{- end }}
   {{- /* We have multiple layers of app Helm values, where every next layer overwrites the previous one. */}}
   {{- /* Layer 1: default provider-independent app Helm values */}}
   {{- $appHelmValues := $app.defaultValues | default dict -}}
