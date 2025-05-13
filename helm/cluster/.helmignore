@@ -1,0 +1,12 @@
+# Exclude common unwanted files
+.DS_Store
+.git/
+.gitignore
+.vscode/
+
+# Exclude Go test binaries
+*.test
+
+# Exclude other build artifacts or temporary files if necessary
+tmp/
+*.bak
