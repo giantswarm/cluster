@@ -26,7 +26,7 @@ nodeRegistration:
     v: "2"
   {{- with $nodePool.config.customNodeTaints }}
   taints:
-    {{- nindent 2 (toYaml .) }}
+    {{- toYaml . | nindent 2 }}
   {{- end }}
 patches:
   directory: /etc/kubernetes/patches

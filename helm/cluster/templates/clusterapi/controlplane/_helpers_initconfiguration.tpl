@@ -15,7 +15,7 @@ nodeRegistration:
   name: {{ printf "${%s}" $.Values.providerIntegration.environmentVariables.hostName }}
   {{- with $.Values.global.controlPlane.customNodeTaints }}
   taints:
-    {{- nindent 2 (toYaml .) }}
+    {{- toYaml . | nindent 2 }}
   {{- end }}
 patches:
   directory: /etc/kubernetes/patches
