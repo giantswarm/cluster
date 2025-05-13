@@ -86,7 +86,7 @@ There are two control plane resources, KubeadmControlPlane and MachineHealthChec
 are `controlPlaneResourceEnabled` and `machineHealthCheckResourceEnabled`, respectively.
 
 Besides the above two resource flags, there are few other values that have to be specified:
-- Group, version and kind of the provider-specific machine template resources (e.g. AWSMachineTemplate, AzureMachineTemplate, 
+- Group, version and kind of the provider-specific machine template resources (e.g. AWSMachineTemplate, AzureMachineTemplate,
   etc.) which is done by setting `.Values.cluster.providerIntegration.controlPlane.resources.infrastructureMachineTemplate`,
 - Name of the Helm template that renders the spec of the provider-specific machine template, which is done by setting
   `.Values.cluster.providerIntegration.controlPlane.resources.infrastructureMachineTemplateSpecTemplateName`. E.g. in case
@@ -482,7 +482,7 @@ WantedBy=multi-user.target
 ```
 
 The Helm templating syntax is treated as plain text by the provider chart. The cluster chart's templating function has
-access to the values under the provider chart's `.global` key so any values referenced in the template must exist 
+access to the values under the provider chart's `.global` key so any values referenced in the template must exist
 under `.global`.
 
 Note that variable scoping is important here - the templating function does not have access to the root `$.Values` object,
@@ -498,3 +498,45 @@ P.S. `.Values.cluster.internal.advancedConfiguration` is the Helm value from the
 while that value inside of cluster chart is `.Values.internal.advancedConfiguration`.
 
 More details about customizing workload cluster Helm values TBA.
+
+
+## Maintaining `values.schema.json` and `values.yaml`
+
+**tldr**:
+We only maintain `values.schema.json` and automatically generate `values.yaml` from it.
+```
+make normalize-schema
+make validate-schema
+make generate-values
+make generate-docs
+```
+
+**Details**:
+
+In order to provide a better UX we validate user values against `values.schema.json`.
+In addition we also use the JSON schema in our frontend to dynamically generate a UI for cluster creation from it.
+To succesfully do this, we have some requirements on the `values.schema.json`, which are defined in [this RFC](https://github.com/giantswarm/rfc/pull/55).
+These requirements can be checked with [schemalint](https://github.com/giantswarm/schemalint).
+`schemalint` does a couple of things:
+
+- Normalize JSON schema (indentation, white space, sorting)
+- Validate whether your schema is valid JSON schema
+- Validate whether the requirements for cluster app schemas are met
+- Check whether schema is normalized
+
+The first point can be achieved with:
+```
+make normalize-schema
+```
+The second to fourth point can be achieved with:
+```
+make validate-schema
+```
+
+The JSON schema in `values.schema.json` should contain defaults defined with the `default` keyword.
+These defaults should be same as those defined in `values.yaml`.
+This allows us to generate `values.yaml` from `values.schema.json` with:
+
+```
+make generate-values
+```
