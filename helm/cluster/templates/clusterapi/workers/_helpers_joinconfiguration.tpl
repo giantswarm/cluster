@@ -24,13 +24,9 @@ nodeRegistration:
     node-ip: {{ printf "${%s}" $.Values.providerIntegration.environmentVariables.ipv4 }}
     node-labels: ip={{ printf "${%s}" $.Values.providerIntegration.environmentVariables.ipv4 }},role=worker,giantswarm.io/machine-pool={{ include "cluster.resource.name" $ }}-{{ $nodePool.name }}{{- if $nodePool.config.customNodeLabels }},{{ join "," $nodePool.config.customNodeLabels }}{{- end }}
     v: "2"
-  {{- if $nodePool.config.customNodeTaints }}
+  {{- with $nodePool.config.customNodeTaints }}
   taints:
-  {{- range $nodePool.config.customNodeTaints }}
-  - key: {{ .key | quote }}
-    value: {{ .value | quote }}
-    effect: {{ .effect | quote }}
-  {{- end }}
+    {{- nindent 2 (toYaml .) }}
   {{- end }}
 patches:
   directory: /etc/kubernetes/patches
