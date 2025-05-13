@@ -87,8 +87,7 @@
                 "type": "object",
                 "required": [
                     "effect",
-                    "key",
-                    "value"
+                    "key"
                 ],
                 "properties": {
                     "effect": {
@@ -772,36 +771,7 @@
                     }
                 },
                 "customNodeTaints": {
-                    "type": "array",
-                    "title": "Custom node taints",
-                    "items": {
-                        "type": "object",
-                        "required": [
-                            "effect",
-                            "key",
-                            "value"
-                        ],
-                        "additionalProperties": false,
-                        "properties": {
-                            "effect": {
-                                "type": "string",
-                                "title": "Effect",
-                                "enum": [
-                                    "NoSchedule",
-                                    "PreferNoSchedule",
-                                    "NoExecute"
-                                ]
-                            },
-                            "key": {
-                                "type": "string",
-                                "title": "Key"
-                            },
-                            "value": {
-                                "type": "string",
-                                "title": "Value"
-                            }
-                        }
-                    }
+                    "$ref": "#/$defs/customNodeTaints"
                 },
                 "labels": {
                     "type": "object",

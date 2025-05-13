@@ -13,15 +13,9 @@ nodeRegistration:
     node-labels: ip={{ printf "${%s}" $.Values.providerIntegration.environmentVariables.ipv4 }}
     v: "2"
   name: {{ printf "${%s}" $.Values.providerIntegration.environmentVariables.hostName }}
-  {{- if $.Values.global.controlPlane.customNodeTaints }}
-  {{- if (gt (len $.Values.global.controlPlane.customNodeTaints) 0) }}
+  {{- with $.Values.global.controlPlane.customNodeTaints }}
   taints:
-  {{- range $.Values.global.controlPlane.customNodeTaints }}
-  - key: {{ .key | quote }}
-    value: {{ .value | quote }}
-    effect: {{ .effect | quote }}
-  {{- end }}
-  {{- end }}
+    {{- toYaml . | nindent 2 }}
   {{- end }}
 patches:
   directory: /etc/kubernetes/patches
