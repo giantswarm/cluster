@@ -9,7 +9,7 @@ nodeRegistration:
     node-ip: {{ printf "${%s}" $.Values.providerIntegration.environmentVariables.ipv4 }}
     node-labels: ip={{ printf "${%s}" $.Values.providerIntegration.environmentVariables.ipv4 }}
   name: {{ printf "${%s}" $.Values.providerIntegration.environmentVariables.hostName }}
-  {{- with $.Values.global.controlPlane.customNodeTaints }}
+  {{- with (concat $.Values.providerIntegration.kubeadmConfig.taints $.Values.providerIntegration.controlPlane.kubeadmConfig.taints $.Values.global.controlPlane.customNodeTaints ) }}
   taints:
     {{- toYaml . | nindent 2 }}
   {{- end }}

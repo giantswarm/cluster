@@ -1,0 +1,18 @@
+providerIntegration:
+  kubeadmConfig:
+    taints:
+      - key: taint.at/level
+        value: all-nodes
+        effect: NoSchedule
+  controlPlane:
+    kubeadmConfig:
+      taints:
+        - key: taint.at/level
+          value: control-plane
+          effect: NoSchedule
+  workers:
+    kubeadmConfig:
+      taints:
+        - key: taint.at/level
+          value: workers
+          effect: NoSchedule
