@@ -10,4 +10,4 @@ dependsOn: coredns
 namespace: kube-system
 # used by renovate
 # repo: giantswarm/observability-bundle
-version: 1.13.0
+version: 1.14.0
