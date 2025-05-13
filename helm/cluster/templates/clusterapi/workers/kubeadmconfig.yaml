@@ -23,8 +23,7 @@ node rollouts and thus possibly interruped workloads for customers.
 {{- $_ := set $nodePoolConfig "customNodeTaints" list }}
 {{- end }}
 {{- $ebsCsiTaint := dict "key" "ebs.csi.aws.com/agent-not-ready" "effect" "NoExecute" }}
-{{- $customNodeTaints := mustAppend $nodePoolConfig.customNodeTaints $ebsCsiTaint }}
-{{- $_ := set $nodePoolConfig "customNodeTaints" $customNodeTaints}}
+{{- $_ := set $nodePoolConfig "customNodeTaints" (mustAppend $nodePoolConfig.customNodeTaints $ebsCsiTaint) }}
 {{- end }}
 {{- $_ := set $ "nodePool" (dict "name" $nodePoolName "config" $nodePoolConfig) }}
 apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
