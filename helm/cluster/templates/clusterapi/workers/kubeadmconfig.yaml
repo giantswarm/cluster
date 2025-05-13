@@ -13,6 +13,11 @@ node rollouts and thus possibly interruped workloads for customers.
 {{- if $.Values.providerIntegration.resourcesApi.machinePoolResourcesEnabled }}
 {{- if eq $.Values.providerIntegration.resourcesApi.nodePoolKind "MachinePool" }}
 {{- range $nodePoolName, $nodePoolConfig := $.Values.global.nodePools | default $.Values.providerIntegration.workers.defaultNodePools }}
+{{/*
+  Sets a default startup taint on every node pool when running on AWS.
+  This is to prevent race conditions involving the AWS EBS CSI Controller.
+  See for details: https://github.com/giantswarm/giantswarm/issues/31687
+ */}}
 {{- if eq $.Values.providerIntegration.provider "aws" }}
 {{- if not $nodePoolConfig.customNodeTaints }}
 {{- $_ := set $nodePoolConfig "customNodeTaints" list }}
