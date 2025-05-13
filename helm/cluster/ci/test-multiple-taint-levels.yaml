@@ -10,9 +10,48 @@ providerIntegration:
         - key: taint.at/level
           value: control-plane
           effect: NoSchedule
+
+    # Required values
+    resources:
+      infrastructureMachineTemplate:
+        group: infrastructure.cluster.x-k8s.io
+        version: v1beta1
+        kind: AWSMachineTemplate
+      infrastructureMachineTemplateSpecTemplateName: "cluster.internal.test.controlPlane.machineTemplate.spec"
+
   workers:
     kubeadmConfig:
       taints:
         - key: taint.at/level
           value: workers
           effect: NoSchedule
+
+    # Required value
+    defaultNodePools:
+      def00: {}
+
+  # Required values
+  provider: aws
+  resourcesApi:
+    clusterResourceEnabled: true
+    controlPlaneResourceEnabled: true
+    machinePoolResourcesEnabled: true
+    machineHealthCheckResourceEnabled: true
+    bastionResourceEnabled: false
+    infrastructureCluster:
+      group: infrastructure.cluster.x-k8s.io
+      version: v1beta1
+      kind: AWSCluster
+    nodePoolKind: MachinePool
+    infrastructureMachinePool:
+      group: infrastructure.cluster.x-k8s.io
+      version: v1beta1
+      kind: AWSMachinePool
+
+# Required values
+global:
+  connectivity:
+    baseDomain: example.gigantic.io
+  metadata:
+    name: tainted
+    organization: org-mcorgface
