@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.2.1] - 2025-05-14
+
 ### Changed
 
 - Make HelmRelease options configurable per app.
@@ -718,7 +720,8 @@ For Kubernetes <v1.29, you will need to re-enable it using the respective values
 
 - Update and clean up the template repo.
 
-[Unreleased]: https://github.com/giantswarm/cluster/compare/v2.2.0...HEAD
+[Unreleased]: https://github.com/giantswarm/cluster/compare/v2.2.1...HEAD
+[2.2.1]: https://github.com/giantswarm/cluster/compare/v2.2.0...v2.2.1
 [2.2.0]: https://github.com/giantswarm/cluster/compare/v2.1.1...v2.2.0
 [2.1.1]: https://github.com/giantswarm/cluster/compare/v2.1.0...v2.1.1
 [2.1.0]: https://github.com/giantswarm/cluster/compare/v2.0.1...v2.1.0
