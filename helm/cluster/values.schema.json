@@ -108,7 +108,8 @@
                         "title": "Value"
                     }
                 }
-            }
+            },
+            "default": []
         },
         "featureGates": {
             "type": "array",
@@ -2651,6 +2652,9 @@
                                 },
                                 "preKubeadmCommands": {
                                     "$ref": "#/$defs/preKubeadmCommands"
+                                },
+                                "taints": {
+                                    "$ref": "#/$defs/customNodeTaints"
                                 }
                             }
                         },
@@ -2747,6 +2751,9 @@
                         },
                         "preKubeadmCommands": {
                             "$ref": "#/$defs/preKubeadmCommands"
+                        },
+                        "taints": {
+                            "$ref": "#/$defs/customNodeTaints"
                         }
                     }
                 },
@@ -3054,6 +3061,9 @@
                                 },
                                 "preKubeadmCommands": {
                                     "$ref": "#/$defs/preKubeadmCommands"
+                                },
+                                "taints": {
+                                    "$ref": "#/$defs/customNodeTaints"
                                 }
                             }
                         },
