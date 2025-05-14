@@ -807,6 +807,15 @@
                     "maximum": 1000,
                     "minimum": 0
                 },
+                "nodepoolType": {
+                    "type": "string",
+                    "title": "Node pool type",
+                    "description": "Controller that will manage the node pool.",
+                    "enum": [
+                        "machinepool",
+                        "karpenter"
+                    ]
+                },
                 "replicas": {
                     "type": "integer",
                     "title": "Replicas",
