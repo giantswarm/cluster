@@ -26,6 +26,8 @@ global:
     - key: you
       value: shall
       effect: NoExecute
+    - key: has.no/value
+      effect: NoExecute
     oidc:
       clientId: hello
       groupsClaim: groupsClaim
@@ -46,6 +48,8 @@ global:
       - key: supernodepool
         value: hello
         effect: NoSchedule
+      - key: has.no/value
+        effect: NoExecute
     verybignodepool-1234:
       replicas: 100
       customNodeLabels:

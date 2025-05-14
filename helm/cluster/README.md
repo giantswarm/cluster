@@ -275,7 +275,7 @@ Configuration of the control plane.
 | **Property** | **Description** | **More Details** |
 | :----------- | :-------------- | :--------------- |
 | `global.controlPlane.apiServerPort` | **API server port** - The API server Load Balancer port. This option sets the Spec.ClusterNetwork.APIServerPort field on the Cluster CR. In CAPI this field isn't used currently. It is instead used in providers. In CAPA this sets only the public facing port of the Load Balancer. In CAPZ both the public facing and the destination port are set to this value. CAPV and CAPVCD do not use it.|**Type:** `integer`<br/>**Default:** `6443`|
-| `global.controlPlane.customNodeTaints` | **Custom node taints**|**Type:** `array`<br/>|
+| `global.controlPlane.customNodeTaints` | **Custom node taints**|**Type:** `array`<br/>**Default:** `[]`|
 | `global.controlPlane.customNodeTaints[*]` |**None**|**Type:** `object`<br/>|
 | `global.controlPlane.customNodeTaints[*].effect` | **Effect**|**Type:** `string`<br/>|
 | `global.controlPlane.customNodeTaints[*].key` | **Key**|**Type:** `string`<br/>|
@@ -431,7 +431,7 @@ Properties within the `.global.nodePools` object
 | `global.nodePools.PATTERN.cgroupsv1` | **Cgroups v1** - Flag that indicates if cgroups v1 should be used.|**Type:** `boolean`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>**Default:** `false`|
 | `global.nodePools.PATTERN.customNodeLabels` | **Node labels** - Labels that are passed to kubelet argument 'node-labels'.|**Type:** `array`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
 | `global.nodePools.PATTERN.customNodeLabels[*]` | **Label**|**Type:** `string`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
-| `global.nodePools.PATTERN.customNodeTaints` | **Custom node taints**|**Type:** `array`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
+| `global.nodePools.PATTERN.customNodeTaints` | **Custom node taints**|**Type:** `array`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>**Default:** `[]`|
 | `global.nodePools.PATTERN.customNodeTaints[*]` |**None**|**Type:** `object`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
 | `global.nodePools.PATTERN.customNodeTaints[*].effect` | **Effect**|**Type:** `string`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
 | `global.nodePools.PATTERN.customNodeTaints[*].key` | **Key**|**Type:** `string`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
@@ -771,6 +771,11 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.controlPlane.kubeadmConfig.postKubeadmCommands[*]` |**None**|**Type:** `string`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.preKubeadmCommands` | **Pre-kubeadm commands** - Extra commands to run before kubeadm runs.|**Type:** `array`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.preKubeadmCommands[*]` |**None**|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.taints` | **Custom node taints**|**Type:** `array`<br/>**Default:** `[]`|
+| `providerIntegration.controlPlane.kubeadmConfig.taints[*]` |**None**|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.taints[*].effect` | **Effect**|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.taints[*].key` | **Key**|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.taints[*].value` | **Value**|**Type:** `string`<br/>|
 | `providerIntegration.controlPlane.resources` | **Resources configuration** - GVK and other configuration for control plane resources.|**Type:** `object`<br/>|
 | `providerIntegration.controlPlane.resources.controlPlane` | **Control plane resource config**|**Type:** `object`<br/>**Default:** `{"api":{"group":"controlplane.cluster.x-k8s.io","kind":"KubeadmControlPlane","version":"v1beta1"}}`|
 | `providerIntegration.controlPlane.resources.controlPlane.api` | **Schema for Kubernetes API group, version and kind** - It can be used to specify which CustomResourceDefinition is used.|**Type:** `object`<br/>|
@@ -881,6 +886,11 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.kubeadmConfig.postKubeadmCommands[*]` |**None**|**Type:** `string`<br/>|
 | `providerIntegration.kubeadmConfig.preKubeadmCommands` | **Pre-kubeadm commands** - Extra commands to run before kubeadm runs.|**Type:** `array`<br/>|
 | `providerIntegration.kubeadmConfig.preKubeadmCommands[*]` |**None**|**Type:** `string`<br/>|
+| `providerIntegration.kubeadmConfig.taints` | **Custom node taints**|**Type:** `array`<br/>**Default:** `[]`|
+| `providerIntegration.kubeadmConfig.taints[*]` |**None**|**Type:** `object`<br/>|
+| `providerIntegration.kubeadmConfig.taints[*].effect` | **Effect**|**Type:** `string`<br/>|
+| `providerIntegration.kubeadmConfig.taints[*].key` | **Key**|**Type:** `string`<br/>|
+| `providerIntegration.kubeadmConfig.taints[*].value` | **Value**|**Type:** `string`<br/>|
 | `providerIntegration.kubernetesVersion` | **Kubernetes version**|**Type:** `string`<br/>**Default:** `"1.25.16"`|
 | `providerIntegration.osImage` | **OS image (deprecated)** - OS image Helm values have been deprecated. All OS-related information should now be obtained from the Release resource.|**Type:** `object`<br/>|
 | `providerIntegration.osImage.channel` | **Channel**|**Type:** `string`<br/>**Default:** `"stable"`|
@@ -920,7 +930,7 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.workers.defaultNodePools.PATTERN.cgroupsv1` | **Cgroups v1** - Flag that indicates if cgroups v1 should be used.|**Type:** `boolean`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>**Default:** `false`|
 | `providerIntegration.workers.defaultNodePools.PATTERN.customNodeLabels` | **Node labels** - Labels that are passed to kubelet argument 'node-labels'.|**Type:** `array`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
 | `providerIntegration.workers.defaultNodePools.PATTERN.customNodeLabels[*]` | **Label**|**Type:** `string`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
-| `providerIntegration.workers.defaultNodePools.PATTERN.customNodeTaints` | **Custom node taints**|**Type:** `array`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
+| `providerIntegration.workers.defaultNodePools.PATTERN.customNodeTaints` | **Custom node taints**|**Type:** `array`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>**Default:** `[]`|
 | `providerIntegration.workers.defaultNodePools.PATTERN.customNodeTaints[*]` |**None**|**Type:** `object`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
 | `providerIntegration.workers.defaultNodePools.PATTERN.customNodeTaints[*].effect` | **Effect**|**Type:** `string`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
 | `providerIntegration.workers.defaultNodePools.PATTERN.customNodeTaints[*].key` | **Key**|**Type:** `string`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
@@ -1030,6 +1040,11 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.workers.kubeadmConfig.postKubeadmCommands[*]` |**None**|**Type:** `string`<br/>|
 | `providerIntegration.workers.kubeadmConfig.preKubeadmCommands` | **Pre-kubeadm commands** - Extra commands to run before kubeadm runs.|**Type:** `array`<br/>|
 | `providerIntegration.workers.kubeadmConfig.preKubeadmCommands[*]` |**None**|**Type:** `string`<br/>|
+| `providerIntegration.workers.kubeadmConfig.taints` | **Custom node taints**|**Type:** `array`<br/>**Default:** `[]`|
+| `providerIntegration.workers.kubeadmConfig.taints[*]` |**None**|**Type:** `object`<br/>|
+| `providerIntegration.workers.kubeadmConfig.taints[*].effect` | **Effect**|**Type:** `string`<br/>|
+| `providerIntegration.workers.kubeadmConfig.taints[*].key` | **Key**|**Type:** `string`<br/>|
+| `providerIntegration.workers.kubeadmConfig.taints[*].value` | **Value**|**Type:** `string`<br/>|
 | `providerIntegration.workers.resources` | **Resources configuration** - Infrastructure template for worker resources when using MachineDeployment.|**Type:** `object`<br/>|
 | `providerIntegration.workers.resources.infrastructureMachineTemplateSpecTemplateName` | **Infrastructure Machine template spec template name** - The name of Helm template that renders Infrastructure Machine template spec.|**Type:** `string`<br/>|
 

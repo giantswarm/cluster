@@ -65,6 +65,7 @@ global:
       enabled: false
   controlPlane:
     apiServerPort: 6443
+    customNodeTaints: []
     machineHealthCheck:
       enabled: true
       maxUnhealthy: 40%
@@ -198,6 +199,7 @@ providerIntegration:
           additionalConfig:
             storage: {}
             systemd: {}
+      taints: []
     resources:
       controlPlane:
         api:
@@ -213,6 +215,7 @@ providerIntegration:
         additionalConfig:
           storage: {}
           systemd: {}
+    taints: []
   kubernetesVersion: 1.25.16
   osImage:
     channel: stable
@@ -239,4 +242,5 @@ providerIntegration:
           additionalConfig:
             storage: {}
             systemd: {}
+      taints: []
     resources: {}
