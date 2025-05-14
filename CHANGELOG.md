@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Make HelmRelease options configurable per app.
+- Set Cilium HelmRelease timeout to 1hs and disable remediation.
+
 ## [2.2.0] - 2025-03-18
 
 ### Added
