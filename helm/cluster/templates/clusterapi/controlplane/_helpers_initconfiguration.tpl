@@ -12,6 +12,7 @@ nodeRegistration:
     node-ip: {{ printf "${%s}" $.Values.providerIntegration.environmentVariables.ipv4 }}
     node-labels: ip={{ printf "${%s}" $.Values.providerIntegration.environmentVariables.ipv4 }}
     v: "2"
+    register-with-taints: 'node-role.kubernetes.io/control-plane="":NoSchedule'
   name: {{ printf "${%s}" $.Values.providerIntegration.environmentVariables.hostName }}
   {{- with (concat $.Values.providerIntegration.kubeadmConfig.taints $.Values.providerIntegration.controlPlane.kubeadmConfig.taints $.Values.global.controlPlane.customNodeTaints ) }}
   taints:

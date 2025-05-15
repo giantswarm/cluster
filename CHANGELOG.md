@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.3.0] - 2025-05-15
+
 ### Added
 
 - Support for region-specific container registry mirror configuration via `mirrorsTemplateName` property.
@@ -15,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `providerIntegration.kubeadmConfig.taints`
   - `providerIntegration.controlPlane.kubeadmConfig.taints`
   - `providerIntegration.workers.kubeadmConfig.taints`
+- Configure the `kubelet` to register Control Plane nodes with the `node-role.kubernetes.io/control-plane` taint.
 
 ### Changed
 
@@ -728,7 +731,8 @@ For Kubernetes <v1.29, you will need to re-enable it using the respective values
 
 - Update and clean up the template repo.
 
-[Unreleased]: https://github.com/giantswarm/cluster/compare/v2.2.0...HEAD
+[Unreleased]: https://github.com/giantswarm/cluster/compare/v2.3.0...HEAD
+[2.3.0]: https://github.com/giantswarm/cluster/compare/v2.2.0...v2.3.0
 [2.2.0]: https://github.com/giantswarm/cluster/compare/v2.1.1...v2.2.0
 [2.1.1]: https://github.com/giantswarm/cluster/compare/v2.1.0...v2.1.1
 [2.1.0]: https://github.com/giantswarm/cluster/compare/v2.0.1...v2.1.0
