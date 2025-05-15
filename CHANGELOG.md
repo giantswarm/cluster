@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `providerIntegration.kubeadmConfig.taints`
   - `providerIntegration.controlPlane.kubeadmConfig.taints`
   - `providerIntegration.workers.kubeadmConfig.taints`
+- Configure the `kubelet` to register Control Plane nodes with the `node-role.kubernetes.io/control-plane` taint.
 
 ### Changed
 
