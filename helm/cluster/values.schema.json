@@ -810,11 +810,12 @@
                 "nodepoolType": {
                     "type": "string",
                     "title": "Node pool type",
-                    "description": "Controller that will manage the node pool.",
+                    "description": "Controller that will manage the node pool. Only used to enable karpenter node pools.",
                     "enum": [
                         "machinepool",
                         "karpenter"
-                    ]
+                    ],
+                    "default": "machinepool"
                 },
                 "replicas": {
                     "type": "integer",
