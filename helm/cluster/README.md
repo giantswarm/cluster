@@ -446,7 +446,7 @@ Properties within the `.global.nodePools` object
 | `global.nodePools.PATTERN.machineHealthCheck.unhealthyUnknownTimeout` | **Timeout for unknown condition** - If a node is in 'Unknown' condition after this timeout, it will be considered unhealthy.|**Type:** `string`<br/>**Example:** `"300s"`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>**Default:** `"10m0s"`|
 | `global.nodePools.PATTERN.maxSize` | **Max size** - Maximum number of node pool nodes|**Type:** `integer`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
 | `global.nodePools.PATTERN.minSize` | **Min size** - Minimum number of node pool nodes|**Type:** `integer`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
-| `global.nodePools.PATTERN.nodepoolType` | **Node pool type** - Controller that will manage the node pool.|**Type:** `string`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
+| `global.nodePools.PATTERN.nodepoolType` | **Node pool type** - Controller that will manage the node pool. Only used to enable karpenter node pools.|**Type:** `string`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>**Default:** `"machinepool"`|
 | `global.nodePools.PATTERN.replicas` | **Replicas** - The number of node pool nodes.|**Type:** `integer`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
 
 ### Other global
@@ -946,7 +946,7 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.workers.defaultNodePools.PATTERN.machineHealthCheck.unhealthyUnknownTimeout` | **Timeout for unknown condition** - If a node is in 'Unknown' condition after this timeout, it will be considered unhealthy.|**Type:** `string`<br/>**Example:** `"300s"`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>**Default:** `"10m0s"`|
 | `providerIntegration.workers.defaultNodePools.PATTERN.maxSize` | **Max size** - Maximum number of node pool nodes|**Type:** `integer`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
 | `providerIntegration.workers.defaultNodePools.PATTERN.minSize` | **Min size** - Minimum number of node pool nodes|**Type:** `integer`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
-| `providerIntegration.workers.defaultNodePools.PATTERN.nodepoolType` | **Node pool type** - Controller that will manage the node pool.|**Type:** `string`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
+| `providerIntegration.workers.defaultNodePools.PATTERN.nodepoolType` | **Node pool type** - Controller that will manage the node pool. Only used to enable karpenter node pools.|**Type:** `string`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>**Default:** `"machinepool"`|
 | `providerIntegration.workers.defaultNodePools.PATTERN.replicas` | **Replicas** - The number of node pool nodes.|**Type:** `integer`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
 | `providerIntegration.workers.kubeadmConfig` | **Kubeadm config** - Configuration of workers nodes.|**Type:** `object`<br/>|
 | `providerIntegration.workers.kubeadmConfig.files` | **Files** - Provider-specific files that are deployed to worker nodes. They are specified in the cluster-<provider> apps.|**Type:** `array`<br/>|
