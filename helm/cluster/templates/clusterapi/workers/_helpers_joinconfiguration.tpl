@@ -25,7 +25,7 @@ nodeRegistration:
     node-labels: ip={{ printf "${%s}" $.Values.providerIntegration.environmentVariables.ipv4 }},role=worker,giantswarm.io/machine-pool={{ include "cluster.resource.name" $ }}-{{ $nodePool.name }}{{- if $nodePool.config.customNodeLabels }},{{ join "," $nodePool.config.customNodeLabels }}{{- end }}
     v: "2"
   {{- $taints := concat $.Values.providerIntegration.kubeadmConfig.taints $.Values.providerIntegration.workers.kubeadmConfig.taints (or $nodePool.config.customNodeTaints list) }}
-  {{- if eq $nodePool.config.nodepoolType "karpenter" }}
+  {{- if eq $nodePool.config.type "karpenter" }}
     {{- $taints = append $taints (dict "key" "karpenter.sh/unregistered" "effect" "NoExecute" "value" "karpenter") }}
   {{- end }}
   {{- with $taints }}
