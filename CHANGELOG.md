@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Introduce `nodepoolType` property in the node pools to be consumed by provider charts when they want to use `karpenter`.
+
 ## [2.3.0] - 2025-05-15
 
 ### Added
