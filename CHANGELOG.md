@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Introduce `type` property in the node pools to be consumed by provider charts when they want to use `karpenter`.
+- Configure `newPodScaleUpDelay` on `cluster-autoscaler` to avoid conflicts with Karpenter.
 
 ## [2.3.0] - 2025-05-15
 

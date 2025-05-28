@@ -23,3 +23,12 @@ users:
 files:
 {{- include "cluster.internal.workers.kubeadm.files" $ | indent 2 }}
 {{- end }}
+
+{{- define "hasKarpenterNodePool" -}}
+{{- range $name, $value := .Values.global.nodePools }}
+  {{- if eq $value.type "karpenter" }}
+    {{- print "true" -}}
+    {{- break -}}
+  {{- end }}
+{{- end }}
+{{- end }}

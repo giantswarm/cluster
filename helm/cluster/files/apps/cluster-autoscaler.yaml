@@ -9,3 +9,8 @@ namespace: kube-system
 # used by renovate
 # repo: giantswarm/cluster-autoscaler-app
 version: 1.30.4-gs1
+{{- if include "hasKarpenterNodePool" . }}
+defaultValues:
+  configmap:
+    newPodScaleUpDelay: 300s
+{{- end }}
