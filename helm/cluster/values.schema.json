@@ -743,6 +743,16 @@
             "type": "object",
             "title": "Node pool",
             "properties": {
+                "type": {
+                    "type": "string",
+                    "title": "Node pool type",
+                    "description": "Controller that will manage the node pool. Only used to enable karpenter node pools.",
+                    "enum": [
+                        "machinepool",
+                        "karpenter"
+                    ],
+                    "default": "machinepool"
+                },
                 "annotations": {
                     "type": "object",
                     "title": "Annotations",
