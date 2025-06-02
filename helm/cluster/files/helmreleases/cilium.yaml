@@ -3,7 +3,7 @@ configKey: cilium
 namespace: kube-system
 # used by renovate
 # repo: giantswarm/cilium-app
-version: 1.1.1
+version: 1.2.0
 timeout: 1h
 remediationRetries: 0
 defaultValues:
