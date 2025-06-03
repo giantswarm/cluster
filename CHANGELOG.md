@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.4.0] - 2025-06-03
+
 ### Changed
 
 - Introduce `type` property in the node pools to be consumed by provider charts when they want to use `karpenter`.
@@ -736,7 +738,8 @@ For Kubernetes <v1.29, you will need to re-enable it using the respective values
 
 - Update and clean up the template repo.
 
-[Unreleased]: https://github.com/giantswarm/cluster/compare/v2.3.0...HEAD
+[Unreleased]: https://github.com/giantswarm/cluster/compare/v2.4.0...HEAD
+[2.4.0]: https://github.com/giantswarm/cluster/compare/v2.3.0...v2.4.0
 [2.3.0]: https://github.com/giantswarm/cluster/compare/v2.2.1...v2.3.0
 [2.2.1]: https://github.com/giantswarm/cluster/compare/v2.2.0...v2.2.1
 [2.2.0]: https://github.com/giantswarm/cluster/compare/v2.1.1...v2.2.0
