@@ -62,6 +62,7 @@ release.giantswarm.io/version: {{ .Values.global.release.version | trimPrefix "v
 {{- if .Values.global.security.hardening.hideVersionEndpoint }}
 {{ include "cluster.resource.name" $ }}-security-hardening: enabled
 {{- end -}}
+{{- end -}}
 
 {{- define "cluster.labels.preventDeletion" }}
 {{- if $.Values.global.metadata.preventDeletion }}
