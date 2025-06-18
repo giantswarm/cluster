@@ -1058,6 +1058,14 @@ Information about the workload cluster release.
 | :----------- | :-------------- | :--------------- |
 | `global.release.version` | **Version**|**Type:** `string`<br/>|
 
+### Security
+Properties within the `.global.security` object
+
+| **Property** | **Description** | **More Details** |
+| :----------- | :-------------- | :--------------- |
+| `global.security.hardening` | **Hardening**|**Type:** `object`<br/>|
+| `global.security.hardening.hideVersionEndpoint` | **Hide version API endpoint** - Whether to hide the version API endpoint for security hardening.|**Type:** `boolean`<br/>**Default:** `true`|
+
 
 
 <!-- DOCS_END -->
