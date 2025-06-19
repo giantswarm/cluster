@@ -1,0 +1,131 @@
+{{- if .Values.global.security.hardening.hideVersionEndpoint }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "cluster.resource.name" . }}-security-hardening
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "cluster.labels.common.all" . | nindent 4 }}
+data:
+  security-hardening.yaml: |
+    apiVersion: batch/v1
+    kind: Job
+    metadata:
+      name: security-hardening-job
+      namespace: kube-system
+      labels:
+        app: security-hardening
+    spec:
+      template:
+        metadata:
+          labels:
+            app: security-hardening
+        spec:
+          serviceAccountName: security-hardening
+          restartPolicy: OnFailure
+          containers:
+          - name: hardening
+            image: {{ .Values.internal.advancedConfiguration.registry }}/giantswarm/kubectl:{{ .Values.providerIntegration.kubernetesVersion }}
+            securityContext:
+              runAsNonRoot: true
+              runAsUser: 1000
+              runAsGroup: 1000
+              allowPrivilegeEscalation: false
+              seccompProfile:
+                type: RuntimeDefault
+              capabilities:
+                drop:
+                - ALL
+            command:
+            - /bin/sh
+            - -c
+            - |
+              echo "Applying security hardening..."
+              echo "Removing /version endpoint from system:public-info-viewer ClusterRole..."
+              kubectl apply --validate=false -f - <<EOF
+              apiVersion: rbac.authorization.k8s.io/v1
+              kind: ClusterRole
+              metadata:
+                name: system:public-info-viewer
+                annotations:
+                  rbac.authorization.kubernetes.io/autoupdate: "false"
+                labels:
+                  kubernetes.io/bootstrapping: rbac-defaults
+              rules:
+              - nonResourceURLs:
+                - /healthz
+                - /livez
+                - /readyz
+                verbs:
+                - get
+              EOF
+              echo "Security hardening applied successfully!"
+      backoffLimit: 3
+    ---
+    apiVersion: v1
+    kind: ServiceAccount
+    metadata:
+      name: security-hardening
+      namespace: kube-system
+      labels:
+        app: security-hardening
+    ---
+    apiVersion: rbac.authorization.k8s.io/v1
+    kind: ClusterRole
+    metadata:
+      name: security-hardening
+      labels:
+        app: security-hardening
+    rules:
+    - apiGroups: ["rbac.authorization.k8s.io"]
+      resources: ["clusterroles"]
+      verbs: ["get", "patch", "update", "apply"]
+    ---
+    apiVersion: rbac.authorization.k8s.io/v1
+    kind: ClusterRoleBinding
+    metadata:
+      name: security-hardening
+      labels:
+        app: security-hardening
+    roleRef:
+      apiGroup: rbac.authorization.k8s.io
+      kind: ClusterRole
+      name: security-hardening
+    subjects:
+    - kind: ServiceAccount
+      name: security-hardening
+      namespace: kube-system
+    ---
+    apiVersion: cilium.io/v2
+    kind: CiliumNetworkPolicy
+    metadata:
+      name: security-hardening-netpol
+      namespace: kube-system
+      labels:
+        app: security-hardening
+    spec:
+      endpointSelector:
+        matchLabels:
+          app: security-hardening
+      egress:
+      - toEntities:
+        - kube-apiserver
+        - cluster
+---
+apiVersion: addons.cluster.x-k8s.io/v1beta1
+kind: ClusterResourceSet
+metadata:
+  name: {{ include "cluster.resource.name" . }}-security-hardening
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "cluster.labels.common.all" . | nindent 4 }}
+spec:
+  clusterSelector:
+    matchLabels:
+      {{ include "cluster.resource.name" . }}-security-hardening: "enabled"
+  resources:
+    - kind: ConfigMap
+      name: {{ include "cluster.resource.name" . }}-security-hardening
+  strategy: ApplyOnce
+{{- end }}

@@ -59,6 +59,9 @@ cluster.x-k8s.io/watch-filter: capi
 {{- if $.Values.providerIntegration.useReleases }}
 release.giantswarm.io/version: {{ .Values.global.release.version | trimPrefix "v" | quote }}
 {{- end }}
+{{- if .Values.global.security.hardening.hideVersionEndpoint }}
+{{ include "cluster.resource.name" $ }}-security-hardening: enabled
+{{- end -}}
 {{- end -}}
 
 {{- define "cluster.labels.preventDeletion" }}
