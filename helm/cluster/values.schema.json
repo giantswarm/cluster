@@ -3037,7 +3037,7 @@
                         "enabled": true,
                         "initialJoinToken": "",
                         "proxyAddr": "teleport.giantswarm.io:443",
-                        "version": "16.1.7"
+                        "version": "16.5.12"
                     }
                 },
                 "useReleases": {
