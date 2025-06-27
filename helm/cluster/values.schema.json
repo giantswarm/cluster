@@ -1776,6 +1776,24 @@
                             "title": "Version"
                         }
                     }
+                },
+                "security": {
+                    "type": "object",
+                    "title": "Security",
+                    "properties": {
+                        "hardening": {
+                            "type": "object",
+                            "title": "Hardening",
+                            "properties": {
+                                "hideVersionEndpoint": {
+                                    "type": "boolean",
+                                    "title": "Hide version API endpoint",
+                                    "description": "Whether to hide the version API endpoint for security hardening.",
+                                    "default": true
+                                }
+                            }
+                        }
+                    }
                 }
             }
         },

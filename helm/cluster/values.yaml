@@ -80,6 +80,9 @@ global:
   podSecurityStandards:
     enforced: false
   release: {}
+  security:
+    hardening:
+      hideVersionEndpoint: true
 internal:
   advancedConfiguration:
     appPlatform:
