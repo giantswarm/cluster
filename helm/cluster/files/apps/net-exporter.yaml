@@ -11,7 +11,13 @@ version: 1.23.0
 defaultValues:
   ciliumNetworkPolicy:
     enabled: true
-  {{- if ($.Values.providerIntegration.components.systemd).timesyncd }}
+  DNSCheck:
+    TCP:
+      Disabled: false
+  Hosts: giantswarm.io.,kubernetes.default.svc.cluster.local.
   NetExporter:
+  {{- if ($.Values.providerIntegration.components.systemd).timesyncd }}
     NTPServers: {{ join "," (compact $.Values.providerIntegration.components.systemd.timesyncd.ntp) }}
+  {{- else }}
+    NTPServers: 0.flatcar.pool.ntp.org.,1.flatcar.pool.ntp.org.
   {{- end }}
