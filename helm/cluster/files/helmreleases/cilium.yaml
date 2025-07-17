@@ -10,8 +10,7 @@ defaultValues:
   # For all available values see https://github.com/giantswarm/cilium-app/blob/main/helm/cilium/values.yaml
   ipam:
     mode: kubernetes
-  k8sServiceHost: api.{{ include "cluster.resource.name" $ }}.{{ .Values.global.connectivity.baseDomain }}
-  k8sServicePort: '{{ .Values.global.controlPlane.apiServerPort }}'
+  k8sServiceHost: auto
   kubeProxyReplacement: 'true'
   hubble:
     relay:
