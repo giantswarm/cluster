@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Set defaults for net-exporter App.
+- Configure cilium to use the k8s hostname defined in the cluster-info ConfigMap
 
 ## [2.4.0] - 2025-06-03
 
