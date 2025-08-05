@@ -31,9 +31,9 @@ spec:
   template:
     spec:
       bootstrap:
-        {{- if $.Values.providerIntegration.resourcesApi.machinePool.bootstrap.templateName }}
+        {{- if and $.Values.providerIntegration.resourcesApi.machinePool.bootstrap $.Values.providerIntegration.resourcesApi.machinePool.bootstrap.templateName }}
         {{- include $.Values.providerIntegration.resourcesApi.machinePool.bootstrap.templateName $ | indent 8 }}
-        {{- else if $.Values.providerIntegration.resourcesApi.machinePool.bootstrap.value }}
+        {{- else if and $.Values.providerIntegration.resourcesApi.machinePool.bootstrap $.Values.providerIntegration.resourcesApi.machinePool.bootstrap.value }}
         {{- $.Values.providerIntegration.resourcesApi.machinePool.bootstrap.value | indent 8 }}
         {{- else }}
         configRef:

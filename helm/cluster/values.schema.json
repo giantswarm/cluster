@@ -126,7 +126,6 @@
                     ]
                 }
             ]
-            
         },
         "customNodeTaints": {
             "type": "array",
@@ -3011,7 +3010,7 @@
                                     "infrastructureMachinePool": {
                                         "$ref": "#/$defs/infrastructureMachinePool"
                                     },
-                                    "machinePool":{
+                                    "machinePool": {
                                         "ref": "#/$defs/machinePool"
                                     }
                                 }
