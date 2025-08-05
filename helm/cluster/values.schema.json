@@ -80,6 +80,54 @@
                 }
             }
         },
+        "bootstrap": {
+            "title": "Bootstrap",
+            "description": "Bootstrap configuration.",
+            "oneOf": [
+                {
+                    "type": "null"
+                },
+                {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                        "templateName": {
+                            "type": "string",
+                            "title": "Template name",
+                            "description": "The name of the Helm template which renders the 'bootstrap' value"
+                        },
+                        "value": {
+                            "type": "string",
+                            "title": "Value",
+                            "description": "Static value for bootstrap."
+                        }
+                    },
+                    "oneOf": [
+                        {
+                            "required": [
+                                "templateName"
+                            ],
+                            "not": {
+                                "required": [
+                                    "value"
+                                ]
+                            }
+                        },
+                        {
+                            "required": [
+                                "value"
+                            ],
+                            "not": {
+                                "required": [
+                                    "templateName"
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
+            
+        },
         "customNodeTaints": {
             "type": "array",
             "title": "Custom node taints",
@@ -731,53 +779,18 @@
                 }
             }
         },
-        "machinePoolBootstrap": {
-            "title": "MachinePool bootstrap",
-            "description": "MachinePool bootstrap configuration.",
-            "oneOf": [
-                {
-                    "type": "null"
-                },
-                {
-                    "type": "object",
-                    "additionalProperties": false,
-                    "properties": {
-                        "templateName": {
-                            "type": "string",
-                            "title": "Template name",
-                            "description": "The name of the Helm template which renders the 'bootstrap' value"
-                        },
-                        "value": {
-                            "type": "string",
-                            "title": "Value",
-                            "description": "Static value for bootstrap."
-                        }
-                    },
-                    "oneOf": [
-                        {
-                            "required": [
-                                "templateName"
-                            ],
-                            "not": {
-                                "required": [
-                                    "value"
-                                ]
-                            }
-                        },
-                        {
-                            "required": [
-                                "value"
-                            ],
-                            "not": {
-                                "required": [
-                                    "templateName"
-                                ]
-                            }
-                        }
-                    ]
+        "machinePool": {
+            "type": "object",
+            "title": "MachinePool",
+            "description": "Configuration for MachinePool resource.",
+            "additionalProperties": false,
+            "properties": {
+                "bootstrap": {
+                    "$ref": "#/$defs/bootstrap",
+                    "title": "Bootstrap",
+                    "description": "Bootstrap configuration for MachinePool."
                 }
-            ]
-            
+            }
         },
         "mounts": {
             "type": "array",
@@ -2998,8 +3011,8 @@
                                     "infrastructureMachinePool": {
                                         "$ref": "#/$defs/infrastructureMachinePool"
                                     },
-                                    "machinePoolBootstrap":{
-                                        "ref": "#/$defs/machinePoolBootstrap"
+                                    "machinePool":{
+                                        "ref": "#/$defs/machinePool"
                                     }
                                 }
                             }
