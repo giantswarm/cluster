@@ -228,6 +228,8 @@ providerIntegration:
     helmRepositoryResourcesEnabled: false
     infrastructureCluster: {}
     machineHealthCheckResourceEnabled: true
+    machinePool:
+      bootstrap: null
     machinePoolResourcesEnabled: true
   teleport:
     enabled: true
