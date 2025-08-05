@@ -731,6 +731,54 @@
                 }
             }
         },
+        "machinePoolBootstrap": {
+            "title": "MachinePool bootstrap",
+            "description": "MachinePool bootstrap configuration.",
+            "oneOf": [
+                {
+                    "type": "null"
+                },
+                {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                        "templateName": {
+                            "type": "string",
+                            "title": "Template name",
+                            "description": "The name of the Helm template which renders the 'bootstrap' value"
+                        },
+                        "value": {
+                            "type": "string",
+                            "title": "Value",
+                            "description": "Static value for bootstrap."
+                        }
+                    },
+                    "oneOf": [
+                        {
+                            "required": [
+                                "templateName"
+                            ],
+                            "not": {
+                                "required": [
+                                    "value"
+                                ]
+                            }
+                        },
+                        {
+                            "required": [
+                                "value"
+                            ],
+                            "not": {
+                                "required": [
+                                    "templateName"
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
+            
+        },
         "mounts": {
             "type": "array",
             "title": "Additional mounts",
@@ -2949,6 +2997,9 @@
                                 "properties": {
                                     "infrastructureMachinePool": {
                                         "$ref": "#/$defs/infrastructureMachinePool"
+                                    },
+                                    "machinePoolBootstrap":{
+                                        "ref": "#/$defs/machinePoolBootstrap"
                                     }
                                 }
                             }

@@ -31,10 +31,10 @@ spec:
   template:
     spec:
       bootstrap:
-        {{- if $.Values.providerIntegration.resourcesApi.infrastructureMachinePool.bootstrap.templateName }}
-        {{- include $.Values.providerIntegration.resourcesApi.infrastructureMachinePool.bootstrap.templateName $ | indent 6 }}
-        {{- else if $.Values.providerIntegration.resourcesApi.infrastructureMachinePool.bootstrap.value }}
-        {{- $.Values.providerIntegration.resourcesApi.infrastructureMachinePool.bootstrap.value | indent 6 }}
+        {{- if $.Values.providerIntegration.resourcesApi.machinePoolBootstrap.templateName }}
+        {{- include $.Values.providerIntegration.resourcesApi.machinePoolBootstrap.templateName $ | indent 8 }}
+        {{- else if $.Values.providerIntegration.resourcesApi.machinePoolBootstrap.value }}
+        {{- $.Values.providerIntegration.resourcesApi.machinePoolBootstrap.value | indent 8 }}
         {{- else }}
         configRef:
           apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
