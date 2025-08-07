@@ -31,7 +31,7 @@ spec:
   template:
     spec:
       bootstrap:
-        {{- if $.Values.providerIntegration.resourcesApi.machinePool.bootstrap }}
+        {{- if and $.Values.providerIntegration.resourcesApi.machinePool $.Values.providerIntegration.resourcesApi.machinePool.bootstrap }}
         {{- if $.Values.providerIntegration.resourcesApi.machinePool.bootstrap.templateName }}
         {{- include $.Values.providerIntegration.resourcesApi.machinePool.bootstrap.templateName $ | indent 8 }}
         {{- else if $.Values.providerIntegration.resourcesApi.machinePool.bootstrap.value }}
