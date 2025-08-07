@@ -787,8 +787,7 @@
                 "bootstrap": {
                     "$ref": "#/$defs/bootstrap",
                     "title": "Bootstrap",
-                    "description": "Bootstrap configuration for MachinePool.",
-                    "default": null
+                    "description": "Bootstrap configuration for MachinePool."
                 }
             }
         },
