@@ -3118,10 +3118,11 @@
                             ],
                             "additionalProperties": false,
                             "properties": {
-                                "disable": {
+                                "enable": {
                                     "type": "boolean",
-                                    "title": "Disable kubeadm config",
-                                    "description": "Flag that indicates if the kubeadm config should not be rendered."
+                                    "title": "Enable kubeadm config",
+                                    "description": "Flag that indicates if the kubeadm config should be rendered.",
+                                    "default": true
                                 },
                                 "files": {
                                     "type": "array",

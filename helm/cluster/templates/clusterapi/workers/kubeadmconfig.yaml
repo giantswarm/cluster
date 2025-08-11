@@ -12,7 +12,7 @@ node rollouts and thus possibly interruped workloads for customers.
 */}}
 {{- if $.Values.providerIntegration.resourcesApi.machinePoolResourcesEnabled }}
 {{- if eq $.Values.providerIntegration.resourcesApi.nodePoolKind "MachinePool" }}
-{{- if not $.Values.providerIntegration.workers.kubeadmConfig.disable }}
+{{- if $.Values.providerIntegration.workers.kubeadmConfig.enable }}
 {{- range $nodePoolName, $nodePoolConfig := $.Values.global.nodePools | default $.Values.providerIntegration.workers.defaultNodePools }}
 {{- $_ := set $ "nodePool" (dict "name" $nodePoolName "config" $nodePoolConfig) }}
 apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
