@@ -3118,7 +3118,7 @@
                             ],
                             "additionalProperties": false,
                             "properties": {
-                                "enable": {
+                                "enabled": {
                                     "type": "boolean",
                                     "title": "Enable kubeadm config",
                                     "description": "Flag that indicates if the kubeadm config should be rendered.",
