@@ -237,6 +237,7 @@ providerIntegration:
   useReleases: false
   workers:
     kubeadmConfig:
+      enabled: true
       ignition:
         containerLinuxConfig:
           additionalConfig:

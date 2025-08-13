@@ -3118,6 +3118,12 @@
                             ],
                             "additionalProperties": false,
                             "properties": {
+                                "enabled": {
+                                    "type": "boolean",
+                                    "title": "Enable kubeadm config",
+                                    "description": "Flag that indicates if the kubeadm config should be rendered.",
+                                    "default": true
+                                },
                                 "files": {
                                     "type": "array",
                                     "title": "Files",

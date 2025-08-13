@@ -949,6 +949,7 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.workers.defaultNodePools.PATTERN.replicas` | **Replicas** - The number of node pool nodes.|**Type:** `integer`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
 | `providerIntegration.workers.defaultNodePools.PATTERN.type` | **Node pool type** - Controller that will manage the node pool. Only used to enable karpenter node pools.|**Type:** `string`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>**Default:** `"machinepool"`|
 | `providerIntegration.workers.kubeadmConfig` | **Kubeadm config** - Configuration of workers nodes.|**Type:** `object`<br/>|
+| `providerIntegration.workers.kubeadmConfig.enabled` | **Enable kubeadm config** - Flag that indicates if the kubeadm config should be rendered.|**Type:** `boolean`<br/>**Default:** `true`|
 | `providerIntegration.workers.kubeadmConfig.files` | **Files** - Provider-specific files that are deployed to worker nodes. They are specified in the cluster-<provider> apps.|**Type:** `array`<br/>|
 | `providerIntegration.workers.kubeadmConfig.files[*]` | **File from secret** - It defines a file with content in a Secret|**Type:** `object`<br/>|
 | `providerIntegration.workers.kubeadmConfig.files[*].contentFrom` | **Content from** - It specifies where the file content is coming from.|**Type:** `object`<br/>|
