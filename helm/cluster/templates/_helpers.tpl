@@ -540,9 +540,9 @@ Where `data` is the data to hash and `global` is the top level scope.
   - .Values.global.components.selinux.mode: this can be used to enforce SELinux on the nodes, which will also enable SELinux for containerd.
 */}}
 {{- define "cluster.containerd.selinux.enabled" }}
-{{- if or $.Values.global.components.containerd.selinux.enabled (eq $.Values.global.components.selinux.mode "enforcing") }}
+{{- if or $.Values.global.components.containerd.selinux.enabled (eq $.Values.global.components.selinux.mode "enforcing") -}}
 true
-{{- else }}
+{{- else -}}
 false
 {{- end }}
 {{- end }}
