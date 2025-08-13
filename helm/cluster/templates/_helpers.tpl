@@ -531,3 +531,18 @@ Where `data` is the data to hash and `global` is the top level scope.
     {{- fail "Cannot determine OS tooling version" }}
 {{- end }}
 {{- end }}
+
+{{/*
+  cluster.containerd.selinux.enabled is a public named template that returns whether SELinux is enabled for containerd.
+
+  There are two values that can be used to control this behavior:
+  - .Values.global.components.containerd.selinux.enabled: this can be used to enable SELinux for containerd independently of the SELinux mode.
+  - .Values.global.components.selinux.mode: this can be used to enforce SELinux on the nodes, which will also enable SELinux for containerd.
+*/}}
+{{- define "cluster.containerd.selinux.enabled" }}
+{{- if or $.Values.global.components.containerd.selinux.enabled (eq $.Values.global.components.selinux.mode "enforcing") -}}
+true
+{{- else -}}
+false
+{{- end }}
+{{- end }}
