@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Values: Fix schema. ([#580](https://github.com/giantswarm/cluster/pull/580))
+- Chart: Update test dependencies and ignore binary. ([#584](https://github.com/giantswarm/cluster/pull/584))
 
 ## [1.7.0] - 2024-12-06
 
