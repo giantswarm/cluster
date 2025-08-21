@@ -2992,9 +2992,13 @@
                             },
                             "then": {
                                 "required": [
+                                    "infrastructureMachinePool",
                                     "nodePoolKind"
                                 ],
                                 "properties": {
+                                    "infrastructureMachinePool": {
+                                        "$ref": "#/$defs/infrastructureMachinePool"
+                                    },
                                     "nodePoolKind": {
                                         "type": "string",
                                         "title": "Node pool kind",
@@ -3020,13 +3024,7 @@
                                 }
                             },
                             "then": {
-                                "required": [
-                                    "infrastructureMachinePool"
-                                ],
                                 "properties": {
-                                    "infrastructureMachinePool": {
-                                        "$ref": "#/$defs/infrastructureMachinePool"
-                                    },
                                     "machinePool": {
                                         "ref": "#/$defs/machinePool"
                                     }
