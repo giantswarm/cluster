@@ -2860,9 +2860,13 @@
                             },
                             "then": {
                                 "required": [
+                                    "infrastructureMachinePool",
                                     "nodePoolKind"
                                 ],
                                 "properties": {
+                                    "infrastructureMachinePool": {
+                                        "$ref": "#/$defs/infrastructureMachinePool"
+                                    },
                                     "nodePoolKind": {
                                         "type": "string",
                                         "title": "Node pool kind",
@@ -2871,29 +2875,6 @@
                                             "MachineDeployment",
                                             "MachinePool"
                                         ]
-                                    }
-                                }
-                            }
-                        },
-                        {
-                            "if": {
-                                "type": "object",
-                                "properties": {
-                                    "machinePoolResourcesEnabled": {
-                                        "const": true
-                                    },
-                                    "nodePoolKind": {
-                                        "const": "MachinePool"
-                                    }
-                                }
-                            },
-                            "then": {
-                                "required": [
-                                    "infrastructureMachinePool"
-                                ],
-                                "properties": {
-                                    "infrastructureMachinePool": {
-                                        "$ref": "#/$defs/infrastructureMachinePool"
                                     }
                                 }
                             }
