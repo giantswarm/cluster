@@ -802,6 +802,7 @@
         "nodePool": {
             "type": "object",
             "title": "Node pool",
+            "additionalProperties": true,
             "properties": {
                 "type": {
                     "type": "string",
