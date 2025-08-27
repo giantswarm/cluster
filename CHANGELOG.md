@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.2.3] - 2025-08-27
+
 ### Removed
 
 - Chart: Remove deprecated `azure-container-registry-config`.
@@ -730,7 +732,8 @@ For Kubernetes <v1.29, you will need to re-enable it using the respective values
 
 - Update and clean up the template repo.
 
-[Unreleased]: https://github.com/giantswarm/cluster/compare/v2.2.2...HEAD
+[Unreleased]: https://github.com/giantswarm/cluster/compare/v2.2.3...HEAD
+[2.2.3]: https://github.com/giantswarm/cluster/compare/v2.2.2...v2.2.3
 [2.2.2]: https://github.com/giantswarm/cluster/compare/v2.2.1...v2.2.2
 [2.2.1]: https://github.com/giantswarm/cluster/compare/v2.2.0...v2.2.1
 [2.2.0]: https://github.com/giantswarm/cluster/compare/v2.1.1...v2.2.0
