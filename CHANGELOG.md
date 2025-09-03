@@ -2,10 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to
+[Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+### Removed
+
+- Chart: obsolete default config with mirroring for docker hub registry
 
 ## [2.6.2] - 2025-09-02
 
@@ -23,7 +27,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Add `enabled` flag to `providerIntegration.workers.kubeadmConfig` to disable the rendering of the `KubeadmConfig` resource.
+- Add `enabled` flag to `providerIntegration.workers.kubeadmConfig` to disable the rendering of the
+  `KubeadmConfig` resource.
 - containerd: Add flag to enable SELinux.
 
 ## [2.5.0] - 2025-07-31
@@ -37,7 +42,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Introduce `type` property in the node pools to be consumed by provider charts when they want to use `karpenter`.
+- Introduce `type` property in the node pools to be consumed by provider charts when they want to use
+  `karpenter`.
 
 ## [2.3.0] - 2025-05-15
 
@@ -49,7 +55,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `providerIntegration.kubeadmConfig.taints`
   - `providerIntegration.controlPlane.kubeadmConfig.taints`
   - `providerIntegration.workers.kubeadmConfig.taints`
-- Configure the `kubelet` to register Control Plane nodes with the `node-role.kubernetes.io/control-plane` taint.
+- Configure the `kubelet` to register Control Plane nodes with the `node-role.kubernetes.io/control-plane`
+  taint.
 
 ## [2.2.1] - 2025-05-14
 
@@ -62,7 +69,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Preventing container with Nvidia runtime taking down the whole node going OOM by properly isolating the container.
+- Preventing container with Nvidia runtime taking down the whole node going OOM by properly isolating the
+  container.
 
 ### Removed
 
@@ -85,7 +93,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Values: Fix `coredns-extensions` type. ([#437](https://github.com/giantswarm/cluster/pull/437))
-- Values: Fix `giantswarm-cluster-suite` and `network-policies` type. ([#439](https://github.com/giantswarm/cluster/pull/439))
+- Values: Fix `giantswarm-cluster-suite` and `network-policies` type.
+  ([#439](https://github.com/giantswarm/cluster/pull/439))
 
 ## [2.0.0] - 2025-02-17
 
@@ -97,9 +106,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- :warning: Kubernetes >= v1.30 **Remove outdated TLS cipher suites `TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305`.**
+- :warning: Kubernetes >= v1.30 **Remove outdated TLS cipher suites
+  `TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305`.**
 - Changed `teleport` data directory to `/`
-- Check that apps requested by `include "cluster.app.catalog"` are listed in the `Release` since else, empty catalog names are produced and the chart deploys fine but fails later at `App`/`HelmRelease` deployment
+- Check that apps requested by `include "cluster.app.catalog"` are listed in the `Release` since else, empty
+  catalog names are produced and the chart deploys fine but fails later at `App`/`HelmRelease` deployment
 - Set `.install.remediation.retries` of `.spec.install` and `.spec.upgrade` of HelmReleases to -1
 - Make `nodeCidrMaskSize` default to 25 instead of 24.
 
@@ -117,7 +128,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Allow configuring `cgroups` v1 or v2 compatibility per node pool, instead of the whole cluster. Control plane nodes always use cgroups v2.
+- Allow configuring `cgroups` v1 or v2 compatibility per node pool, instead of the whole cluster. Control
+  plane nodes always use cgroups v2.
 - Fix new line in additionalFields.
 
 ### Added
@@ -141,10 +153,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added support for `Service` section in custom systemd configuration
-- Added support for `After`, `Requires`, `Wants` and `BindsTo` within unit section of custom systemd configuration
+- Added support for `After`, `Requires`, `Wants` and `BindsTo` within unit section of custom systemd
+  configuration
 - Added support for passing Helm templating from provider chart values through to systemd unit templates
 - Added support for `Before` and `PartOf` within unit section of custom systemd configuration
-- Added support for `Restart`, `Environment` and `EnvironmentFile` within service section of custom systemd configuration
+- Added support for `Restart`, `Environment` and `EnvironmentFile` within service section of custom systemd
+  configuration
 
 ### Changed
 
@@ -162,11 +176,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Allow configuring `kube-controller-manager` `--node-cidr-mask-size` flag.
 - Chart: Support multiple service account issuers.\
-  Change `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuer` to plural `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuers` and render them in the specified order as `--service-account-issuer` parameters for the API server.
+  Change `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuer`
+  to plural
+  `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuers` and
+  render them in the specified order as `--service-account-issuer` parameters for the API server.
 
 ### Changed
 
-- Only add the `customNodeLabels` value to the kubelet `node-labels` argument in the `KubeadmConfig` when `customNodeLabels` is defined.
+- Only add the `customNodeLabels` value to the kubelet `node-labels` argument in the `KubeadmConfig` when
+  `customNodeLabels` is defined.
 
 ## [1.3.0] - 2024-09-06
 
@@ -204,13 +222,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `cluster.os.name` named template that returns the operating system name.
 - `cluster.os.releaseChannel` named template that returns the operating system release channel.
 - `cluster.os.version` named template that returns the operating system version.
-- `cluster.os.tooling.version` named template which is used to obtain the OS tooling (capi-image-builder) version.
+- `cluster.os.tooling.version` named template which is used to obtain the OS tooling (capi-image-builder)
+  version.
 
 ### Changed
 
 - Use already existing helper function to render all common labels in the `MachineHealthCheck` CR.
 - Remove unnecessary new lines before and after the labels field in the CRs.
-- Apps: Depend on `kyverno-crds` instead of `kyverno`. ([#285](https://github.com/giantswarm/cluster/pull/285))
+- Apps: Depend on `kyverno-crds` instead of `kyverno`.
+  ([#285](https://github.com/giantswarm/cluster/pull/285))
 - Set `kubeProxyReplacement` to `'true'` instead of deprecated value `strict` in cilium values.
 - Apps: Bump `cluster-autoscaler` to v1.29.3-gs1. ([#286](https://github.com/giantswarm/cluster/pull/286))
 - Deprecate `cluster.component.flatcar.version` named template in favor of `cluster.os.version`.
@@ -220,7 +240,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Support `pauseProperties` with `null` values.
-- Add MC Zot deployment as a registry mirror for `gsoci.azurecr.io` registry. This is the new default behavior.
+- Add MC Zot deployment as a registry mirror for `gsoci.azurecr.io` registry. This is the new default
+  behavior.
 
 ### Added
 
@@ -228,7 +249,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.36.0] - 2024-07-19
 
-This release removes the `CronJobTimeZone` feature gate as it becomes stable and is included in Kubernetes v1.29.
+This release removes the `CronJobTimeZone` feature gate as it becomes stable and is included in Kubernetes
+v1.29.
 
 For Kubernetes <v1.29, you will need to re-enable it using the respective values.
 
@@ -260,7 +282,8 @@ For Kubernetes <v1.29, you will need to re-enable it using the respective values
 
 ### Added
 
-- Add new `giantswarm-cluster-suite` app that provides basic Kubernetes resources others apps need in workload cluster.
+- Add new `giantswarm-cluster-suite` app that provides basic Kubernetes resources others apps need in workload
+  cluster.
 - New flag that allows switching from Chart Operator backed App Platform to Flux backed App Platform.
 
 ### Changed
@@ -279,8 +302,10 @@ For Kubernetes <v1.29, you will need to re-enable it using the respective values
 
 ### Added
 
-- Add `.global.components.containerd.localRegistryCache` Helm values and support for in-cluster, local registry cache mirrors in `containerd` configuration.
-  In such cases, the registry should be exposed via node ports and `containerd` connects via that port at `127.0.0.1` via HTTP (only allowed for this single use case).
+- Add `.global.components.containerd.localRegistryCache` Helm values and support for in-cluster, local
+  registry cache mirrors in `containerd` configuration. In such cases, the registry should be exposed via node
+  ports and `containerd` connects via that port at `127.0.0.1` via HTTP (only allowed for this single use
+  case).
 
 ## [0.31.4] - 2024-06-12
 
@@ -310,10 +335,10 @@ For Kubernetes <v1.29, you will need to re-enable it using the respective values
 
 ### Added
 
-- This PR adds support for using Release CRs and getting Kubernetes, Flatcar and apps version, catalog and dependencies
-  from there. This change is fully backward compatible, and it requires that new flag `$.Values.providerIntegration.useReleases`
-  is set to `true`. The default value of `$.Values.providerIntegration.useReleases` is `false`, so cluster chart version
-  can be safely updated.
+- This PR adds support for using Release CRs and getting Kubernetes, Flatcar and apps version, catalog and
+  dependencies from there. This change is fully backward compatible, and it requires that new flag
+  `$.Values.providerIntegration.useReleases` is set to `true`. The default value of
+  `$.Values.providerIntegration.useReleases` is `false`, so cluster chart version can be safely updated.
 
 ## [0.30.1] - 2024-06-07
 
@@ -338,7 +363,8 @@ For Kubernetes <v1.29, you will need to re-enable it using the respective values
 ### Fixed
 
 - Fix wrong indentation for owner field of KubeadmConfig files.
-- Fix `unable to select an IP from default routes` error by adding `network-online.target` as dependency for kubeadm service.
+- Fix `unable to select an IP from default routes` error by adding `network-online.target` as dependency for
+  kubeadm service.
 
 ## [0.27.0] - 2024-05-28
 
@@ -347,39 +373,55 @@ For Kubernetes <v1.29, you will need to re-enable it using the respective values
 - Add MachineDeployment resource template.
 - Add MachineHealthCheck resource template to NodePools.
 - API Server: Make feature gates configurable. ([#201](https://github.com/giantswarm/cluster/pull/201))\
-  - Values: Make `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.featureGates` reusable.
+  - Values: Make `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.featureGates`
+    reusable.
   - Values: Add `internal.advancedConfiguration.controlPlane.apiServer.featureGates`.
   - API Server: Implement `internal.advancedConfiguration.controlPlane.apiServer.featureGates`.
-- Controller Manager: Make feature gates configurable. ([#203](https://github.com/giantswarm/cluster/pull/203))\
+- Controller Manager: Make feature gates configurable.
+  ([#203](https://github.com/giantswarm/cluster/pull/203))\
   - Values: Add `internal.advancedConfiguration.controlPlane.controllerManager.featureGates`.
-  - Values: Add `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.controllerManager.featureGates`.
-  - Controller Manager: Implement `cluster.internal.controlPlane.kubeadm.clusterConfiguration.controllerManager.featureGates`.
+  - Values: Add
+    `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.controllerManager.featureGates`.
+  - Controller Manager: Implement
+    `cluster.internal.controlPlane.kubeadm.clusterConfiguration.controllerManager.featureGates`.
 
 ### Changed
 
-- **BREAKING** Replace `COREOS_EC2_HOSTNAME` with `Values.providerIntegration.environmentVariables.hostName` to support multiple providers.
-- **BREAKING** Replace `COREOS_EC2_IPV4_LOCAL` with `Values.providerIntegration.environmentVariables.ipv4` to support multiple providers.
+- **BREAKING** Replace `COREOS_EC2_HOSTNAME` with `Values.providerIntegration.environmentVariables.hostName`
+  to support multiple providers.
+- **BREAKING** Replace `COREOS_EC2_IPV4_LOCAL` with `Values.providerIntegration.environmentVariables.ipv4` to
+  support multiple providers.
 
 - Update cluster-autoscaler-app to 1.27.3-gs9.
-- HelmReleases are deployed from a single generic template and details about apps that are deployed as HelmReleases are in `helm/cluster/files/helmreleases` (similarly to `helm/cluster/files/apps`).
-- HelmReleases can be configured with `.Values.ephemeralConfiguration.<app name>` in the same way like App resources. Available values are:
+- HelmReleases are deployed from a single generic template and details about apps that are deployed as
+  HelmReleases are in `helm/cluster/files/helmreleases` (similarly to `helm/cluster/files/apps`).
+- HelmReleases can be configured with `.Values.ephemeralConfiguration.<app name>` in the same way like App
+  resources. Available values are:
   - `versionOverride` to override app version,
   - `catalogOverride` to override catalog (e.g. when you use development build version of your app), and
   - `disable` to disable rendering and deployment of the app.
-- `chartName` is now optional when specifying app details in `helm/cluster/files/apps/<app name>.yaml` or `helm/cluster/files/helmreleases/<app name>.yaml`, and if it is not specified, `appName` property value will be used.
-- `catalog` is now optional when specifying app details in `helm/cluster/files/apps/<app name>.yaml` or `helm/cluster/files/helmreleases/<app name>.yaml`, and if it is not specified, `"default"` value will be used.
-- containerd: Append content hash to configuration secret name. ([#158](https://github.com/giantswarm/cluster/pull/158))\
+- `chartName` is now optional when specifying app details in `helm/cluster/files/apps/<app name>.yaml` or
+  `helm/cluster/files/helmreleases/<app name>.yaml`, and if it is not specified, `appName` property value will
+  be used.
+- `catalog` is now optional when specifying app details in `helm/cluster/files/apps/<app name>.yaml` or
+  `helm/cluster/files/helmreleases/<app name>.yaml`, and if it is not specified, `"default"` value will be
+  used.
+- containerd: Append content hash to configuration secret name.
+  ([#158](https://github.com/giantswarm/cluster/pull/158))\
   This ensures nodes roll whenever containerd configuration is changed.\
   **NOTE:** This also causes nodes to roll when upgrading to this version.
 
 ### ⚠️ Breaking changes for cluster-$provider apps
 
-> _Note: This is NOT a breaking change for customers. Team Turtles handles updates of cluster chart in cluster-$provider apps and updates Helm values accordingly._
+> _Note: This is NOT a breaking change for customers. Team Turtles handles updates of cluster chart in
+> cluster-$provider apps and updates Helm values accordingly._
 
 - Remove deprecated `.Values.providerIntegration.resourcesApi.ciliumHelmReleaseResourceEnabled` Helm value.
 - Remove deprecated `.Values.providerIntegration.resourcesApi.coreDnsHelmReleaseResourceEnabled` Helm value.
-- Remove deprecated `.Values.providerIntegration.resourcesApi.networkPoliciesHelmReleaseResourceEnabled` Helm value.
-- Remove deprecated `.Values.providerIntegration.resourcesApi.verticalPodAutoscalerCrdHelmReleaseResourceEnabled` Helm value.
+- Remove deprecated `.Values.providerIntegration.resourcesApi.networkPoliciesHelmReleaseResourceEnabled` Helm
+  value.
+- Remove deprecated
+  `.Values.providerIntegration.resourcesApi.verticalPodAutoscalerCrdHelmReleaseResourceEnabled` Helm value.
 
 ## [0.26.0] - 2024-05-16
 
@@ -391,7 +433,8 @@ For Kubernetes <v1.29, you will need to re-enable it using the respective values
 
 ### ⚠️ Breaking changes
 
-- Revert https://github.com/giantswarm/cluster/pull/152 because it introduced invalid containerd config which caused containerd to silently partially fail and not apply registry mirrors config.
+- Revert https://github.com/giantswarm/cluster/pull/152 because it introduced invalid containerd config which
+  caused containerd to silently partially fail and not apply registry mirrors config.
 
 ## [0.24.0] - 2024-05-10
 
@@ -413,26 +456,37 @@ For Kubernetes <v1.29, you will need to re-enable it using the respective values
 - Add security-bundle app (disabled by default).
 - Add teleport-kube-agent app (disabled by default).
 - Add vertical-pod-autoscaler app (disabled by default).
-- Add `$.Values.providerIntegration.apps.cilium.enable` flag to enable Cilium HelmRelease (old flag `$.Values.providerIntegration.resourcesApi.ciliumHelmReleaseResourceEnabled` is deprecated).
-- Add `$.Values.providerIntegration.apps.coreDns.enable` flag to enable CoreDns HelmRelease (old flag `$.Values.providerIntegration.resourcesApi.coreDnsHelmReleaseResourceEnabled` is deprecated).
-- Add `$.Values.providerIntegration.apps.networkPolicies.enable` flag to enable Network policies HelmRelease (old flag `$.Values.providerIntegration.resourcesApi.networkPoliciesHelmReleaseResourceEnabled` is deprecated).
-- Add `$.Values.providerIntegration.apps.verticalPodAutoscalerCrd.enable` flag to enable Network policies HelmRelease (old flag `$.Values.providerIntegration.resourcesApi.verticalPodAutoscalerCrdHelmReleaseResourceEnabled` is deprecated).
-- Add `$.Values.internal.ephemeralConfiguration.apps` config, meant only for development and temporary problem mitigation purposes, and where version and catalog can be overridden for every app.
+- Add `$.Values.providerIntegration.apps.cilium.enable` flag to enable Cilium HelmRelease (old flag
+  `$.Values.providerIntegration.resourcesApi.ciliumHelmReleaseResourceEnabled` is deprecated).
+- Add `$.Values.providerIntegration.apps.coreDns.enable` flag to enable CoreDns HelmRelease (old flag
+  `$.Values.providerIntegration.resourcesApi.coreDnsHelmReleaseResourceEnabled` is deprecated).
+- Add `$.Values.providerIntegration.apps.networkPolicies.enable` flag to enable Network policies HelmRelease
+  (old flag `$.Values.providerIntegration.resourcesApi.networkPoliciesHelmReleaseResourceEnabled` is
+  deprecated).
+- Add `$.Values.providerIntegration.apps.verticalPodAutoscalerCrd.enable` flag to enable Network policies
+  HelmRelease (old flag
+  `$.Values.providerIntegration.resourcesApi.verticalPodAutoscalerCrdHelmReleaseResourceEnabled` is
+  deprecated).
+- Add `$.Values.internal.ephemeralConfiguration.apps` config, meant only for development and temporary problem
+  mitigation purposes, and where version and catalog can be overridden for every app.
 
 ### Fixed
 
-- Fix CoreDNS provider-specific config (it was incorrectly reading Cilium app config instead of CoreDNS app config).
+- Fix CoreDNS provider-specific config (it was incorrectly reading Cilium app config instead of CoreDNS app
+  config).
 - Fix `containerd` configuration file.
 
 ### Changed
 
-- Move `.internal.localRegistryCache` to `.global.components.containerd.localRegistryCache` to publicly expose the settings.
+- Move `.internal.localRegistryCache` to `.global.components.containerd.localRegistryCache` to publicly expose
+  the settings.
 
 ## [0.23.0] - 2024-05-08
 
 ### Added
 
-- Render `KubeadmConfig.spec.containerLinuxConfig.additionalConfig.storage.filesystems` for machine pool workers to be able to configure additional disks.
+- Render `KubeadmConfig.spec.containerLinuxConfig.additionalConfig.storage.filesystems` for machine pool
+  workers to be able to configure additional disks.
 
 ## [0.22.0] - 2024-05-07
 
@@ -457,17 +511,18 @@ For Kubernetes <v1.29, you will need to re-enable it using the respective values
 
 - Upgrade cilium-app to v0.24.0 (cilium 1.15.4).
 
-
 ## [0.19.0] - 2024-04-25
 
-- Upgrade cilium-app to v0.23.0 in order to make Cilium ENI mode for CAPA usable (adds subnet and security group selection filters)
+- Upgrade cilium-app to v0.23.0 in order to make Cilium ENI mode for CAPA usable (adds subnet and security
+  group selection filters)
 - Add OS image to cluster chart schema, so it can be used by cluster-\<provider\> apps.
 
 ## [0.18.0] - 2024-03-28
 
 ### Changed
 
-- Update teleport node labels - add `ins=` label and remove `cluster=` label condition check, such that MC nodes have this label.
+- Update teleport node labels - add `ins=` label and remove `cluster=` label condition check, such that MC
+  nodes have this label.
 
 ## [0.17.0] - 2024-03-28
 
@@ -487,7 +542,8 @@ For Kubernetes <v1.29, you will need to re-enable it using the respective values
 ### Added
 
 - Chart: Add `ip` to Kubelet node labels. ([#125](https://github.com/giantswarm/cluster/pull/131))
-- Chart: Add `providerIntegration.apps.networkPolicies` to be able to add provider specific network-policies helm values.
+- Chart: Add `providerIntegration.apps.networkPolicies` to be able to add provider specific network-policies
+  helm values.
 - Chart: Add `global.apps.networkPolicies` to allow customers to change network-policies helm values.
 - Chart: Add `cluster-test` HelmRepository.
 
@@ -495,13 +551,16 @@ For Kubernetes <v1.29, you will need to re-enable it using the respective values
 
 ### Added
 
-- Chart: Add `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuer.templateName` to be able set API Service Account Issuer via template.
+- Chart: Add
+  `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuer.templateName`
+  to be able set API Service Account Issuer via template.
 - Chart: Add `providerIntegration.apps.coredns` to be able to add provider specific coredns helm values.
 - Chart: Add `providerIntegration.registry` to be able to set the container registry value via template.
 
 ### Changed
 
-- Chart: Make `internal.advancedConfiguration.controlPlane.controllerManager.terminatedPodGCThreshold` configurable. ([#123](https://github.com/giantswarm/cluster/pull/123))
+- Chart: Make `internal.advancedConfiguration.controlPlane.controllerManager.terminatedPodGCThreshold`
+  configurable. ([#123](https://github.com/giantswarm/cluster/pull/123))
 
 ### Fixed
 
@@ -518,9 +577,12 @@ For Kubernetes <v1.29, you will need to re-enable it using the respective values
 
 ### Changed
 
-- Chart: Improve `enable-admission-plugins` rendering. ([#113](https://github.com/giantswarm/cluster/pull/113))
-- Chart: Split `cluster.internal.kubeadm.files.kubernetes` into `cluster.internal.controlPlane.kubeadm.files.*`. ([#117](https://github.com/giantswarm/cluster/pull/117))
-- Chart: Make `additionalAdmissionPlugins` a reusable definition. ([#120](https://github.com/giantswarm/cluster/pull/120))
+- Chart: Improve `enable-admission-plugins` rendering.
+  ([#113](https://github.com/giantswarm/cluster/pull/113))
+- Chart: Split `cluster.internal.kubeadm.files.kubernetes` into
+  `cluster.internal.controlPlane.kubeadm.files.*`. ([#117](https://github.com/giantswarm/cluster/pull/117))
+- Chart: Make `additionalAdmissionPlugins` a reusable definition.
+  ([#120](https://github.com/giantswarm/cluster/pull/120))
 
 ## [0.12.0] - 2024-02-29
 
@@ -547,8 +609,10 @@ For Kubernetes <v1.29, you will need to re-enable it using the respective values
 ### Added
 
 - Add cilium HelmRelease (behind a flag which is disabled by default).
-- Add network-policies HelmRelease and cluster-catalog HelmRepository (behind a flag which is disabled by default).
-- Kubelet: Add `containerLogMaxSize` & `containerLogMaxFiles`. ([#92](https://github.com/giantswarm/cluster/pull/92))
+- Add network-policies HelmRelease and cluster-catalog HelmRepository (behind a flag which is disabled by
+  default).
+- Kubelet: Add `containerLogMaxSize` & `containerLogMaxFiles`.
+  ([#92](https://github.com/giantswarm/cluster/pull/92))
 - API Server: Make audit policy rules extendable. ([#93](https://github.com/giantswarm/cluster/pull/93))
 
 ## [0.9.1] - 2024-02-22
@@ -568,7 +632,10 @@ For Kubernetes <v1.29, you will need to re-enable it using the respective values
 
 ### Changed
 
-- Set `--node-ip` kubelet argument also for joining control plane nodes. Other nodes already had this setting, and it is important if a node has multiple network interfaces (such as for Cilium ENI mode or AWS VPC CNI). Only the primary IP will be reported in the node status, resulting in `kubectl exec` and other tooling working correctly.
+- Set `--node-ip` kubelet argument also for joining control plane nodes. Other nodes already had this setting,
+  and it is important if a node has multiple network interfaces (such as for Cilium ENI mode or AWS VPC CNI).
+  Only the primary IP will be reported in the node status, resulting in `kubectl exec` and other tooling
+  working correctly.
 - Put API server priority and fairness configuration behind a flag that is disabled by default.
 
 ## [0.8.0] - 2024-02-09
@@ -577,7 +644,8 @@ For Kubernetes <v1.29, you will need to re-enable it using the respective values
 
 - Add systemd unit and script to compute fairness values for k8s API server in controlplane.
 - Add internal.advancedConfiguration.kubelet to configure system and k8s reserved resources.
-- Add `rolloutBefore` config to Helm value to `.Values.internal.advancedConfiguration.controlPlane` to enable support for automatic node rollout/certificate renewal
+- Add `rolloutBefore` config to Helm value to `.Values.internal.advancedConfiguration.controlPlane` to enable
+  support for automatic node rollout/certificate renewal
 - Add systemd unit and timer for hourly etcd defragmentation.
 
 ### Changed
@@ -586,7 +654,8 @@ For Kubernetes <v1.29, you will need to re-enable it using the respective values
 
 ### Fixed
 
-- Fix MachinePool templates, so that AWSMachinePool correctly performs rolling updates (ported from https://github.com/giantswarm/cluster-aws/pull/457).
+- Fix MachinePool templates, so that AWSMachinePool correctly performs rolling updates (ported from
+  https://github.com/giantswarm/cluster-aws/pull/457).
 
 ## [0.7.1] - 2024-01-31
 
@@ -608,17 +677,20 @@ For Kubernetes <v1.29, you will need to re-enable it using the respective values
 ## [0.6.1] - 2024-01-26
 
 ### Fixed
+
 - Quote all etcd extra args, so they are correctly set as strings.
 
 ## [0.6.0] - 2024-01-25
 
 ### Added
 
-- Add `global.podSecurityStandards.enforced` value which sets `policy.giantswarm.io/psp-status: disabled` label on the Cluster CR.
+- Add `global.podSecurityStandards.enforced` value which sets `policy.giantswarm.io/psp-status: disabled`
+  label on the Cluster CR.
 
 ## [0.5.0] - 2024-01-25
 
 ### Added
+
 - Add `quotaBackendBytesGiB` etcd config to Helm value `.Values.internal.advancedConfiguration.etcd`.
 
 ## [0.4.0] - 2024-01-24
@@ -631,13 +703,16 @@ For Kubernetes <v1.29, you will need to re-enable it using the respective values
 
 ### Changed
 
-- Move API server `extraCertificateSANs` Helm value to `.Values.internal.advancedConfiguration.controlPlane.apiServer`.
+- Move API server `extraCertificateSANs` Helm value to
+  `.Values.internal.advancedConfiguration.controlPlane.apiServer`.
 - Move API server `extraArgs` Helm value to `.Values.internal.advancedConfiguration.controlPlane.apiServer`.
 - Move API server `etcdPrefix` Helm value to `.Values.internal.advancedConfiguration.controlPlane.apiServer`.
 - Move API server `bindPort` Helm value to `.Values.internal.advancedConfiguration.controlPlane.apiServer`.
 - Move advanced etcd config to `.Values.internal.advancedConfiguration.controlPlane.etcd`.
-- Use `gsoci.azurecr.io` for `kubeadm` container images (ported from https://github.com/giantswarm/cluster-aws/pull/482).
-- Use `gsoci.azurecr.io` for sandbox container image (pause container) (ported from https://github.com/giantswarm/cluster-aws/pull/482).
+- Use `gsoci.azurecr.io` for `kubeadm` container images (ported from
+  https://github.com/giantswarm/cluster-aws/pull/482).
+- Use `gsoci.azurecr.io` for sandbox container image (pause container) (ported from
+  https://github.com/giantswarm/cluster-aws/pull/482).
 
 ### Fixed
 
@@ -654,7 +729,8 @@ For Kubernetes <v1.29, you will need to re-enable it using the respective values
 ### Changed
 
 - Align API for properties that can be set as pre-defined static values and/or via templates.
-- Improve NO_PROXY template: rename to cluster.connectivity.proxy.noProxy, make it public and usable from other charts.
+- Improve NO_PROXY template: rename to cluster.connectivity.proxy.noProxy, make it public and usable from
+  other charts.
 
 ## [0.2.1] - 2024-01-17
 
@@ -672,15 +748,18 @@ For Kubernetes <v1.29, you will need to re-enable it using the respective values
 - Add systemd unit for configuring kubeadm service (ported from cluster-aws).
 - Add systemd unit for configuring containerd service (ported from cluster-aws).
 - Add systemd unit for configuring audit-rules service (ported from cluster-aws).
-- Add missing kubelet configuration to align it with vintage config (ported from https://github.com/giantswarm/cluster-aws/pull/468).
+- Add missing kubelet configuration to align it with vintage config (ported from
+  https://github.com/giantswarm/cluster-aws/pull/468).
 - Add /var/lib/kubelet as a default directory on all nodes.
 - Add missing API server service-cluster-ip-range CLI argument 🙈.
 - Add missing API server extra volumes.
 
 ### Changed
 
-- Support longer node pool names and allow dashes (ported from https://github.com/giantswarm/cluster-aws/pull/429).
-- Use KubeletConfiguration file instead of a bash script (ported from https://github.com/giantswarm/cluster-aws/pull/427).
+- Support longer node pool names and allow dashes (ported from
+  https://github.com/giantswarm/cluster-aws/pull/429).
+- Use KubeletConfiguration file instead of a bash script (ported from
+  https://github.com/giantswarm/cluster-aws/pull/427).
 - Update kubernetes version to 1.24.16.
 - Enable Teleport by default.
 - Update Teleport version to 14.1.3.
@@ -688,6 +767,7 @@ For Kubernetes <v1.29, you will need to re-enable it using the respective values
 - Render all SSH config conditionally behind a bastion flag.
 
 ### Fixed
+
 - Fixed rendering of timesyncd configuration.
 - Fix proxy Helm values schema.
 - Fix API server timeoutForControlPlane config value.
@@ -740,7 +820,8 @@ For Kubernetes <v1.29, you will need to re-enable it using the respective values
 - Add control plane replicas configuration in KubeadmControlPlane.
 - Add MachinePool resource template.
 - Add KubeadmConfig resource template.
-- Add Flatcar configuration of systemd units and storage (filesystems and directories) in MachinePool's KubeadmConfig.
+- Add Flatcar configuration of systemd units and storage (filesystems and directories) in MachinePool's
+  KubeadmConfig.
 - Add kubeadm init configuration in MachinePool's KubeadmConfig.
 - Add kubeadm join configuration in MachinePool's KubeadmConfig.
 - Add files configuration in MachinePool's KubeadmConfig.
