@@ -33,9 +33,6 @@ global:
       enabled: false
     containerd:
       containerRegistries:
-        docker.io:
-          - endpoint: registry-1.docker.io
-          - endpoint: giantswarm.azurecr.io
         gsoci.azurecr.io:
           - endpoint: gsoci.azurecr.io
       localRegistryCache:
