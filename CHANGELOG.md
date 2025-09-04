@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Removed
+
+- Chart: obsolete default config with mirroring for docker hub registry
+
 ## [2.6.2] - 2025-09-02
 
 ### Removed
