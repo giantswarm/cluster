@@ -11,6 +11,7 @@ nodeRegistration:
   name: {{ printf "${%s}" $.Values.providerIntegration.environmentVariables.hostName }}
   kubeletExtraArgs:
     cloud-provider: external
+    cgroup-driver: systemd
     {{- if $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.cloudConfig  }}
     cloud-config: {{ $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.cloudConfig  }}
     {{- end }}

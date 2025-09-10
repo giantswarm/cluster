@@ -8,6 +8,7 @@ localAPIEndpoint:
 nodeRegistration:
   kubeletExtraArgs:
     cloud-provider: external
+    cgroup-driver: systemd
     healthz-bind-address: 0.0.0.0
     node-ip: {{ printf "${%s}" $.Values.providerIntegration.environmentVariables.ipv4 }}
     node-labels: ip={{ printf "${%s}" $.Values.providerIntegration.environmentVariables.ipv4 }}
