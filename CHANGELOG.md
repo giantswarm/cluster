@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 - Chart: Obsolete default config with mirroring for Docker Hub registry.
+- **BREAKING CHANGE:** Cgroups v1 is not supported anymore. The `.internal.advancedConfiguration.cgroupsv1` and `.global.nodePools.().cgroupsv1` flags have been removed.
 
 ## [2.6.2] - 2025-09-02
 
