@@ -182,7 +182,6 @@ global:
     enforced: true
 internal:
   advancedConfiguration:
-    cgroupsv1: true
     controlPlane:
       apiServer:
         additionalAdmissionPlugins:
