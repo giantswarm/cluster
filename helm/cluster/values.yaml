@@ -233,6 +233,13 @@ providerIntegration:
     initialJoinToken: ""
     proxyAddr: teleport.giantswarm.io:443
     version: 16.5.12
+    autoUpdate:
+      enabled: false
+      intervalSec: "1h"
+      onBootDelaySec: "5min"
+      randomizedDelaySec: "10min"
+      timeoutSeconds: 600
+      manualVersionOverride: ""
   useReleases: false
   workers:
     kubeadmConfig:

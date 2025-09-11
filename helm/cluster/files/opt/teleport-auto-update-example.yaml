@@ -1,0 +1,74 @@
+# Example Helm Values Configuration for Teleport Auto-Update Service
+# 
+# This file demonstrates how to enable and configure the Teleport auto-update service
+# that automatically synchronizes the node Teleport binary with the live cluster version.
+
+providerIntegration:
+  teleport:
+    enabled: true
+    proxyAddr: "teleport.giantswarm.io:443"  # Your Teleport cluster proxy address
+    initialJoinToken: ""
+    
+    # Enable auto-update service
+    autoUpdate:
+      enabled: true              # Enable the auto-update service
+      intervalSec: "1h"          # Check for updates every hour
+      onBootDelaySec: "5min"     # Wait 5 minutes after boot before first check
+      randomizedDelaySec: "10min" # Add up to 10 minutes random delay to spread load
+      timeoutSeconds: 600        # Timeout for update operations (10 minutes)
+      manualVersionOverride: ""   # Optional: manually specify version if detection fails
+                                 # Example: "16.5.12" (leave empty for dynamic detection)
+
+# Usage Notes:
+# 
+# 1. When enabled, the service will:
+#    - Create /opt/bin/teleport-auto-update.sh script on each node
+#    - Create systemd service teleport-auto-update.service
+#    - Create systemd timer teleport-auto-update.timer
+#    - Use existing /etc/teleport.yaml to get proxy address
+#
+# 2. The timer will run the service according to the configured schedule
+#
+# 3. The service will:
+#    - Query live Teleport cluster for current version (verified: v17.7.2)
+#    - Use Web API: https://teleport.giantswarm.io:443/webapi/ping
+#    - Extract server_version field from JSON response  
+#    - Compare with local binary version
+#    - Download new binary if versions differ
+#    - Backup current binary before update
+#    - Verify downloaded binary integrity
+#    - Replace binary and restart Teleport service
+#    - Rollback on failure
+#
+# 4. Logs are available via:
+#    - journalctl -u teleport-auto-update.service
+#    - journalctl -u teleport-auto-update.timer
+#    - systemd-cat -t teleport-auto-update
+#
+# 5. Manual triggers:
+#    - systemctl start teleport-auto-update.service
+#    - /opt/bin/teleport-auto-update.sh (direct execution)
+#
+# 6. Backups are stored in /opt/bin/teleport-backups/
+#    - Only the 5 most recent backups are kept
+#
+# Security Considerations:
+# - The script requires internet access to download binaries
+# - Downloads are from official Teleport CDN (cdn.teleport.dev)
+# - Binary integrity is verified before installation
+# - Service runs as root (required for binary replacement)
+# - Failed updates trigger automatic rollback
+
+# Testing Commands:
+#
+# Test API connectivity and version extraction:
+#   curl -k "https://teleport.giantswarm.io:443/webapi/ping" | grep server_version
+#   # Expected: "server_version":"17.7.2"
+#
+# Test the auto-update script:
+#   /opt/bin/teleport-auto-update.sh --test      # Test extraction logic
+#   /opt/bin/teleport-auto-update.sh --dry-run   # Test full detection
+#
+# Manual trigger:
+#   systemctl start teleport-auto-update.service
+
