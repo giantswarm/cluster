@@ -83,7 +83,6 @@ internal:
   advancedConfiguration:
     appPlatform:
       fluxBackend: false
-    cgroupsv1: false
     controlPlane:
       apiServer:
         admissionConfiguration: {}

@@ -6,6 +6,7 @@ controlPlane:
 nodeRegistration:
   kubeletExtraArgs:
     cloud-provider: external
+    cgroup-driver: systemd
     node-ip: {{ printf "${%s}" $.Values.providerIntegration.environmentVariables.ipv4 }}
     node-labels: ip={{ printf "${%s}" $.Values.providerIntegration.environmentVariables.ipv4 }}
     register-with-taints: 'node-role.kubernetes.io/control-plane="":NoSchedule'

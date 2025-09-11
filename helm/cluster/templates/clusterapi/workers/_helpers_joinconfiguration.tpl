@@ -10,10 +10,8 @@
 nodeRegistration:
   name: {{ printf "${%s}" $.Values.providerIntegration.environmentVariables.hostName }}
   kubeletExtraArgs:
-    {{- if or $nodePool.config.cgroupsv1 $.Values.internal.advancedConfiguration.cgroupsv1 }}
-    cgroup-driver: cgroupfs
-    {{- end }}
     cloud-provider: external
+    cgroup-driver: systemd
     {{- if $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.cloudConfig  }}
     cloud-config: {{ $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.cloudConfig  }}
     {{- end }}
