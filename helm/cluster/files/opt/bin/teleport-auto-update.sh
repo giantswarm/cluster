@@ -62,13 +62,13 @@ get_cluster_version() {
     local host=$(echo "$proxy_addr" | cut -d: -f1)
     local port=$(echo "$proxy_addr" | cut -d: -f2)
     
-    # Method 1: Query the Teleport Web API ping endpoint
+    # Query the Teleport Web API ping endpoint
     log "Attempting to query cluster version via Teleport Web API..."
     cluster_version=$(timeout 30 curl -s -k "https://$host:$port/webapi/ping" 2>/dev/null | \
                      sed -n 's/.*"server_version":"\([^"]*\)".*/\1/p' | \
                      sed 's/^v//' | head -1 || echo "")
     
-    # Method 2: Try alternative API endpoint
+    # Try alternative API endpoint
     if [ -z "$cluster_version" ]; then
         log "Attempting to query via alternative API endpoint..."
         cluster_version=$(timeout 30 curl -s -k "https://$host:$port/web/config" 2>/dev/null | \
@@ -78,7 +78,7 @@ get_cluster_version() {
                          sed 's/^v//' || echo "")
     fi
     
-    # Method 3: Use teleport binary with verbose ping (extracts server version from response)
+    # Use teleport binary with verbose ping (extracts server version from response)
     if [ -z "$cluster_version" ] && [ -x "$TELEPORT_BINARY" ]; then
         log "Attempting to query cluster version via teleport ping..."
         # Use verbose ping and extract server version from handshake response
@@ -91,26 +91,7 @@ get_cluster_version() {
         fi
     fi
     
-    # Method 4: Try using tsh status (if tsh is available and can connect)
-    if [ -z "$cluster_version" ] && command -v tsh >/dev/null 2>&1; then
-        log "Attempting to query cluster version via tsh status..."
-        # Try to get status from cluster (this requires connection)
-        cluster_version=$(timeout 30 tsh status --proxy="$proxy_addr" 2>/dev/null | \
-                         grep -i "cluster.*version\|server.*version" | \
-                         sed 's/.*version[: ]*v*\([0-9][0-9.]*\).*/\1/' | \
-                         head -1 || echo "")
-    fi
-    
-    # Method 5: Try direct HTTPS connection to get server headers
-    if [ -z "$cluster_version" ]; then
-        log "Attempting to query cluster version via server headers..."
-        cluster_version=$(timeout 30 curl -s -k -I "https://$host:$port/" 2>/dev/null | \
-                         grep -i "server\|teleport" | \
-                         sed 's/.*teleport[\/: ]*v*\([0-9][0-9.]*\).*/\1/i' | \
-                         head -1 || echo "")
-    fi
-    
-    # Method 6: Fallback to manual version file (if configured)
+    # Fallback to manual version file (if configured)
     if [ -z "$cluster_version" ] && [ -f "/etc/teleport-target-version" ]; then
         log "Attempting to use manual version override file..."
         cluster_version=$(cat "/etc/teleport-target-version" | tr -d '\n\r ' | head -1)
@@ -187,8 +168,8 @@ download_teleport() {
             break
         else
             log "Download attempt $i failed, retrying..."
-            if [ $i -eq $MAX_RETRIES ]; then
-                log_error "Failed to download after $MAX_RETRIES attempts"
+            if [ "$i" -eq $MAX_RETRIES ]; then
+                l"og"_error "Failed to download after $MAX_RETRIES attempts"
                 return 1
             fi
             sleep 5
