@@ -94,10 +94,20 @@ and is used to join the node to the teleport cluster.
   permissions: "0755"
   encoding: base64
   content: {{ $.Files.Get "files/opt/teleport-node-role.sh" | b64enc }}
+- path: /opt/bin/teleport-auto-update.sh
+  permissions: "0755"
+  encoding: base64
+  content: {{ $.Files.Get "files/opt/bin/teleport-auto-update.sh" | b64enc }}
 - path: /etc/teleport.yaml
   permissions: "0644"
   encoding: base64
   content: {{ tpl ($.Files.Get "files/etc/teleport.yaml") . | b64enc }}
+{{- if and $.Values.providerIntegration.teleport.autoUpdate.enabled $.Values.providerIntegration.teleport.autoUpdate.manualVersionOverride }}
+- path: /etc/teleport-target-version
+  permissions: "0644"
+  encoding: base64
+  content: {{ $.Values.providerIntegration.teleport.autoUpdate.manualVersionOverride | b64enc }}
+{{- end }}
 {{- end }}
 {{- end }}
 
