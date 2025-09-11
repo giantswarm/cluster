@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.0.0] - 2025-09-11
+
 ### Removed
 
 - Chart: Obsolete default config with mirroring for Docker Hub registry.
@@ -769,7 +771,8 @@ For Kubernetes <v1.29, you will need to re-enable it using the respective values
 
 - Update and clean up the template repo.
 
-[Unreleased]: https://github.com/giantswarm/cluster/compare/v2.6.2...HEAD
+[Unreleased]: https://github.com/giantswarm/cluster/compare/v3.0.0...HEAD
+[3.0.0]: https://github.com/giantswarm/cluster/compare/v2.6.2...v3.0.0
 [2.6.2]: https://github.com/giantswarm/cluster/compare/v2.6.1...v2.6.2
 [2.6.1]: https://github.com/giantswarm/cluster/compare/v2.6.0...v2.6.1
 [2.6.0]: https://github.com/giantswarm/cluster/compare/v2.5.0...v2.6.0
