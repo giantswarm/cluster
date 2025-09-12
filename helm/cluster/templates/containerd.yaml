@@ -1,20 +1,8 @@
-{{- if $.Values.providerIntegration.resourcesApi.machinePoolResourcesEnabled }}
-{{- range $nodePoolName, $nodePoolConfig := $.Values.global.nodePools | default $.Values.providerIntegration.workers.defaultNodePools }}
-{{- $_ := set $ "nodePool" (dict "name" $nodePoolName "config" $nodePoolConfig) }}
+{{- if or $.Values.providerIntegration.resourcesApi.machinePoolResourcesEnabled $.Values.providerIntegration.resourcesApi.controlPlaneResourceEnabled }}
 apiVersion: v1
 kind: Secret
 metadata:
-  name: {{ include "cluster.resource.name" $ }}-{{ $nodePoolName }}-containerd-{{ include "cluster.data.hash" (dict "data" (tpl ($.Files.Get "files/etc/containerd/workers-config.toml") $) "salt" $.Values.providerIntegration.hashSalt) }}
+  name: {{ include "cluster.resource.name" $ }}-containerd-{{ include "cluster.data.hash" (dict "data" (tpl ($.Files.Get "files/etc/containerd/config.toml") $) "salt" $.Values.providerIntegration.hashSalt) }}
 data:
-  config.toml: {{ tpl ($.Files.Get "files/etc/containerd/workers-config.toml") $ | b64enc | quote }}
----
-{{- end }}
-{{- end }}
-{{- if $.Values.providerIntegration.resourcesApi.controlPlaneResourceEnabled }}
-apiVersion: v1
-kind: Secret
-metadata:
-  name: {{ include "cluster.resource.name" $ }}-controlplane-containerd-{{ include "cluster.data.hash" (dict "data" (tpl ($.Files.Get "files/etc/containerd/controlplane-config.toml") $) "salt" $.Values.providerIntegration.hashSalt) }}
-data:
-  config.toml: {{ tpl ($.Files.Get "files/etc/containerd/controlplane-config.toml") $ | b64enc | quote }}
+  config.toml: {{ tpl ($.Files.Get "files/etc/containerd/config.toml") $ | b64enc | quote }}
 {{- end }}
