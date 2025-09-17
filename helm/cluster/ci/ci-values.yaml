@@ -69,16 +69,6 @@ global:
         - endpoint: private-example-2.azurecr.io
           auth: c3VwZXJfc2VjcmV0X2F1dGg=
   apps:
-    capiNodeLabeler:
-      values:
-        foo: bar
-      extraConfigs:
-      - name: my-secret-extra-config-1
-        kind: secret
-        priority: 110
-      - name: my-extra-config-2
-        kind: configMap
-        priority: 120
     certManager:
       values:
         ingressShim:
@@ -286,8 +276,6 @@ internal:
       renderWithoutReleaseResource: true
 providerIntegration:
   apps:
-    capiNodeLabeler:
-      enable: true
     certExporter:
       enable: true
       configTemplateName: cluster.test.providerIntegration.apps.certExporter.config

@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Removed
+
+- Removed `capi-node-labeler` app. From now on, the worker nodes won't have the `node-role.kubernetes.io/worker` or `node.kubernetes.io/worker` labels.
+
 ## [3.0.1] - 2025-09-12
 
 ### Changed
