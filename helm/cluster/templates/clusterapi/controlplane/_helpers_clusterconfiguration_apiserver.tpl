@@ -115,6 +115,7 @@ extraVolumes:
   "LimitRanger"
   "MutatingAdmissionWebhook"
   "NamespaceLifecycle"
+  "OwnerReferencesPermissionEnforcement"
   "PersistentVolumeClaimResize"
   "Priority"
   "ResourceQuota"
