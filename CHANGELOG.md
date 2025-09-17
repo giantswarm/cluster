@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `OwnerReferencesPermissionEnforcement` admission plugin is now enabled by default on all clusters.
+
 ## [4.0.1] - 2025-09-24
 
 ### Fixed
