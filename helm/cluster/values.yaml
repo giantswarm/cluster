@@ -2,7 +2,6 @@
 
 global:
   apps:
-    capiNodeLabeler: {}
     certExporter: {}
     certManager: {}
     chartOperatorExtensions: {}
@@ -118,8 +117,6 @@ internal:
     offlineTesting: {}
 providerIntegration:
   apps:
-    capiNodeLabeler:
-      enable: false
     certExporter:
       enable: false
     certManager:
