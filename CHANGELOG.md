@@ -11,6 +11,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Add `karpenter` app to schema so that users can pass custom configuration when installing it. 
 
+### Removed
+
+- Removed `capi-node-labeler` app. From now on, the worker nodes won't have the `node-role.kubernetes.io/worker` or `node.kubernetes.io/worker` labels.
+
+## [3.0.1] - 2025-09-12
+
+### Changed
+
+- Chart: Simplify containerd configuration by using a single config file for both control-plane and worker nodes.
+
 ## [3.0.0] - 2025-09-11
 
 ### Removed
@@ -775,7 +785,8 @@ For Kubernetes <v1.29, you will need to re-enable it using the respective values
 
 - Update and clean up the template repo.
 
-[Unreleased]: https://github.com/giantswarm/cluster/compare/v3.0.0...HEAD
+[Unreleased]: https://github.com/giantswarm/cluster/compare/v3.0.1...HEAD
+[3.0.1]: https://github.com/giantswarm/cluster/compare/v3.0.0...v3.0.1
 [3.0.0]: https://github.com/giantswarm/cluster/compare/v2.6.2...v3.0.0
 [2.6.2]: https://github.com/giantswarm/cluster/compare/v2.6.1...v2.6.2
 [2.6.1]: https://github.com/giantswarm/cluster/compare/v2.6.0...v2.6.1
