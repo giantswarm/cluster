@@ -16,6 +16,7 @@ global:
     giantswarmClusterSuite: {}
     k8sAuditMetrics: {}
     k8sDnsNodeCache: {}
+    karpenter: {}
     metricsServer: {}
     netExporter: {}
     networkPolicies: {}
@@ -144,6 +145,8 @@ providerIntegration:
     k8sAuditMetrics:
       enable: false
     k8sDnsNodeCache:
+      enable: false
+    karpenter:
       enable: false
     metricsServer:
       enable: false
