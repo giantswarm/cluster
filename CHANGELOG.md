@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [4.0.1] - 2025-09-24
+
 ### Fixed
 
 - Removed `karpenter` app from schema, as it's defined in the schemas of the charts depending on the `cluster` chart.
@@ -791,7 +793,8 @@ For Kubernetes <v1.29, you will need to re-enable it using the respective values
 
 - Update and clean up the template repo.
 
-[Unreleased]: https://github.com/giantswarm/cluster/compare/v4.0.0...HEAD
+[Unreleased]: https://github.com/giantswarm/cluster/compare/v4.0.1...HEAD
+[4.0.1]: https://github.com/giantswarm/cluster/compare/v4.0.0...v4.0.1
 [4.0.0]: https://github.com/giantswarm/cluster/compare/v3.0.1...v4.0.0
 [3.0.1]: https://github.com/giantswarm/cluster/compare/v3.0.0...v3.0.1
 [3.0.0]: https://github.com/giantswarm/cluster/compare/v2.6.2...v3.0.0
