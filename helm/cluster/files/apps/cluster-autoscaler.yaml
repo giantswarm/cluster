@@ -8,4 +8,4 @@ dependsOn: kyverno-crds
 namespace: kube-system
 # used by renovate
 # repo: giantswarm/cluster-autoscaler-app
-version: 1.32.2-gs1
+version: 1.33.1-1
