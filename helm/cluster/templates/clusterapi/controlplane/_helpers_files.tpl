@@ -2,7 +2,6 @@
 {{- include "cluster.internal.kubeadm.files" $ }}
 {{- include "cluster.internal.controlPlane.kubeadm.files.admission" $ }}
 {{- include "cluster.internal.controlPlane.kubeadm.files.audit" $ }}
-{{- include "cluster.internal.controlPlane.kubeadm.files.cri" $ }}
 {{- include "cluster.internal.controlPlane.kubeadm.files.encryption" $ }}
 {{- include "cluster.internal.controlPlane.kubeadm.files.fairness" $ }}
 {{- include "cluster.internal.controlPlane.kubeadm.files.oidc" $ }}
@@ -102,14 +101,4 @@
 {{- if $.Values.internal.advancedConfiguration.controlPlane.files }}
 {{ include "cluster.internal.processFiles" (dict "files" $.Values.internal.advancedConfiguration.controlPlane.files "clusterName" (include "cluster.resource.name" $)) }}
 {{- end }}
-{{- end }}
-
-{{/* containerd configuration for the control plane nodes */}}
-{{- define "cluster.internal.controlPlane.kubeadm.files.cri" }}
-- path: /etc/containerd/config.toml
-  permissions: "0644"
-  contentFrom:
-    secret:
-      name: {{ include "cluster.resource.name" $ }}-controlplane-containerd-{{ include "cluster.data.hash" (dict "data" (tpl ($.Files.Get "files/etc/containerd/controlplane-config.toml") $) "salt" $.Values.providerIntegration.hashSalt) }}
-      key: config.toml
 {{- end }}

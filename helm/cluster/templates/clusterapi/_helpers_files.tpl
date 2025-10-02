@@ -1,5 +1,6 @@
 {{- define "cluster.internal.kubeadm.files" }}
 {{- include "cluster.internal.kubeadm.files.sysctl" $ }}
+{{- include "cluster.internal.kubeadm.files.cri" $ }}
 {{- include "cluster.internal.kubeadm.files.selinux" $ }}
 {{- include "cluster.internal.kubeadm.files.systemd" $ }}
 {{- include "cluster.internal.kubeadm.files.ssh" $ }}
@@ -144,6 +145,15 @@ and is used to join the node to the teleport cluster.
 {{- if $.Values.internal.advancedConfiguration.files }}
 {{ include "cluster.internal.processFiles" (dict "files" $.Values.internal.advancedConfiguration.files "clusterName" (include "cluster.resource.name" $)) }}
 {{- end }}
+{{- end }}
+
+{{- define "cluster.internal.kubeadm.files.cri" }}
+- path: /etc/containerd/config.toml
+  permissions: "0644"
+  contentFrom:
+    secret:
+      name: {{ include "cluster.resource.name" $ }}-containerd-{{ include "cluster.data.hash" (dict "data" (tpl ($.Files.Get "files/etc/containerd/config.toml") $) "salt" $.Values.providerIntegration.hashSalt) }}
+      key: config.toml
 {{- end }}
 
 {{- define "cluster.internal.processFiles" }}
