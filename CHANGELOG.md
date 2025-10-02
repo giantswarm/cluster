@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- `NodeRestriction` admission plugin is now enabled by default on all clusters.
 - `OwnerReferencesPermissionEnforcement` admission plugin is now enabled by default on all clusters.
 
 ## [4.0.1] - 2025-09-24
