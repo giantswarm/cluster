@@ -7,7 +7,10 @@ localAPIEndpoint:
   bindPort: {{ $.Values.internal.advancedConfiguration.controlPlane.apiServer.bindPort | default 6443 }}
 nodeRegistration:
   kubeletExtraArgs:
+    {{- $k8sVersion := include "cluster.component.kubernetes.version" $ | trimPrefix "v" }}
+    {{- if or (eq $k8sVersion "N/A") (semverCompare "<1.33.0-0" $k8sVersion) }}
     cloud-provider: external
+    {{- end }}
     cgroup-driver: systemd
     healthz-bind-address: 0.0.0.0
     node-ip: {{ printf "${%s}" $.Values.providerIntegration.environmentVariables.ipv4 }}

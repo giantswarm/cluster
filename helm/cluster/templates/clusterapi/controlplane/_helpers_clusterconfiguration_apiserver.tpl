@@ -25,7 +25,10 @@ extraArgs:
   audit-log-maxsize: "100"
   audit-log-path: /var/log/apiserver/audit.log
   audit-policy-file: /etc/kubernetes/policies/audit-policy.yaml
+  {{- $k8sVersion := include "cluster.component.kubernetes.version" $ | trimPrefix "v" }}
+  {{- if or (eq $k8sVersion "N/A") (semverCompare "<1.33.0-0" $k8sVersion) }}
   cloud-provider: external
+  {{- end }}
   {{- if $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.cloudConfig  }}
   cloud-config: {{ $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.cloudConfig  }}
   {{- end }}
