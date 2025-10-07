@@ -10,6 +10,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - `OwnerReferencesPermissionEnforcement` admission plugin is now enabled by default on all clusters.
+- Added shared helper functions that can be called from provider charts to retrieve configuration values with automatic fallback:
+  - `cluster.connectivity.baseDomain` - Returns base domain, prioritizing `cluster-app-config` ConfigMap in `default` namespace, with fallback to Helm values.
+  - `cluster.managementCluster` - Returns management cluster name, prioritizing ConfigMap with fallback to Helm values.
+  - `cluster.components.containerd.containerRegistries` - Returns container registry configuration, prioritizing ConfigMap with fallback to Helm values.
+  - `cluster.internal.get-config-map-values` - Internal helper that caches ConfigMap lookup for better performance.
+  - **Priority Order**: ConfigMap values take precedence over Helm values, enabling a migration strategy where ConfigMap is the primary source and Helm values provide backward compatibility.
+
+### Changed
+
+- Updated `teleport.yaml` and `containerd/config.toml` to use new shared helper functions for retrieving `baseDomain`, `managementCluster`, and `containerRegistries` values.
 
 ## [4.0.2] - 2025-10-06
 

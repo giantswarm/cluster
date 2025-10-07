@@ -546,3 +546,175 @@ true
 false
 {{- end }}
 {{- end }}
+
+{{/*
+  cluster.internal.get-config-map-values is an internal helper template that retrieves and parses
+  the cluster-app-config ConfigMap from the default namespace.
+  
+  It sets $.GiantSwarm.configMapValues with the parsed values from the ConfigMap.
+  This helper is used by other public helpers to avoid duplicating the lookup logic.
+*/}}
+{{- define "cluster.internal.get-config-map-values" -}}
+{{- if not $.GiantSwarm -}}
+  {{- $_ := set $ "GiantSwarm" dict -}}
+{{- end -}}
+{{- if not $.GiantSwarm.configMapValues -}}
+  {{- $configMapValues := dict -}}
+  {{- $configMap := lookup "v1" "ConfigMap" "default" "cluster-app-config" -}}
+  {{- if $configMap -}}
+    {{- if $configMap.data -}}
+      {{- $valuesYaml := index $configMap.data "values.yaml" | default "" -}}
+      {{- if $valuesYaml -}}
+        {{- $configMapValues = $valuesYaml | fromYaml -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+  {{- $_ := set $.GiantSwarm "configMapValues" $configMapValues -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+  cluster.connectivity.baseDomain is a public helper template that returns the base domain.
+  
+  Priority order:
+  1. First tries to look up baseDomain from the cluster-app-config ConfigMap in the default namespace.
+  2. If not found in ConfigMap, falls back to Helm values.
+  
+  This works both when called from the cluster chart itself and from parent charts
+  (like cluster-aws, cluster-vsphere, etc).
+  
+  Example usage in cluster chart:
+    {{ include "cluster.connectivity.baseDomain" $ }}
+  
+  Example usage in cluster-aws chart:
+    {{ include "cluster.connectivity.baseDomain" $ }}
+*/}}
+{{- define "cluster.connectivity.baseDomain" -}}
+{{- $baseDomain := "" -}}
+{{- $global := dict -}}
+
+{{- /* Determine which Values structure we're using */}}
+{{- if eq $.Chart.Name "cluster" -}}
+  {{- $global = $.Values.global -}}
+{{- else if $.Values.cluster -}}
+  {{- /* Called from parent chart, cluster values are under $.Values.cluster */}}
+  {{- $global = $.Values.cluster.global -}}
+{{- else -}}
+  {{- /* Called from parent chart, use parent's global */}}
+  {{- $global = $.Values.global -}}
+{{- end -}}
+
+{{- /* First try to lookup from cluster-app-config ConfigMap */}}
+{{- $_ := include "cluster.internal.get-config-map-values" $ -}}
+{{- if $.GiantSwarm.configMapValues -}}
+  {{- if $.GiantSwarm.configMapValues.baseDomain -}}
+    {{- $baseDomain = $.GiantSwarm.configMapValues.baseDomain -}}
+  {{- end -}}
+{{- end -}}
+
+{{- /* If not found in ConfigMap, fallback to Helm values */}}
+{{- if not $baseDomain -}}
+  {{- if and $global.connectivity $global.connectivity.baseDomain -}}
+    {{- $baseDomain = $global.connectivity.baseDomain -}}
+  {{- end -}}
+{{- end -}}
+{{- $baseDomain -}}
+{{- end -}}
+
+{{/*
+  cluster.managementCluster is a public helper template that returns the management cluster name.
+  
+  Priority order:
+  1. First tries to look up managementCluster from the cluster-app-config ConfigMap in the default namespace.
+  2. If not found in ConfigMap, falls back to Helm values.
+  
+  This works both when called from the cluster chart itself and from parent charts
+  (like cluster-aws, cluster-vsphere, etc).
+  
+  Example usage in cluster chart:
+    {{ include "cluster.managementCluster" $ }}
+  
+  Example usage in cluster-aws chart:
+    {{ include "cluster.managementCluster" $ }}
+*/}}
+{{- define "cluster.managementCluster" -}}
+{{- $managementCluster := "" -}}
+{{- $global := dict -}}
+
+{{- /* Determine which Values structure we're using */}}
+{{- if eq $.Chart.Name "cluster" -}}
+  {{- $global = $.Values.global -}}
+{{- else if $.Values.cluster -}}
+  {{- /* Called from parent chart, cluster values are under $.Values.cluster */}}
+  {{- $global = $.Values.cluster.global -}}
+{{- else -}}
+  {{- /* Called from parent chart, use parent's global */}}
+  {{- $global = $.Values.global -}}
+{{- end -}}
+
+{{- /* First try to lookup from cluster-app-config ConfigMap */}}
+{{- $_ := include "cluster.internal.get-config-map-values" $ -}}
+{{- if $.GiantSwarm.configMapValues -}}
+  {{- if $.GiantSwarm.configMapValues.managementCluster -}}
+    {{- $managementCluster = $.GiantSwarm.configMapValues.managementCluster -}}
+  {{- end -}}
+{{- end -}}
+
+{{- /* If not found in ConfigMap, fallback to Helm values */}}
+{{- if not $managementCluster -}}
+  {{- if $global.managementCluster -}}
+    {{- $managementCluster = $global.managementCluster -}}
+  {{- end -}}
+{{- end -}}
+{{- $managementCluster -}}
+{{- end -}}
+
+{{/*
+  cluster.components.containerd.containerRegistries is a public helper template that returns the container registries configuration.
+  
+  Priority order:
+  1. First tries to look up containerRegistries from the cluster-app-config ConfigMap in the default namespace.
+  2. If not found in ConfigMap, falls back to Helm values.
+  
+  This works both when called from the cluster chart itself and from parent charts
+  (like cluster-aws, cluster-vsphere, etc).
+  
+  The result is returned as YAML, so you typically need to use it with fromYaml or toYaml.
+  
+  Example usage in cluster chart:
+    {{- $registries := include "cluster.components.containerd.containerRegistries" $ | fromYaml }}
+  
+  Example usage in cluster-aws chart:
+    {{- $registries := include "cluster.components.containerd.containerRegistries" $ | fromYaml }}
+*/}}
+{{- define "cluster.components.containerd.containerRegistries" -}}
+{{- $containerRegistries := dict -}}
+{{- $global := dict -}}
+
+{{- /* Determine which Values structure we're using */}}
+{{- if eq $.Chart.Name "cluster" -}}
+  {{- $global = $.Values.global -}}
+{{- else if $.Values.cluster -}}
+  {{- /* Called from parent chart, cluster values are under $.Values.cluster */}}
+  {{- $global = $.Values.cluster.global -}}
+{{- else -}}
+  {{- /* Called from parent chart, use parent's global */}}
+  {{- $global = $.Values.global -}}
+{{- end -}}
+
+{{- /* First try to lookup from cluster-app-config ConfigMap */}}
+{{- $_ := include "cluster.internal.get-config-map-values" $ -}}
+{{- if $.GiantSwarm.configMapValues -}}
+  {{- if $.GiantSwarm.configMapValues.containerRegistries -}}
+    {{- $containerRegistries = $.GiantSwarm.configMapValues.containerRegistries -}}
+  {{- end -}}
+{{- end -}}
+
+{{- /* If not found in ConfigMap, fallback to Helm values */}}
+{{- if not $containerRegistries -}}
+  {{- if and $global.components $global.components.containerd $global.components.containerd.containerRegistries -}}
+    {{- $containerRegistries = $global.components.containerd.containerRegistries -}}
+  {{- end -}}
+{{- end -}}
+{{- $containerRegistries | toYaml -}}
+{{- end -}}

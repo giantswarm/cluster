@@ -22,9 +22,9 @@ ssh_service:
     command: [/opt/teleport-node-role.sh]
     period: 1m0s
   labels:
-    ins: {{ .Values.global.managementCluster }}
-    mc: {{ .Values.global.managementCluster }}
+    ins: {{ include "cluster.managementCluster" $ }}
+    mc: {{ include "cluster.managementCluster" $ }}
     cluster: {{ include "cluster.resource.name" $ }}
-    baseDomain: {{ .Values.global.connectivity.baseDomain }}
+    baseDomain: {{ include "cluster.connectivity.baseDomain" $ }}
 proxy_service:
   enabled: "no"
