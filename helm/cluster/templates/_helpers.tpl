@@ -591,21 +591,6 @@ false
 */}}
 {{- define "cluster.connectivity.baseDomain" -}}
 {{- $baseDomain := "" -}}
-{{- $global := dict -}}
-
-{{- /* Determine which Values structure we're using */}}
-{{- if and $.Chart (eq $.Chart.Name "cluster") -}}
-  {{- $global = $.Values.global -}}
-{{- else if $.Values.cluster -}}
-  {{- /* Called from parent chart, cluster values are under $.Values.cluster */}}
-  {{- $global = $.Values.cluster.global -}}
-{{- else if $.Values.global -}}
-  {{- /* Called from parent chart or custom context, use global */}}
-  {{- $global = $.Values.global -}}
-{{- else -}}
-  {{- /* Fallback: just use Values directly as global */}}
-  {{- $global = $.Values -}}
-{{- end -}}
 
 {{- /* First try to lookup from cluster-app-config ConfigMap */}}
 {{- $_ := include "cluster.internal.get-config-map-values" $ -}}
@@ -616,9 +601,10 @@ false
 {{- end -}}
 
 {{- /* If not found in ConfigMap, fallback to Helm values */}}
+{{- /* Note: global is always accessed as .Values.global regardless of chart context */}}
 {{- if not $baseDomain -}}
-  {{- if and $global.connectivity $global.connectivity.baseDomain -}}
-    {{- $baseDomain = $global.connectivity.baseDomain -}}
+  {{- if and $.Values.global $.Values.global.connectivity $.Values.global.connectivity.baseDomain -}}
+    {{- $baseDomain = $.Values.global.connectivity.baseDomain -}}
   {{- end -}}
 {{- end -}}
 {{- $baseDomain -}}
@@ -642,21 +628,6 @@ false
 */}}
 {{- define "cluster.managementCluster" -}}
 {{- $managementCluster := "" -}}
-{{- $global := dict -}}
-
-{{- /* Determine which Values structure we're using */}}
-{{- if and $.Chart (eq $.Chart.Name "cluster") -}}
-  {{- $global = $.Values.global -}}
-{{- else if $.Values.cluster -}}
-  {{- /* Called from parent chart, cluster values are under $.Values.cluster */}}
-  {{- $global = $.Values.cluster.global -}}
-{{- else if $.Values.global -}}
-  {{- /* Called from parent chart or custom context, use global */}}
-  {{- $global = $.Values.global -}}
-{{- else -}}
-  {{- /* Fallback: just use Values directly as global */}}
-  {{- $global = $.Values -}}
-{{- end -}}
 
 {{- /* First try to lookup from cluster-app-config ConfigMap */}}
 {{- $_ := include "cluster.internal.get-config-map-values" $ -}}
@@ -667,9 +638,10 @@ false
 {{- end -}}
 
 {{- /* If not found in ConfigMap, fallback to Helm values */}}
+{{- /* Note: global is always accessed as .Values.global regardless of chart context */}}
 {{- if not $managementCluster -}}
-  {{- if $global.managementCluster -}}
-    {{- $managementCluster = $global.managementCluster -}}
+  {{- if and $.Values.global $.Values.global.managementCluster -}}
+    {{- $managementCluster = $.Values.global.managementCluster -}}
   {{- end -}}
 {{- end -}}
 {{- $managementCluster -}}
@@ -695,21 +667,6 @@ false
 */}}
 {{- define "cluster.components.containerd.containerRegistries" -}}
 {{- $containerRegistries := dict -}}
-{{- $global := dict -}}
-
-{{- /* Determine which Values structure we're using */}}
-{{- if and $.Chart (eq $.Chart.Name "cluster") -}}
-  {{- $global = $.Values.global -}}
-{{- else if $.Values.cluster -}}
-  {{- /* Called from parent chart, cluster values are under $.Values.cluster */}}
-  {{- $global = $.Values.cluster.global -}}
-{{- else if $.Values.global -}}
-  {{- /* Called from parent chart or custom context, use global */}}
-  {{- $global = $.Values.global -}}
-{{- else -}}
-  {{- /* Fallback: just use Values directly as global */}}
-  {{- $global = $.Values -}}
-{{- end -}}
 
 {{- /* First try to lookup from cluster-app-config ConfigMap */}}
 {{- $_ := include "cluster.internal.get-config-map-values" $ -}}
@@ -720,9 +677,10 @@ false
 {{- end -}}
 
 {{- /* If not found in ConfigMap, fallback to Helm values */}}
+{{- /* Note: global is always accessed as .Values.global regardless of chart context */}}
 {{- if not $containerRegistries -}}
-  {{- if and $global.components $global.components.containerd $global.components.containerd.containerRegistries -}}
-    {{- $containerRegistries = $global.components.containerd.containerRegistries -}}
+  {{- if and $.Values.global $.Values.global.components $.Values.global.components.containerd $.Values.global.components.containerd.containerRegistries -}}
+    {{- $containerRegistries = $.Values.global.components.containerd.containerRegistries -}}
   {{- end -}}
 {{- end -}}
 {{- $containerRegistries | toYaml -}}
