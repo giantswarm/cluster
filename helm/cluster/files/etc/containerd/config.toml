@@ -65,4 +65,3 @@ enable_selinux = {{ include "cluster.containerd.selinux.enabled" $ }}
   [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.nvidia.options]
     BinaryName = "/usr/bin/nvidia-container-runtime"
     SystemdCgroup = true
-
