@@ -594,14 +594,17 @@ false
 {{- $global := dict -}}
 
 {{- /* Determine which Values structure we're using */}}
-{{- if eq $.Chart.Name "cluster" -}}
+{{- if and $.Chart (eq $.Chart.Name "cluster") -}}
   {{- $global = $.Values.global -}}
 {{- else if $.Values.cluster -}}
   {{- /* Called from parent chart, cluster values are under $.Values.cluster */}}
   {{- $global = $.Values.cluster.global -}}
-{{- else -}}
-  {{- /* Called from parent chart, use parent's global */}}
+{{- else if $.Values.global -}}
+  {{- /* Called from parent chart or custom context, use global */}}
   {{- $global = $.Values.global -}}
+{{- else -}}
+  {{- /* Fallback: just use Values directly as global */}}
+  {{- $global = $.Values -}}
 {{- end -}}
 
 {{- /* First try to lookup from cluster-app-config ConfigMap */}}
@@ -642,14 +645,17 @@ false
 {{- $global := dict -}}
 
 {{- /* Determine which Values structure we're using */}}
-{{- if eq $.Chart.Name "cluster" -}}
+{{- if and $.Chart (eq $.Chart.Name "cluster") -}}
   {{- $global = $.Values.global -}}
 {{- else if $.Values.cluster -}}
   {{- /* Called from parent chart, cluster values are under $.Values.cluster */}}
   {{- $global = $.Values.cluster.global -}}
-{{- else -}}
-  {{- /* Called from parent chart, use parent's global */}}
+{{- else if $.Values.global -}}
+  {{- /* Called from parent chart or custom context, use global */}}
   {{- $global = $.Values.global -}}
+{{- else -}}
+  {{- /* Fallback: just use Values directly as global */}}
+  {{- $global = $.Values -}}
 {{- end -}}
 
 {{- /* First try to lookup from cluster-app-config ConfigMap */}}
@@ -692,14 +698,17 @@ false
 {{- $global := dict -}}
 
 {{- /* Determine which Values structure we're using */}}
-{{- if eq $.Chart.Name "cluster" -}}
+{{- if and $.Chart (eq $.Chart.Name "cluster") -}}
   {{- $global = $.Values.global -}}
 {{- else if $.Values.cluster -}}
   {{- /* Called from parent chart, cluster values are under $.Values.cluster */}}
   {{- $global = $.Values.cluster.global -}}
-{{- else -}}
-  {{- /* Called from parent chart, use parent's global */}}
+{{- else if $.Values.global -}}
+  {{- /* Called from parent chart or custom context, use global */}}
   {{- $global = $.Values.global -}}
+{{- else -}}
+  {{- /* Fallback: just use Values directly as global */}}
+  {{- $global = $.Values -}}
 {{- end -}}
 
 {{- /* First try to lookup from cluster-app-config ConfigMap */}}
