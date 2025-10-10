@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `OwnerReferencesPermissionEnforcement` admission plugin is now enabled by default on all clusters.
 
+### Changed
+
+- Update HelmRelease ApiVersion to from v2beta1 to v2.
+
 ## [4.0.3] - 2025-10-10
 
 ### Changed
