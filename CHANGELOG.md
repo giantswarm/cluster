@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - `OwnerReferencesPermissionEnforcement` admission plugin is now enabled by default on all clusters.
+- Chart: Add feature gate support for scheduler and kubelet.
 
 ### Changed
 
