@@ -26,6 +26,15 @@ metadata:
 spec:
   clusterName: {{ include "cluster.resource.name" $ }}
   replicas: {{ $nodePoolConfig.replicas }}
+  strategy:
+    {{- with $nodePoolConfig.rollingUpdate.deletePolicy }}
+    rollingUpdate:
+      {{- with $nodePoolConfig.rollingUpdate.deletePolicy }}
+      deletePolicy: {{ $nodePoolConfig.rollingUpdate.deletePolicy }}
+      {{- end }}
+      maxSurge: {{ $nodePoolConfig.rollingUpdate.maxSurge | default 1 }}
+      maxUnavailable: {{ $nodePoolConfig.rollingUpdate.maxUnavailable | default 0 }}
+    {{- end }}
   template:
     metadata:
       labels:
