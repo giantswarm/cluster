@@ -67,6 +67,16 @@
 {{- join "," (compact $noProxyList) | trim }}
 {{- end }}
 
+{{- define "cluster.internal.kubeadm.featureGates" }}
+{{- $providerFeatureGates := $.Values.providerIntegration.kubeadmConfig.featureGates | default list }}
+{{- $internalFeatureGates := $.Values.internal.advancedConfiguration.kubelet.featureGates | default list }}
+{{- $mergedFeatureGates := dict }}
+{{- range (concat $providerFeatureGates $internalFeatureGates) }}
+{{- $_ := set $mergedFeatureGates (trim .name) .enabled }}
+{{- end }}
+{{- $mergedFeatureGates | toYaml }}
+{{- end }}
+
 {{- define "cluster.test.internal.kubeadm.proxy.anotherNoProxyList" }}
 - some.noproxy.{{ $.Values.global.metadata.name }}.{{ $.Values.global.connectivity.baseDomain }}
 - another.noproxy.address.giantswarm.io
