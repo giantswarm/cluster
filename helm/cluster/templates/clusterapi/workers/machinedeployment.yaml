@@ -29,14 +29,14 @@ spec:
   strategy:
     {{- with $nodePoolConfig.rollingUpdate }}
     rollingUpdate:
-      {{- with $nodePoolConfig.rollingUpdate.deletePolicy }}
-      deletePolicy: {{ $nodePoolConfig.rollingUpdate.deletePolicy }}
+      {{- if .deletePolicy }}
+      deletePolicy: {{ .deletePolicy }}
       {{- end }}
-      {{- with $nodePoolConfig.rollingUpdate.maxSurge }}
-      maxSurge: {{ $nodePoolConfig.rollingUpdate.maxSurge }}
+      {{- if .maxSurge }}
+      maxSurge: {{ .maxSurge }}
       {{- end }}
-      {{- with $nodePoolConfig.rollingUpdate.maxUnavailable }}
-      maxUnavailable: {{ $nodePoolConfig.rollingUpdate.maxUnavailable }}
+      {{- if .maxUnavailable }}
+      maxUnavailable: {{ .maxUnavailable }}
       {{- end }}
     {{- end }}
   template:
