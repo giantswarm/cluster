@@ -11,20 +11,24 @@ global:
     def00:
       minSize: 3
       maxSize: 20
-      rollingUpdate:
-        maxSurge: "5"
-        maxUnavailable: "10%"
+      strategy:
+        rollingUpdate:
+          maxSurge: "5"
+          maxUnavailable: "10%"
     def01:
       replicas: 100
-      rollingUpdate:
-        maxSurge: "10%"
-        maxUnavailable: "1"
+      strategy:
+        rollingUpdate:
+          maxSurge: "10%"
+          maxUnavailable: "1"
     def02:
       replicas: 100
-      rollingUpdate:
-        deletePolicy: Newest
-        maxSurge: "10%"
-        maxUnavailable: "1"
+      strategy:
+        rollingUpdate:
+          deletePolicy: Newest
+          maxSurge: "10%"
+          maxUnavailable: "1"
+
 providerIntegration:
   environmentVariables:
     hostName: COREOS_EC2_HOSTNAME
