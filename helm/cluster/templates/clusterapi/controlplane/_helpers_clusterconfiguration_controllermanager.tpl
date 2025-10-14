@@ -25,15 +25,8 @@ extraVolumes:
 {{- end }}
 
 {{- define "cluster.internal.controlPlane.kubeadm.clusterConfiguration.controllerManager.featureGates" }}
-{{- $providerFeatureGates := $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.controllerManager.featureGates | default list }}
-{{- $internalFeatureGates := $.Values.internal.advancedConfiguration.controlPlane.controllerManager.featureGates | default list }}
-{{- $mergedFeatureGates := dict }}
-{{- range (concat $providerFeatureGates $internalFeatureGates) }}
-{{- $_ := set $mergedFeatureGates (trim .name) .enabled }}
-{{- end }}
-{{- $featureGates := list }}
-{{- range $name, $enabled := $mergedFeatureGates }}
-{{- $featureGates = append $featureGates (printf "%s=%t" $name $enabled) }}
-{{- end }}
-{{- $featureGates | join "," }}
+{{- $providerFeatureGates := $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.controllerManager.featureGates }}
+{{- $internalFeatureGates := $.Values.internal.advancedConfiguration.controlPlane.controllerManager.featureGates }}
+{{- $featureGates := dict "providerFeatureGates" $providerFeatureGates "internalFeatureGates" $internalFeatureGates }}
+{{- include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.featureGates" $featureGates }}
 {{- end }}

@@ -100,6 +100,7 @@ internal:
         quotaBackendBytesGiB: 8
       rolloutBefore:
         certificatesExpiryDays: 180
+      scheduler: {}
     kubelet:
       containerLogMaxFiles: 0
       containerLogMaxSize: ""
@@ -188,6 +189,7 @@ providerIntegration:
       clusterConfiguration:
         apiServer: {}
         controllerManager: {}
+        scheduler: {}
       diskSetup: {}
       ignition:
         containerLinuxConfig:

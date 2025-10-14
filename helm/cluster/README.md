@@ -351,6 +351,11 @@ For Giant Swarm internal use only, not stable, or not supported by UIs.
 | `internal.advancedConfiguration.controlPlane.preKubeadmCommands[*]` |**None**|**Type:** `[string]`<br/>|
 | `internal.advancedConfiguration.controlPlane.rolloutBefore` | **Rollout Before** - Rollout Before is a field to indicate a rollout should be performed if the specified criteria is met.|**Type:** `[object]`<br/>|
 | `internal.advancedConfiguration.controlPlane.rolloutBefore.certificatesExpiryDays` | **Certificate expiry days** - Indicates a rollout needs to be performed if the certificates of the machine will expire within the specified days.|**Type:** `[integer]`<br/>**Default:** `180`|
+| `internal.advancedConfiguration.controlPlane.scheduler` | **Scheduler** - Advanced configuration of the Kubernetes scheduler|**Type:** `[object]`<br/>|
+| `internal.advancedConfiguration.controlPlane.scheduler.featureGates` | **Feature gates** - A list of feature gates to enable or disable.|**Type:** `[array]`<br/>|
+| `internal.advancedConfiguration.controlPlane.scheduler.featureGates[*]` | **Feature gate** - A feature gate to enable or disable.|**Type:** `[object]`<br/>|
+| `internal.advancedConfiguration.controlPlane.scheduler.featureGates[*].enabled` | **Enabled** - Whether to enable or disable the feature gate.|**Type:** `[boolean]`<br/>|
+| `internal.advancedConfiguration.controlPlane.scheduler.featureGates[*].name` | **Name** - Name of the feature gate.|**Type:** `[string]`<br/>|
 | `internal.advancedConfiguration.files` | **Files** - Custom cluster-specific files that are deployed to all nodes.|**Type:** `[array]`<br/>|
 | `internal.advancedConfiguration.files[*]` | **File from secret** - It defines a file with content in a Secret|**Type:** `[object]`<br/>|
 | `internal.advancedConfiguration.files[*].contentFrom` | **Content from** - It specifies where the file content is coming from.|**Type:** `[object]`<br/>|
@@ -363,6 +368,10 @@ For Giant Swarm internal use only, not stable, or not supported by UIs.
 | `internal.advancedConfiguration.kubelet` | **Kubelet configuration** - Kubelet configuration settings for the whole cluster.|**Type:** `[object]`<br/>|
 | `internal.advancedConfiguration.kubelet.containerLogMaxFiles` | **Maximum number of container log files** - Specifies the maximum number of container log files that can be present for a container.|**Type:** `[integer]`<br/>**Default:** `0`|
 | `internal.advancedConfiguration.kubelet.containerLogMaxSize` | **Maximum size of the container log** - Specifies the maximum size of the container log file before it is rotated. For example: "5Mi" or "256Ki".|**Type:** `[string]`<br/>**Default:** `""`|
+| `internal.advancedConfiguration.kubelet.featureGates` | **Feature gates** - A list of feature gates to enable or disable.|**Type:** `[array]`<br/>|
+| `internal.advancedConfiguration.kubelet.featureGates[*]` | **Feature gate** - A feature gate to enable or disable.|**Type:** `[object]`<br/>|
+| `internal.advancedConfiguration.kubelet.featureGates[*].enabled` | **Enabled** - Whether to enable or disable the feature gate.|**Type:** `[boolean]`<br/>|
+| `internal.advancedConfiguration.kubelet.featureGates[*].name` | **Name** - Name of the feature gate.|**Type:** `[string]`<br/>|
 | `internal.advancedConfiguration.kubelet.insecure` | **Kubelet Authentication** - Disables kubelet authentication, anyone with access to the port can talk to the API.|**Type:** `[boolean]`<br/>**Default:** `false`|
 | `internal.advancedConfiguration.kubelet.kubeReserved` | **Kube reserved resources configuration** - Resources configuration for Kubernetes system services.|**Type:** `[object]`<br/>|
 | `internal.advancedConfiguration.kubelet.kubeReserved.cpu` | **Kube reserved CPU** - CPU reserved for Kubernetes system services.|**Type:** `[string]`<br/>**Default:** `"350m"`|
@@ -660,6 +669,11 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.controllerManager.featureGates[*]` | **Feature gate** - A feature gate to enable or disable.|**Type:** `[object]`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.controllerManager.featureGates[*].enabled` | **Enabled** - Whether to enable or disable the feature gate.|**Type:** `[boolean]`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.controllerManager.featureGates[*].name` | **Name** - Name of the feature gate.|**Type:** `[string]`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.scheduler` | **Scheduler** - Configuration of the Kubernetes scheduler|**Type:** `[object]`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.scheduler.featureGates` | **Feature gates** - A list of feature gates to enable or disable.|**Type:** `[array]`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.scheduler.featureGates[*]` | **Feature gate** - A feature gate to enable or disable.|**Type:** `[object]`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.scheduler.featureGates[*].enabled` | **Enabled** - Whether to enable or disable the feature gate.|**Type:** `[boolean]`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.scheduler.featureGates[*].name` | **Name** - Name of the feature gate.|**Type:** `[string]`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.diskSetup` | **Disk setup** - Provider-specific disk setup that is deployed to control plane nodes. They are specified in the cluster-<provider> apps.|**Type:** `[object]`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.diskSetup.filesystems` | **File systems** - Filesystems specifies the list of file systems to setup.|**Type:** `[array]`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.diskSetup.filesystems[*]` |**None**|**Type:** `[object]`<br/>|
@@ -789,6 +803,10 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.hashSalt` | **Hash salt** - If specified, this token is used as a salt to the hash suffix of some resource names. Can be used to force-recreate some resources.|**Type:** `[string]`<br/>|
 | `providerIntegration.kubeadmConfig` | **Provider-specific kubeadm config** - Provider-specific kubeadm config that is common for all nodes, including both control plane and workers.|**Type:** `[object]`<br/>|
 | `providerIntegration.kubeadmConfig.enableGiantswarmUser` | **Enable giantswarm User** - If enabled, the giantswarm user will be created on all nodes.|**Type:** `[boolean]`<br/>**Default:** `false`|
+| `providerIntegration.kubeadmConfig.featureGates` | **Feature gates** - A list of feature gates to enable or disable.|**Type:** `[array]`<br/>|
+| `providerIntegration.kubeadmConfig.featureGates[*]` | **Feature gate** - A feature gate to enable or disable.|**Type:** `[object]`<br/>|
+| `providerIntegration.kubeadmConfig.featureGates[*].enabled` | **Enabled** - Whether to enable or disable the feature gate.|**Type:** `[boolean]`<br/>|
+| `providerIntegration.kubeadmConfig.featureGates[*].name` | **Name** - Name of the feature gate.|**Type:** `[string]`<br/>|
 | `providerIntegration.kubeadmConfig.files` | **Files** - Provider-specific files that are deployed to all nodes. They are specified in the cluster-<provider> apps.|**Type:** `[array]`<br/>|
 | `providerIntegration.kubeadmConfig.files[*]` | **File from secret** - It defines a file with content in a Secret|**Type:** `[object]`<br/>|
 | `providerIntegration.kubeadmConfig.files[*].contentFrom` | **Content from** - It specifies where the file content is coming from.|**Type:** `[object]`<br/>|

@@ -2109,6 +2109,16 @@
                                             "minimum": 30
                                         }
                                     }
+                                },
+                                "scheduler": {
+                                    "type": "object",
+                                    "title": "Scheduler",
+                                    "description": "Advanced configuration of the Kubernetes scheduler",
+                                    "properties": {
+                                        "featureGates": {
+                                            "$ref": "#/$defs/featureGates"
+                                        }
+                                    }
                                 }
                             }
                         },
@@ -2136,6 +2146,9 @@
                                     "title": "Maximum size of the container log",
                                     "description": "Specifies the maximum size of the container log file before it is rotated. For example: \"5Mi\" or \"256Ki\".",
                                     "default": ""
+                                },
+                                "featureGates": {
+                                    "$ref": "#/$defs/featureGates"
                                 },
                                 "insecure": {
                                     "type": "boolean",
@@ -2709,6 +2722,16 @@
                                                     "$ref": "#/$defs/featureGates"
                                                 }
                                             }
+                                        },
+                                        "scheduler": {
+                                            "type": "object",
+                                            "title": "Scheduler",
+                                            "description": "Configuration of the Kubernetes scheduler",
+                                            "properties": {
+                                                "featureGates": {
+                                                    "$ref": "#/$defs/featureGates"
+                                                }
+                                            }
                                         }
                                     }
                                 },
@@ -2828,6 +2851,9 @@
                             "title": "Enable giantswarm User",
                             "description": "If enabled, the giantswarm user will be created on all nodes.",
                             "default": false
+                        },
+                        "featureGates": {
+                            "$ref": "#/$defs/featureGates"
                         },
                         "files": {
                             "type": "array",

@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `OwnerReferencesPermissionEnforcement` admission plugin is now enabled by default on all clusters.
 - Expose `rollingUpdate` values in the node pools to configure the `MachineDeployments`.
+- Chart: Add feature gate support for scheduler and kubelet.
 
 ### Changed
 
