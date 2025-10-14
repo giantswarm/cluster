@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [4.1.0] - 2025-10-14
+
 ### Added
 
 - `OwnerReferencesPermissionEnforcement` admission plugin is now enabled by default on all clusters.
@@ -815,7 +817,8 @@ For Kubernetes <v1.29, you will need to re-enable it using the respective values
 
 - Update and clean up the template repo.
 
-[Unreleased]: https://github.com/giantswarm/cluster/compare/v4.0.3...HEAD
+[Unreleased]: https://github.com/giantswarm/cluster/compare/v4.1.0...HEAD
+[4.1.0]: https://github.com/giantswarm/cluster/compare/v4.0.3...v4.1.0
 [4.0.3]: https://github.com/giantswarm/cluster/compare/v4.0.2...v4.0.3
 [4.0.2]: https://github.com/giantswarm/cluster/compare/v4.0.1...v4.0.2
 [4.0.1]: https://github.com/giantswarm/cluster/compare/v4.0.0...v4.0.1
