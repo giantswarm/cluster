@@ -24,6 +24,12 @@ SystemdCgroup = true
 sandbox_image = "{{ include "cluster.image.registry" $ }}/{{ $.Values.providerIntegration.components.containerd.sandboxContainerImage.name }}:{{ $.Values.providerIntegration.components.containerd.sandboxContainerImage.tag }}"
 enable_selinux = {{ include "cluster.containerd.selinux.enabled" $ }}
 
+{{- if $.Values.global.components.containerd.cdi.enabled }}
+# Configure Container Device Interface (CDI).
+enable_cdi = true
+cdi_spec_dirs = {{ $.Values.global.components.containerd.cdi.specDirs | toJson }}
+{{- end }}
+
 [plugins."io.containerd.grpc.v1.cri".registry]
   [plugins."io.containerd.grpc.v1.cri".registry.mirrors]
   {{- $containerMirrors := include "cluster.container.mirrors" $ | fromYaml }}
