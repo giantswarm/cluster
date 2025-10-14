@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Chart: Add CDI support for containerd.
+
 ## [4.1.0] - 2025-10-14
 
 ### Added
