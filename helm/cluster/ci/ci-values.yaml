@@ -202,9 +202,17 @@ internal:
         featureGates:
         - name: StatefulSetAutoDeletePVC
           enabled: true
+        - name: DynamicResourceAllocation
+          enabled: true
       controllerManager:
         featureGates:
         - name: StatefulSetAutoDeletePVC
+          enabled: true
+        - name: DynamicResourceAllocation
+          enabled: true
+      scheduler:
+        featureGates:
+        - name: DynamicResourceAllocation
           enabled: true
       etcd:
         quotaBackendBytesGiB: 16
@@ -259,6 +267,9 @@ internal:
         memory: 384Mi
       containerLogMaxSize: 30Mi
       containerLogMaxFiles: 2
+      featureGates:
+      - name: DynamicResourceAllocation
+        enabled: true
   ephemeralConfiguration:
     apps:
       certExporter:

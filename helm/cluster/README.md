@@ -215,6 +215,10 @@ Advanced configuration of components that are running on all nodes.
 | `global.components.auditd` | **Auditd** - Enable Auditd service.|**Type:** `[object]`<br/>|
 | `global.components.auditd.enabled` | **Enabled** - Whether or not the Auditd service shall be enabled. When true, the Auditd service is enabled. When false, the Auditd service is disabled.|**Type:** `[boolean]`<br/>**Default:** `false`|
 | `global.components.containerd` | **Containerd** - Configuration of containerd.|**Type:** `[object]`<br/>|
+| `global.components.containerd.cdi` | **Container Device Interface (CDI)** - Configuration of CDI support in containerd.|**Type:** `[object]`<br/>|
+| `global.components.containerd.cdi.enabled` | **Enabled** - Enabling this will configure containerd to support Container Device Interface (CDI) specification.|**Type:** `[boolean]`<br/>**Default:** `false`|
+| `global.components.containerd.cdi.specDirs` | **CDI spec directories** - List of directories to search for CDI spec files.|**Type:** `[array]`<br/>**Default:** `["/etc/cdi","/var/run/cdi"]`|
+| `global.components.containerd.cdi.specDirs[*]` | **CDI spec directory** - Directory to search for CDI spec files.|**Type:** `[string]`<br/>|
 | `global.components.containerd.containerRegistries` | **Container registries** - Endpoints and credentials configuration for container registries.|**Type:** `[object]`<br/>**Default:** `{"gsoci.azurecr.io":[{"endpoint":"gsoci.azurecr.io"}]}`|
 | `global.components.containerd.containerRegistries.*` | **Registries** - Container registries and mirrors|**Type:** `[array]`<br/>|
 | `global.components.containerd.containerRegistries.*[*]` | **Registry**|**Type:** `[object]`<br/>|
@@ -351,6 +355,11 @@ For Giant Swarm internal use only, not stable, or not supported by UIs.
 | `internal.advancedConfiguration.controlPlane.preKubeadmCommands[*]` |**None**|**Type:** `[string]`<br/>|
 | `internal.advancedConfiguration.controlPlane.rolloutBefore` | **Rollout Before** - Rollout Before is a field to indicate a rollout should be performed if the specified criteria is met.|**Type:** `[object]`<br/>|
 | `internal.advancedConfiguration.controlPlane.rolloutBefore.certificatesExpiryDays` | **Certificate expiry days** - Indicates a rollout needs to be performed if the certificates of the machine will expire within the specified days.|**Type:** `[integer]`<br/>**Default:** `180`|
+| `internal.advancedConfiguration.controlPlane.scheduler` | **Scheduler** - Advanced configuration of the Kubernetes scheduler|**Type:** `[object]`<br/>|
+| `internal.advancedConfiguration.controlPlane.scheduler.featureGates` | **Feature gates** - A list of feature gates to enable or disable.|**Type:** `[array]`<br/>|
+| `internal.advancedConfiguration.controlPlane.scheduler.featureGates[*]` | **Feature gate** - A feature gate to enable or disable.|**Type:** `[object]`<br/>|
+| `internal.advancedConfiguration.controlPlane.scheduler.featureGates[*].enabled` | **Enabled** - Whether to enable or disable the feature gate.|**Type:** `[boolean]`<br/>|
+| `internal.advancedConfiguration.controlPlane.scheduler.featureGates[*].name` | **Name** - Name of the feature gate.|**Type:** `[string]`<br/>|
 | `internal.advancedConfiguration.files` | **Files** - Custom cluster-specific files that are deployed to all nodes.|**Type:** `[array]`<br/>|
 | `internal.advancedConfiguration.files[*]` | **File from secret** - It defines a file with content in a Secret|**Type:** `[object]`<br/>|
 | `internal.advancedConfiguration.files[*].contentFrom` | **Content from** - It specifies where the file content is coming from.|**Type:** `[object]`<br/>|
@@ -363,6 +372,10 @@ For Giant Swarm internal use only, not stable, or not supported by UIs.
 | `internal.advancedConfiguration.kubelet` | **Kubelet configuration** - Kubelet configuration settings for the whole cluster.|**Type:** `[object]`<br/>|
 | `internal.advancedConfiguration.kubelet.containerLogMaxFiles` | **Maximum number of container log files** - Specifies the maximum number of container log files that can be present for a container.|**Type:** `[integer]`<br/>**Default:** `0`|
 | `internal.advancedConfiguration.kubelet.containerLogMaxSize` | **Maximum size of the container log** - Specifies the maximum size of the container log file before it is rotated. For example: "5Mi" or "256Ki".|**Type:** `[string]`<br/>**Default:** `""`|
+| `internal.advancedConfiguration.kubelet.featureGates` | **Feature gates** - A list of feature gates to enable or disable.|**Type:** `[array]`<br/>|
+| `internal.advancedConfiguration.kubelet.featureGates[*]` | **Feature gate** - A feature gate to enable or disable.|**Type:** `[object]`<br/>|
+| `internal.advancedConfiguration.kubelet.featureGates[*].enabled` | **Enabled** - Whether to enable or disable the feature gate.|**Type:** `[boolean]`<br/>|
+| `internal.advancedConfiguration.kubelet.featureGates[*].name` | **Name** - Name of the feature gate.|**Type:** `[string]`<br/>|
 | `internal.advancedConfiguration.kubelet.insecure` | **Kubelet Authentication** - Disables kubelet authentication, anyone with access to the port can talk to the API.|**Type:** `[boolean]`<br/>**Default:** `false`|
 | `internal.advancedConfiguration.kubelet.kubeReserved` | **Kube reserved resources configuration** - Resources configuration for Kubernetes system services.|**Type:** `[object]`<br/>|
 | `internal.advancedConfiguration.kubelet.kubeReserved.cpu` | **Kube reserved CPU** - CPU reserved for Kubernetes system services.|**Type:** `[string]`<br/>**Default:** `"350m"`|
@@ -440,6 +453,11 @@ Properties within the `.global.nodePools` object
 | `global.nodePools.PATTERN.maxSize` | **Max size** - Maximum number of node pool nodes|**Type:** `[integer]`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
 | `global.nodePools.PATTERN.minSize` | **Min size** - Minimum number of node pool nodes|**Type:** `[integer]`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
 | `global.nodePools.PATTERN.replicas` | **Replicas** - The number of node pool nodes.|**Type:** `[integer]`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
+| `global.nodePools.PATTERN.strategy` | **Update strategy** - Strategy to use when updating the machines.|**Type:** `[object]`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
+| `global.nodePools.PATTERN.strategy.rollingUpdate` | **Rolling update strategy** - Rolling update config params.|**Type:** `[object]`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
+| `global.nodePools.PATTERN.strategy.rollingUpdate.deletePolicy` | **Delete policy** - DeletePolicy defines the policy used by the MachineDeployment to identify nodes to delete when downscaling. When no value is supplied, the default DeletePolicy of MachineSet is used.|**Type:** `[string]`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
+| `global.nodePools.PATTERN.strategy.rollingUpdate.maxSurge` | **Max surge** - The maximum number of machines that can be scheduled above the desired number of machines. Value can be an absolute number (ex: 5) or a percentage of desired machines (ex: 10%). This can not be 0 if MaxUnavailable is 0. Absolute number is calculated from percentage by rounding up. Defaults to 1.|**Type:** `[string]`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>**Default:** `"1"`|
+| `global.nodePools.PATTERN.strategy.rollingUpdate.maxUnavailable` | **Max unavailable** - The maximum number of machines that can be unavailable during the update. Value can be an absolute number (ex: 5) or a percentage of desired machines (ex: 10%). Absolute number is calculated from percentage by rounding down. This can not be 0 if MaxSurge is 0. Defaults to 0.|**Type:** `[string]`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>**Default:** `"0"`|
 | `global.nodePools.PATTERN.type` | **Node pool type** - Controller that will manage the node pool. Only used to enable karpenter node pools.|**Type:** `[string]`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>**Default:** `"machinepool"`|
 
 ### Other global
@@ -655,6 +673,11 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.controllerManager.featureGates[*]` | **Feature gate** - A feature gate to enable or disable.|**Type:** `[object]`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.controllerManager.featureGates[*].enabled` | **Enabled** - Whether to enable or disable the feature gate.|**Type:** `[boolean]`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.controllerManager.featureGates[*].name` | **Name** - Name of the feature gate.|**Type:** `[string]`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.scheduler` | **Scheduler** - Configuration of the Kubernetes scheduler|**Type:** `[object]`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.scheduler.featureGates` | **Feature gates** - A list of feature gates to enable or disable.|**Type:** `[array]`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.scheduler.featureGates[*]` | **Feature gate** - A feature gate to enable or disable.|**Type:** `[object]`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.scheduler.featureGates[*].enabled` | **Enabled** - Whether to enable or disable the feature gate.|**Type:** `[boolean]`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.scheduler.featureGates[*].name` | **Name** - Name of the feature gate.|**Type:** `[string]`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.diskSetup` | **Disk setup** - Provider-specific disk setup that is deployed to control plane nodes. They are specified in the cluster-<provider> apps.|**Type:** `[object]`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.diskSetup.filesystems` | **File systems** - Filesystems specifies the list of file systems to setup.|**Type:** `[array]`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.diskSetup.filesystems[*]` |**None**|**Type:** `[object]`<br/>|
@@ -784,6 +807,10 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.hashSalt` | **Hash salt** - If specified, this token is used as a salt to the hash suffix of some resource names. Can be used to force-recreate some resources.|**Type:** `[string]`<br/>|
 | `providerIntegration.kubeadmConfig` | **Provider-specific kubeadm config** - Provider-specific kubeadm config that is common for all nodes, including both control plane and workers.|**Type:** `[object]`<br/>|
 | `providerIntegration.kubeadmConfig.enableGiantswarmUser` | **Enable giantswarm User** - If enabled, the giantswarm user will be created on all nodes.|**Type:** `[boolean]`<br/>**Default:** `false`|
+| `providerIntegration.kubeadmConfig.featureGates` | **Feature gates** - A list of feature gates to enable or disable.|**Type:** `[array]`<br/>|
+| `providerIntegration.kubeadmConfig.featureGates[*]` | **Feature gate** - A feature gate to enable or disable.|**Type:** `[object]`<br/>|
+| `providerIntegration.kubeadmConfig.featureGates[*].enabled` | **Enabled** - Whether to enable or disable the feature gate.|**Type:** `[boolean]`<br/>|
+| `providerIntegration.kubeadmConfig.featureGates[*].name` | **Name** - Name of the feature gate.|**Type:** `[string]`<br/>|
 | `providerIntegration.kubeadmConfig.files` | **Files** - Provider-specific files that are deployed to all nodes. They are specified in the cluster-<provider> apps.|**Type:** `[array]`<br/>|
 | `providerIntegration.kubeadmConfig.files[*]` | **File from secret** - It defines a file with content in a Secret|**Type:** `[object]`<br/>|
 | `providerIntegration.kubeadmConfig.files[*].contentFrom` | **Content from** - It specifies where the file content is coming from.|**Type:** `[object]`<br/>|
@@ -936,6 +963,11 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.workers.defaultNodePools.PATTERN.maxSize` | **Max size** - Maximum number of node pool nodes|**Type:** `[integer]`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
 | `providerIntegration.workers.defaultNodePools.PATTERN.minSize` | **Min size** - Minimum number of node pool nodes|**Type:** `[integer]`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
 | `providerIntegration.workers.defaultNodePools.PATTERN.replicas` | **Replicas** - The number of node pool nodes.|**Type:** `[integer]`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
+| `providerIntegration.workers.defaultNodePools.PATTERN.strategy` | **Update strategy** - Strategy to use when updating the machines.|**Type:** `[object]`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
+| `providerIntegration.workers.defaultNodePools.PATTERN.strategy.rollingUpdate` | **Rolling update strategy** - Rolling update config params.|**Type:** `[object]`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
+| `providerIntegration.workers.defaultNodePools.PATTERN.strategy.rollingUpdate.deletePolicy` | **Delete policy** - DeletePolicy defines the policy used by the MachineDeployment to identify nodes to delete when downscaling. When no value is supplied, the default DeletePolicy of MachineSet is used.|**Type:** `[string]`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
+| `providerIntegration.workers.defaultNodePools.PATTERN.strategy.rollingUpdate.maxSurge` | **Max surge** - The maximum number of machines that can be scheduled above the desired number of machines. Value can be an absolute number (ex: 5) or a percentage of desired machines (ex: 10%). This can not be 0 if MaxUnavailable is 0. Absolute number is calculated from percentage by rounding up. Defaults to 1.|**Type:** `[string]`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>**Default:** `"1"`|
+| `providerIntegration.workers.defaultNodePools.PATTERN.strategy.rollingUpdate.maxUnavailable` | **Max unavailable** - The maximum number of machines that can be unavailable during the update. Value can be an absolute number (ex: 5) or a percentage of desired machines (ex: 10%). Absolute number is calculated from percentage by rounding down. This can not be 0 if MaxSurge is 0. Defaults to 0.|**Type:** `[string]`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>**Default:** `"0"`|
 | `providerIntegration.workers.defaultNodePools.PATTERN.type` | **Node pool type** - Controller that will manage the node pool. Only used to enable karpenter node pools.|**Type:** `[string]`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>**Default:** `"machinepool"`|
 | `providerIntegration.workers.kubeadmConfig` | **Kubeadm config** - Configuration of workers nodes.|**Type:** `[object]`<br/>|
 | `providerIntegration.workers.kubeadmConfig.enabled` | **Enable kubeadm config** - Flag that indicates if the kubeadm config should be rendered.|**Type:** `[boolean]`<br/>**Default:** `true`|

@@ -28,9 +28,9 @@ extraArgs:
   {{- $k8sVersion := include "cluster.component.kubernetes.version" $ | trimPrefix "v" }}
   {{- if or (eq $k8sVersion "N/A") (semverCompare "<1.33.0-0" $k8sVersion) }}
   cloud-provider: external
-  {{- end }}
   {{- if $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.cloudConfig  }}
   cloud-config: {{ $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.cloudConfig  }}
+  {{- end }}
   {{- end }}
   enable-admission-plugins: {{ include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.enableAdmissionPlugins" $ }}
   {{- if $.Values.internal.advancedConfiguration.controlPlane.apiServer.enablePriorityAndFairness }}
@@ -145,15 +145,8 @@ api-audiences-example.giantswarm.io
 {{- end }}
 
 {{- define "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.featureGates" }}
-{{- $providerFeatureGates := $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.featureGates | default list }}
-{{- $internalFeatureGates := $.Values.internal.advancedConfiguration.controlPlane.apiServer.featureGates | default list }}
-{{- $mergedFeatureGates := dict }}
-{{- range (concat $providerFeatureGates $internalFeatureGates) }}
-{{- $_ := set $mergedFeatureGates (trim .name) .enabled }}
-{{- end }}
-{{- $featureGates := list }}
-{{- range $name, $enabled := $mergedFeatureGates }}
-{{- $featureGates = append $featureGates (printf "%s=%t" $name $enabled) }}
-{{- end }}
-{{- $featureGates | join "," }}
+{{- $providerFeatureGates := $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.featureGates }}
+{{- $internalFeatureGates := $.Values.internal.advancedConfiguration.controlPlane.apiServer.featureGates }}
+{{- $featureGates := dict "providerFeatureGates" $providerFeatureGates "internalFeatureGates" $internalFeatureGates }}
+{{- include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.featureGates" $featureGates }}
 {{- end }}

@@ -31,6 +31,11 @@ global:
     auditd:
       enabled: false
     containerd:
+      cdi:
+        enabled: false
+        specDirs:
+          - /etc/cdi
+          - /var/run/cdi
       containerRegistries:
         gsoci.azurecr.io:
           - endpoint: gsoci.azurecr.io
@@ -100,6 +105,7 @@ internal:
         quotaBackendBytesGiB: 8
       rolloutBefore:
         certificatesExpiryDays: 180
+      scheduler: {}
     kubelet:
       containerLogMaxFiles: 0
       containerLogMaxSize: ""
@@ -188,6 +194,7 @@ providerIntegration:
       clusterConfiguration:
         apiServer: {}
         controllerManager: {}
+        scheduler: {}
       diskSetup: {}
       ignition:
         containerLinuxConfig:
