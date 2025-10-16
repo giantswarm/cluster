@@ -2033,6 +2033,10 @@
                                                 {
                                                     "enabled": true,
                                                     "name": "StatefulSetAutoDeletePVC"
+                                                },
+                                                {
+                                                    "enabled": true,
+                                                    "name": "MutableCSINodeAllocatableCount"
                                                 }
                                             ]
                                         }
@@ -2179,7 +2183,13 @@
                                     "default": ""
                                 },
                                 "featureGates": {
-                                    "$ref": "#/$defs/featureGates"
+                                    "$ref": "#/$defs/featureGates",
+                                    "default": [
+                                        {
+                                            "enabled": true,
+                                            "name": "MutableCSINodeAllocatableCount"
+                                        }
+                                    ]
                                 },
                                 "insecure": {
                                     "type": "boolean",
