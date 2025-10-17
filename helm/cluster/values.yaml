@@ -95,6 +95,8 @@ internal:
         featureGates:
           - enabled: true
             name: StatefulSetAutoDeletePVC
+          - enabled: true
+            name: MutableCSINodeAllocatableCount
       controllerManager:
         featureGates:
           - enabled: true
@@ -109,6 +111,9 @@ internal:
     kubelet:
       containerLogMaxFiles: 0
       containerLogMaxSize: ""
+      featureGates:
+        - enabled: true
+          name: MutableCSINodeAllocatableCount
       insecure: false
       kubeReserved:
         cpu: 350m
