@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Enable `MutableCSINodeAllocatableCount` feature gate on all clusters by default.
+- Enable `MutableCSINodeAllocatableCount` feature gate on all v1.33+ clusters by default.
 
 ## [4.2.0] - 2025-10-14
 
