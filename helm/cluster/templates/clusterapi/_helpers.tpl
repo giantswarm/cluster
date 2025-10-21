@@ -74,24 +74,23 @@
     - featureGates: List of feature gate objects with name, enabled, and minKubernetesVersion
     - currentVersion: Optional current cluster version (defaults to workload cluster version from Release)
 
-  Returns: List of feature gates that meet version requirements
+  Returns: List of feature gates that meet version requirements.
 */}}
 {{- define "cluster.internal.filterFeatureGatesByVersion" }}
 {{- $currentVersion := .currentVersion | default (include "cluster.component.kubernetes.version" $) }}
-{{- $filteredGates := list }}
+{{- $filteredFeatureGates := list }}
 {{- range .featureGates }}
 {{- if not .minKubernetesVersion or semverCompare (printf ">=%s" .minKubernetesVersion) $currentVersion }}
-{{- $filteredGates = append $filteredGates . }}
+{{- $filteredFeatureGates = append $filteredFeatureGates . }}
 {{- end }}
 {{- end }}
-{{- $filteredGates }}
+{{- $filteredFeatureGates | toYaml }}
 {{- end }}
 
 {{- define "cluster.internal.kubeadm.featureGates" }}
 {{- $providerFeatureGates := $.Values.providerIntegration.kubeadmConfig.featureGates | default list }}
 {{- $internalFeatureGates := $.Values.internal.advancedConfiguration.kubelet.featureGates | default list }}
-{{- $allFeatureGates := concat $providerFeatureGates $internalFeatureGates }}
-{{- $filteredFeatureGates := include "cluster.internal.filterFeatureGatesByVersion" (dict "featureGates" $allFeatureGates) | fromYaml }}
+{{- $filteredFeatureGates := concat $providerFeatureGates $internalFeatureGates }}
 {{- $mergedFeatureGates := dict }}
 {{- range $filteredFeatureGates }}
 {{- $_ := set $mergedFeatureGates (trim .name) .enabled }}
