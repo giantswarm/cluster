@@ -11,8 +11,11 @@ evictionHard:
 evictionSoftGracePeriod:
   memory.available: "5s"
 evictionMaxPodGracePeriod: 60
-{{- if (include "cluster.internal.kubeadm.featureGates" $ | fromYaml) }}
-featureGates: {{- include "cluster.internal.kubeadm.featureGates" $ | nindent 2 }}
+{{- $kubernetesVersion := include "cluster.component.kubernetes.version" $ }}
+{{- $providerFeatureGates := $.Values.providerIntegration.kubeadmConfig.featureGates }}
+{{- $internalFeatureGates := $.Values.internal.advancedConfiguration.kubelet.featureGates }}
+{{- if (include "cluster.internal.kubeadm.featureGates" (dict "providerFeatureGates" $providerFeatureGates "internalFeatureGates" $internalFeatureGates "kubernetesVersion" $kubernetesVersion) | fromYaml) }}
+featureGates: {{- include "cluster.internal.kubeadm.featureGates" (dict "providerFeatureGates" $providerFeatureGates "internalFeatureGates" $internalFeatureGates "kubernetesVersion" $kubernetesVersion) | nindent 2 }}
 {{- end }}
 kubeReserved:
   cpu: {{ $.Values.internal.advancedConfiguration.kubelet.kubeReserved.cpu }}
