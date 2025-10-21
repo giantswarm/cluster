@@ -15,8 +15,10 @@ template:
 {{- define "cluster.internal.controlPlane.kubeadm.clusterConfiguration.featureGates" }}
 {{- $providerFeatureGates := .providerFeatureGates | default list }}
 {{- $internalFeatureGates := .internalFeatureGates | default list }}
+{{- $allFeatureGates := concat $providerFeatureGates $internalFeatureGates }}
+{{- $filteredFeatureGates := include "cluster.internal.filterFeatureGatesByVersion" (dict "featureGates" $allFeatureGates) | fromYaml }}
 {{- $mergedFeatureGates := dict }}
-{{- range (concat $providerFeatureGates $internalFeatureGates) }}
+{{- range $filteredFeatureGates }}
 {{- $_ := set $mergedFeatureGates (trim .name) .enabled }}
 {{- end }}
 {{- $featureGates := list }}
