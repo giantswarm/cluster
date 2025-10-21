@@ -17,18 +17,11 @@ template:
 {{- $internalFeatureGates := .internalFeatureGates | default list }}
 {{- $allFeatureGates := concat $providerFeatureGates $internalFeatureGates }}
 {{- $root := .root }}
-{{- /* Get kubernetes version directly without relying on Chart context */}}
-{{- $_ := include "cluster.internal.get-provider-integration-values" $root }}
-{{- $kubernetesVersion := "" }}
-{{- if $root.GiantSwarm.providerIntegration.useReleases }}
-{{- $_ := set $root "componentName" "kubernetes" }}
-{{- $kubernetesVersion = include "cluster.component.version" $root | trimPrefix "v" }}
-{{- else if $root.GiantSwarm.providerIntegration.kubernetesVersion }}
-{{- $kubernetesVersion = $root.GiantSwarm.providerIntegration.kubernetesVersion | trimPrefix "v" }}
-{{- end }}
+{{- /* Get kubernetes version using the standard helper (now works in tpl context) */}}
+{{- $kubernetesVersion := include "cluster.component.kubernetes.version" $root }}
 {{- /* Use outputDict pattern to avoid YAML serialization issues */}}
 {{- $outputDict := dict }}
-{{- $_ = include "cluster.internal.filterFeatureGatesByVersion" (dict "featureGates" $allFeatureGates "currentVersion" $kubernetesVersion "outputDict" $outputDict) }}
+{{- $_ := include "cluster.internal.filterFeatureGatesByVersion" (dict "featureGates" $allFeatureGates "currentVersion" $kubernetesVersion "outputDict" $outputDict) }}
 {{- $filteredFeatureGates := $outputDict.result | default list }}
 {{- $mergedFeatureGates := dict }}
 {{- range $filteredFeatureGates }}
