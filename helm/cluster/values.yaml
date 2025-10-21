@@ -94,12 +94,15 @@ internal:
         enablePriorityAndFairness: true
         featureGates:
           - enabled: true
+            minKubernetesVersion: 1.27.0
             name: StatefulSetAutoDeletePVC
           - enabled: true
+            minKubernetesVersion: 1.33.0
             name: MutableCSINodeAllocatableCount
       controllerManager:
         featureGates:
           - enabled: true
+            minKubernetesVersion: 1.27.0
             name: StatefulSetAutoDeletePVC
         terminatedPodGCThreshold: 125
       etcd:
@@ -113,6 +116,7 @@ internal:
       containerLogMaxSize: ""
       featureGates:
         - enabled: true
+          minKubernetesVersion: 1.33.0
           name: MutableCSINodeAllocatableCount
       insecure: false
       kubeReserved:

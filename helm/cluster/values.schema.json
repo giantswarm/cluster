@@ -177,16 +177,16 @@
                         "title": "Enabled",
                         "description": "Whether to enable or disable the feature gate."
                     },
+                    "minKubernetesVersion": {
+                        "type": "string",
+                        "title": "Minimum Kubernetes version",
+                        "description": "Optional minimum Kubernetes version required for this feature gate to be functional. Uses semantic versioning (e.g., '1.33.0'). If specified and the cluster version is below this threshold, the feature gate will be ignored.",
+                        "pattern": "^\\d+\\.\\d+\\.\\d+$"
+                    },
                     "name": {
                         "type": "string",
                         "title": "Name",
                         "description": "Name of the feature gate."
-                    },
-                    "minKubernetesVersion": {
-                        "type": "string",
-                        "title": "Minimum Kubernetes version",
-                        "description": "Minimum Kubernetes version required for this feature gate to be functional. Uses semantic versioning (e.g., '1.33.0'). If the cluster version is below this threshold, the feature gate will be ignored.",
-                        "pattern": "^\\d+\\.\\d+\\.\\d+$"
                     }
                 }
             }
@@ -2038,13 +2038,13 @@
                                             "default": [
                                                 {
                                                     "enabled": true,
-                                                    "name": "StatefulSetAutoDeletePVC",
-                                                    "minKubernetesVersion": "1.27.0"
+                                                    "minKubernetesVersion": "1.27.0",
+                                                    "name": "StatefulSetAutoDeletePVC"
                                                 },
                                                 {
                                                     "enabled": true,
-                                                    "name": "MutableCSINodeAllocatableCount",
-                                                    "minKubernetesVersion": "1.33.0"
+                                                    "minKubernetesVersion": "1.33.0",
+                                                    "name": "MutableCSINodeAllocatableCount"
                                                 }
                                             ]
                                         }
@@ -2060,8 +2060,8 @@
                                             "default": [
                                                 {
                                                     "enabled": true,
-                                                    "name": "StatefulSetAutoDeletePVC",
-                                                    "minKubernetesVersion": "1.27.0"
+                                                    "minKubernetesVersion": "1.27.0",
+                                                    "name": "StatefulSetAutoDeletePVC"
                                                 }
                                             ]
                                         },
@@ -2196,8 +2196,8 @@
                                     "default": [
                                         {
                                             "enabled": true,
-                                            "name": "MutableCSINodeAllocatableCount",
-                                            "minKubernetesVersion": "1.33.0"
+                                            "minKubernetesVersion": "1.33.0",
+                                            "name": "MutableCSINodeAllocatableCount"
                                         }
                                     ]
                                 },
