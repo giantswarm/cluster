@@ -27,6 +27,6 @@ extraVolumes:
 {{- define "cluster.internal.controlPlane.kubeadm.clusterConfiguration.controllerManager.featureGates" }}
 {{- $providerFeatureGates := $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.controllerManager.featureGates }}
 {{- $internalFeatureGates := $.Values.internal.advancedConfiguration.controlPlane.controllerManager.featureGates }}
-{{- $featureGates := dict "providerFeatureGates" $providerFeatureGates "internalFeatureGates" $internalFeatureGates }}
+{{- $featureGates := dict "providerFeatureGates" $providerFeatureGates "internalFeatureGates" $internalFeatureGates "root" $ }}
 {{- include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.featureGates" $featureGates }}
 {{- end }}

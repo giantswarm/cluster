@@ -146,6 +146,6 @@ api-audiences-example.giantswarm.io
 {{- define "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.featureGates" }}
 {{- $providerFeatureGates := $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.featureGates }}
 {{- $internalFeatureGates := $.Values.internal.advancedConfiguration.controlPlane.apiServer.featureGates }}
-{{- $featureGates := dict "providerFeatureGates" $providerFeatureGates "internalFeatureGates" $internalFeatureGates }}
+{{- $featureGates := dict "providerFeatureGates" $providerFeatureGates "internalFeatureGates" $internalFeatureGates "root" $ }}
 {{- include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.featureGates" $featureGates }}
 {{- end }}

@@ -1,0 +1,59 @@
+global:
+  managementCluster: giantmc
+  release:
+    version: v33.0.0
+  metadata:
+    name: awesome
+    organization: giantswarm
+  connectivity:
+    baseDomain: example.gigantic.io
+  nodePools:
+    def00:
+      minSize: 3
+      maxSize: 20
+providerIntegration:
+  environmentVariables:
+    hostName: COREOS_EC2_HOSTNAME
+    ipv4: COREOS_EC2_IPV4_LOCAL
+  provider: aws
+  kubernetesVersion: 1.33.0
+  resourcesApi:
+    bastionResourceEnabled: false
+    clusterResourceEnabled: true
+    controlPlaneResourceEnabled: true
+    infrastructureCluster:
+      group: infrastructure.cluster.x-k8s.io
+      kind: GiantCluster
+      version: v1beta1
+    machineHealthCheckResourceEnabled: true
+    machinePoolResourcesEnabled: true
+    nodePoolKind: MachinePool
+    infrastructureMachinePool:
+      group: infrastructure.cluster.x-k8s.io
+      version: v1beta1
+      kind: GiantMachinePool
+    helmRepositoryResourcesEnabled: true
+  controlPlane:
+    kubeadmConfig:
+      clusterConfiguration:
+        apiServer:
+          featureGates:
+          - name: TestFeatureAlwaysIncluded
+            enabled: true
+          - name: MutableCSINodeAllocatableCount
+            enabled: true
+            minKubernetesVersion: 1.33.0
+    resources:
+      infrastructureMachineTemplate:
+        group: infrastructure.cluster.x-k8s.io
+        kind: GiantMachineTemplate
+        version: v1beta1
+      infrastructureMachineTemplateSpecTemplateName: cluster.internal.test.controlPlane.machineTemplate.spec
+  workers:
+    defaultNodePools:
+      def00:
+        customNodeLabels:
+        - label=default
+        maxSize: 3
+        minSize: 3
+

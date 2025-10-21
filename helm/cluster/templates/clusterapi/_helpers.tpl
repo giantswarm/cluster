@@ -72,25 +72,39 @@
 
   Args:
     - featureGates: List of feature gate objects with name, enabled, and minKubernetesVersion
-    - currentVersion: Optional current cluster version (defaults to workload cluster version from Release)
+    - currentVersion: Current cluster version (must be provided)
+    - outputDict: Reference to output dictionary where results will be stored (key: "result")
 
-  Returns: List of feature gates that meet version requirements.
+  Returns: Nothing (modifies outputDict in place)
 */}}
 {{- define "cluster.internal.filterFeatureGatesByVersion" }}
-{{- $currentVersion := .currentVersion | default (include "cluster.component.kubernetes.version" $) }}
+{{- $currentVersion := .currentVersion }}
 {{- $filteredFeatureGates := list }}
 {{- range .featureGates }}
-{{- if not .minKubernetesVersion or semverCompare (printf ">=%s" .minKubernetesVersion) $currentVersion }}
+{{- if or (not .minKubernetesVersion) (semverCompare (printf ">=%s" .minKubernetesVersion) $currentVersion) }}
 {{- $filteredFeatureGates = append $filteredFeatureGates . }}
 {{- end }}
 {{- end }}
-{{- $filteredFeatureGates | toYaml }}
+{{- $_ := set .outputDict "result" $filteredFeatureGates }}
 {{- end }}
 
 {{- define "cluster.internal.kubeadm.featureGates" }}
 {{- $providerFeatureGates := $.Values.providerIntegration.kubeadmConfig.featureGates | default list }}
 {{- $internalFeatureGates := $.Values.internal.advancedConfiguration.kubelet.featureGates | default list }}
-{{- $filteredFeatureGates := concat $providerFeatureGates $internalFeatureGates }}
+{{- $allFeatureGates := concat $providerFeatureGates $internalFeatureGates }}
+{{- /* Get kubernetes version directly without relying on Chart context */}}
+{{- $_ := include "cluster.internal.get-provider-integration-values" $ }}
+{{- $kubernetesVersion := "" }}
+{{- if $.GiantSwarm.providerIntegration.useReleases }}
+{{- $_ := set $ "componentName" "kubernetes" }}
+{{- $kubernetesVersion = include "cluster.component.version" $ | trimPrefix "v" }}
+{{- else if $.GiantSwarm.providerIntegration.kubernetesVersion }}
+{{- $kubernetesVersion = $.GiantSwarm.providerIntegration.kubernetesVersion | trimPrefix "v" }}
+{{- end }}
+{{- /* Use outputDict pattern to avoid YAML serialization issues */}}
+{{- $outputDict := dict }}
+{{- $_ = include "cluster.internal.filterFeatureGatesByVersion" (dict "featureGates" $allFeatureGates "currentVersion" $kubernetesVersion "outputDict" $outputDict) }}
+{{- $filteredFeatureGates := $outputDict.result | default list }}
 {{- $mergedFeatureGates := dict }}
 {{- range $filteredFeatureGates }}
 {{- $_ := set $mergedFeatureGates (trim .name) .enabled }}

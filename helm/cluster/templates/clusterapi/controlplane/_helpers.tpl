@@ -10,12 +10,26 @@ template:
 {{/*
   A helper function to merge and join feature gates from internal configuration and provider integration as a comma separated string.
 
-  Expects a dictionary with the keys `providerFeatureGates` and `internalFeatureGates`.
+  Expects a dictionary with the keys `providerFeatureGates`, `internalFeatureGates`, and `root`.
 */}}
 {{- define "cluster.internal.controlPlane.kubeadm.clusterConfiguration.featureGates" }}
 {{- $providerFeatureGates := .providerFeatureGates | default list }}
 {{- $internalFeatureGates := .internalFeatureGates | default list }}
-{{- $filteredFeatureGates := concat $providerFeatureGates $internalFeatureGates }}
+{{- $allFeatureGates := concat $providerFeatureGates $internalFeatureGates }}
+{{- $root := .root }}
+{{- /* Get kubernetes version directly without relying on Chart context */}}
+{{- $_ := include "cluster.internal.get-provider-integration-values" $root }}
+{{- $kubernetesVersion := "" }}
+{{- if $root.GiantSwarm.providerIntegration.useReleases }}
+{{- $_ := set $root "componentName" "kubernetes" }}
+{{- $kubernetesVersion = include "cluster.component.version" $root | trimPrefix "v" }}
+{{- else if $root.GiantSwarm.providerIntegration.kubernetesVersion }}
+{{- $kubernetesVersion = $root.GiantSwarm.providerIntegration.kubernetesVersion | trimPrefix "v" }}
+{{- end }}
+{{- /* Use outputDict pattern to avoid YAML serialization issues */}}
+{{- $outputDict := dict }}
+{{- $_ = include "cluster.internal.filterFeatureGatesByVersion" (dict "featureGates" $allFeatureGates "currentVersion" $kubernetesVersion "outputDict" $outputDict) }}
+{{- $filteredFeatureGates := $outputDict.result | default list }}
 {{- $mergedFeatureGates := dict }}
 {{- range $filteredFeatureGates }}
 {{- $_ := set $mergedFeatureGates (trim .name) .enabled }}
