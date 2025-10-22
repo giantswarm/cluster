@@ -14,8 +14,10 @@ evictionMaxPodGracePeriod: 60
 {{- $kubernetesVersion := include "cluster.component.kubernetes.version" $ }}
 {{- $providerFeatureGates := $.Values.providerIntegration.kubeadmConfig.featureGates }}
 {{- $internalFeatureGates := $.Values.internal.advancedConfiguration.kubelet.featureGates }}
-{{- if (include "cluster.internal.kubeadm.featureGates" (dict "providerFeatureGates" $providerFeatureGates "internalFeatureGates" $internalFeatureGates "kubernetesVersion" $kubernetesVersion) | fromYaml) }}
-featureGates: {{- include "cluster.internal.kubeadm.featureGates" (dict "providerFeatureGates" $providerFeatureGates "internalFeatureGates" $internalFeatureGates "kubernetesVersion" $kubernetesVersion) | nindent 2 }}
+{{- $_ := include "cluster.internal.get-internal-values" $ }}
+{{- $renderWithoutRelease := ((($.GiantSwarm.internal).ephemeralConfiguration).offlineTesting).renderWithoutReleaseResource | default false }}
+{{- if (include "cluster.internal.kubeadm.featureGates" (dict "providerFeatureGates" $providerFeatureGates "internalFeatureGates" $internalFeatureGates "kubernetesVersion" $kubernetesVersion "renderWithoutReleaseResource" $renderWithoutRelease) | fromYaml) }}
+featureGates: {{- include "cluster.internal.kubeadm.featureGates" (dict "providerFeatureGates" $providerFeatureGates "internalFeatureGates" $internalFeatureGates "kubernetesVersion" $kubernetesVersion "renderWithoutReleaseResource" $renderWithoutRelease) | nindent 2 }}
 {{- end }}
 kubeReserved:
   cpu: {{ $.Values.internal.advancedConfiguration.kubelet.kubeReserved.cpu }}

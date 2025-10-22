@@ -14,6 +14,7 @@ template:
     - providerFeatureGates: List of provider feature gates
     - internalFeatureGates: List of internal feature gates
     - kubernetesVersion: Current Kubernetes version to filter against
+    - renderWithoutReleaseResource: If true, skip version filtering (for offline testing)
 
   Returns: Comma-separated string of feature gates (e.g., "Feature1=true,Feature2=false")
 */}}
@@ -21,11 +22,15 @@ template:
 {{- $providerFeatureGates := .providerFeatureGates | default list }}
 {{- $internalFeatureGates := .internalFeatureGates | default list }}
 {{- $kubernetesVersion := .kubernetesVersion }}
+{{- $renderWithoutRelease := .renderWithoutReleaseResource | default false }}
 {{- $allFeatureGates := concat $providerFeatureGates $internalFeatureGates }}
 {{- /* Filter feature gates by version */}}
 {{- $filteredFeatureGates := list }}
 {{- range $allFeatureGates }}
-{{- if not .minKubernetesVersion }}
+{{- if $renderWithoutRelease }}
+{{- /* In offline testing mode, include all feature gates without version filtering */}}
+{{- $filteredFeatureGates = append $filteredFeatureGates . }}
+{{- else if not .minKubernetesVersion }}
 {{- /* No version requirement, always include */}}
 {{- $filteredFeatureGates = append $filteredFeatureGates . }}
 {{- else if and $kubernetesVersion (ne $kubernetesVersion "") (semverCompare (printf ">=%s" .minKubernetesVersion) $kubernetesVersion) }}

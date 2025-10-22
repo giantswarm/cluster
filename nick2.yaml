@@ -1,0 +1,61 @@
+---
+apiVersion: v1
+data:
+  values: |
+    global:
+      connectivity:
+        availabilityZoneUsageLimit: 3
+        network: {}
+        topology: {}
+      controlPlane: {}
+      metadata:
+        name: nick2
+        organization: giantswarm
+        preventDeletion: false
+      nodePools:
+        nodepool0:
+          instanceType: m5.xlarge
+          maxSize: 10
+          minSize: 3
+          rootVolumeSizeGB: 8
+      providerSpecific: {}
+      release:
+        version: 33.0.0-nick
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  labels:
+    giantswarm.io/cluster: nick2
+  name: nick2-userconfig
+  namespace: org-giantswarm
+---
+apiVersion: application.giantswarm.io/v1alpha1
+kind: App
+metadata:
+  labels:
+    app-operator.giantswarm.io/version: 0.0.0
+  name: nick2
+  namespace: org-giantswarm
+spec:
+  catalog: cluster
+  config:
+    configMap:
+      name: ""
+      namespace: ""
+    secret:
+      name: ""
+      namespace: ""
+  kubeConfig:
+    context:
+      name: ""
+    inCluster: true
+    secret:
+      name: ""
+      namespace: ""
+  name: cluster-aws
+  namespace: org-giantswarm
+  userConfig:
+    configMap:
+      name: nick2-userconfig
+      namespace: org-giantswarm
+  version: ""

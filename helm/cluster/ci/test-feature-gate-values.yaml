@@ -17,9 +17,8 @@ providerIntegration:
     ipv4: COREOS_EC2_IPV4_LOCAL
   provider: aws
   kubernetesVersion: 1.33.0
-  useReleases: false
   resourcesApi:
-    bastionResourceEnabled: false
+    bastionResourceEnabled: true
     clusterResourceEnabled: true
     controlPlaneResourceEnabled: true
     infrastructureCluster:

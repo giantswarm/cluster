@@ -147,5 +147,7 @@ api-audiences-example.giantswarm.io
 {{- $kubernetesVersion := include "cluster.component.kubernetes.version" $ }}
 {{- $providerFeatureGates := $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.featureGates }}
 {{- $internalFeatureGates := $.Values.internal.advancedConfiguration.controlPlane.apiServer.featureGates }}
-{{- include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.featureGates" (dict "providerFeatureGates" $providerFeatureGates "internalFeatureGates" $internalFeatureGates "kubernetesVersion" $kubernetesVersion) }}
+{{- $_ := include "cluster.internal.get-internal-values" $ }}
+{{- $renderWithoutRelease := ((($.GiantSwarm.internal).ephemeralConfiguration).offlineTesting).renderWithoutReleaseResource | default false }}
+{{- include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.featureGates" (dict "providerFeatureGates" $providerFeatureGates "internalFeatureGates" $internalFeatureGates "kubernetesVersion" $kubernetesVersion "renderWithoutReleaseResource" $renderWithoutRelease) }}
 {{- end }}
