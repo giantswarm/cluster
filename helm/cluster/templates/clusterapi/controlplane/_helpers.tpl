@@ -28,7 +28,7 @@ template:
 {{- if not .minKubernetesVersion }}
 {{- /* No version requirement, always include */}}
 {{- $filteredFeatureGates = append $filteredFeatureGates . }}
-{{- else if and $kubernetesVersion (semverCompare (printf ">=%s" .minKubernetesVersion) $kubernetesVersion) }}
+{{- else if and $kubernetesVersion (ne $kubernetesVersion "") (semverCompare (printf ">=%s" .minKubernetesVersion) $kubernetesVersion) }}
 {{- /* Version requirement met */}}
 {{- $filteredFeatureGates = append $filteredFeatureGates . }}
 {{- end }}
