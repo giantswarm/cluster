@@ -18,7 +18,7 @@ providerIntegration:
   provider: aws
   kubernetesVersion: 1.33.0
   resourcesApi:
-    bastionResourceEnabled: true
+    bastionResourceEnabled: false
     clusterResourceEnabled: true
     controlPlaneResourceEnabled: true
     infrastructureCluster:
