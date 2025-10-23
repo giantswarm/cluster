@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Enable `MutableCSINodeAllocatableCount` feature gate on all v1.33+ clusters by default.
+- Add `minKubernetesVersion` field to feature gate definitions for better version control.
+
+### Changed
+
+- **Breaking**: The `MutableCSINodeAllocatableCount` feature gate is not recommended for use with Kubernetes v1.33+ clusters as it may cause compatibility issues.
+
 ## [4.2.0] - 2025-10-14
 
 ### Added
