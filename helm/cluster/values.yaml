@@ -20,6 +20,7 @@ global:
     netExporter: {}
     networkPolicies: {}
     nodeExporter: {}
+    nodeProblemDetector: {}
     observabilityBundle: {}
     observabilityPolicies: {}
     prometheusBlackboxExporter: {}
@@ -70,6 +71,9 @@ global:
     apiServerPort: 6443
     customNodeTaints: []
     machineHealthCheck:
+      diskFullContainerdTimeout: ""
+      diskFullKubeletTimeout: ""
+      diskFullVarLogTimeout: ""
       enabled: true
       maxUnhealthy: 40%
       nodeStartupTimeout: 8m0s
@@ -167,6 +171,8 @@ providerIntegration:
     networkPolicies:
       enable: false
     nodeExporter:
+      enable: false
+    nodeProblemDetector:
       enable: false
     observabilityBundle:
       enable: false
