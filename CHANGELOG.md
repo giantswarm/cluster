@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [4.3.0] - 2025-10-23
+
 ### Added
 
 - Enable `MutableCSINodeAllocatableCount` feature gate on all v1.33+ clusters by default.
@@ -832,7 +834,8 @@ For Kubernetes <v1.29, you will need to re-enable it using the respective values
 
 - Update and clean up the template repo.
 
-[Unreleased]: https://github.com/giantswarm/cluster/compare/v4.2.0...HEAD
+[Unreleased]: https://github.com/giantswarm/cluster/compare/v4.3.0...HEAD
+[4.3.0]: https://github.com/giantswarm/cluster/compare/v4.2.0...v4.3.0
 [4.2.0]: https://github.com/giantswarm/cluster/compare/v4.1.0...v4.2.0
 [4.1.0]: https://github.com/giantswarm/cluster/compare/v4.0.3...v4.1.0
 [4.0.3]: https://github.com/giantswarm/cluster/compare/v4.0.2...v4.0.3
