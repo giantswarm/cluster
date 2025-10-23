@@ -165,7 +165,7 @@
             "items": {
                 "type": "object",
                 "title": "Feature gate",
-                "description": "A feature gate to enable or disable.",
+                "description": "A feature gate to enable or disable. Can optionally specify minimum Kubernetes version requirements.",
                 "required": [
                     "name",
                     "enabled"
@@ -176,6 +176,12 @@
                         "type": "boolean",
                         "title": "Enabled",
                         "description": "Whether to enable or disable the feature gate."
+                    },
+                    "minKubernetesVersion": {
+                        "type": "string",
+                        "title": "Minimum Kubernetes version",
+                        "description": "Optional minimum Kubernetes version required for this feature gate to be functional. Uses semantic versioning (e.g., '1.33.0'). If specified and the cluster version is below this threshold, the feature gate will be ignored.",
+                        "pattern": "^\\d+\\.\\d+\\.\\d+$"
                     },
                     "name": {
                         "type": "string",
@@ -2032,7 +2038,13 @@
                                             "default": [
                                                 {
                                                     "enabled": true,
+                                                    "minKubernetesVersion": "1.27.0",
                                                     "name": "StatefulSetAutoDeletePVC"
+                                                },
+                                                {
+                                                    "enabled": true,
+                                                    "minKubernetesVersion": "1.33.0",
+                                                    "name": "MutableCSINodeAllocatableCount"
                                                 }
                                             ]
                                         }
@@ -2048,6 +2060,7 @@
                                             "default": [
                                                 {
                                                     "enabled": true,
+                                                    "minKubernetesVersion": "1.27.0",
                                                     "name": "StatefulSetAutoDeletePVC"
                                                 }
                                             ]
@@ -2179,7 +2192,14 @@
                                     "default": ""
                                 },
                                 "featureGates": {
-                                    "$ref": "#/$defs/featureGates"
+                                    "$ref": "#/$defs/featureGates",
+                                    "default": [
+                                        {
+                                            "enabled": true,
+                                            "minKubernetesVersion": "1.33.0",
+                                            "name": "MutableCSINodeAllocatableCount"
+                                        }
+                                    ]
                                 },
                                 "insecure": {
                                     "type": "boolean",

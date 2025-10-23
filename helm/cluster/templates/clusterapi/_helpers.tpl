@@ -67,11 +67,41 @@
 {{- join "," (compact $noProxyList) | trim }}
 {{- end }}
 
+{{/*
+  A helper function to merge feature gates from provider integration and internal configuration,
+  filtering them by Kubernetes version.
+
+  Expects a dictionary with the keys:
+    - providerFeatureGates: List of provider feature gates
+    - internalFeatureGates: List of internal feature gates
+    - kubernetesVersion: Current Kubernetes version to filter against
+    - renderWithoutReleaseResource: If true, skip version filtering (for offline testing)
+
+  Returns: YAML map of feature gates (name: enabled)
+*/}}
 {{- define "cluster.internal.kubeadm.featureGates" }}
-{{- $providerFeatureGates := $.Values.providerIntegration.kubeadmConfig.featureGates | default list }}
-{{- $internalFeatureGates := $.Values.internal.advancedConfiguration.kubelet.featureGates | default list }}
+{{- $providerFeatureGates := .providerFeatureGates | default list }}
+{{- $internalFeatureGates := .internalFeatureGates | default list }}
+{{- $kubernetesVersion := .kubernetesVersion }}
+{{- $renderWithoutRelease := .renderWithoutReleaseResource | default false }}
+{{- $allFeatureGates := concat $providerFeatureGates $internalFeatureGates }}
+{{- /* Filter feature gates by version */}}
+{{- $filteredFeatureGates := list }}
+{{- range $allFeatureGates }}
+{{- if $renderWithoutRelease }}
+{{- /* In offline testing mode, include all feature gates without version filtering */}}
+{{- $filteredFeatureGates = append $filteredFeatureGates . }}
+{{- else if not .minKubernetesVersion }}
+{{- /* No version requirement, always include */}}
+{{- $filteredFeatureGates = append $filteredFeatureGates . }}
+{{- else if and $kubernetesVersion (ne $kubernetesVersion "") (semverCompare (printf ">=%s" .minKubernetesVersion) $kubernetesVersion) }}
+{{- /* Version requirement met */}}
+{{- $filteredFeatureGates = append $filteredFeatureGates . }}
+{{- end }}
+{{- end }}
+{{- /* Merge feature gates (later entries override earlier ones) */}}
 {{- $mergedFeatureGates := dict }}
-{{- range (concat $providerFeatureGates $internalFeatureGates) }}
+{{- range $filteredFeatureGates }}
 {{- $_ := set $mergedFeatureGates (trim .name) .enabled }}
 {{- end }}
 {{- $mergedFeatureGates | toYaml }}

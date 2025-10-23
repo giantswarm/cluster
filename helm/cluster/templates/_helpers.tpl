@@ -170,11 +170,14 @@ Where `data` is the data to hash and `global` is the top level scope.
 {{- define "cluster.internal.get-provider-integration-values" }}
 {{- $providerIntegration := dict }}
 {{- /* Case 1: template is called from the cluster chart itself */}}
-{{- if and (eq $.Chart.Name "cluster") $.Values.providerIntegration }}
+{{- if and $.Chart (eq $.Chart.Name "cluster") $.Values.providerIntegration }}
   {{- $providerIntegration = $.Values.providerIntegration }}
 {{- /* Case 2: template is called from a parent chart that passes Helm values to cluster chart in .Values.cluster */}}
 {{- else if ($.Values.cluster).providerIntegration }}
   {{- $providerIntegration = $.Values.cluster.providerIntegration }}
+{{- /* Case 3: template is called from tpl context where Chart is not available, use direct access */}}
+{{- else if $.Values.providerIntegration }}
+  {{- $providerIntegration = $.Values.providerIntegration }}
 {{- end }}
 {{- /* Create $.GiantSwarm object where we put custom Giant Swarm vars */}}
 {{- if not $.GiantSwarm }}

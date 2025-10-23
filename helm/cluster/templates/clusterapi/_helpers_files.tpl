@@ -50,6 +50,7 @@
 {{- end }}
 
 {{- define "cluster.internal.kubeadm.files.kubelet" }}
+{{- $_ := include "cluster.internal.get-internal-values" $ }}
 - path: /etc/kubernetes/patches/kubeletconfiguration.yaml
   permissions: "0644"
   encoding: base64

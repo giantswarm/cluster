@@ -10,15 +10,40 @@ template:
 {{/*
   A helper function to merge and join feature gates from internal configuration and provider integration as a comma separated string.
 
-  Expects a dictionary with the keys `providerFeatureGates` and `internalFeatureGates`.
+  Expects a dictionary with the keys:
+    - providerFeatureGates: List of provider feature gates
+    - internalFeatureGates: List of internal feature gates
+    - kubernetesVersion: Current Kubernetes version to filter against
+    - renderWithoutReleaseResource: If true, skip version filtering (for offline testing)
+
+  Returns: Comma-separated string of feature gates (e.g., "Feature1=true,Feature2=false")
 */}}
 {{- define "cluster.internal.controlPlane.kubeadm.clusterConfiguration.featureGates" }}
 {{- $providerFeatureGates := .providerFeatureGates | default list }}
 {{- $internalFeatureGates := .internalFeatureGates | default list }}
+{{- $kubernetesVersion := .kubernetesVersion }}
+{{- $renderWithoutRelease := .renderWithoutReleaseResource | default false }}
+{{- $allFeatureGates := concat $providerFeatureGates $internalFeatureGates }}
+{{- /* Filter feature gates by version */}}
+{{- $filteredFeatureGates := list }}
+{{- range $allFeatureGates }}
+{{- if $renderWithoutRelease }}
+{{- /* In offline testing mode, include all feature gates without version filtering */}}
+{{- $filteredFeatureGates = append $filteredFeatureGates . }}
+{{- else if not .minKubernetesVersion }}
+{{- /* No version requirement, always include */}}
+{{- $filteredFeatureGates = append $filteredFeatureGates . }}
+{{- else if and $kubernetesVersion (ne $kubernetesVersion "") (semverCompare (printf ">=%s" .minKubernetesVersion) $kubernetesVersion) }}
+{{- /* Version requirement met */}}
+{{- $filteredFeatureGates = append $filteredFeatureGates . }}
+{{- end }}
+{{- end }}
+{{- /* Merge feature gates (later entries override earlier ones) */}}
 {{- $mergedFeatureGates := dict }}
-{{- range (concat $providerFeatureGates $internalFeatureGates) }}
+{{- range $filteredFeatureGates }}
 {{- $_ := set $mergedFeatureGates (trim .name) .enabled }}
 {{- end }}
+{{- /* Format as comma-separated key=value string */}}
 {{- $featureGates := list }}
 {{- range $name, $enabled := $mergedFeatureGates }}
 {{- $featureGates = append $featureGates (printf "%s=%t" $name $enabled) }}

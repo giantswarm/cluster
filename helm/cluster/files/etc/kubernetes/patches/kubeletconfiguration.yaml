@@ -11,8 +11,12 @@ evictionHard:
 evictionSoftGracePeriod:
   memory.available: "5s"
 evictionMaxPodGracePeriod: 60
-{{- if (include "cluster.internal.kubeadm.featureGates" $ | fromYaml) }}
-featureGates: {{- include "cluster.internal.kubeadm.featureGates" $ | nindent 2 }}
+{{- $kubernetesVersion := include "cluster.component.kubernetes.version" $ }}
+{{- $providerFeatureGates := $.Values.providerIntegration.kubeadmConfig.featureGates }}
+{{- $internalFeatureGates := $.Values.internal.advancedConfiguration.kubelet.featureGates }}
+{{- $renderWithoutRelease := ((($.GiantSwarm.internal).ephemeralConfiguration).offlineTesting).renderWithoutReleaseResource | default false }}
+{{- if (include "cluster.internal.kubeadm.featureGates" (dict "providerFeatureGates" $providerFeatureGates "internalFeatureGates" $internalFeatureGates "kubernetesVersion" $kubernetesVersion "renderWithoutReleaseResource" $renderWithoutRelease) | fromYaml) }}
+featureGates: {{- include "cluster.internal.kubeadm.featureGates" (dict "providerFeatureGates" $providerFeatureGates "internalFeatureGates" $internalFeatureGates "kubernetesVersion" $kubernetesVersion "renderWithoutReleaseResource" $renderWithoutRelease) | nindent 2 }}
 {{- end }}
 kubeReserved:
   cpu: {{ $.Values.internal.advancedConfiguration.kubelet.kubeReserved.cpu }}
