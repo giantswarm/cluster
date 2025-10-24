@@ -19,4 +19,12 @@ rules:
   - list
   - get
   - patch
+- apiGroups:
+  - source.toolkit.fluxcd.io
+  resources:
+  - helmcharts
+  verbs:
+  - list
+  - get
+  - delete
 {{- end }}

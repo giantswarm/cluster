@@ -71,6 +71,16 @@ spec:
           then
             # Patch releases.
             kubectl patch --namespace "${NAMESPACE}" ${releases} --type merge --patch '{ "spec": { "suspend": true } }'
+
+            # Get and delete associated HelmChart CRs
+            charts="$(kubectl get helmcharts.source.toolkit.fluxcd.io --namespace "${NAMESPACE}" --selector giantswarm.io/cluster="${CLUSTER}" --output name)"
+            if [ -n "${charts}" ]
+            then
+              echo "Deleting HelmChart CRs: ${charts}"
+              kubectl delete --namespace "${NAMESPACE}" ${charts}
+            else
+              echo "No HelmChart CRs to delete found."
+            fi
           else
             # Print info.
             echo "No releases to patch found."
