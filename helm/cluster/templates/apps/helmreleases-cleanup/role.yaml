@@ -23,8 +23,10 @@ rules:
   - source.toolkit.fluxcd.io
   resources:
   - helmcharts
+  - helmcharts/finalizers
   verbs:
   - list
   - get
+  - patch
   - delete
 {{- end }}

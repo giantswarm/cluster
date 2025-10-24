@@ -73,11 +73,20 @@ spec:
             kubectl patch --namespace "${NAMESPACE}" ${releases} --type merge --patch '{ "spec": { "suspend": true } }'
 
             # Get and delete associated HelmChart CRs
-            charts="$(kubectl get helmcharts.source.toolkit.fluxcd.io --namespace "${NAMESPACE}" --selector giantswarm.io/cluster="${CLUSTER}" --output name)"
+            # HelmChart CRs don't have the giantswarm.io/cluster label, so we need to find them by name pattern
+            # Look in all namespaces since HelmChart CRs might be created in different namespaces
+            charts="$(kubectl get helmcharts.source.toolkit.fluxcd.io --all-namespaces --output name | grep "^helmchart.source.toolkit.fluxcd.io/${CLUSTER}-")"
             if [ -n "${charts}" ]
             then
               echo "Deleting HelmChart CRs: ${charts}"
-              kubectl delete --namespace "${NAMESPACE}" ${charts}
+              # Remove finalizers and delete HelmChart CRs
+              for chart in ${charts}; do
+                # Extract namespace from the chart name (format: helmchart.source.toolkit.fluxcd.io/name)
+                chart_name=$(echo ${chart} | cut -d'/' -f2)
+                chart_namespace=$(kubectl get helmchart.source.toolkit.fluxcd.io ${chart_name} --all-namespaces --output jsonpath='{.metadata.namespace}')
+                kubectl patch --namespace "${chart_namespace}" ${chart} --type json --patch '[{"op": "remove", "path": "/metadata/finalizers"}]'
+                kubectl delete --namespace "${chart_namespace}" ${chart}
+              done
             else
               echo "No HelmChart CRs to delete found."
             fi
