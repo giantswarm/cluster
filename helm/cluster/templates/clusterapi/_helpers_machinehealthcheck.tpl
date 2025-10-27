@@ -1,5 +1,11 @@
 {{- define "cluster.internal.machinehealthcheck.commonspec" -}}
+{{- if eq .machineType "controlPlane" }}
 maxUnhealthy: {{ .maxUnhealthy | default "40%" | quote }}
+{{- else if eq .machineType "workers" }}
+maxUnhealthy: {{ .maxUnhealthy | default "20%" | quote }}
+{{- else }}
+  {{- fail "Invalid/missing machineType" }}
+{{- end }}
 nodeStartupTimeout: {{ .nodeStartupTimeout | default "8m0s" | quote }}
 unhealthyConditions:
   - type: Ready

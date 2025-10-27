@@ -19,7 +19,9 @@ spec:
     matchLabels:
       cluster.x-k8s.io/cluster-name: {{ include "cluster.resource.name" $ }}
       cluster.x-k8s.io/control-plane: ""
-  {{- include "cluster.internal.machinehealthcheck.commonspec" $.Values.global.controlPlane.machineHealthCheck | nindent 2 }}
+  {{- $machineHealthCheck := dict "machineType" "controlPlane" }}
+  {{- $_ := mergeOverwrite $machineHealthCheck $.Values.global.controlPlane.machineHealthCheck }}
+  {{- include "cluster.internal.machinehealthcheck.commonspec" $machineHealthCheck | nindent 2 }}
 {{- end }}
 {{- end }}
 {{- end }}
