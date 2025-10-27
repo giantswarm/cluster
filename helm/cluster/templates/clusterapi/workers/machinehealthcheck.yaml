@@ -1,8 +1,9 @@
 {{- if $.Values.providerIntegration.resourcesApi.machinePoolResourcesEnabled }}
 {{- if $.Values.providerIntegration.resourcesApi.machineHealthCheckResourceEnabled }}
-{{- if eq $.Values.providerIntegration.resourcesApi.nodePoolKind "MachineDeployment" }}
 {{- range $nodePoolName, $nodePoolConfig := $.Values.global.nodePools | default $.Values.providerIntegration.workers.defaultNodePools }}
-{{- if and $nodePoolConfig.machineHealthCheck ($nodePoolConfig.machineHealthCheck.enabled | default false) }}
+{{- if $nodePoolConfig.machineHealthCheck }}
+{{- if required "machineHealthCheck enabled property is required" $nodePoolConfig.machineHealthCheck.enabled }}
+{{- if eq $.Values.providerIntegration.resourcesApi.nodePoolKind "MachineDeployment" }}
 {{- $_ := set $ "nodePool" (dict "name" $nodePoolName "config" $nodePoolConfig) }}
 apiVersion: cluster.x-k8s.io/v1beta1
 kind: MachineHealthCheck
@@ -24,19 +25,38 @@ metadata:
   namespace: {{ $.Release.Namespace }}
 spec:
   clusterName: {{ include "cluster.resource.name" $ }}
-  maxUnhealthy: {{ $nodePoolConfig.machineHealthCheck.maxUnhealthy }}
-  nodeStartupTimeout: {{ $nodePoolConfig.machineHealthCheck.nodeStartupTimeout }}
   selector:
     matchLabels:
       cluster.x-k8s.io/cluster-name: {{ include "cluster.resource.name" $ }}
       cluster.x-k8s.io/deployment-name: {{ include "cluster.resource.name" $ }}-{{ $nodePoolName }}
-  unhealthyConditions:
-  - type: Ready
-    status: Unknown
-    timeout: {{ $nodePoolConfig.machineHealthCheck.unhealthyUnknownTimeout }}
-  - type: Ready
-    status: "False"
-    timeout: {{ $nodePoolConfig.machineHealthCheck.unhealthyNotReadyTimeout }}
+  {{- include "cluster.internal.machinehealthcheck.commonspec" $nodePoolConfig.machineHealthCheck | nindent 4 }}
+{{- else if eq $.Values.providerIntegration.resourcesApi.nodePoolKind "MachinePool" }}
+apiVersion: cluster.x-k8s.io/v1beta1
+kind: MachineHealthCheck
+metadata:
+  {{- $annotations := include "cluster.annotations.custom" $ }}
+  {{- if $annotations }}
+  annotations:
+    {{- $annotations | indent 4 }}
+  {{- end }}
+  labels:
+    giantswarm.io/machine-pool: {{ include "cluster.resource.name" $ }}-{{ $nodePoolName }}
+    {{- include "cluster.labels.common" $ | nindent 4 }}
+    {{- if $nodePoolConfig.labels }}
+    {{- range $key, $val := $nodePoolConfig.labels }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
+    {{- end }}
+  name: {{ include "cluster.resource.name" $ }}-{{ $nodePoolName }}
+  namespace: {{ $.Release.Namespace }}
+spec:
+  clusterName: {{ include "cluster.resource.name" $ }}
+  selector:
+    matchLabels:
+      cluster.x-k8s.io/cluster-name: {{ include "cluster.resource.name" $ }}
+      cluster.x-k8s.io/pool-name: {{ include "cluster.resource.name" $ }}-{{ $nodePoolName }}
+  {{- include "cluster.internal.machinehealthcheck.commonspec" $nodePoolConfig.machineHealthCheck | nindent 2 }}
+{{- end }}
 {{- end }}
 {{- end }}
 {{- end }}
