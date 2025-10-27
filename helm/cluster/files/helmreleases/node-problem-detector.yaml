@@ -1,6 +1,6 @@
 appName: node-problem-detector
 configKey: nodeProblemDetector
-catalog: cluster
+catalog: default
 namespace: kube-system
 # used by renovate
 # repo: giantswarm/node-problem-detector-app
