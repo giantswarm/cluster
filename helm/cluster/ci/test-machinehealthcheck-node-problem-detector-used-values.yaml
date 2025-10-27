@@ -7,6 +7,12 @@ global:
     organization: giantswarm
   connectivity:
     baseDomain: example.gigantic.io
+  controlPlane:
+    machineHealthCheck:
+      enabled: true
+
+      # node-problem-detector-app specific
+      diskFullContainerdTimeout: 30m0s
   nodePools:
     verybignodepool-1234:
       replicas: 100
@@ -14,7 +20,6 @@ global:
     def00:
       machineHealthCheck:
         enabled: true
-        maxUnhealthy: 40%
         nodeStartupTimeout: 8m0s
         unhealthyNotReadyTimeout: 10m0s
         unhealthyUnknownTimeout: 10m0s

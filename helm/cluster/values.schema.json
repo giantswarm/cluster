@@ -782,10 +782,10 @@
                 "maxUnhealthy": {
                     "type": "string",
                     "title": "Maximum unhealthy nodes",
+                    "description": "Defaults to 40% for control plane nodes and 20% for worker nodes.",
                     "examples": [
                         "40%"
-                    ],
-                    "default": "40%"
+                    ]
                 },
                 "nodeStartupTimeout": {
                     "type": "string",

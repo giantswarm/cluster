@@ -29,7 +29,9 @@ spec:
     matchLabels:
       cluster.x-k8s.io/cluster-name: {{ include "cluster.resource.name" $ }}
       cluster.x-k8s.io/deployment-name: {{ include "cluster.resource.name" $ }}-{{ $nodePoolName }}
-  {{- include "cluster.internal.machinehealthcheck.commonspec" $nodePoolConfig.machineHealthCheck | nindent 4 }}
+  {{- $machineHealthCheck := dict "machineType" "workers" }}
+  {{- $_ := mergeOverwrite $machineHealthCheck $nodePoolConfig.machineHealthCheck }}
+  {{- include "cluster.internal.machinehealthcheck.commonspec" $machineHealthCheck | nindent 4 }}
 {{- else if eq $.Values.providerIntegration.resourcesApi.nodePoolKind "MachinePool" }}
 apiVersion: cluster.x-k8s.io/v1beta1
 kind: MachineHealthCheck
@@ -55,7 +57,9 @@ spec:
     matchLabels:
       cluster.x-k8s.io/cluster-name: {{ include "cluster.resource.name" $ }}
       cluster.x-k8s.io/pool-name: {{ include "cluster.resource.name" $ }}-{{ $nodePoolName }}
-  {{- include "cluster.internal.machinehealthcheck.commonspec" $nodePoolConfig.machineHealthCheck | nindent 2 }}
+  {{- $machineHealthCheck := dict "machineType" "workers" }}
+  {{- $_ := mergeOverwrite $machineHealthCheck $nodePoolConfig.machineHealthCheck }}
+  {{- include "cluster.internal.machinehealthcheck.commonspec" $machineHealthCheck | nindent 2 }}
 {{- end }}
 {{- end }}
 {{- end }}
