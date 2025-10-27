@@ -15,8 +15,6 @@ metadata:
   namespace: {{ $.Release.Namespace }}
 spec:
   clusterName: {{ include "cluster.resource.name" $ }}
-  maxUnhealthy: {{ $.Values.global.controlPlane.machineHealthCheck.maxUnhealthy }}
-  nodeStartupTimeout: {{ $.Values.global.controlPlane.machineHealthCheck.nodeStartupTimeout }}
   selector:
     matchLabels:
       cluster.x-k8s.io/cluster-name: {{ include "cluster.resource.name" $ }}

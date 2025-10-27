@@ -12,4 +12,4 @@ version: 0.5.2
 dependsOn: []
 
 interval: 1m
-disable: {{ include "cluster.internal.machinehealthcheck.uses-node-problem-detector" $ | eq "true" | ternary false true }}
+disable: {{ include "cluster.internal.machinehealthcheck.use-node-problem-detector" $ | eq "true" | ternary false true }}

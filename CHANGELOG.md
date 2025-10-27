@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Add `MachineHealthCheck` for machine pool worker nodes (requires "machine pool machines" feature in the CAPI infrastructure provider). This can be turned on per node pool (default off).
-- Conditionally add node-problem-detector-app if specific conditions are enabled in a node pool's machine health check properties
+- Conditionally add node-problem-detector-app if specific conditions are enabled in a node pool's machine health check properties.
 
 ## [4.3.0] - 2025-10-23
 

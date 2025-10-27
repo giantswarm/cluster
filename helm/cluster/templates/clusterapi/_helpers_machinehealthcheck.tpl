@@ -27,7 +27,7 @@ unhealthyConditions:
   {{- end }}
 {{- end -}}
 
-{{- define "cluster.internal.machinehealthcheck.uses-node-problem-detector" -}}
+{{- define "cluster.internal.machinehealthcheck.use-node-problem-detector" -}}
   {{- /* Check if the control plane or any node pool uses features of node-problem-detector-app and print "true" in that case, otherwise nothing (= falsy) */}}
   {{- if $.Values.providerIntegration.resourcesApi.machineHealthCheckResourceEnabled }}
     {{- $allMachineHealthCheckObjects := list }}
