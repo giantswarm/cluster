@@ -1228,6 +1228,7 @@
                 "components",
                 "connectivity",
                 "controlPlane",
+                "managementCluster",
                 "metadata"
             ],
             "additionalProperties": true,
