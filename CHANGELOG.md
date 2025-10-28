@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [4.4.0] - 2025-10-28
+
 ### Added
 
 - Add `MachineHealthCheck` for machine pool worker nodes (requires "machine pool machines" feature in the CAPI infrastructure provider). This can be turned on per node pool (default off). Use `maxUnhealthy=20%` as default (for control plane nodes, the default remains at `40%`).
@@ -843,7 +845,8 @@ For Kubernetes <v1.29, you will need to re-enable it using the respective values
 
 - Update and clean up the template repo.
 
-[Unreleased]: https://github.com/giantswarm/cluster/compare/v4.3.0...HEAD
+[Unreleased]: https://github.com/giantswarm/cluster/compare/v4.4.0...HEAD
+[4.4.0]: https://github.com/giantswarm/cluster/compare/v4.3.0...v4.4.0
 [4.3.0]: https://github.com/giantswarm/cluster/compare/v4.2.0...v4.3.0
 [4.2.0]: https://github.com/giantswarm/cluster/compare/v4.1.0...v4.2.0
 [4.1.0]: https://github.com/giantswarm/cluster/compare/v4.0.3...v4.1.0
