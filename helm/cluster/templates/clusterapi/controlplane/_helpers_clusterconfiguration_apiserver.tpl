@@ -2,8 +2,8 @@
 certSANs:
 - localhost
 - 127.0.0.1
-- "api.{{ include "cluster.resource.name" $ }}.{{ required "The baseDomain value is required" $.Values.global.connectivity.baseDomain }}"
-- "apiserver.{{ include "cluster.resource.name" $ }}.{{ required "The baseDomain value is required" $.Values.global.connectivity.baseDomain }}"
+- "api.{{ include "cluster.resource.name" $ }}.{{ $.Values.global.connectivity.baseDomain }}"
+- "apiserver.{{ include "cluster.resource.name" $ }}.{{ $.Values.global.connectivity.baseDomain }}"
 {{- if $.Values.internal.advancedConfiguration.controlPlane.apiServer.extraCertificateSANs }}
 {{ toYaml $.Values.internal.advancedConfiguration.controlPlane.apiServer.extraCertificateSANs }}
 {{- end }}
@@ -131,7 +131,7 @@ extraVolumes:
 
 {{- define "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.serviceAccountIssuer" }}
 {{- if .serviceAccountIssuer.clusterDomainPrefix -}}
-https://{{ .serviceAccountIssuer.clusterDomainPrefix }}.{{ include "cluster.resource.name" $ }}.{{ required "The baseDomain value is required" $.Values.global.connectivity.baseDomain }}
+https://{{ .serviceAccountIssuer.clusterDomainPrefix }}.{{ include "cluster.resource.name" $ }}.{{ $.Values.global.connectivity.baseDomain }}
 {{- else if .serviceAccountIssuer.templateName -}}
 {{- include .serviceAccountIssuer.templateName $ -}}
 {{- else -}}

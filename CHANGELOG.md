@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Add required install values to a `required.yaml` file and update values schema.
+
 ## [4.4.0] - 2025-10-28
 
 ### Added
