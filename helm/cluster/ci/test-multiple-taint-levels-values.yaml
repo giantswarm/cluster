@@ -50,6 +50,7 @@ providerIntegration:
 
 # Required values
 global:
+  managementCluster: giantmc
   connectivity:
     baseDomain: example.gigantic.io
   metadata:

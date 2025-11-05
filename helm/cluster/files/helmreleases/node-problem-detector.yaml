@@ -1,0 +1,15 @@
+appName: node-problem-detector
+configKey: nodeProblemDetector
+catalog: default
+namespace: kube-system
+# used by renovate
+# repo: giantswarm/node-problem-detector-app
+version: 0.5.2
+
+# Can't list these dependencies here because they're `App` objects, not `HelmRelease` objects
+# - kyverno-crds # for `PolicyException`
+# - prometheus-operator-crd # for `PodMonitor`
+dependsOn: []
+
+interval: 1m
+disable: {{ include "cluster.internal.machinehealthcheck.use-node-problem-detector" $ | eq "true" | ternary false true }}

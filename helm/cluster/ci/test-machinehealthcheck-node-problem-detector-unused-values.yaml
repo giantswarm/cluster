@@ -1,0 +1,56 @@
+global:
+  managementCluster: giantmc
+  release:
+    version: v27.0.0-alpha.1
+  metadata:
+    name: awesome
+    organization: giantswarm
+  connectivity:
+    baseDomain: example.gigantic.io
+  nodePools:
+    verybignodepool-1234:
+      replicas: 100
+
+    def00:
+      machineHealthCheck:
+        enabled: true
+        maxUnhealthy: 40%
+        nodeStartupTimeout: 8m0s
+        unhealthyNotReadyTimeout: 10m0s
+        unhealthyUnknownTimeout: 10m0s
+
+providerIntegration:
+  environmentVariables:
+    hostName: COREOS_EC2_HOSTNAME
+    ipv4: COREOS_EC2_IPV4_LOCAL
+  provider: aws
+  resourcesApi:
+    bastionResourceEnabled: false
+    clusterResourceEnabled: true
+    controlPlaneResourceEnabled: true
+    infrastructureCluster:
+      group: infrastructure.cluster.x-k8s.io
+      kind: GiantCluster
+      version: v1beta1
+    machineHealthCheckResourceEnabled: true
+    machinePoolResourcesEnabled: true
+    nodePoolKind: MachinePool
+    infrastructureMachinePool:
+      group: infrastructure.cluster.x-k8s.io
+      version: v1beta1
+      kind: GiantMachinePool
+    helmRepositoryResourcesEnabled: true
+  controlPlane:
+    resources:
+      infrastructureMachineTemplate:
+        group: infrastructure.cluster.x-k8s.io
+        kind: GiantMachineTemplate
+        version: v1beta1
+      infrastructureMachineTemplateSpecTemplateName: cluster.internal.test.controlPlane.machineTemplate.spec
+  workers:
+    defaultNodePools:
+      def00:
+        customNodeLabels:
+        - label=default
+        maxSize: 3
+        minSize: 3

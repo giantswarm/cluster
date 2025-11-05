@@ -15,19 +15,13 @@ metadata:
   namespace: {{ $.Release.Namespace }}
 spec:
   clusterName: {{ include "cluster.resource.name" $ }}
-  maxUnhealthy: {{ $.Values.global.controlPlane.machineHealthCheck.maxUnhealthy }}
-  nodeStartupTimeout: {{ $.Values.global.controlPlane.machineHealthCheck.nodeStartupTimeout }}
   selector:
     matchLabels:
       cluster.x-k8s.io/cluster-name: {{ include "cluster.resource.name" $ }}
       cluster.x-k8s.io/control-plane: ""
-  unhealthyConditions:
-  - type: Ready
-    status: Unknown
-    timeout: {{ $.Values.global.controlPlane.machineHealthCheck.unhealthyUnknownTimeout }}
-  - type: Ready
-    status: "False"
-    timeout: {{ $.Values.global.controlPlane.machineHealthCheck.unhealthyNotReadyTimeout }}
+  {{- $machineHealthCheck := dict "machineType" "controlPlane" }}
+  {{- $_ := mergeOverwrite $machineHealthCheck $.Values.global.controlPlane.machineHealthCheck }}
+  {{- include "cluster.internal.machinehealthcheck.commonspec" $machineHealthCheck | nindent 2 }}
 {{- end }}
 {{- end }}
 {{- end }}

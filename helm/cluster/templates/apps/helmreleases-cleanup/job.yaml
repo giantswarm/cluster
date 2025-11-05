@@ -71,6 +71,21 @@ spec:
           then
             # Patch releases.
             kubectl patch --namespace "${NAMESPACE}" ${releases} --type merge --patch '{ "spec": { "suspend": true } }'
+
+            # Get and delete associated HelmChart CRs
+            # HelmChart CRs don't have the giantswarm.io/cluster label, so we need to find them by name pattern
+            charts="$(kubectl get helmcharts.source.toolkit.fluxcd.io --namespace "${NAMESPACE}" --output name | grep "^helmchart.source.toolkit.fluxcd.io/${NAMESPACE}-${CLUSTER}-")"
+            if [ -n "${charts}" ]
+            then
+              echo "Deleting HelmChart CRs: ${charts}"
+              # Remove finalizers and delete HelmChart CRs
+              for chart in ${charts}; do
+                kubectl patch --namespace "${NAMESPACE}" ${chart} --type json --patch '[{"op": "remove", "path": "/metadata/finalizers"}]'
+                kubectl delete --namespace "${NAMESPACE}" ${chart}
+              done
+            else
+              echo "No HelmChart CRs to delete found."
+            fi
           else
             # Print info.
             echo "No releases to patch found."
