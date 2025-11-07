@@ -1,0 +1,11 @@
+appName: priority-classes
+configKey: priorityClasses
+catalog: default
+namespace: kube-system
+# used by renovate
+# repo: giantswarm/priority-classes
+version: 0.1.0
+timeout: 5m
+remediationRetries: 0
+interval: 1m
+
