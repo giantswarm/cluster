@@ -8,4 +8,3 @@ version: 0.3.0
 timeout: 5m
 remediationRetries: 0
 interval: 1m
-
