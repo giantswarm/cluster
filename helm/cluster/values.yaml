@@ -23,6 +23,7 @@ global:
     nodeProblemDetector: {}
     observabilityBundle: {}
     observabilityPolicies: {}
+    priorityClasses: {}
     prometheusBlackboxExporter: {}
     securityBundle: {}
     teleportKubeAgent: {}
@@ -176,6 +177,8 @@ providerIntegration:
     observabilityBundle:
       enable: false
     observabilityPolicies:
+      enable: false
+    priorityClasses:
       enable: false
     prometheusBlackboxExporter:
       enable: false

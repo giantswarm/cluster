@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add `priority-classes` app to deploy curated Giant Swarm priority classes.
+
 ### Changed
 
 - Add required install values to a `required.yaml` file and update values schema.
