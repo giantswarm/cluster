@@ -50,7 +50,7 @@
 {{- /* Provider chart */}}
 {{- $shouldRenderApp = and $shouldRenderApp $providerIntegrationAppConfig.enable }}
 {{- /* Releases */}}
-{{- $shouldRenderApp = and $shouldRenderApp (or (not $.Values.providerIntegration.useReleases) (include "cluster.app.in-release" $)) }}
+{{- $shouldRenderApp = and $shouldRenderApp (or (not $.Values.providerIntegration.useReleases) (include "cluster.app.in-release" $ | eq "true")) }}
 
 {{- if $shouldRenderApp }}
 ---
