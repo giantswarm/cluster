@@ -4,6 +4,7 @@
 {{- include "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units.kubernetes" $ }}
 {{- include "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units.teleport-init" $ }}
 {{- include "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units.teleport" $ }}
+{{- include "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units.teleport-auto-update" $ }}
 {{- end }}
 
 {{- define "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units" }}
@@ -302,6 +303,47 @@
     LimitNOFILE=524288
     [Install]
     WantedBy=multi-user.target
+{{- end }}
+{{- end }}
+
+{{- define "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units.teleport-auto-update" }}
+{{- if and $.Values.providerIntegration.teleport.enabled $.Values.providerIntegration.teleport.autoUpdate.enabled }}
+- name: teleport-auto-update.service
+  enabled: false
+  contents: |
+    [Unit]
+    Description=Teleport Auto-Update Service
+    Requires=network-online.target
+    After=network-online.target
+    Before=teleport.service
+    
+    [Service]
+    Type=oneshot
+    User=root
+    ExecStartPre=/bin/bash -c 'until [ -f "/etc/teleport.yaml" ]; do echo "Waiting for teleport config"; sleep 5; done'
+    ExecStart=/opt/bin/teleport-auto-update.sh
+    StandardOutput=journal
+    StandardError=journal
+    TimeoutStartSec={{ $.Values.providerIntegration.teleport.autoUpdate.timeoutSeconds | default 600 }}
+    
+    [Install]
+    WantedBy=multi-user.target
+
+- name: teleport-auto-update.timer
+  enabled: true
+  contents: |
+    [Unit]
+    Description=Teleport Auto-Update Timer
+    Requires=teleport-auto-update.service
+    
+    [Timer]
+    OnBootSec={{ $.Values.providerIntegration.teleport.autoUpdate.onBootDelaySec | default "5min" }}
+    OnUnitActiveSec={{ $.Values.providerIntegration.teleport.autoUpdate.intervalSec | default "1h" }}
+    RandomizedDelaySec={{ $.Values.providerIntegration.teleport.autoUpdate.randomizedDelaySec | default "10min" }}
+    Persistent=true
+    
+    [Install]
+    WantedBy=timers.target
 {{- end }}
 {{- end }}
 
