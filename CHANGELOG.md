@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Enable Gateway API support on cert-manager by default.
+
 ## [4.5.1] - 2025-11-12
 
 ### Changed
