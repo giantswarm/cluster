@@ -25,10 +25,7 @@ sandbox_image = "gsoci.azurecr.io/giantswarm/pause:3.9"
 enable_selinux = false
 
 [plugins."io.containerd.grpc.v1.cri".registry]
-  [plugins."io.containerd.grpc.v1.cri".registry.mirrors]
-    [plugins."io.containerd.grpc.v1.cri".registry.mirrors."gsoci.azurecr.io"]
-      endpoint = ["https://zot.giantmc.example.gigantic.io","https://gsoci.azurecr.io",]
-[plugins."io.containerd.grpc.v1.cri".registry.configs]
+  config_path = "/etc/containerd/certs.d"
 
 # add Nvidia container runtime to support GPUs
 [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.nvidia]
