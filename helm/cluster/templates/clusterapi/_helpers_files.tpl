@@ -138,6 +138,52 @@ and is used to join the node to the teleport cluster.
 {{- end }}
 {{- end }}
 
+{{- define "cluster.containerd.hosts.toml" -}}
+{{- $registry := .registry -}}
+{{- $mirrors := .mirrors -}}
+server = "https://{{ $registry }}"
+
+{{- /* Local Registry Cache */ -}}
+{{- if and .Values.global.components.containerd.localRegistryCache.enabled (has $registry .Values.global.components.containerd.localRegistryCache.mirroredRegistries) }}
+[host."http://127.0.0.1:{{ .Values.global.components.containerd.localRegistryCache.port }}"]
+  capabilities = ["pull", "resolve"]
+  override_path = true
+{{- end }}
+
+{{- /* Management Cluster Registry Cache */ -}}
+{{- if and .Values.global.components.containerd.managementClusterRegistryCache.enabled (has $registry .Values.global.components.containerd.managementClusterRegistryCache.mirroredRegistries) }}
+[host."https://zot.{{ .Values.global.managementCluster }}.{{ .Values.global.connectivity.baseDomain }}"]
+  capabilities = ["pull", "resolve"]
+  override_path = true
+{{- end }}
+
+{{- /* Configured Mirrors */ -}}
+{{- range $mirror := $mirrors }}
+[host."https://{{ $mirror.endpoint }}"]
+  capabilities = ["pull", "resolve"]
+  {{- if ne $mirror.endpoint $registry }}
+  override_path = true
+  {{- end }}
+  {{- if $mirror.skipVerify }}
+  skip_verify = true
+  {{- else }}
+  skip_verify = false
+  {{- end }}
+  {{- with $mirror.credentials }}
+    {{- if or (and .username .password) .auth .identitytoken }}
+  [host."https://{{ $mirror.endpoint }}".header]
+      {{- if and .username .password }}
+    Authorization = ["Basic {{ printf "%s:%s" .username .password | b64enc }}"]
+      {{- else if .auth }}
+    Authorization = ["Basic {{ .auth }}"]
+      {{- else if .identitytoken }}
+    Authorization = ["Bearer {{ .identitytoken }}"]
+      {{- end }}
+    {{- end }}
+  {{- end }}
+{{- end }}
+{{- end -}}
+
 {{- define "cluster.internal.kubeadm.files.cri" }}
 - path: /etc/containerd/config.toml
   permissions: "0644"
@@ -145,6 +191,14 @@ and is used to join the node to the teleport cluster.
     secret:
       name: {{ include "cluster.resource.name" $ }}-containerd-{{ include "cluster.data.hash" (dict "data" (tpl ($.Files.Get "files/etc/containerd/config.toml") $) "salt" $.Values.providerIntegration.hashSalt) }}
       key: config.toml
+
+{{- $containerMirrors := include "cluster.container.mirrors" $ | fromYaml }}
+{{- range $host, $config := $containerMirrors }}
+- path: /etc/containerd/certs.d/{{ $host }}/hosts.toml
+  permissions: "0644"
+  encoding: base64
+  content: {{ include "cluster.containerd.hosts.toml" (dict "registry" $host "mirrors" $config "Values" $.Values) | b64enc }}
+{{- end }}
 {{- end }}
 
 {{- define "cluster.internal.processFiles" }}
