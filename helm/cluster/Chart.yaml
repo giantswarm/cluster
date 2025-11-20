@@ -1,7 +1,7 @@
 apiVersion: v2
 name: cluster
 type: application
-version: 4.5.1
+version: 4.6.0
 description: Giant Swarm cluster chart with provider-independent cluster resources
 icon: https://s.giantswarm.io/app-icons/giantswarm/1/dark.svg
 home: https://github.com/giantswarm/cluster

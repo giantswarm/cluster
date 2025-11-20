@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [4.6.0] - 2025-11-20
+
 ### Changed
 
 - Refactor containerd configuration to use `config_path` (`/etc/containerd/certs.d`) and `hosts.toml` for registry mirrors, ensuring proper fallback order (local cache -> mirrors -> upstream).
@@ -866,7 +868,8 @@ For Kubernetes <v1.29, you will need to re-enable it using the respective values
 
 - Update and clean up the template repo.
 
-[Unreleased]: https://github.com/giantswarm/cluster/compare/v4.5.1...HEAD
+[Unreleased]: https://github.com/giantswarm/cluster/compare/v4.6.0...HEAD
+[4.6.0]: https://github.com/giantswarm/cluster/compare/v4.5.1...v4.6.0
 [4.5.1]: https://github.com/giantswarm/cluster/compare/v4.5.0...v4.5.1
 [4.5.0]: https://github.com/giantswarm/cluster/compare/v4.4.0...v4.5.0
 [4.4.0]: https://github.com/giantswarm/cluster/compare/v4.3.0...v4.4.0
