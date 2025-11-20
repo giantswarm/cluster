@@ -5,7 +5,7 @@
         "additionalAdmissionPlugins": {
             "type": "array",
             "title": "Additional admission plugins",
-            "description": "A list of plugins to enable, in addition to the default ones that include DefaultStorageClass, DefaultTolerationSeconds, LimitRanger, MutatingAdmissionWebhook, NamespaceLifecycle, PersistentVolumeClaimResize, Priority, ResourceQuota, ServiceAccount and ValidatingAdmissionWebhook.",
+            "description": "A list of plugins to enable, in addition to the default ones that include DefaultStorageClass, DefaultTolerationSeconds, LimitRanger, MutatingAdmissionWebhook, NamespaceLifecycle, NodeRestriction, OwnerReferencesPermissionEnforcement, PersistentVolumeClaimResize, Priority, ResourceQuota, ServiceAccount and ValidatingAdmissionWebhook.",
             "items": {
                 "type": "string",
                 "title": "Additional admission plugin"
