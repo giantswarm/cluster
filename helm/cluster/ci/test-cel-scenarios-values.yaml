@@ -1,7 +1,7 @@
 global:
   managementCluster: giantmc
   release:
-    version: v27.0.0-alpha.1
+    version: v34.0.0
   metadata:
     name: hello
     organization: giantswarm
@@ -33,7 +33,7 @@ global:
           - issuerUrl: "https://issuer1.example.com"
             audiences:
               - "client1"
-            
+
           # Scenario 2: With prefixes
           - issuerUrl: "https://issuer2.example.com"
             audiences:
@@ -41,7 +41,7 @@ global:
             usernamePrefix: "oidc:"
             groupsPrefix: "oidc:"
             groupsClaim: "groups"
-            
+
           # Scenario 3: Custom claim names
           - issuerUrl: "https://issuer3.example.com"
             audiences:
@@ -50,7 +50,7 @@ global:
             groupsClaim: "roles"
 
 providerIntegration:
-  kubernetesVersion: "1.32.0"
+  kubernetesVersion: "1.34.0"
   environmentVariables:
     hostName: COREOS_EC2_HOSTNAME
     ipv4: COREOS_EC2_IPV4_LOCAL

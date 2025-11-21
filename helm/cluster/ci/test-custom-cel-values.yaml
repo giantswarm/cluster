@@ -37,6 +37,7 @@ global:
               username:
                 expression: 'custom_expression_works'
 providerIntegration:
+  kubernetesVersion: "1.34.0"
   environmentVariables:
     hostName: COREOS_EC2_HOSTNAME
     ipv4: COREOS_EC2_IPV4_LOCAL

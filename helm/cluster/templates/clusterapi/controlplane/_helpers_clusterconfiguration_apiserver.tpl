@@ -44,7 +44,7 @@ extraArgs:
   feature-gates: {{ include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.featureGates" $ }}
   {{- end }}
   kubelet-preferred-address-types: InternalIP
-  {{- if and $.Values.global.controlPlane.oidc.structuredAuthentication.enabled (semverCompare ">=1.30.0-0" $k8sVersion) }}
+  {{- if and $.Values.global.controlPlane.oidc.structuredAuthentication.enabled (ne $k8sVersion "N/A") (semverCompare ">=1.34.0-0" $k8sVersion) }}
   authentication-config: /etc/kubernetes/policies/auth-config.yaml
   {{- else }}
   {{- if $.Values.global.controlPlane.oidc.issuerUrl }}

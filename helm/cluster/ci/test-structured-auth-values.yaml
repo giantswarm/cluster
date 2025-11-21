@@ -1,7 +1,7 @@
 global:
   managementCluster: giantmc
   release:
-    version: v27.0.0-alpha.1
+    version: v34.0.0
   metadata:
     name: hello
     organization: giantswarm
@@ -37,7 +37,7 @@ global:
               - claim: "hd"
                 requiredValue: "example.com"
 providerIntegration:
-  kubernetesVersion: "1.32.0"
+  kubernetesVersion: "1.34.0"
   environmentVariables:
     hostName: COREOS_EC2_HOSTNAME
     ipv4: COREOS_EC2_IPV4_LOCAL
