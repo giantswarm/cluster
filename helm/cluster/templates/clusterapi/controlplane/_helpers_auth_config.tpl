@@ -3,7 +3,7 @@
 {{- /* Use v1beta1 for Kubernetes 1.33.x (Beta), v1 for 1.34+ (GA) */ -}}
 {{- $kubernetesVersion := include "cluster.component.kubernetes.version" $ | trimPrefix "v" -}}
 {{- $apiVersion := "v1beta1" -}}
-{{- if semverCompare ">=1.34.0-0" $kubernetesVersion -}}
+{{- if and (ne $kubernetesVersion "N/A") (semverCompare ">=1.34.0-0" $kubernetesVersion) -}}
   {{- $apiVersion = "v1" -}}
 {{- end -}}
 apiVersion: apiserver.config.k8s.io/{{ $apiVersion }}
