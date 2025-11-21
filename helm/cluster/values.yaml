@@ -79,7 +79,9 @@ global:
       nodeStartupTimeout: 8m0s
       unhealthyNotReadyTimeout: 10m0s
       unhealthyUnknownTimeout: 10m0s
-    oidc: {}
+    oidc:
+      structuredAuthentication:
+        enabled: false
     replicas: 3
   metadata:
     preventDeletion: false

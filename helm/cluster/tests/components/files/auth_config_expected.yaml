@@ -1,0 +1,22 @@
+apiVersion: apiserver.config.k8s.io/v1beta1
+kind: AuthenticationConfiguration
+jwt:
+  - issuer:
+      url: "https://issuer1.example.com"
+      audiences:
+        - "client1"
+    claimMappings:
+      username:
+        expression: 'claims["sub"]'
+  - issuer:
+      url: "https://issuer2.example.com"
+      audiences:
+        - "client2"
+    claimValidationRules:
+      - claim: "hd"
+        requiredValue: "example.com"
+    claimMappings:
+      username:
+        expression: 'claims["email"]'
+      groups:
+        expression: "has(claims['groups']) ? (type(claims['groups']) == string ? [claims['groups']] : claims['groups']) : []"

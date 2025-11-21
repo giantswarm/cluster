@@ -73,11 +73,18 @@
 {{- end }}
 
 {{- define "cluster.internal.controlPlane.kubeadm.files.oidc" }}
+{{- if $.Values.global.controlPlane.oidc.structuredAuthentication.enabled }}
+- path: /etc/kubernetes/policies/auth-config.yaml
+  permissions: "0600"
+  encoding: base64
+  content: {{ include "cluster.internal.controlPlane.oidc.structuredAuthentication.config" $ | b64enc }}
+{{- else }}
 {{- if $.Values.global.controlPlane.oidc.caPem }}
 - path: /etc/ssl/certs/oidc.pem
   permissions: "0600"
   encoding: base64
   content: {{ tpl ($.Files.Get "files/etc/ssl/certs/oidc.pem") . | b64enc }}
+{{- end }}
 {{- end }}
 {{- if .Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuers }}
 {{- if gt (len .Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuers) 1 }}
