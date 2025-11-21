@@ -72,4 +72,3 @@ providerIntegration:
         - label=default
         maxSize: 3
         minSize: 3
-
