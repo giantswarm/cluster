@@ -1,5 +1,12 @@
 {{- define "cluster.internal.controlPlane.oidc.structuredAuthentication.config" -}}
-apiVersion: apiserver.config.k8s.io/v1
+{{- /* NOTE: Temporarily allowing 1.33+ for testing. Production should use 1.34+ */ -}}
+{{- /* Use v1beta1 for Kubernetes 1.33.x (Beta), v1 for 1.34+ (GA) */ -}}
+{{- $kubernetesVersion := include "cluster.kubernetesVersion" $ -}}
+{{- $apiVersion := "v1beta1" -}}
+{{- if semverCompare ">=1.34.0-0" $kubernetesVersion -}}
+  {{- $apiVersion = "v1" -}}
+{{- end -}}
+apiVersion: apiserver.config.k8s.io/{{ $apiVersion }}
 kind: AuthenticationConfiguration
 jwt:
 {{- $issuers := list }}
