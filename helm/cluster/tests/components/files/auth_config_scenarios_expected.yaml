@@ -23,7 +23,7 @@ jwt:
       username:
         expression: '"oidc:" + claims["sub"]'
       groups:
-        expression: "has(claims['groups']) ? (type(claims['groups']) == string ? ['oidc:' + claims['groups']] : claims['groups'].map(g, 'oidc:' + g)) : []"
+        expression: "'groups' in claims ? (type(claims['groups']) == string ? ['oidc:' + claims['groups']] : claims['groups'].map(g, 'oidc:' + g)) : []"
   - issuer:
       url: "https://issuer3.example.com"
       audiences:
@@ -32,4 +32,4 @@ jwt:
       username:
         expression: 'claims["email"]'
       groups:
-        expression: "has(claims['roles']) ? (type(claims['roles']) == string ? [claims['roles']] : claims['roles']) : []"
+        expression: "'roles' in claims ? (type(claims['roles']) == string ? [claims['roles']] : claims['roles']) : []"

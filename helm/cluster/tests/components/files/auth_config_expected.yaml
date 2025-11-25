@@ -19,4 +19,4 @@ jwt:
       username:
         expression: 'claims["email"]'
       groups:
-        expression: "has(claims['groups']) ? (type(claims['groups']) == string ? [claims['groups']] : claims['groups']) : []"
+        expression: "'groups' in claims ? (type(claims['groups']) == string ? [claims['groups']] : claims['groups']) : []"
