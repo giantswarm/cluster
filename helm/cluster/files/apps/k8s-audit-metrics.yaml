@@ -8,4 +8,4 @@ dependsOn: kyverno-crds
 namespace: kube-system
 # used by renovate
 # repo: giantswarm/k8s-audit-metrics
-version: 0.10.9
+version: 0.10.10

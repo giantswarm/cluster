@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Add support for Kubernetes Structured Authentication Configuration for OIDC providers. This feature allows configuring multiple OIDC issuers. The feature is disabled by default and can be enabled via `global.controlPlane.oidc.structuredAuthentication.enabled`. When enabled, the API server uses `AuthenticationConfiguration` instead of legacy `--oidc-*` flags, providing support for multiple issuers, custom CEL expressions for claim mappings, and claim validation rules.
 
+## [5.0.0] - 2025-11-25
+
 ### Removed
 
 - Remove helm `Job` that cleans up `HelmReleases`. This was needed because we were letting Helm delete the infra cluster and control plane Custom Resources, instead of letting CAPI controllers handle the deletion. This has been fixed, so the `Job` is no longer required. 
@@ -70,6 +72,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- `NodeRestriction` admission plugin is now enabled by default on all clusters.
 - `OwnerReferencesPermissionEnforcement` admission plugin is now enabled by default on all clusters.
 - Expose `rollingUpdate` values in the node pools to configure the `MachineDeployments`.
 - Chart: Add feature gate support for scheduler and kubelet.
@@ -876,7 +879,8 @@ For Kubernetes <v1.29, you will need to re-enable it using the respective values
 
 - Update and clean up the template repo.
 
-[Unreleased]: https://github.com/giantswarm/cluster/compare/v4.6.0...HEAD
+[Unreleased]: https://github.com/giantswarm/cluster/compare/v5.0.0...HEAD
+[5.0.0]: https://github.com/giantswarm/cluster/compare/v4.6.0...v5.0.0
 [4.6.0]: https://github.com/giantswarm/cluster/compare/v4.5.1...v4.6.0
 [4.5.1]: https://github.com/giantswarm/cluster/compare/v4.5.0...v4.5.1
 [4.5.0]: https://github.com/giantswarm/cluster/compare/v4.4.0...v4.5.0

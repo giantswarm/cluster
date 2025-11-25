@@ -122,6 +122,7 @@ extraVolumes:
   "LimitRanger"
   "MutatingAdmissionWebhook"
   "NamespaceLifecycle"
+  "NodeRestriction"
   "OwnerReferencesPermissionEnforcement"
   "PersistentVolumeClaimResize"
   "Priority"
