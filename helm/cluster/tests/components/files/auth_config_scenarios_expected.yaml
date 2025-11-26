@@ -33,3 +33,4 @@ jwt:
         expression: 'claims["email"]'
       groups:
         claim: "roles"
+        prefix: ""

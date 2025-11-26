@@ -138,6 +138,7 @@ jwt:
       {{- else if $gClaim }}
       groups:
         claim: {{ $gClaim | quote }}
+        prefix: ""
       {{- end }}
       {{- end }}
       {{- if $issuer.claimMappings }}

@@ -20,3 +20,4 @@ jwt:
         expression: 'claims["email"]'
       groups:
         claim: "groups"
+        prefix: ""
