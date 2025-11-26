@@ -129,15 +129,16 @@ jwt:
           {{- if $gClaim }}
             {{- if $gPrefix }}
               {{- $groupsExpression = printf "'%s' in claims ? (type(claims['%s']) == string ? ['%s' + claims['%s']] : claims['%s'].map(g, '%s' + g)) : []" $gClaim $gClaim $gPrefix $gClaim $gClaim $gPrefix }}
-            {{- else }}
-              {{- $groupsExpression = printf "'%s' in claims ? (type(claims['%s']) == string ? [claims['%s']] : claims['%s']) : []" $gClaim $gClaim $gClaim $gClaim }}
             {{- end }}
           {{- end }}
-        {{- end }}
 
       {{- if $groupsExpression }}
       groups:
         expression: {{ $groupsExpression | quote }}
+      {{- else if $gClaim }}
+      groups:
+        claim: {{ $gClaim | quote }}
+      {{- end }}
       {{- end }}
       {{- if $issuer.claimMappings }}
       {{- if $issuer.claimMappings.uid }}

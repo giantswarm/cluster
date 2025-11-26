@@ -32,4 +32,4 @@ jwt:
       username:
         expression: 'claims["email"]'
       groups:
-        expression: "'roles' in claims ? (type(claims['roles']) == string ? [claims['roles']] : claims['roles']) : []"
+        claim: "roles"
