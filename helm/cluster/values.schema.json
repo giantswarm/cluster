@@ -1880,17 +1880,50 @@
                                                                 "properties": {
                                                                     "claim": {
                                                                         "type": "string",
-                                                                        "title": "Claim"
+                                                                        "title": "Claim",
+                                                                        "description": "JWT claim to use for groups. Mutually exclusive with 'expression'."
                                                                     },
                                                                     "expression": {
                                                                         "type": "string",
-                                                                        "title": "CEL expression"
+                                                                        "title": "CEL expression",
+                                                                        "description": "CEL expression to determine groups. Mutually exclusive with 'claim' and 'prefix'."
                                                                     },
                                                                     "prefix": {
                                                                         "type": "string",
-                                                                        "title": "Prefix"
+                                                                        "title": "Prefix",
+                                                                        "description": "Prefix to prepend to group claims. Required if 'claim' is set. Mutually exclusive with 'expression'."
                                                                     }
-                                                                }
+                                                                },
+                                                                "oneOf": [
+                                                                    {
+                                                                        "required": [
+                                                                            "expression"
+                                                                        ],
+                                                                        "not": {
+                                                                            "required": [
+                                                                                "claim"
+                                                                            ]
+                                                                        }
+                                                                    },
+                                                                    {
+                                                                        "required": [
+                                                                            "claim"
+                                                                        ],
+                                                                        "not": {
+                                                                            "required": [
+                                                                                "expression"
+                                                                            ]
+                                                                        }
+                                                                    },
+                                                                    {
+                                                                        "not": {
+                                                                            "required": [
+                                                                                "expression",
+                                                                                "claim"
+                                                                            ]
+                                                                        }
+                                                                    }
+                                                                ]
                                                             },
                                                             "uid": {
                                                                 "type": "object",
@@ -1912,17 +1945,50 @@
                                                                 "properties": {
                                                                     "claim": {
                                                                         "type": "string",
-                                                                        "title": "Claim"
+                                                                        "title": "Claim",
+                                                                        "description": "JWT claim to use as the username. Mutually exclusive with 'expression'."
                                                                     },
                                                                     "expression": {
                                                                         "type": "string",
-                                                                        "title": "CEL expression"
+                                                                        "title": "CEL expression",
+                                                                        "description": "CEL expression to determine the username. Mutually exclusive with 'claim' and 'prefix'."
                                                                     },
                                                                     "prefix": {
                                                                         "type": "string",
-                                                                        "title": "Prefix"
+                                                                        "title": "Prefix",
+                                                                        "description": "Prefix to prepend to the username claim. Required if 'claim' is set. Mutually exclusive with 'expression'."
                                                                     }
-                                                                }
+                                                                },
+                                                                "oneOf": [
+                                                                    {
+                                                                        "required": [
+                                                                            "expression"
+                                                                        ],
+                                                                        "not": {
+                                                                            "required": [
+                                                                                "claim"
+                                                                            ]
+                                                                        }
+                                                                    },
+                                                                    {
+                                                                        "required": [
+                                                                            "claim"
+                                                                        ],
+                                                                        "not": {
+                                                                            "required": [
+                                                                                "expression"
+                                                                            ]
+                                                                        }
+                                                                    },
+                                                                    {
+                                                                        "not": {
+                                                                            "required": [
+                                                                                "expression",
+                                                                                "claim"
+                                                                            ]
+                                                                        }
+                                                                    }
+                                                                ]
                                                             }
                                                         }
                                                     },

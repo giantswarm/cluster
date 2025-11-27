@@ -21,9 +21,11 @@ jwt:
         - "client2"
     claimMappings:
       username:
-        expression: '"oidc:" + claims["sub"]'
+        claim: "sub"
+        prefix: "oidc:"
       groups:
-        expression: "'groups' in claims ? (type(claims['groups']) == string ? ['oidc:' + claims['groups']] : claims['groups'].map(g, 'oidc:' + g)) : []"
+        claim: "roles"
+        prefix: "oidc:"
   - issuer:
       url: "https://issuer3.example.com"
       audiences:

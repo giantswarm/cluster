@@ -63,83 +63,88 @@ jwt:
     claimMappings:
       {{- /* 
           Username mapping:
-          If a custom expression is provided, use it.
-          Otherwise, construct an expression that concatenates the prefix (if any) with the claim value.
-          Default claim is "sub" if not specified.
-      */}}
-      username:
-          {{- $uExpression := "" }}
-          {{- if $issuer.claimMappings }}
-            {{- if $issuer.claimMappings.username }}
-              {{- if $issuer.claimMappings.username.expression }}
-                {{- $uExpression = $issuer.claimMappings.username.expression }}
-              {{- end }}
-            {{- end }}
-          {{- end }}
+          Configures how the username is derived from the OIDC token.
           
-          {{- if $uExpression }}
-        expression: {{ $uExpression | quote }}
-          {{- else }}
-            {{- $uClaim := "sub" }}
-            {{- $uPrefix := "" }}
-            {{- if $issuer.claimMappings }}
-               {{- if $issuer.claimMappings.username }}
-                  {{- $uClaim = $issuer.claimMappings.username.claim | default ($issuer.usernameClaim | default "sub") }}
-                  {{- $uPrefix = $issuer.claimMappings.username.prefix | default ($issuer.usernamePrefix | default "") }}
-               {{- end }}
-            {{- else }}
-               {{- $uClaim = $issuer.usernameClaim | default "sub" }}
-               {{- $uPrefix = $issuer.usernamePrefix | default "" }}
-            {{- end }}
-        expression: '{{ if $uPrefix }}"{{ $uPrefix }}" + {{ end }}claims["{{ $uClaim }}"]'
-          {{- end }}
-
-        {{- /* 
-            Groups mapping:
-            Constructs a CEL expression to handle group claims.
-            - Checks if the claim exists.
-            - Handles both string (single group) and list (multiple groups) claim types.
-            - Prepends prefix if specified.
-        */}}
-        {{- $groupsExpression := "" }}
-        {{- if $issuer.claimMappings }}
-          {{- if $issuer.claimMappings.groups }}
-            {{- if $issuer.claimMappings.groups.expression }}
-              {{- $groupsExpression = $issuer.claimMappings.groups.expression }}
-            {{- end }}
+          Mutual Exclusion Rule:
+          - If `expression` is provided, it takes precedence and is used as a CEL expression.
+          - If `expression` is NOT provided, `claim` and `prefix` are used.
+            - `claim`: The JWT claim to use (default: "sub").
+            - `prefix`: The string to prepend to the claim value (required if claim is set, can be empty).
+      */}}
+      {{- $uExpression := "" }}
+      {{- if $issuer.claimMappings }}
+        {{- if $issuer.claimMappings.username }}
+          {{- if $issuer.claimMappings.username.expression }}
+            {{- $uExpression = $issuer.claimMappings.username.expression }}
           {{- end }}
         {{- end }}
-
-        {{- if not $groupsExpression }}
-          {{- $gClaim := "" }}
-          {{- $gPrefix := "" }}
-          
-          {{- if $issuer.claimMappings }}
-            {{- if $issuer.claimMappings.groups }}
-               {{- $gClaim = $issuer.claimMappings.groups.claim | default ($issuer.groupsClaim) }}
-               {{- $gPrefix = $issuer.claimMappings.groups.prefix | default ($issuer.groupsPrefix | default "") }}
-            {{- end }}
-          {{- end }}
-          
-          {{- if not $gClaim }}
-             {{- $gClaim = $issuer.groupsClaim }}
-             {{- $gPrefix = $issuer.groupsPrefix | default "" }}
-          {{- end }}
-
-          {{- if $gClaim }}
-            {{- if $gPrefix }}
-              {{- $groupsExpression = printf "'%s' in claims ? (type(claims['%s']) == string ? ['%s' + claims['%s']] : claims['%s'].map(g, '%s' + g)) : []" $gClaim $gClaim $gPrefix $gClaim $gClaim $gPrefix }}
-            {{- end }}
-          {{- end }}
-
-      {{- if $groupsExpression }}
-      groups:
-        expression: {{ $groupsExpression | quote }}
-      {{- else if $gClaim }}
-      groups:
-        claim: {{ $gClaim | quote }}
-        prefix: ""
       {{- end }}
+      
+      {{- $uClaim := "sub" }}
+      {{- $uPrefix := "" }}
+      {{- if not $uExpression }}
+        {{- if $issuer.claimMappings }}
+           {{- if $issuer.claimMappings.username }}
+              {{- $uClaim = $issuer.claimMappings.username.claim | default ($issuer.usernameClaim | default "sub") }}
+              {{- $uPrefix = $issuer.claimMappings.username.prefix | default ($issuer.usernamePrefix | default "") }}
+           {{- end }}
+        {{- else }}
+           {{- $uClaim = $issuer.usernameClaim | default "sub" }}
+           {{- $uPrefix = $issuer.usernamePrefix | default "" }}
+        {{- end }}
+      {{- end }}
+
+      username:
+      {{- if $uExpression }}
+        expression: {{ $uExpression | quote }}
+      {{- else }}
+        claim: {{ $uClaim | quote }}
+        prefix: {{ $uPrefix | quote }}
+      {{- end }}
+
+      {{- /* 
+          Groups mapping:
+          Configures how groups are derived from the OIDC token.
+          
+          Mutual Exclusion Rule:
+          - If `expression` is provided, it takes precedence and is used as a CEL expression.
+          - If `expression` is NOT provided, `claim` and `prefix` are used.
+            - `claim`: The JWT claim to use (default: "groups").
+            - `prefix`: The string to prepend to the claim value (required if claim is set, can be empty).
+      */}}
+      {{- $groupsExpression := "" }}
+      {{- if $issuer.claimMappings }}
+        {{- if $issuer.claimMappings.groups }}
+          {{- if $issuer.claimMappings.groups.expression }}
+            {{- $groupsExpression = $issuer.claimMappings.groups.expression }}
+          {{- end }}
+        {{- end }}
+      {{- end }}
+
+      {{- $gClaim := "" }}
+      {{- $gPrefix := "" }}
+      {{- if not $groupsExpression }}
+        {{- if $issuer.claimMappings }}
+          {{- if $issuer.claimMappings.groups }}
+             {{- $gClaim = $issuer.claimMappings.groups.claim | default ($issuer.groupsClaim) }}
+             {{- $gPrefix = $issuer.claimMappings.groups.prefix | default ($issuer.groupsPrefix | default "") }}
+          {{- end }}
+        {{- end }}
+        
+        {{- if not $gClaim }}
+           {{- $gClaim = $issuer.groupsClaim }}
+           {{- $gPrefix = $issuer.groupsPrefix | default "" }}
+        {{- end }}
+      {{- end }}
+
+      {{- if or $groupsExpression $gClaim }}
+      groups:
+        {{- if $groupsExpression }}
+        expression: {{ $groupsExpression | quote }}
+        {{- else }}
+        claim: {{ $gClaim | quote }}
+        prefix: {{ $gPrefix | quote }}
+        {{- end }}
       {{- end }}
       {{- if $issuer.claimMappings }}
       {{- if $issuer.claimMappings.uid }}

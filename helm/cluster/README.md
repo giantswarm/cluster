@@ -322,16 +322,16 @@ Configuration of the control plane.
 | `global.controlPlane.oidc.structuredAuthentication.issuers[*].claimMappings.extra[*].key` | **Key**|**Type:** `[string]`<br/>|
 | `global.controlPlane.oidc.structuredAuthentication.issuers[*].claimMappings.extra[*].valueExpression` | **Value expression**|**Type:** `[string]`<br/>|
 | `global.controlPlane.oidc.structuredAuthentication.issuers[*].claimMappings.groups` | **Groups mapping**|**Type:** `[object]`<br/>|
-| `global.controlPlane.oidc.structuredAuthentication.issuers[*].claimMappings.groups.claim` | **Claim**|**Type:** `[string]`<br/>|
-| `global.controlPlane.oidc.structuredAuthentication.issuers[*].claimMappings.groups.expression` | **CEL expression**|**Type:** `[string]`<br/>|
-| `global.controlPlane.oidc.structuredAuthentication.issuers[*].claimMappings.groups.prefix` | **Prefix**|**Type:** `[string]`<br/>|
+| `global.controlPlane.oidc.structuredAuthentication.issuers[*].claimMappings.groups.claim` | **Claim** - JWT claim to use for groups. Mutually exclusive with 'expression'.|**Type:** `[string]`<br/>|
+| `global.controlPlane.oidc.structuredAuthentication.issuers[*].claimMappings.groups.expression` | **CEL expression** - CEL expression to determine groups. Mutually exclusive with 'claim' and 'prefix'.|**Type:** `[string]`<br/>|
+| `global.controlPlane.oidc.structuredAuthentication.issuers[*].claimMappings.groups.prefix` | **Prefix** - Prefix to prepend to group claims. Required if 'claim' is set. Mutually exclusive with 'expression'.|**Type:** `[string]`<br/>|
 | `global.controlPlane.oidc.structuredAuthentication.issuers[*].claimMappings.uid` | **UID mapping**|**Type:** `[object]`<br/>|
 | `global.controlPlane.oidc.structuredAuthentication.issuers[*].claimMappings.uid.claim` | **Claim**|**Type:** `[string]`<br/>|
 | `global.controlPlane.oidc.structuredAuthentication.issuers[*].claimMappings.uid.expression` | **CEL expression**|**Type:** `[string]`<br/>|
 | `global.controlPlane.oidc.structuredAuthentication.issuers[*].claimMappings.username` | **Username mapping**|**Type:** `[object]`<br/>|
-| `global.controlPlane.oidc.structuredAuthentication.issuers[*].claimMappings.username.claim` | **Claim**|**Type:** `[string]`<br/>|
-| `global.controlPlane.oidc.structuredAuthentication.issuers[*].claimMappings.username.expression` | **CEL expression**|**Type:** `[string]`<br/>|
-| `global.controlPlane.oidc.structuredAuthentication.issuers[*].claimMappings.username.prefix` | **Prefix**|**Type:** `[string]`<br/>|
+| `global.controlPlane.oidc.structuredAuthentication.issuers[*].claimMappings.username.claim` | **Claim** - JWT claim to use as the username. Mutually exclusive with 'expression'.|**Type:** `[string]`<br/>|
+| `global.controlPlane.oidc.structuredAuthentication.issuers[*].claimMappings.username.expression` | **CEL expression** - CEL expression to determine the username. Mutually exclusive with 'claim' and 'prefix'.|**Type:** `[string]`<br/>|
+| `global.controlPlane.oidc.structuredAuthentication.issuers[*].claimMappings.username.prefix` | **Prefix** - Prefix to prepend to the username claim. Required if 'claim' is set. Mutually exclusive with 'expression'.|**Type:** `[string]`<br/>|
 | `global.controlPlane.oidc.structuredAuthentication.issuers[*].claimValidationRules` | **Claim validation rules**|**Type:** `[array]`<br/>|
 | `global.controlPlane.oidc.structuredAuthentication.issuers[*].claimValidationRules[*]` |**None**|**Type:** `[object]`<br/>|
 | `global.controlPlane.oidc.structuredAuthentication.issuers[*].claimValidationRules[*].claim` | **Claim**|**Type:** `[string]`<br/>|
