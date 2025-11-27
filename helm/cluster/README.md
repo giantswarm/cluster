@@ -326,18 +326,18 @@ Configuration of the control plane.
 | `global.controlPlane.oidc.structuredAuthentication.issuers[*].claimMappings.groups.expression` | **CEL expression** - CEL expression to determine groups. Mutually exclusive with 'claim' and 'prefix'.|**Type:** `[string]`<br/>|
 | `global.controlPlane.oidc.structuredAuthentication.issuers[*].claimMappings.groups.prefix` | **Prefix** - Prefix to prepend to group claims. Required if 'claim' is set. Mutually exclusive with 'expression'.|**Type:** `[string]`<br/>|
 | `global.controlPlane.oidc.structuredAuthentication.issuers[*].claimMappings.uid` | **UID mapping**|**Type:** `[object]`<br/>|
-| `global.controlPlane.oidc.structuredAuthentication.issuers[*].claimMappings.uid.claim` | **Claim**|**Type:** `[string]`<br/>|
-| `global.controlPlane.oidc.structuredAuthentication.issuers[*].claimMappings.uid.expression` | **CEL expression**|**Type:** `[string]`<br/>|
+| `global.controlPlane.oidc.structuredAuthentication.issuers[*].claimMappings.uid.claim` | **Claim** - JWT claim to use as the UID. Mutually exclusive with 'expression'.|**Type:** `[string]`<br/>|
+| `global.controlPlane.oidc.structuredAuthentication.issuers[*].claimMappings.uid.expression` | **CEL expression** - CEL expression to determine the UID. Mutually exclusive with 'claim'.|**Type:** `[string]`<br/>|
 | `global.controlPlane.oidc.structuredAuthentication.issuers[*].claimMappings.username` | **Username mapping**|**Type:** `[object]`<br/>|
 | `global.controlPlane.oidc.structuredAuthentication.issuers[*].claimMappings.username.claim` | **Claim** - JWT claim to use as the username. Mutually exclusive with 'expression'.|**Type:** `[string]`<br/>|
 | `global.controlPlane.oidc.structuredAuthentication.issuers[*].claimMappings.username.expression` | **CEL expression** - CEL expression to determine the username. Mutually exclusive with 'claim' and 'prefix'.|**Type:** `[string]`<br/>|
 | `global.controlPlane.oidc.structuredAuthentication.issuers[*].claimMappings.username.prefix` | **Prefix** - Prefix to prepend to the username claim. Required if 'claim' is set. Mutually exclusive with 'expression'.|**Type:** `[string]`<br/>|
 | `global.controlPlane.oidc.structuredAuthentication.issuers[*].claimValidationRules` | **Claim validation rules**|**Type:** `[array]`<br/>|
 | `global.controlPlane.oidc.structuredAuthentication.issuers[*].claimValidationRules[*]` |**None**|**Type:** `[object]`<br/>|
-| `global.controlPlane.oidc.structuredAuthentication.issuers[*].claimValidationRules[*].claim` | **Claim**|**Type:** `[string]`<br/>|
-| `global.controlPlane.oidc.structuredAuthentication.issuers[*].claimValidationRules[*].expression` | **CEL expression**|**Type:** `[string]`<br/>|
-| `global.controlPlane.oidc.structuredAuthentication.issuers[*].claimValidationRules[*].message` | **Validation message**|**Type:** `[string]`<br/>|
-| `global.controlPlane.oidc.structuredAuthentication.issuers[*].claimValidationRules[*].requiredValue` | **Required value**|**Type:** `[string]`<br/>|
+| `global.controlPlane.oidc.structuredAuthentication.issuers[*].claimValidationRules[*].claim` | **Claim** - JWT claim to validate. Used with 'requiredValue'. Mutually exclusive with 'expression'.|**Type:** `[string]`<br/>|
+| `global.controlPlane.oidc.structuredAuthentication.issuers[*].claimValidationRules[*].expression` | **CEL expression** - CEL expression that must evaluate to true. Mutually exclusive with 'claim' and 'requiredValue'.|**Type:** `[string]`<br/>|
+| `global.controlPlane.oidc.structuredAuthentication.issuers[*].claimValidationRules[*].message` | **Validation message** - Error message shown in API server logs when validation fails.|**Type:** `[string]`<br/>|
+| `global.controlPlane.oidc.structuredAuthentication.issuers[*].claimValidationRules[*].requiredValue` | **Required value** - Required value for the claim. Used with 'claim'. Mutually exclusive with 'expression'.|**Type:** `[string]`<br/>|
 | `global.controlPlane.oidc.structuredAuthentication.issuers[*].clientId` | **Client ID**|**Type:** `[string]`<br/>|
 | `global.controlPlane.oidc.structuredAuthentication.issuers[*].discoveryUrl` | **Discovery URL** - Overrides the URL used to fetch discovery information.|**Type:** `[string]`<br/>|
 | `global.controlPlane.oidc.structuredAuthentication.issuers[*].groupsClaim` | **Groups claim**|**Type:** `[string]`<br/>|
@@ -349,8 +349,8 @@ Configuration of the control plane.
 | `global.controlPlane.oidc.structuredAuthentication.issuers[*].requiredClaims[*].requiredValue` | **Required value**|**Type:** `[string]`<br/>|
 | `global.controlPlane.oidc.structuredAuthentication.issuers[*].userValidationRules` | **User validation rules**|**Type:** `[array]`<br/>|
 | `global.controlPlane.oidc.structuredAuthentication.issuers[*].userValidationRules[*]` |**None**|**Type:** `[object]`<br/>|
-| `global.controlPlane.oidc.structuredAuthentication.issuers[*].userValidationRules[*].expression` | **CEL expression**|**Type:** `[string]`<br/>|
-| `global.controlPlane.oidc.structuredAuthentication.issuers[*].userValidationRules[*].message` | **Validation message**|**Type:** `[string]`<br/>|
+| `global.controlPlane.oidc.structuredAuthentication.issuers[*].userValidationRules[*].expression` | **CEL expression** - CEL expression that must evaluate to true for the user to be valid.|**Type:** `[string]`<br/>|
+| `global.controlPlane.oidc.structuredAuthentication.issuers[*].userValidationRules[*].message` | **Validation message** - Error message shown in API server logs when validation fails.|**Type:** `[string]`<br/>|
 | `global.controlPlane.oidc.structuredAuthentication.issuers[*].usernameClaim` | **Username claim**|**Type:** `[string]`<br/>|
 | `global.controlPlane.oidc.structuredAuthentication.issuers[*].usernamePrefix` | **Username prefix**|**Type:** `[string]`<br/>|
 | `global.controlPlane.oidc.usernameClaim` | **Username claim**|**Type:** `[string]`<br/>|

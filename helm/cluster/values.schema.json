@@ -1894,36 +1894,12 @@
                                                                         "description": "Prefix to prepend to group claims. Required if 'claim' is set. Mutually exclusive with 'expression'."
                                                                     }
                                                                 },
-                                                                "oneOf": [
-                                                                    {
-                                                                        "required": [
-                                                                            "expression"
-                                                                        ],
-                                                                        "not": {
-                                                                            "required": [
-                                                                                "claim"
-                                                                            ]
-                                                                        }
-                                                                    },
-                                                                    {
-                                                                        "required": [
-                                                                            "claim"
-                                                                        ],
-                                                                        "not": {
-                                                                            "required": [
-                                                                                "expression"
-                                                                            ]
-                                                                        }
-                                                                    },
-                                                                    {
-                                                                        "not": {
-                                                                            "required": [
-                                                                                "expression",
-                                                                                "claim"
-                                                                            ]
-                                                                        }
-                                                                    }
-                                                                ]
+                                                                "not": {
+                                                                    "required": [
+                                                                        "expression",
+                                                                        "claim"
+                                                                    ]
+                                                                }
                                                             },
                                                             "uid": {
                                                                 "type": "object",
@@ -1931,12 +1907,20 @@
                                                                 "properties": {
                                                                     "claim": {
                                                                         "type": "string",
-                                                                        "title": "Claim"
+                                                                        "title": "Claim",
+                                                                        "description": "JWT claim to use as the UID. Mutually exclusive with 'expression'."
                                                                     },
                                                                     "expression": {
                                                                         "type": "string",
-                                                                        "title": "CEL expression"
+                                                                        "title": "CEL expression",
+                                                                        "description": "CEL expression to determine the UID. Mutually exclusive with 'claim'."
                                                                     }
+                                                                },
+                                                                "not": {
+                                                                    "required": [
+                                                                        "expression",
+                                                                        "claim"
+                                                                    ]
                                                                 }
                                                             },
                                                             "username": {
@@ -1959,36 +1943,12 @@
                                                                         "description": "Prefix to prepend to the username claim. Required if 'claim' is set. Mutually exclusive with 'expression'."
                                                                     }
                                                                 },
-                                                                "oneOf": [
-                                                                    {
-                                                                        "required": [
-                                                                            "expression"
-                                                                        ],
-                                                                        "not": {
-                                                                            "required": [
-                                                                                "claim"
-                                                                            ]
-                                                                        }
-                                                                    },
-                                                                    {
-                                                                        "required": [
-                                                                            "claim"
-                                                                        ],
-                                                                        "not": {
-                                                                            "required": [
-                                                                                "expression"
-                                                                            ]
-                                                                        }
-                                                                    },
-                                                                    {
-                                                                        "not": {
-                                                                            "required": [
-                                                                                "expression",
-                                                                                "claim"
-                                                                            ]
-                                                                        }
-                                                                    }
-                                                                ]
+                                                                "not": {
+                                                                    "required": [
+                                                                        "expression",
+                                                                        "claim"
+                                                                    ]
+                                                                }
                                                             }
                                                         }
                                                     },
@@ -2000,20 +1960,30 @@
                                                             "properties": {
                                                                 "claim": {
                                                                     "type": "string",
-                                                                    "title": "Claim"
+                                                                    "title": "Claim",
+                                                                    "description": "JWT claim to validate. Used with 'requiredValue'. Mutually exclusive with 'expression'."
                                                                 },
                                                                 "expression": {
                                                                     "type": "string",
-                                                                    "title": "CEL expression"
+                                                                    "title": "CEL expression",
+                                                                    "description": "CEL expression that must evaluate to true. Mutually exclusive with 'claim' and 'requiredValue'."
                                                                 },
                                                                 "message": {
                                                                     "type": "string",
-                                                                    "title": "Validation message"
+                                                                    "title": "Validation message",
+                                                                    "description": "Error message shown in API server logs when validation fails."
                                                                 },
                                                                 "requiredValue": {
                                                                     "type": "string",
-                                                                    "title": "Required value"
+                                                                    "title": "Required value",
+                                                                    "description": "Required value for the claim. Used with 'claim'. Mutually exclusive with 'expression'."
                                                                 }
+                                                            },
+                                                            "not": {
+                                                                "required": [
+                                                                    "expression",
+                                                                    "claim"
+                                                                ]
                                                             }
                                                         }
                                                     },
@@ -2064,11 +2034,13 @@
                                                             "properties": {
                                                                 "expression": {
                                                                     "type": "string",
-                                                                    "title": "CEL expression"
+                                                                    "title": "CEL expression",
+                                                                    "description": "CEL expression that must evaluate to true for the user to be valid."
                                                                 },
                                                                 "message": {
                                                                     "type": "string",
-                                                                    "title": "Validation message"
+                                                                    "title": "Validation message",
+                                                                    "description": "Error message shown in API server logs when validation fails."
                                                                 }
                                                             }
                                                         }

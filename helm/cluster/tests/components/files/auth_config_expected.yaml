@@ -1,4 +1,4 @@
-apiVersion: apiserver.config.k8s.io/v1beta1
+apiVersion: apiserver.config.k8s.io/v1
 kind: AuthenticationConfiguration
 jwt:
   - issuer:
@@ -6,8 +6,10 @@ jwt:
       audiences:
         - "client1"
     claimMappings:
+
       username:
-        expression: 'claims["sub"]'
+        claim: "sub"
+        prefix: ""
   - issuer:
       url: "https://issuer2.example.com"
       audiences:
@@ -16,8 +18,10 @@ jwt:
       - claim: "hd"
         requiredValue: "example.com"
     claimMappings:
+
       username:
-        expression: 'claims["email"]'
+        claim: "email"
+        prefix: ""
       groups:
         claim: "groups"
         prefix: ""
