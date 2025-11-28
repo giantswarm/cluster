@@ -44,6 +44,9 @@ extraArgs:
   feature-gates: {{ include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.featureGates" $ }}
   {{- end }}
   kubelet-preferred-address-types: InternalIP
+  {{- if and $.Values.global.controlPlane.oidc.structuredAuthentication.enabled (ne $k8sVersion "N/A") (semverCompare ">=1.34.0-0" $k8sVersion) }}
+  authentication-config: /etc/kubernetes/policies/auth-config.yaml
+  {{- else }}
   {{- if $.Values.global.controlPlane.oidc.issuerUrl }}
   {{- if $.Values.global.controlPlane.oidc.caPem }}
   oidc-ca-file: /etc/ssl/certs/oidc.pem
@@ -57,6 +60,7 @@ extraArgs:
   oidc-username-claim: {{ $.Values.global.controlPlane.oidc.usernameClaim | quote }}
   {{- if $.Values.global.controlPlane.oidc.usernamePrefix }}
   oidc-username-prefix: {{ $.Values.global.controlPlane.oidc.usernamePrefix | quote }}
+  {{- end }}
   {{- end }}
   {{- end }}
   profiling: "false"
