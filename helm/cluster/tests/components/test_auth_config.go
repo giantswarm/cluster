@@ -58,7 +58,7 @@ var _ = Describe("auth config", func() {
 	})
 
 	It("renders the correct authentication configuration for complex scenarios", func() {
-		helmValuesFile := "test-cel-scenarios-values.yaml"
+		helmValuesFile := "test-claim-mapping-scenarios-values.yaml"
 
 		// Render all cluster chart manifests
 		manifests := helm.Template(
