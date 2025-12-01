@@ -159,7 +159,11 @@ server = "https://{{ $registry }}"
 
 {{- /* Configured Mirrors */ -}}
 {{- range $mirror := $mirrors }}
+{{- if $mirror.insecure }}
+[host."http://{{ $mirror.endpoint }}"]
+{{- else }}
 [host."https://{{ $mirror.endpoint }}"]
+{{- end }}
   capabilities = ["pull", "resolve"]
   {{- if ne $mirror.endpoint $registry }}
   override_path = true
