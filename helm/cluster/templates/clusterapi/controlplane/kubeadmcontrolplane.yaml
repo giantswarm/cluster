@@ -63,8 +63,10 @@ spec:
     users:
     {{- $users | indent 4 }}
     {{- end }}
+  remidiationStrategy: 
+    {{- toYaml $.Values.internal.advancedConfiguration.controlPlane.remidiationStrategy | indent 4 }}
   replicas: {{ .Values.global.controlPlane.replicas }}
   rolloutBefore:
-    {{- toYaml $.Values.internal.advancedConfiguration.controlPlane.rolloutBefore | nindent 4 }}
+    {{- toYaml $.Values.internal.advancedConfiguration.controlPlane.rolloutBefore | indent 4 }}
   version: v{{ include "cluster.component.kubernetes.version" $ }}
 {{- end }}
