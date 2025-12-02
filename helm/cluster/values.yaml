@@ -114,6 +114,7 @@ internal:
       etcd:
         experimental: {}
         quotaBackendBytesGiB: 8
+      remediationStrategy: {}
       rolloutBefore:
         certificatesExpiryDays: 180
       scheduler: {}
