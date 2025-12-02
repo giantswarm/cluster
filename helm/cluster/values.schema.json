@@ -3212,6 +3212,59 @@
                         "initialJoinToken"
                     ],
                     "properties": {
+                        "autoUpdate": {
+                            "type": "object",
+                            "title": "Teleport Auto-Update Configuration",
+                            "description": "Configuration for automatic Teleport binary updates",
+                            "properties": {
+                                "enabled": {
+                                    "type": "boolean",
+                                    "title": "Enable auto-update",
+                                    "description": "Enable automatic updates of the Teleport binary to match cluster version",
+                                    "default": false
+                                },
+                                "intervalSec": {
+                                    "type": "string",
+                                    "title": "Update interval",
+                                    "description": "How often to check for updates (systemd time format, e.g., '1h', '30m')",
+                                    "default": "1h"
+                                },
+                                "manualVersionOverride": {
+                                    "type": "string",
+                                    "title": "Manual version override",
+                                    "description": "Manually specify target version if dynamic detection fails (e.g., '16.5.12'). Leave empty to rely on dynamic detection.",
+                                    "default": ""
+                                },
+                                "onBootDelaySec": {
+                                    "type": "string",
+                                    "title": "Boot delay",
+                                    "description": "Delay after boot before first update check (systemd time format)",
+                                    "default": "5min"
+                                },
+                                "randomizedDelaySec": {
+                                    "type": "string",
+                                    "title": "Randomized delay",
+                                    "description": "Random delay to spread update checks across nodes (systemd time format)",
+                                    "default": "10min"
+                                },
+                                "timeoutSeconds": {
+                                    "type": "integer",
+                                    "title": "Update timeout",
+                                    "description": "Timeout for update operations in seconds",
+                                    "default": 600,
+                                    "maximum": 3600,
+                                    "minimum": 60
+                                }
+                            },
+                            "default": {
+                                "enabled": false,
+                                "intervalSec": "1h",
+                                "manualVersionOverride": "",
+                                "onBootDelaySec": "5min",
+                                "randomizedDelaySec": "10min",
+                                "timeoutSeconds": 600
+                            }
+                        },
                         "enabled": {
                             "type": "boolean",
                             "title": "Enable teleport"
@@ -3230,6 +3283,14 @@
                         }
                     },
                     "default": {
+                        "autoUpdate": {
+                            "enabled": false,
+                            "intervalSec": "1h",
+                            "manualVersionOverride": "",
+                            "onBootDelaySec": "5min",
+                            "randomizedDelaySec": "10min",
+                            "timeoutSeconds": 600
+                        },
                         "enabled": true,
                         "initialJoinToken": "",
                         "proxyAddr": "teleport.giantswarm.io:443",
