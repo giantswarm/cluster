@@ -2421,14 +2421,14 @@
                                 "preKubeadmCommands": {
                                     "$ref": "#/$defs/preKubeadmCommands"
                                 },
-                                "remidiationStrategy": {
+                                "remediationStrategy": {
                                     "type": "object",
                                     "title": "Remidiation Strategy",
                                     "description": "RemediationStrategy controls how control plane machine remediation happens",
                                     "properties": {
                                         "maxRetry": {
                                             "type": "integer",
-                                            "title": "Max Retries",
+                                            "title": "Max Retry",
                                             "description": "Max retry is the max number of retries while attempting to remediate an unhealthy machine"
                                         },
                                         "minHealthyPeriod": {

@@ -63,9 +63,9 @@ spec:
     users:
     {{- $users | indent 4 }}
     {{- end }}
-  {{- if .Values.internal.advancedConfiguration.controlPlane.apiServer.remidiationStrategy }}  
-  remidiationStrategy: 
-    {{- toYaml $.Values.internal.advancedConfiguration.controlPlane.remidiationStrategy | indent 4 }}
+  {{- if .Values.internal.advancedConfiguration.controlPlane.apiServer.remediationStrategy }}  
+  remediationStrategy: 
+    {{- toYaml $.Values.internal.advancedConfiguration.controlPlane.remediationStrategy | indent 4 }}
   {{- end}}
   replicas: {{ .Values.global.controlPlane.replicas }}
   rolloutBefore:
