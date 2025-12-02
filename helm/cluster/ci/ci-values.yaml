@@ -245,6 +245,10 @@ internal:
     - echo "custom nodes command before kubeadm"
     postKubeadmCommands:
     - echo "custom nodes command after kubeadm"
+    remediationStrategy:
+      maxRetry: 5
+      retryPeriod: 2m
+      minHealthyPeriod: 2h
     workers:
       files:
       - path: /etc/custom/worker/node/file.yaml
