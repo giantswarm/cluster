@@ -63,8 +63,10 @@ spec:
     users:
     {{- $users | indent 4 }}
     {{- end }}
+  {{- if .Values.internal.advancedConfiguration.controlPlane.apiServer.remidiationStrategy }}  
   remidiationStrategy: 
     {{- toYaml $.Values.internal.advancedConfiguration.controlPlane.remidiationStrategy | indent 4 }}
+  {{- end}}
   replicas: {{ .Values.global.controlPlane.replicas }}
   rolloutBefore:
     {{- toYaml $.Values.internal.advancedConfiguration.controlPlane.rolloutBefore | indent 4 }}
