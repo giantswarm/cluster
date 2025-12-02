@@ -64,7 +64,7 @@ spec:
     {{- $users | indent 4 }}
     {{- end }} 
   remediationStrategy: 
-    {{- include "cluster.internal.advancedConfiguration.remediationStrategy" | indent 4 }}
+    {{- include "cluster.internal.advancedConfiguration.remediationStrategy" $ | indent 4 }}
   replicas: {{ .Values.global.controlPlane.replicas }}
   rolloutBefore:
     {{- toYaml $.Values.internal.advancedConfiguration.controlPlane.rolloutBefore | indent 4 }}
