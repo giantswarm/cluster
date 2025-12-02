@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Replace `cluster-autoscaler` with new `cluster-autoscaler-app-bundle` that contains the required AWS IAM Roles as crossplane resources.
+- Replace `cluster-autoscaler` with new `cluster-autoscaler-app-bundle` that contains the required AWS IAM Roles as crossplane resources when deploying on `aws`.
 
 ## [5.0.0] - 2025-11-25
 
