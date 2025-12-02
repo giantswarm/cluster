@@ -62,11 +62,9 @@ spec:
     {{- if $users }}
     users:
     {{- $users | indent 4 }}
-    {{- end }}
-  {{- if .Values.internal.advancedConfiguration.controlPlane.apiServer.remediationStrategy }}  
+    {{- end }} 
   remediationStrategy: 
-    {{- toYaml $.Values.internal.advancedConfiguration.controlPlane.remediationStrategy | indent 4 }}
-  {{- end}}
+    {{- include "cluster.internal.advancedConfiguration.remediationStrategy" }}
   replicas: {{ .Values.global.controlPlane.replicas }}
   rolloutBefore:
     {{- toYaml $.Values.internal.advancedConfiguration.controlPlane.rolloutBefore | indent 4 }}

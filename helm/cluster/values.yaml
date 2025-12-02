@@ -134,6 +134,7 @@ internal:
         cpu: 250m
         memory: 384Mi
     registry: gsoci.azurecr.io
+    remediationStrategy: {}
     workers: {}
   ephemeralConfiguration:
     offlineTesting: {}

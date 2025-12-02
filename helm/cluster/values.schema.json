@@ -2572,6 +2572,28 @@
                             "description": "The registry to use for pulling images. If not set, the default registry is used.",
                             "default": "gsoci.azurecr.io"
                         },
+                        "remediationStrategy": {
+                            "type": "object",
+                            "title": "Remidiation Strategy",
+                            "description": "RemediationStrategy controls how control plane machine remediation happens",
+                            "properties": {
+                                "maxRetry": {
+                                    "type": "integer",
+                                    "title": "Max Retry",
+                                    "description": "Max retry is the max number of retries while attempting to remediate an unhealthy machine"
+                                },
+                                "minHealthyPeriod": {
+                                    "type": "string",
+                                    "title": "Min Healthy Period",
+                                    "description": "Min healthy period defines the duration after which KCP will consider any failure to a machine unrelated"
+                                },
+                                "retryPeriod": {
+                                    "type": "string",
+                                    "title": "Retry Period",
+                                    "description": "Retry period is the duration that KCP should wait before remediating a machine being created as a replacement"
+                                }
+                            }
+                        },
                         "workers": {
                             "type": "object",
                             "title": "Workers",
