@@ -1515,6 +1515,18 @@
                                                     "type": "string",
                                                     "title": "Endpoint",
                                                     "description": "Endpoint for the container registry."
+                                                },
+                                                "insecure": {
+                                                    "type": "boolean",
+                                                    "title": "HTTP endpoint",
+                                                    "description": "Set to true to configure endpoint as HTTP instead of HTTPs (default).",
+                                                    "default": false
+                                                },
+                                                "skipVerify": {
+                                                    "type": "boolean",
+                                                    "title": "Skip TLS verify",
+                                                    "description": "Skip TLS verification of the endpoint.",
+                                                    "default": false
                                                 }
                                             }
                                         }
