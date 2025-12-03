@@ -242,7 +242,7 @@ Advanced configuration of components that are running on all nodes.
 | `global.components.containerd.containerRegistries.*[*].credentials.password` | **Password** - Used to authenticate for the registry with username/password.|**Type:** `string`<br/>|
 | `global.components.containerd.containerRegistries.*[*].credentials.username` | **Username** - Used to authenticate for the registry with username/password.|**Type:** `string`<br/>|
 | `global.components.containerd.containerRegistries.*[*].endpoint` | **Endpoint** - Endpoint for the container registry.|**Type:** `string`<br/>|
-| `global.components.containerd.containerRegistries.*[*].insecure` | **HTTP endpoint** - Set to true to configure endpoint as HTTP instead of HTTPs (default).|**Type:** `boolean`<br/>**Default:** `false`|
+| `global.components.containerd.containerRegistries.*[*].insecure` | **HTTP endpoint** - Set to true to configure endpoint as HTTP instead of HTTPS (default).|**Type:** `boolean`<br/>**Default:** `false`|
 | `global.components.containerd.containerRegistries.*[*].skipVerify` | **Skip TLS verify** - Skip TLS verification of the endpoint.|**Type:** `boolean`<br/>**Default:** `false`|
 | `global.components.containerd.localRegistryCache` | **Local registry cache** - Caching container registry within the cluster.|**Type:** `object`<br/>|
 | `global.components.containerd.localRegistryCache.enabled` | **Enable** - Enabling this will deploy the Zot registry service in the cluster. To make use of it as a pull-through cache, you also have to specify registries to cache images for.|**Type:** `boolean`<br/>**Default:** `false`|
