@@ -417,10 +417,6 @@ For Giant Swarm internal use only, not stable, or not supported by UIs.
 | `internal.advancedConfiguration.controlPlane.postKubeadmCommands[*]` |**None**|**Type:** `string`<br/>|
 | `internal.advancedConfiguration.controlPlane.preKubeadmCommands` | **Pre-kubeadm commands** - Extra commands to run before kubeadm runs.|**Type:** `array`<br/>|
 | `internal.advancedConfiguration.controlPlane.preKubeadmCommands[*]` |**None**|**Type:** `string`<br/>|
-| `internal.advancedConfiguration.controlPlane.remediationStrategy` | **Remidiation Strategy** - RemediationStrategy controls how control plane machine remediation happens|**Type:** `object`<br/>|
-| `internal.advancedConfiguration.controlPlane.remediationStrategy.maxRetry` | **Max Retries** - Max retry is the max number of retries while attempting to remediate an unhealthy machine|**Type:** `integer`<br/>|
-| `internal.advancedConfiguration.controlPlane.remediationStrategy.minHealthyPeriod` | **Min Healthy Period** - Min healthy period defines the duration after which KCP will consider any failure to a machine unrelated|**Type:** `string`<br/>|
-| `internal.advancedConfiguration.controlPlane.remediationStrategy.retryPeriod` | **Retry Period** - Retry period is the duration that KCP should wait before remediating a machine being created as a replacement|**Type:** `string`<br/>|
 | `internal.advancedConfiguration.controlPlane.rolloutBefore` | **Rollout Before** - Rollout Before is a field to indicate a rollout should be performed if the specified criteria is met.|**Type:** `object`<br/>|
 | `internal.advancedConfiguration.controlPlane.rolloutBefore.certificatesExpiryDays` | **Certificate expiry days** - Indicates a rollout needs to be performed if the certificates of the machine will expire within the specified days.|**Type:** `integer`<br/>**Default:** `180`|
 | `internal.advancedConfiguration.controlPlane.scheduler` | **Scheduler** - Advanced configuration of the Kubernetes scheduler|**Type:** `object`<br/>|
@@ -459,6 +455,10 @@ For Giant Swarm internal use only, not stable, or not supported by UIs.
 | `internal.advancedConfiguration.preKubeadmCommands` | **Pre-kubeadm commands** - Extra commands to run before kubeadm runs.|**Type:** `array`<br/>|
 | `internal.advancedConfiguration.preKubeadmCommands[*]` |**None**|**Type:** `string`<br/>|
 | `internal.advancedConfiguration.registry` | **Registry** - The registry to use for pulling images. If not set, the default registry is used.|**Type:** `string`<br/>**Default:** `"gsoci.azurecr.io"`|
+| `internal.advancedConfiguration.remediationStrategy` | **Remidiation Strategy** - RemediationStrategy controls how control plane machine remediation happens|**Type:** `object`<br/>|
+| `internal.advancedConfiguration.remediationStrategy.maxRetry` | **Max Retry** - Max retry is the max number of retries while attempting to remediate an unhealthy machine|**Type:** `integer`<br/>|
+| `internal.advancedConfiguration.remediationStrategy.minHealthyPeriod` | **Min Healthy Period** - Min healthy period defines the duration after which KCP will consider any failure to a machine unrelated|**Type:** `string`<br/>|
+| `internal.advancedConfiguration.remediationStrategy.retryPeriod` | **Retry Period** - Retry period is the duration that KCP should wait before remediating a machine being created as a replacement|**Type:** `string`<br/>|
 | `internal.advancedConfiguration.workers` | **Workers** - Advanced configuration of worker nodes.|**Type:** `object`<br/>|
 | `internal.advancedConfiguration.workers.files` | **Files** - Custom cluster-specific files that are deployed to worker nodes.|**Type:** `array`<br/>|
 | `internal.advancedConfiguration.workers.files[*]` | **File from secret** - It defines a file with content in a Secret|**Type:** `object`<br/>|
