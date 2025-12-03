@@ -1519,7 +1519,7 @@
                                                 "insecure": {
                                                     "type": "boolean",
                                                     "title": "HTTP endpoint",
-                                                    "description": "Set to true to configure endpoint as HTTP instead of HTTPs (default).",
+                                                    "description": "Set to true to configure endpoint as HTTP instead of HTTPS (default).",
                                                     "default": false
                                                 },
                                                 "skipVerify": {
