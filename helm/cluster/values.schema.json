@@ -1539,20 +1539,31 @@
                                         ]
                                     }
                                 },
-                                "debugLevel": {
-                                    "type": "string",
-                                    "title": "Debug level",
-                                    "description": "Debug level for containerd logging [trace, debug, info, warn, error, fatal, panic].",
-                                    "enum": [
-                                        "trace",
-                                        "debug",
-                                        "info",
-                                        "warn",
-                                        "error",
-                                        "fatal",
-                                        "panic"
+                                "debug": {
+                                    "type": "object",
+                                    "title": "ContainerD debug configuration",
+                                    "description": "Debug configuration for containerd.",
+                                    "required": [
+                                        "level"
                                     ],
-                                    "default": "info"
+                                    "additionalProperties": false,
+                                    "properties": {
+                                        "level": {
+                                            "type": "string",
+                                            "title": "Debug level",
+                                            "description": "Debug level for containerd logging [trace, debug, info, warn, error, fatal, panic].",
+                                            "enum": [
+                                                "trace",
+                                                "debug",
+                                                "info",
+                                                "warn",
+                                                "error",
+                                                "fatal",
+                                                "panic"
+                                            ],
+                                            "default": "info"
+                                        }
+                                    }
                                 },
                                 "localRegistryCache": {
                                     "type": "object",

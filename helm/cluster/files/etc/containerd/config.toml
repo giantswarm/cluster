@@ -5,7 +5,7 @@ version = 2
 subreaper = true
 # set containerd debug level
 [debug]
-  level = {{ $.Values.global.components.containerd.debugLevel }}
+  level = {{ $.Values.global.components.containerd.debug.level }}
 
 # set containerd's OOM score
 oom_score = -999
