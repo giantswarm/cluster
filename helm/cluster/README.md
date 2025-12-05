@@ -455,6 +455,10 @@ For Giant Swarm internal use only, not stable, or not supported by UIs.
 | `internal.advancedConfiguration.preKubeadmCommands` | **Pre-kubeadm commands** - Extra commands to run before kubeadm runs.|**Type:** `array`<br/>|
 | `internal.advancedConfiguration.preKubeadmCommands[*]` |**None**|**Type:** `string`<br/>|
 | `internal.advancedConfiguration.registry` | **Registry** - The registry to use for pulling images. If not set, the default registry is used.|**Type:** `string`<br/>**Default:** `"gsoci.azurecr.io"`|
+| `internal.advancedConfiguration.remediationStrategy` | **Remidiation Strategy** - RemediationStrategy controls how control plane machine remediation happens|**Type:** `object`<br/>|
+| `internal.advancedConfiguration.remediationStrategy.maxRetry` | **Max Retry** - Max retry is the max number of retries while attempting to remediate an unhealthy machine|**Type:** `integer`<br/>|
+| `internal.advancedConfiguration.remediationStrategy.minHealthyPeriod` | **Min Healthy Period** - Min healthy period defines the duration after which KCP will consider any failure to a machine unrelated|**Type:** `string`<br/>|
+| `internal.advancedConfiguration.remediationStrategy.retryPeriod` | **Retry Period** - Retry period is the duration that KCP should wait before remediating a machine being created as a replacement|**Type:** `string`<br/>|
 | `internal.advancedConfiguration.workers` | **Workers** - Advanced configuration of worker nodes.|**Type:** `object`<br/>|
 | `internal.advancedConfiguration.workers.files` | **Files** - Custom cluster-specific files that are deployed to worker nodes.|**Type:** `array`<br/>|
 | `internal.advancedConfiguration.workers.files[*]` | **File from secret** - It defines a file with content in a Secret|**Type:** `object`<br/>|
