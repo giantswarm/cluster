@@ -147,14 +147,14 @@ server = "https://{{ $registry }}"
 {{- if and .Values.global.components.containerd.localRegistryCache.enabled (has $registry .Values.global.components.containerd.localRegistryCache.mirroredRegistries) }}
 [host."http://127.0.0.1:{{ .Values.global.components.containerd.localRegistryCache.port }}"]
   capabilities = ["pull", "resolve"]
-  override_path = true
+  override_path = false
 {{- end }}
 
 {{- /* Management Cluster Registry Cache */ -}}
 {{- if and .Values.global.components.containerd.managementClusterRegistryCache.enabled (has $registry .Values.global.components.containerd.managementClusterRegistryCache.mirroredRegistries) }}
 [host."https://zot.{{ .Values.global.managementCluster }}.{{ .Values.global.connectivity.baseDomain }}"]
   capabilities = ["pull", "resolve"]
-  override_path = true
+  override_path = false
 {{- end }}
 
 {{- /* Configured Mirrors */ -}}
@@ -166,6 +166,8 @@ server = "https://{{ $registry }}"
 {{- end }}
   capabilities = ["pull", "resolve"]
   {{- if ne $mirror.endpoint $registry }}
+  override_path = false
+  {{- else if $mirror.enableOverridePath }}
   override_path = true
   {{- end }}
   {{- if $mirror.skipVerify }}

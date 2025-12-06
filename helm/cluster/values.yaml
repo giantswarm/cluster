@@ -43,6 +43,7 @@ global:
           - endpoint: gsoci.azurecr.io
       debug:
         level: info
+      enableOverridePath: false
       localRegistryCache:
         enabled: false
         mirroredRegistries: []
