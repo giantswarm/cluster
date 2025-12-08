@@ -167,7 +167,7 @@ server = "https://{{ $registry }}"
   capabilities = ["pull", "resolve"]
   {{- if ne $mirror.endpoint $registry }}
   override_path = false
-  {{- else if $mirror.enableOverridePath }}
+  {{- else if $mirror.overridePath }}
   override_path = true
   {{- end }}
   {{- if $mirror.skipVerify }}
