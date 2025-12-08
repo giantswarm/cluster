@@ -165,15 +165,11 @@ server = "https://{{ $registry }}"
 [host."https://{{ $mirror.endpoint }}"]
 {{- end }}
   capabilities = ["pull", "resolve"]
-  {{- if ne $mirror.endpoint $registry }}
-  override_path = false
-  {{- else if $mirror.overridePath }}
+  {{- if $mirror.overridePath }}
   override_path = true
   {{- end }}
   {{- if $mirror.skipVerify }}
   skip_verify = true
-  {{- else }}
-  skip_verify = false
   {{- end }}
   {{- with $mirror.credentials }}
     {{- if or (and .username .password) .auth .identitytoken }}
