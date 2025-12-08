@@ -1511,6 +1511,12 @@
                                                         }
                                                     }
                                                 },
+                                                "enableOverridePath": {
+                                                    "type": "boolean",
+                                                    "title": "Override path enabled",
+                                                    "description": "This setting is used to indicate the host's API root endpoint is defined in the URL path rather than by the API specification. This may be used with non-compliant OCI registries which are missing the /v2 prefix. (Defaults to false).",
+                                                    "default": false
+                                                },
                                                 "endpoint": {
                                                     "type": "string",
                                                     "title": "Endpoint",
@@ -1564,12 +1570,6 @@
                                             "default": "info"
                                         }
                                     }
-                                },
-                                "enableOverridePath": {
-                                    "type": "boolean",
-                                    "title": "Override path enabled",
-                                    "description": "This setting is used to indicate the host's API root endpoint is defined in the URL path rather than by the API specification. This may be used with non-compliant OCI registries which are missing the /v2 prefix. (Defaults to false).",
-                                    "default": false
                                 },
                                 "localRegistryCache": {
                                     "type": "object",
