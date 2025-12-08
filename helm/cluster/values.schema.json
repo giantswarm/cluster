@@ -1515,6 +1515,24 @@
                                                     "type": "string",
                                                     "title": "Endpoint",
                                                     "description": "Endpoint for the container registry."
+                                                },
+                                                "insecure": {
+                                                    "type": "boolean",
+                                                    "title": "HTTP endpoint",
+                                                    "description": "Set to true to configure endpoint as HTTP instead of HTTPS (default).",
+                                                    "default": false
+                                                },
+                                                "overridePath": {
+                                                    "type": "boolean",
+                                                    "title": "Override path enabled",
+                                                    "description": "This setting is used to indicate the host's API root endpoint is defined in the URL path rather than by the API specification. This may be used with non-compliant OCI registries which are missing the /v2 prefix. (Defaults to false).",
+                                                    "default": false
+                                                },
+                                                "skipVerify": {
+                                                    "type": "boolean",
+                                                    "title": "Skip TLS verify",
+                                                    "description": "Skip TLS verification of the endpoint.",
+                                                    "default": false
                                                 }
                                             }
                                         }
@@ -1525,6 +1543,32 @@
                                                 "endpoint": "gsoci.azurecr.io"
                                             }
                                         ]
+                                    }
+                                },
+                                "debug": {
+                                    "type": "object",
+                                    "title": "ContainerD debug configuration",
+                                    "description": "Debug configuration for containerd.",
+                                    "required": [
+                                        "level"
+                                    ],
+                                    "additionalProperties": false,
+                                    "properties": {
+                                        "level": {
+                                            "type": "string",
+                                            "title": "Debug level",
+                                            "description": "Debug level for containerd logging [trace, debug, info, warn, error, fatal, panic].",
+                                            "enum": [
+                                                "trace",
+                                                "debug",
+                                                "info",
+                                                "warn",
+                                                "error",
+                                                "fatal",
+                                                "panic"
+                                            ],
+                                            "default": "info"
+                                        }
                                     }
                                 },
                                 "localRegistryCache": {

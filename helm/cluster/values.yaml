@@ -41,6 +41,8 @@ global:
       containerRegistries:
         gsoci.azurecr.io:
           - endpoint: gsoci.azurecr.io
+      debug:
+        level: info
       localRegistryCache:
         enabled: false
         mirroredRegistries: []
