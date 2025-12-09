@@ -205,7 +205,7 @@ providerIntegration:
     containerd:
       sandboxContainerImage:
         name: giantswarm/pause
-        tag: "3.9"
+        tag: "3.10"
   connectivity:
     proxy:
       noProxy: {}
