@@ -724,7 +724,7 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.components.containerd` | **Containerd** - Configuration of containerd.|**Type:** `object`<br/>|
 | `providerIntegration.components.containerd.sandboxContainerImage` | **Sandbox image** - The image used by sandbox / pause container|**Type:** `object`<br/>|
 | `providerIntegration.components.containerd.sandboxContainerImage.name` | **Repository**|**Type:** `string`<br/>**Default:** `"giantswarm/pause"`|
-| `providerIntegration.components.containerd.sandboxContainerImage.tag` | **Tag**|**Type:** `string`<br/>**Default:** `"3.10"`|
+| `providerIntegration.components.containerd.sandboxContainerImage.tag` | **Tag**|**Type:** `string`<br/>**Default:** `"3.10.1"`|
 | `providerIntegration.components.systemd` | **systemd**|**Default:** `null`|
 | `providerIntegration.components.systemd[option#1]` |**None**|**Type:** `null`<br/>|
 | `providerIntegration.components.systemd[option#2]` |**None**|**Type:** `object`<br/>|
