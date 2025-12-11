@@ -25,7 +25,7 @@ runtime_type = "io.containerd.runc.v2"
 [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc.options]
 SystemdCgroup = true
 [plugins."io.containerd.grpc.v1.cri"]
-sandbox_image = "gsoci.azurecr.io/giantswarm/pause:3.10"
+sandbox_image = "gsoci.azurecr.io/giantswarm/pause:3.10.1"
 enable_selinux = false
 
 [plugins."io.containerd.grpc.v1.cri".registry]

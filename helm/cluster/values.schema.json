@@ -2815,7 +2815,7 @@
                                         "tag": {
                                             "type": "string",
                                             "title": "Tag",
-                                            "default": "3.10"
+                                            "default": "3.10.1"
                                         }
                                     }
                                 }
