@@ -4,6 +4,7 @@ clusterValues:
   configMap: true
   secret: true
 forceUpgrade: true
+dependsOn: prometheus-operator-crd
 namespace: kube-system
 # used by renovate
 # repo: giantswarm/teleport-kube-agent-app
