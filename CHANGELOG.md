@@ -9,7 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Chart: Update sandbox image to v3.10.1. ([#731](https://github.com/giantswarm/cluster/pull/731))
+- Chart: Update sandbox image to v3.10.1. ([#734](https://github.com/giantswarm/cluster/pull/734))
+- Chart: Render `cloud-config` flag for Kubernetes < v1.34.0 only. ([#735](https://github.com/giantswarm/cluster/pull/735))
 
 ## [5.1.0] - 2025-12-10
 
