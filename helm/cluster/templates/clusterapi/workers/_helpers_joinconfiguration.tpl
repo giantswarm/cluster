@@ -10,10 +10,13 @@
 nodeRegistration:
   name: {{ printf "${%s}" $.Values.providerIntegration.environmentVariables.hostName }}
   kubeletExtraArgs:
-    cloud-provider: external
     cgroup-driver: systemd
+    {{- $k8sVersion := include "cluster.component.kubernetes.version" $ | trimPrefix "v" }}
+    {{- if or (eq $k8sVersion "N/A") (semverCompare "<1.34.0-0" $k8sVersion) }}
+    cloud-provider: external
     {{- if $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.cloudConfig  }}
     cloud-config: {{ $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.cloudConfig  }}
+    {{- end }}
     {{- end }}
     healthz-bind-address: 0.0.0.0
     node-ip: {{ printf "${%s}" $.Values.providerIntegration.environmentVariables.ipv4 }}
