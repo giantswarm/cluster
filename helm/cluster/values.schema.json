@@ -1511,6 +1511,15 @@
                                                         }
                                                     }
                                                 },
+                                                "dialTimeout": {
+                                                    "type": "string",
+                                                    "title": "Dial timeout",
+                                                    "description": "Timeout used when dialing the registry endpoint. Note that containerd applies this timeout per blob, not to the whole image; a high timeout may result in unexpectedly long pulls.",
+                                                    "examples": [
+                                                        "10s",
+                                                        "1m"
+                                                    ]
+                                                },
                                                 "endpoint": {
                                                     "type": "string",
                                                     "title": "Endpoint",
@@ -1538,11 +1547,7 @@
                                         }
                                     },
                                     "default": {
-                                        "gsoci.azurecr.io": [
-                                            {
-                                                "endpoint": "gsoci.azurecr.io"
-                                            }
-                                        ]
+                                        "gsoci.azurecr.io": []
                                     }
                                 },
                                 "debug": {
@@ -1581,6 +1586,16 @@
                                     ],
                                     "additionalProperties": false,
                                     "properties": {
+                                        "dialTimeout": {
+                                            "type": "string",
+                                            "title": "Dial timeout",
+                                            "description": "Timeout used when dialing the registry endpoint. Note that containerd applies this timeout per blob, not to the whole image; a high timeout may result in unexpectedly long pulls.",
+                                            "examples": [
+                                                "10s",
+                                                "1m"
+                                            ],
+                                            "default": "1s"
+                                        },
                                         "enabled": {
                                             "type": "boolean",
                                             "title": "Enable",
@@ -1613,6 +1628,16 @@
                                     ],
                                     "additionalProperties": false,
                                     "properties": {
+                                        "dialTimeout": {
+                                            "type": "string",
+                                            "title": "Dial timeout",
+                                            "description": "Timeout used when dialing the registry endpoint. Note that containerd applies this timeout per blob, not to the whole image; a high timeout may result in unexpectedly long pulls.",
+                                            "examples": [
+                                                "10s",
+                                                "1m"
+                                            ],
+                                            "default": "1s"
+                                        },
                                         "enabled": {
                                             "type": "boolean",
                                             "title": "Enabled",

@@ -147,12 +147,18 @@ server = "https://{{ $registry }}"
 {{- if and .Values.global.components.containerd.localRegistryCache.enabled (has $registry .Values.global.components.containerd.localRegistryCache.mirroredRegistries) }}
 [host."http://127.0.0.1:{{ .Values.global.components.containerd.localRegistryCache.port }}"]
   capabilities = ["pull", "resolve"]
+  {{- if .Values.global.components.containerd.localRegistryCache.dialTimeout }}
+  dial_timeout = {{ .Values.global.components.containerd.localRegistryCache.dialTimeout | quote }}
+  {{- end }}
 {{- end }}
 
 {{- /* Management Cluster Registry Cache */ -}}
 {{- if and .Values.global.components.containerd.managementClusterRegistryCache.enabled (has $registry .Values.global.components.containerd.managementClusterRegistryCache.mirroredRegistries) }}
 [host."https://zot.{{ .Values.global.managementCluster }}.{{ .Values.global.connectivity.baseDomain }}"]
   capabilities = ["pull", "resolve"]
+  {{- if .Values.global.components.containerd.managementClusterRegistryCache.dialTimeout }}
+  dial_timeout = {{ .Values.global.components.containerd.managementClusterRegistryCache.dialTimeout | quote }}
+  {{- end }}
 {{- end }}
 
 {{- /* Configured Mirrors */ -}}
@@ -180,6 +186,9 @@ server = "https://{{ $registry }}"
     Authorization = ["Bearer {{ .identitytoken }}"]
       {{- end }}
     {{- end }}
+  {{- end }}
+  {{- if $mirror.dialTimeout }}
+  dial_timeout = {{ $mirror.dialTimeout | quote }}
   {{- end }}
 {{- end }}
 {{- end -}}
