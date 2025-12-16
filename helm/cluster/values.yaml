@@ -247,7 +247,9 @@ providerIntegration:
     bastionResourceEnabled: true
     cleanupHelmReleaseResourcesEnabled: false
     clusterResourceEnabled: true
-    kubeadmControlPlaneResourceEnabled: true
+    controlPlaneResource:
+      enabled: true
+      provider: kubeadm
     helmRepositoryResourcesEnabled: false
     infrastructureCluster: {}
     machineHealthCheckResourceEnabled: true

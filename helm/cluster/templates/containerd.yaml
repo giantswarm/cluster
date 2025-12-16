@@ -1,4 +1,10 @@
-{{- if or $.Values.providerIntegration.resourcesApi.machinePoolResourcesEnabled $.Values.providerIntegration.resourcesApi.kubeadmControlPlaneResourceEnabled }}
+{{- if or
+  $.Values.providerIntegration.resourcesApi.machinePoolResourcesEnabled
+  (and
+    $.Values.providerIntegration.resourcesApi.controlPlaneResource.enabled
+    (eq $.Values.providerIntegration.resourcesApi.controlPlaneResource.provider "kubeadm")
+  )
+}}
 apiVersion: v1
 kind: Secret
 metadata:

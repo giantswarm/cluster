@@ -20,7 +20,9 @@ providerIntegration:
   resourcesApi:
     bastionResourceEnabled: false
     clusterResourceEnabled: true
-    kubeadmControlPlaneResourceEnabled: true
+    controlPlaneResource:
+      enabled: true
+      provider: kubeadm
     infrastructureCluster:
       group: infrastructure.cluster.x-k8s.io
       kind: GiantCluster
