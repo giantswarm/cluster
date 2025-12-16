@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [5.1.1] - 2025-12-16
+
 ### Changed
 
 - Apps: Make Teleport Kube Agent depend on Prometheus Operator CRD. ([#733](https://github.com/giantswarm/cluster/pull/733))
@@ -895,7 +897,8 @@ For Kubernetes <v1.29, you will need to re-enable it using the respective values
 
 - Update and clean up the template repo.
 
-[Unreleased]: https://github.com/giantswarm/cluster/compare/v5.1.0...HEAD
+[Unreleased]: https://github.com/giantswarm/cluster/compare/v5.1.1...HEAD
+[5.1.1]: https://github.com/giantswarm/cluster/compare/v5.1.0...v5.1.1
 [5.1.0]: https://github.com/giantswarm/cluster/compare/v5.0.0...v5.1.0
 [5.0.0]: https://github.com/giantswarm/cluster/compare/v4.6.0...v5.0.0
 [4.6.0]: https://github.com/giantswarm/cluster/compare/v4.5.1...v4.6.0
