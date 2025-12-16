@@ -539,7 +539,7 @@ providerIntegration:
     toolingVersion: 1.2.3
   resourcesApi:
     clusterResourceEnabled: true
-    controlPlaneResourceEnabled: true
+    kubeadmControlPlaneResourceEnabled: true
     machinePoolResourcesEnabled: true
     machineHealthCheckResourceEnabled: true
     bastionResourceEnabled: true

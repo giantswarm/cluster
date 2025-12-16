@@ -38,7 +38,7 @@ unhealthyConditions:
   {{- if $.Values.providerIntegration.resourcesApi.machineHealthCheckResourceEnabled }}
     {{- $allMachineHealthCheckObjects := list }}
 
-    {{- if $.Values.providerIntegration.resourcesApi.controlPlaneResourceEnabled }}
+    {{- if $.Values.providerIntegration.resourcesApi.kubeadmControlPlaneResourceEnabled }}
       {{- $allMachineHealthCheckObjects = append $allMachineHealthCheckObjects $.Values.global.controlPlane.machineHealthCheck }}
     {{- end }}
 

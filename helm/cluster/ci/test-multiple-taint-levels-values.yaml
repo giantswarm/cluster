@@ -34,7 +34,7 @@ providerIntegration:
   provider: aws
   resourcesApi:
     clusterResourceEnabled: true
-    controlPlaneResourceEnabled: true
+    kubeadmControlPlaneResourceEnabled: true
     machinePoolResourcesEnabled: true
     machineHealthCheckResourceEnabled: true
     bastionResourceEnabled: false

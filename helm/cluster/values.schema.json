@@ -3346,7 +3346,7 @@
                     "description": "Group, version and kind configuration that is required and used by a specific Cluster API provider.",
                     "required": [
                         "clusterResourceEnabled",
-                        "controlPlaneResourceEnabled",
+                        "kubeadmControlPlaneResourceEnabled",
                         "machinePoolResourcesEnabled",
                         "machineHealthCheckResourceEnabled",
                         "bastionResourceEnabled",
@@ -3371,7 +3371,7 @@
                             "description": "Flag that indicates if the Cluster resource is enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.",
                             "default": true
                         },
-                        "controlPlaneResourceEnabled": {
+                        "kubeadmControlPlaneResourceEnabled": {
                             "type": "boolean",
                             "title": "Control plane resource enabled",
                             "description": "Flag that indicates if the control plane resource is enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.",

@@ -83,7 +83,7 @@ cluster:
 #### Control plane resources
 
 There are two control plane resources, KubeadmControlPlane and MachineHealthCheck, and each has its own resource flag which
-are `controlPlaneResourceEnabled` and `machineHealthCheckResourceEnabled`, respectively.
+are `kubeadmControlPlaneResourceEnabled` and `machineHealthCheckResourceEnabled`, respectively.
 
 Besides the above two resource flags, there are few other values that have to be specified:
 - Group, version and kind of the provider-specific machine template resources (e.g. AWSMachineTemplate, AzureMachineTemplate,
@@ -106,7 +106,7 @@ cluster:
           version: v1beta1
         infrastructureMachineTemplateSpecTemplateName: controlplane-awsmachinetemplate-spec
     resourcesApi:
-      controlPlaneResourceEnabled: true
+      kubeadmControlPlaneResourceEnabled: true
       machineHealthCheckResourceEnabled: true
 ```
 
