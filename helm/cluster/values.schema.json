@@ -3625,10 +3625,9 @@
                                     "description": "The control plane provider to use (e.g., kubeadm, kamaji). Only required when enabled is true.",
                                     "enum": [
                                         "kubeadm",
-                                        "eks",
+                                        "external",
                                         "kamaji"
-                                    ],
-                                    "default": "kubeadm"
+                                    ]
                                 }
                             },
                             "if": {
@@ -3641,7 +3640,12 @@
                             "then": {
                                 "required": [
                                     "provider"
-                                ]
+                                ],
+                                "properties": {
+                                    "provider": {
+                                        "default": "kubeadm"
+                                    }
+                                }
                             }
                         },
                         "helmRepositoryResourcesEnabled": {
