@@ -3627,7 +3627,8 @@
                                         "kubeadm",
                                         "external",
                                         "kamaji"
-                                    ]
+                                    ],
+                                    "default": "kubeadm"
                                 }
                             },
                             "if": {
@@ -3640,12 +3641,7 @@
                             "then": {
                                 "required": [
                                     "provider"
-                                ],
-                                "properties": {
-                                    "provider": {
-                                        "default": "kubeadm"
-                                    }
-                                }
+                                ]
                             }
                         },
                         "helmRepositoryResourcesEnabled": {
