@@ -746,6 +746,52 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.connectivity.proxy.noProxy.value[*]` |**None**|**Type:** `string`<br/>|
 | `providerIntegration.connectivity.sshSsoPublicKey` | **SSH public key for single sign-on**|**Type:** `string`<br/>**Default:** `"ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM4cvZ01fLmO9cJbWUj7sfF+NhECgy+Cl0bazSrZX7sU vault-ca@vault.operations.giantswarm.io"`|
 | `providerIntegration.controlPlane` | **Provider-specific control plane configuration**|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji` | **Kamaji control plane configuration** - Configuration specific to Kamaji control plane provider. Only used when controlPlaneResource.provider is set to 'kamaji'.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji.addons` | **Addons configuration** - Configuration for Kubernetes addons managed by Kamaji.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji.addons.coreDNS` | **CoreDNS configuration** - CoreDNS addon configuration.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji.addons.konnectivity` | **Konnectivity configuration** - Konnectivity addon configuration.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji.addons.kubeProxy` | **Kube-proxy configuration** - Kube-proxy addon configuration.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji.apiServer` | **API Server configuration**|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji.apiServer.extraArgs` | **Extra arguments** - Additional command-line arguments for the API server.|**Type:** `array`<br/>|
+| `providerIntegration.controlPlane.kamaji.apiServer.extraArgs[*]` |**None**|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kamaji.controllerManager` | **Controller Manager configuration**|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji.controllerManager.extraArgs` | **Extra arguments** - Additional command-line arguments for the controller manager.|**Type:** `array`<br/>|
+| `providerIntegration.controlPlane.kamaji.controllerManager.extraArgs[*]` |**None**|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kamaji.dataStoreName` | **Data store name** - Name of the Kamaji DataStore to use for this control plane.|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kamaji.deployment` | **Deployment configuration** - Configuration for the Kamaji control plane Deployment.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji.deployment.additionalMetadata` | **Additional metadata** - Additional metadata for the Deployment resource.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji.deployment.additionalMetadata.annotations` | **Annotations** - Additional annotations for the Deployment.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji.deployment.additionalMetadata.annotations.*` |**None**|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kamaji.deployment.additionalMetadata.labels` | **Labels** - Additional labels for the Deployment.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji.deployment.additionalMetadata.labels.*` |**None**|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kamaji.deployment.affinity` | **Affinity** - Pod affinity and anti-affinity configuration.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji.deployment.nodeSelector` | **Node selector** - Node selector for pod scheduling.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji.deployment.nodeSelector.*` |**None**|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kamaji.deployment.podAdditionalMetadata` | **Pod additional metadata** - Additional metadata for the Pod template.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji.deployment.podAdditionalMetadata.annotations` | **Annotations** - Additional annotations for the Pod.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji.deployment.podAdditionalMetadata.annotations.*` |**None**|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kamaji.deployment.podAdditionalMetadata.labels` | **Labels** - Additional labels for the Pod.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji.deployment.podAdditionalMetadata.labels.*` |**None**|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kamaji.deployment.tolerations` | **Tolerations** - Pod tolerations.|**Type:** `array`<br/>|
+| `providerIntegration.controlPlane.kamaji.deployment.tolerations[*]` |**None**|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji.deployment.topologySpreadConstraints` | **Topology spread constraints** - Topology spread constraints for pod distribution.|**Type:** `array`<br/>|
+| `providerIntegration.controlPlane.kamaji.deployment.topologySpreadConstraints[*]` |**None**|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji.kubelet` | **Kubelet configuration** - Kubelet configuration for the control plane.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji.kubelet.cgroupfs` | **Cgroup filesystem** - Cgroup driver for the kubelet (e.g., 'systemd' or 'cgroupfs').|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kamaji.kubelet.preferredAddressTypes` | **Preferred address types** - Ordered list of preferred address types to use for kubelet connections.|**Type:** `array`<br/>|
+| `providerIntegration.controlPlane.kamaji.kubelet.preferredAddressTypes[*]` |**None**|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kamaji.network` | **Network configuration** - Network configuration for the Kamaji control plane.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji.network.certSANs` | **Certificate SANs** - Additional Subject Alternative Names for the API server certificate.|**Type:** `array`<br/>|
+| `providerIntegration.controlPlane.kamaji.network.certSANs[*]` |**None**|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kamaji.network.serviceAddress` | **Service address** - IP address or hostname for the control plane service.|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kamaji.network.serviceAnnotations` | **Service annotations** - Annotations for the control plane Service.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji.network.serviceAnnotations.*` |**None**|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kamaji.network.serviceLabels` | **Service labels** - Labels for the control plane Service.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji.network.serviceLabels.*` |**None**|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kamaji.network.serviceType` | **Service type** - Kubernetes Service type (e.g., 'LoadBalancer', 'NodePort', 'ClusterIP').|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kamaji.scheduler` | **Scheduler configuration**|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji.scheduler.extraArgs` | **Extra arguments** - Additional command-line arguments for the scheduler.|**Type:** `array`<br/>|
+| `providerIntegration.controlPlane.kamaji.scheduler.extraArgs[*]` |**None**|**Type:** `string`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig` | **Kubeadm config** - Configuration of control plane nodes.|**Type:** `object`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration` | **Cluster configuration** - Configuration of Kubernetes components.|**Type:** `object`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer` | **API server** - Configuration of API server.|**Type:** `object`<br/>**Default:** `{}`|

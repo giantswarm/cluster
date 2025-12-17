@@ -2942,11 +2942,245 @@
                     "type": "object",
                     "title": "Provider-specific control plane configuration",
                     "required": [
-                        "kubeadmConfig",
                         "resources"
                     ],
                     "additionalProperties": false,
                     "properties": {
+                        "kamaji": {
+                            "type": "object",
+                            "title": "Kamaji control plane configuration",
+                            "description": "Configuration specific to Kamaji control plane provider. Only used when controlPlaneResource.provider is set to 'kamaji'.",
+                            "additionalProperties": false,
+                            "properties": {
+                                "addons": {
+                                    "type": "object",
+                                    "title": "Addons configuration",
+                                    "description": "Configuration for Kubernetes addons managed by Kamaji.",
+                                    "additionalProperties": false,
+                                    "properties": {
+                                        "coreDNS": {
+                                            "type": "object",
+                                            "title": "CoreDNS configuration",
+                                            "description": "CoreDNS addon configuration.",
+                                            "additionalProperties": true
+                                        },
+                                        "konnectivity": {
+                                            "type": "object",
+                                            "title": "Konnectivity configuration",
+                                            "description": "Konnectivity addon configuration.",
+                                            "additionalProperties": true
+                                        },
+                                        "kubeProxy": {
+                                            "type": "object",
+                                            "title": "Kube-proxy configuration",
+                                            "description": "Kube-proxy addon configuration.",
+                                            "additionalProperties": true
+                                        }
+                                    }
+                                },
+                                "apiServer": {
+                                    "type": "object",
+                                    "title": "API Server configuration",
+                                    "additionalProperties": false,
+                                    "properties": {
+                                        "extraArgs": {
+                                            "type": "array",
+                                            "title": "Extra arguments",
+                                            "description": "Additional command-line arguments for the API server.",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                },
+                                "controllerManager": {
+                                    "type": "object",
+                                    "title": "Controller Manager configuration",
+                                    "additionalProperties": false,
+                                    "properties": {
+                                        "extraArgs": {
+                                            "type": "array",
+                                            "title": "Extra arguments",
+                                            "description": "Additional command-line arguments for the controller manager.",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                },
+                                "dataStoreName": {
+                                    "type": "string",
+                                    "title": "Data store name",
+                                    "description": "Name of the Kamaji DataStore to use for this control plane."
+                                },
+                                "deployment": {
+                                    "type": "object",
+                                    "title": "Deployment configuration",
+                                    "description": "Configuration for the Kamaji control plane Deployment.",
+                                    "additionalProperties": false,
+                                    "properties": {
+                                        "additionalMetadata": {
+                                            "type": "object",
+                                            "title": "Additional metadata",
+                                            "description": "Additional metadata for the Deployment resource.",
+                                            "additionalProperties": false,
+                                            "properties": {
+                                                "annotations": {
+                                                    "type": "object",
+                                                    "title": "Annotations",
+                                                    "description": "Additional annotations for the Deployment.",
+                                                    "additionalProperties": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "labels": {
+                                                    "type": "object",
+                                                    "title": "Labels",
+                                                    "description": "Additional labels for the Deployment.",
+                                                    "additionalProperties": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "affinity": {
+                                            "type": "object",
+                                            "title": "Affinity",
+                                            "description": "Pod affinity and anti-affinity configuration.",
+                                            "additionalProperties": true
+                                        },
+                                        "nodeSelector": {
+                                            "type": "object",
+                                            "title": "Node selector",
+                                            "description": "Node selector for pod scheduling.",
+                                            "additionalProperties": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "podAdditionalMetadata": {
+                                            "type": "object",
+                                            "title": "Pod additional metadata",
+                                            "description": "Additional metadata for the Pod template.",
+                                            "additionalProperties": false,
+                                            "properties": {
+                                                "annotations": {
+                                                    "type": "object",
+                                                    "title": "Annotations",
+                                                    "description": "Additional annotations for the Pod.",
+                                                    "additionalProperties": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "labels": {
+                                                    "type": "object",
+                                                    "title": "Labels",
+                                                    "description": "Additional labels for the Pod.",
+                                                    "additionalProperties": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "tolerations": {
+                                            "type": "array",
+                                            "title": "Tolerations",
+                                            "description": "Pod tolerations.",
+                                            "items": {
+                                                "type": "object",
+                                                "additionalProperties": true
+                                            }
+                                        },
+                                        "topologySpreadConstraints": {
+                                            "type": "array",
+                                            "title": "Topology spread constraints",
+                                            "description": "Topology spread constraints for pod distribution.",
+                                            "items": {
+                                                "type": "object",
+                                                "additionalProperties": true
+                                            }
+                                        }
+                                    }
+                                },
+                                "kubelet": {
+                                    "type": "object",
+                                    "title": "Kubelet configuration",
+                                    "description": "Kubelet configuration for the control plane.",
+                                    "additionalProperties": false,
+                                    "properties": {
+                                        "cgroupfs": {
+                                            "type": "string",
+                                            "title": "Cgroup filesystem",
+                                            "description": "Cgroup driver for the kubelet (e.g., 'systemd' or 'cgroupfs')."
+                                        },
+                                        "preferredAddressTypes": {
+                                            "type": "array",
+                                            "title": "Preferred address types",
+                                            "description": "Ordered list of preferred address types to use for kubelet connections.",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                },
+                                "network": {
+                                    "type": "object",
+                                    "title": "Network configuration",
+                                    "description": "Network configuration for the Kamaji control plane.",
+                                    "additionalProperties": false,
+                                    "properties": {
+                                        "certSANs": {
+                                            "type": "array",
+                                            "title": "Certificate SANs",
+                                            "description": "Additional Subject Alternative Names for the API server certificate.",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "serviceAddress": {
+                                            "type": "string",
+                                            "title": "Service address",
+                                            "description": "IP address or hostname for the control plane service."
+                                        },
+                                        "serviceAnnotations": {
+                                            "type": "object",
+                                            "title": "Service annotations",
+                                            "description": "Annotations for the control plane Service.",
+                                            "additionalProperties": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "serviceLabels": {
+                                            "type": "object",
+                                            "title": "Service labels",
+                                            "description": "Labels for the control plane Service.",
+                                            "additionalProperties": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "serviceType": {
+                                            "type": "string",
+                                            "title": "Service type",
+                                            "description": "Kubernetes Service type (e.g., 'LoadBalancer', 'NodePort', 'ClusterIP')."
+                                        }
+                                    }
+                                },
+                                "scheduler": {
+                                    "type": "object",
+                                    "title": "Scheduler configuration",
+                                    "additionalProperties": false,
+                                    "properties": {
+                                        "extraArgs": {
+                                            "type": "array",
+                                            "title": "Extra arguments",
+                                            "description": "Additional command-line arguments for the scheduler.",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
                         "kubeadmConfig": {
                             "type": "object",
                             "title": "Kubeadm config",
@@ -3616,7 +3850,67 @@
                         }
                     }
                 }
-            }
+            },
+            "allOf": [
+                {
+                    "if": {
+                        "type": "object",
+                        "properties": {
+                            "resourcesApi": {
+                                "type": "object",
+                                "properties": {
+                                    "controlPlaneResource": {
+                                        "type": "object",
+                                        "properties": {
+                                            "provider": {
+                                                "const": "kubeadm"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "controlPlane": {
+                                "required": [
+                                    "kubeadmConfig"
+                                ]
+                            }
+                        }
+                    }
+                },
+                {
+                    "if": {
+                        "type": "object",
+                        "properties": {
+                            "resourcesApi": {
+                                "type": "object",
+                                "properties": {
+                                    "controlPlaneResource": {
+                                        "type": "object",
+                                        "properties": {
+                                            "provider": {
+                                                "const": "kamaji"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "controlPlane": {
+                                "required": [
+                                    "kamaji"
+                                ]
+                            }
+                        }
+                    }
+                }
+            ]
         }
     }
 }
