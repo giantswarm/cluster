@@ -3610,8 +3610,7 @@
                             "title": "Control plane resource",
                             "description": "Configuration for control plane resource provisioning.",
                             "required": [
-                                "enabled",
-                                "provider"
+                                "enabled"
                             ],
                             "properties": {
                                 "enabled": {
@@ -3623,13 +3622,26 @@
                                 "provider": {
                                     "type": "string",
                                     "title": "Provider",
-                                    "description": "The control plane provider to use (e.g., kubeadm, kamaji).",
+                                    "description": "The control plane provider to use (e.g., kubeadm, kamaji). Only required when enabled is true.",
                                     "enum": [
                                         "kubeadm",
+                                        "eks",
                                         "kamaji"
                                     ],
                                     "default": "kubeadm"
                                 }
+                            },
+                            "if": {
+                                "properties": {
+                                    "enabled": {
+                                        "const": true
+                                    }
+                                }
+                            },
+                            "then": {
+                                "required": [
+                                    "provider"
+                                ]
                             }
                         },
                         "helmRepositoryResourcesEnabled": {
@@ -3861,7 +3873,14 @@
                                 "properties": {
                                     "controlPlaneResource": {
                                         "type": "object",
+                                        "required": [
+                                            "enabled",
+                                            "provider"
+                                        ],
                                         "properties": {
+                                            "enabled": {
+                                                "const": true
+                                            },
                                             "provider": {
                                                 "const": "kubeadm"
                                             }
@@ -3890,7 +3909,14 @@
                                 "properties": {
                                     "controlPlaneResource": {
                                         "type": "object",
+                                        "required": [
+                                            "enabled",
+                                            "provider"
+                                        ],
                                         "properties": {
+                                            "enabled": {
+                                                "const": true
+                                            },
                                             "provider": {
                                                 "const": "kamaji"
                                             }
