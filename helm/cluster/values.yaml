@@ -259,6 +259,7 @@ providerIntegration:
     clusterResourceEnabled: true
     controlPlaneResource:
       enabled: true
+      provider: kubeadm
     helmRepositoryResourcesEnabled: false
     infrastructureCluster: {}
     machineHealthCheckResourceEnabled: true
