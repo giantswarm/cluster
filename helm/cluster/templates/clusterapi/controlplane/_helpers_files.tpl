@@ -65,11 +65,11 @@
   permissions: "0644"
   encoding: base64
   content: {{ tpl ($.Files.Get "files/etc/kubernetes/patches/kube-apiserver0+json.yaml") . | b64enc }}
+{{- end }}
 - path: /etc/kubernetes/patches/kube-controller-manager0+json.yaml
   permissions: "0644"
   encoding: base64
   content: {{ tpl ($.Files.Get "files/etc/kubernetes/patches/kube-controller-manager0+json.yaml") . | b64enc }}
-{{- end }}
 {{- end }}
 
 {{- define "cluster.internal.controlPlane.kubeadm.files.oidc" }}
