@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [5.1.1] - 2025-12-16
+
 ### Changed
 
 - Refactored control plane resource configuration: replaced `providerIntegration.resourcesApi.controlPlaneResourceEnabled` boolean flag= with a unified `controlPlaneResource` object containing `enabled` (boolean) and `provider` (enum: `kubeadm`|`kamaji`) fields. This provides a cleaner, more extensible API for supporting multiple control plane providers.
@@ -14,6 +16,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Chart: Update sandbox image to v3.10.1. ([#734](https://github.com/giantswarm/cluster/pull/734))
 - Chart: Render `cloud-config` flag for Kubernetes < v1.34.0 only. ([#736](https://github.com/giantswarm/cluster/pull/736))
 - Chart: Always render `cloud-provider` flag. ([#738](https://github.com/giantswarm/cluster/pull/738))
+
+### Fixed
+
+- Move `node-cidr-mask-size` patch out of `enablePriorityAndFairness` conditional block. This was not a real problem since this block is enabled by default.
 
 ## [5.1.0] - 2025-12-10
 
@@ -32,7 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
-- Remove helm `Job` that cleans up `HelmReleases`. This was needed because we were letting Helm delete the infra cluster and control plane Custom Resources, instead of letting CAPI controllers handle the deletion. This has been fixed, so the `Job` is no longer required. 
+- Remove helm `Job` that cleans up `HelmReleases`. This was needed because we were letting Helm delete the infra cluster and control plane Custom Resources, instead of letting CAPI controllers handle the deletion. This has been fixed, so the `Job` is no longer required.
 
 ## [4.6.0] - 2025-11-20
 
@@ -896,7 +902,8 @@ For Kubernetes <v1.29, you will need to re-enable it using the respective values
 
 - Update and clean up the template repo.
 
-[Unreleased]: https://github.com/giantswarm/cluster/compare/v5.1.0...HEAD
+[Unreleased]: https://github.com/giantswarm/cluster/compare/v5.1.1...HEAD
+[5.1.1]: https://github.com/giantswarm/cluster/compare/v5.1.0...v5.1.1
 [5.1.0]: https://github.com/giantswarm/cluster/compare/v5.0.0...v5.1.0
 [5.0.0]: https://github.com/giantswarm/cluster/compare/v4.6.0...v5.0.0
 [4.6.0]: https://github.com/giantswarm/cluster/compare/v4.5.1...v4.6.0
