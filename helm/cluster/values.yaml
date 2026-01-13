@@ -82,6 +82,10 @@ global:
       unhealthyNotReadyTimeout: 10m0s
       unhealthyUnknownTimeout: 10m0s
     oidc:
+      issuerUrl: https://dex.greenoak.vorwerk.gigantic.io
+      clientId: dex-k8s-authenticator
+      usernameClaim: email
+      groupsClaim: groups
       structuredAuthentication:
         enabled: false
     replicas: 3
