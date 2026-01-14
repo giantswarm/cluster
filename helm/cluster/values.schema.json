@@ -1837,6 +1837,117 @@
                         "machineHealthCheck": {
                             "$ref": "#/$defs/machineHealthCheck"
                         },
+                        "authorization": {
+                            "type": "object",
+                            "title": "Authorization",
+                            "description": "Configuration for Kubernetes API server authorization.",
+                            "properties": {
+                                "structuredAuthorization": {
+                                    "type": "object",
+                                    "title": "Structured authorization",
+                                    "description": "Structured authorization configuration (AuthorizationConfiguration). GA in Kubernetes 1.32+.",
+                                    "properties": {
+                                        "enabled": {
+                                            "type": "boolean",
+                                            "title": "Enable structured authorization",
+                                            "description": "When enabled, uses --authorization-config instead of --authorization-mode flags.",
+                                            "default": false
+                                        },
+                                        "authorizers": {
+                                            "type": "array",
+                                            "title": "Authorizers",
+                                            "description": "List of authorizers in evaluation order. Must include at least Node and RBAC.",
+                                            "items": {
+                                                "type": "object",
+                                                "required": ["type", "name"],
+                                                "properties": {
+                                                    "type": {
+                                                        "type": "string",
+                                                        "title": "Authorizer type",
+                                                        "description": "Type of authorizer.",
+                                                        "enum": ["Node", "RBAC", "Webhook"]
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "title": "Authorizer name",
+                                                        "description": "Unique name for this authorizer."
+                                                    },
+                                                    "webhook": {
+                                                        "type": "object",
+                                                        "title": "Webhook configuration",
+                                                        "description": "Configuration for Webhook authorizer type.",
+                                                        "properties": {
+                                                            "timeout": {
+                                                                "type": "string",
+                                                                "title": "Timeout",
+                                                                "description": "Timeout for the webhook request (e.g., '3s', '10s').",
+                                                                "default": "3s"
+                                                            },
+                                                            "subjectAccessReviewVersion": {
+                                                                "type": "string",
+                                                                "title": "SubjectAccessReview version",
+                                                                "description": "API version for SubjectAccessReview.",
+                                                                "enum": ["v1", "v1beta1"],
+                                                                "default": "v1"
+                                                            },
+                                                            "matchConditionSubjectAccessReviewVersion": {
+                                                                "type": "string",
+                                                                "title": "Match condition SubjectAccessReview version",
+                                                                "description": "API version for match condition SubjectAccessReview.",
+                                                                "enum": ["v1"],
+                                                                "default": "v1"
+                                                            },
+                                                            "failurePolicy": {
+                                                                "type": "string",
+                                                                "title": "Failure policy",
+                                                                "description": "What to do when the webhook fails.",
+                                                                "enum": ["Deny", "NoOpinion"],
+                                                                "default": "Deny"
+                                                            },
+                                                            "connectionInfo": {
+                                                                "type": "object",
+                                                                "title": "Connection info",
+                                                                "description": "How to connect to the webhook.",
+                                                                "required": ["type"],
+                                                                "properties": {
+                                                                    "type": {
+                                                                        "type": "string",
+                                                                        "title": "Connection type",
+                                                                        "description": "Type of connection to the webhook.",
+                                                                        "enum": ["KubeConfigFile", "InClusterConfig"]
+                                                                    },
+                                                                    "kubeConfigFile": {
+                                                                        "type": "string",
+                                                                        "title": "KubeConfig file path",
+                                                                        "description": "Path to kubeconfig file. Required when type is KubeConfigFile."
+                                                                    }
+                                                                }
+                                                            },
+                                                            "matchConditions": {
+                                                                "type": "array",
+                                                                "title": "Match conditions",
+                                                                "description": "CEL expressions that must all evaluate to true for the webhook to be called.",
+                                                                "items": {
+                                                                    "type": "object",
+                                                                    "required": ["expression"],
+                                                                    "properties": {
+                                                                        "expression": {
+                                                                            "type": "string",
+                                                                            "title": "CEL expression",
+                                                                            "description": "CEL expression that must evaluate to true."
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
                         "oidc": {
                             "type": "object",
                             "title": "OIDC authentication",

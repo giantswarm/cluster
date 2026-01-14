@@ -5,6 +5,7 @@
 {{- include "cluster.internal.controlPlane.kubeadm.files.encryption" $ }}
 {{- include "cluster.internal.controlPlane.kubeadm.files.fairness" $ }}
 {{- include "cluster.internal.controlPlane.kubeadm.files.oidc" $ }}
+{{- include "cluster.internal.controlPlane.kubeadm.files.authorization" $ }}
 {{- include "cluster.internal.controlPlane.kubeadm.files.provider" $ }}
 {{- include "cluster.internal.controlPlane.kubeadm.files.custom" $ }}
 {{- include "cluster.internal.controlPlane.kubeadm.files.cloudConfig" $ }}
@@ -93,6 +94,15 @@
   encoding: base64
   content: {{ tpl ($.Files.Get "files/etc/kubernetes/patches/kube-apiserver1serviceaccountissuers+json.yaml.tpl") . | b64enc }}
 {{- end }}
+{{- end }}
+{{- end }}
+
+{{- define "cluster.internal.controlPlane.kubeadm.files.authorization" }}
+{{- if $.Values.global.controlPlane.authorization.structuredAuthorization.enabled }}
+- path: /etc/kubernetes/policies/authz-config.yaml
+  permissions: "0600"
+  encoding: base64
+  content: {{ include "cluster.internal.controlPlane.structuredAuthorization.config" $ | b64enc }}
 {{- end }}
 {{- end }}
 

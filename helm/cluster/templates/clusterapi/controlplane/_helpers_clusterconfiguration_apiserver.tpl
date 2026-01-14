@@ -63,6 +63,9 @@ extraArgs:
   {{- end }}
   {{- end }}
   {{- end }}
+  {{- if and $.Values.global.controlPlane.authorization.structuredAuthorization.enabled (ne $k8sVersion "N/A") (semverCompare ">=1.34.0-0" $k8sVersion) }}
+  authorization-config: /etc/kubernetes/policies/authz-config.yaml
+  {{- end }}
   profiling: "false"
   runtime-config: api/all=true
   {{- /* Additional `--service-account-issuer` values are applied via patch file (see `kube-apiserver1serviceaccountissuers+json.yaml.tpl`) if there are multiple such parameters. Since Kubernetes defaults to the parameter `--service-account-issuer=https://kubernetes.default.svc.cluster.local` (not desired), we must set the *first* issuer *here*. This becomes easier with the switch to v1beta4 kubeadm config which supports multiple parameters (array instead of map). */}}

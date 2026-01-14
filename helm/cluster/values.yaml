@@ -72,6 +72,9 @@ global:
       enabled: false
   controlPlane:
     apiServerPort: 6443
+    authorization:
+      structuredAuthorization:
+        enabled: false
     customNodeTaints: []
     machineHealthCheck:
       diskFullContainerdTimeout: ""
