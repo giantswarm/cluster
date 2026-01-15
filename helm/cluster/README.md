@@ -293,6 +293,24 @@ Configuration of the control plane.
 | **Property** | **Description** | **More Details** |
 | :----------- | :-------------- | :--------------- |
 | `global.controlPlane.apiServerPort` | **API server port** - The API server Load Balancer port. This option sets the Spec.ClusterNetwork.APIServerPort field on the Cluster CR. In CAPI this field isn't used currently. It is instead used in providers. In CAPA this sets only the public facing port of the Load Balancer. In CAPZ both the public facing and the destination port are set to this value. CAPV and CAPVCD do not use it.|**Type:** `integer`<br/>**Default:** `6443`|
+| `global.controlPlane.authorization` | **Authorization** - Configuration for Kubernetes API server authorization.|**Type:** `object`<br/>|
+| `global.controlPlane.authorization.structuredAuthorization` | **Structured authorization** - Structured authorization configuration (AuthorizationConfiguration). GA in Kubernetes 1.32+.|**Type:** `object`<br/>|
+| `global.controlPlane.authorization.structuredAuthorization.authorizers` | **Authorizers** - List of authorizers in evaluation order. Must include at least Node and RBAC.|**Type:** `array`<br/>|
+| `global.controlPlane.authorization.structuredAuthorization.authorizers[*]` |**None**|**Type:** `object`<br/>|
+| `global.controlPlane.authorization.structuredAuthorization.authorizers[*].name` | **Authorizer name** - Unique name for this authorizer.|**Type:** `string`<br/>|
+| `global.controlPlane.authorization.structuredAuthorization.authorizers[*].type` | **Authorizer type** - Type of authorizer.|**Type:** `string`<br/>**Allowed values:** `Node`, `RBAC`, `Webhook`<br/>|
+| `global.controlPlane.authorization.structuredAuthorization.authorizers[*].webhook` | **Webhook configuration** - Configuration for Webhook authorizer type.|**Type:** `object`<br/>|
+| `global.controlPlane.authorization.structuredAuthorization.authorizers[*].webhook.connectionInfo` | **Connection info** - How to connect to the webhook.|**Type:** `object`<br/>|
+| `global.controlPlane.authorization.structuredAuthorization.authorizers[*].webhook.connectionInfo.kubeConfigFile` | **KubeConfig file path** - Path to kubeconfig file. Required when type is KubeConfigFile.|**Type:** `string`<br/>|
+| `global.controlPlane.authorization.structuredAuthorization.authorizers[*].webhook.connectionInfo.type` | **Connection type** - Type of connection to the webhook.|**Type:** `string`<br/>**Allowed values:** `KubeConfigFile`, `InClusterConfig`<br/>|
+| `global.controlPlane.authorization.structuredAuthorization.authorizers[*].webhook.failurePolicy` | **Failure policy** - What to do when the webhook fails.|**Type:** `string`<br/>**Allowed values:** `Deny`, `NoOpinion`<br/>**Default:** `"Deny"`|
+| `global.controlPlane.authorization.structuredAuthorization.authorizers[*].webhook.matchConditionSubjectAccessReviewVersion` | **Match condition SubjectAccessReview version** - API version for match condition SubjectAccessReview.|**Type:** `string`<br/>**Allowed value:** `v1`<br/>**Default:** `"v1"`|
+| `global.controlPlane.authorization.structuredAuthorization.authorizers[*].webhook.matchConditions` | **Match conditions** - CEL expressions that must all evaluate to true for the webhook to be called.|**Type:** `array`<br/>|
+| `global.controlPlane.authorization.structuredAuthorization.authorizers[*].webhook.matchConditions[*]` |**None**|**Type:** `object`<br/>|
+| `global.controlPlane.authorization.structuredAuthorization.authorizers[*].webhook.matchConditions[*].expression` | **CEL expression** - CEL expression that must evaluate to true.|**Type:** `string`<br/>|
+| `global.controlPlane.authorization.structuredAuthorization.authorizers[*].webhook.subjectAccessReviewVersion` | **SubjectAccessReview version** - API version for SubjectAccessReview.|**Type:** `string`<br/>**Allowed values:** `v1`, `v1beta1`<br/>**Default:** `"v1"`|
+| `global.controlPlane.authorization.structuredAuthorization.authorizers[*].webhook.timeout` | **Timeout** - Timeout for the webhook request (e.g., '3s', '10s').|**Type:** `string`<br/>**Default:** `"3s"`|
+| `global.controlPlane.authorization.structuredAuthorization.enabled` | **Enable structured authorization** - When enabled, uses --authorization-config instead of --authorization-mode flags.|**Type:** `boolean`<br/>**Default:** `false`|
 | `global.controlPlane.customNodeTaints` | **Custom node taints**|**Type:** `array`<br/>**Default:** `[]`|
 | `global.controlPlane.customNodeTaints[*]` |**None**|**Type:** `object`<br/>|
 | `global.controlPlane.customNodeTaints[*].effect` | **Effect**|**Type:** `string`<br/>**Allowed values:** `NoSchedule`, `PreferNoSchedule`, `NoExecute`<br/>|
