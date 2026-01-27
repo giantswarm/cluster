@@ -117,3 +117,14 @@ network-topology.giantswarm.io/mode: None
 network-topology.giantswarm.io/transit-gateway: abc-123
 network-topology.giantswarm.io/prefix-list: "foo,bar"
 {{- end }}
+
+{{- define "cluster.internal.advancedConfiguration.kubelet.kubeReserved" -}}
+cpu: {{ $.Values.internal.advancedConfiguration.kubelet.kubeReserved.cpu }}
+memory: {{ $.Values.internal.advancedConfiguration.kubelet.kubeReserved.memory }}
+ephemeralStorage: {{ $.Values.internal.advancedConfiguration.kubelet.kubeReserved.ephemeralStorage }}
+{{- end -}}
+
+{{- define "cluster.internal.advancedConfiguration.kubelet.systemReserved" -}}
+cpu: {{ $.Values.internal.advancedConfiguration.kubelet.systemReserved.cpu }}
+memory: {{ $.Values.internal.advancedConfiguration.kubelet.systemReserved.memory }}
+{{- end -}}
