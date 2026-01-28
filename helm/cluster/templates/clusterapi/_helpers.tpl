@@ -119,12 +119,12 @@ network-topology.giantswarm.io/prefix-list: "foo,bar"
 {{- end }}
 
 {{- define "cluster.internal.advancedConfiguration.kubelet.kubeReserved" -}}
-cpu: {{ $.Values.internal.advancedConfiguration.kubelet.kubeReserved.cpu }}
-memory: {{ $.Values.internal.advancedConfiguration.kubelet.kubeReserved.memory }}
-ephemeralStorage: {{ $.Values.internal.advancedConfiguration.kubelet.kubeReserved.ephemeralStorage }}
+cpu: {{ ((((.internal).advancedConfiguration).kubelet).kubeReserved).cpu | default "350m" }}
+memory: {{ ((((.internal).advancedConfiguration).kubelet).kubeReserved).memory | default "1280Mi" }}
+ephemeralStorage: {{ ((((.internal).advancedConfiguration).kubelet).kubeReserved).ephemeralStorage | default "1024Mi" }}
 {{- end -}}
 
 {{- define "cluster.internal.advancedConfiguration.kubelet.systemReserved" -}}
-cpu: {{ $.Values.internal.advancedConfiguration.kubelet.systemReserved.cpu }}
-memory: {{ $.Values.internal.advancedConfiguration.kubelet.systemReserved.memory }}
+cpu: {{ ((((.internal).advancedConfiguration).kubelet).systemReserved).cpu | default "250m" }}
+memory: {{ ((((.internal).advancedConfiguration).kubelet).systemReserved).memory | default "384Mi" }}
 {{- end -}}

@@ -18,15 +18,19 @@ evictionMaxPodGracePeriod: 60
 {{- if (include "cluster.internal.kubeadm.featureGates" (dict "providerFeatureGates" $providerFeatureGates "internalFeatureGates" $internalFeatureGates "kubernetesVersion" $kubernetesVersion "renderWithoutReleaseResource" $renderWithoutRelease) | fromYaml) }}
 featureGates: {{- include "cluster.internal.kubeadm.featureGates" (dict "providerFeatureGates" $providerFeatureGates "internalFeatureGates" $internalFeatureGates "kubernetesVersion" $kubernetesVersion "renderWithoutReleaseResource" $renderWithoutRelease) | nindent 2 }}
 {{- end }}
+{{- with (include "cluster.internal.advancedConfiguration.kubelet.kubeReserved" $.Values) }}
 kubeReserved:
-  cpu: {{ $.Values.internal.advancedConfiguration.kubelet.kubeReserved.cpu }}
-  memory: {{ $.Values.internal.advancedConfiguration.kubelet.kubeReserved.memory }}
-  ephemeral-storage: {{ $.Values.internal.advancedConfiguration.kubelet.kubeReserved.ephemeralStorage }}
+  cpu: {{ .cpu }}
+  memory: {{ .memory }}
+  ephemeral-storage: {{ .ephemeralStorage }}
+{{- end }}
+{{- with (include "cluster.internal.advancedConfiguration.kubelet.systemReserved" $.Values) }}
+systemReserved:
+  cpu: {{ .cpu }}
+  memory: {{ .memory }}
+{{- end }}
 kubeReservedCgroup: /kubereserved.slice
 protectKernelDefaults: true
-systemReserved:
-  cpu: {{ $.Values.internal.advancedConfiguration.kubelet.systemReserved.cpu }}
-  memory: {{ $.Values.internal.advancedConfiguration.kubelet.systemReserved.memory }}
 systemReservedCgroup: /system.slice
 tlsCipherSuites: {{ include "cluster.internal.kubeadm.tlsCipherSuites" $ | nindent 2 }}
 serializeImagePulls: false
