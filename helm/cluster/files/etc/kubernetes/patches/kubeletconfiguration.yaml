@@ -18,13 +18,13 @@ evictionMaxPodGracePeriod: 60
 {{- if (include "cluster.internal.kubeadm.featureGates" (dict "providerFeatureGates" $providerFeatureGates "internalFeatureGates" $internalFeatureGates "kubernetesVersion" $kubernetesVersion "renderWithoutReleaseResource" $renderWithoutRelease) | fromYaml) }}
 featureGates: {{- include "cluster.internal.kubeadm.featureGates" (dict "providerFeatureGates" $providerFeatureGates "internalFeatureGates" $internalFeatureGates "kubernetesVersion" $kubernetesVersion "renderWithoutReleaseResource" $renderWithoutRelease) | nindent 2 }}
 {{- end }}
-{{- with (include "cluster.internal.advancedConfiguration.kubelet.kubeReserved" $.Values) }}
+{{- with ((include "cluster.internal.advancedConfiguration.kubelet.kubeReserved" $.Values) | fromYaml) }}
 kubeReserved:
   cpu: {{ .cpu }}
   memory: {{ .memory }}
   ephemeral-storage: {{ .ephemeralStorage }}
 {{- end }}
-{{- with (include "cluster.internal.advancedConfiguration.kubelet.systemReserved" $.Values) }}
+{{- with ((include "cluster.internal.advancedConfiguration.kubelet.systemReserved" $.Values) | fromYaml) }}
 systemReserved:
   cpu: {{ .cpu }}
   memory: {{ .memory }}
