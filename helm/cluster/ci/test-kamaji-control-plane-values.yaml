@@ -49,7 +49,7 @@ providerIntegration:
         version: v1beta1
       infrastructureMachineTemplateSpecTemplateName: cluster.internal.test.controlPlane.machineTemplate.spec
     kamaji:
-      dataStoreName: default
+      enabled: true
       apiServer:
         extraArgs:
         - "--enable-admission-plugins=PodSecurity"

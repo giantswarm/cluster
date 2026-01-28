@@ -38,5 +38,7 @@ ginkgo:
 
 .PHONY: test
 test: ginkgo
+	@helm repo add giantswarm https://giantswarm.github.io/default-catalog || true
+	@helm dependency update helm/cluster
 	@cd helm/cluster/tests && \
 		ginkgo -v ./...

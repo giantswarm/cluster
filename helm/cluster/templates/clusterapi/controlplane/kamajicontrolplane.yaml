@@ -41,9 +41,7 @@ spec:
       {{- end }}
     {{- end }}
   {{- end }}
-  {{- with .dataStoreName }}
-  dataStoreName: {{ . | quote }}
-  {{- end }}
+  dataStoreName: {{ .dataStoreName | quote | default (include "cluster.resource.name" $) }}
   {{- with .addons }}
   addons:
     {{- if hasKey . "coreDNS" }}

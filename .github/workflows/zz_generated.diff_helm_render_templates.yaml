@@ -71,6 +71,9 @@ jobs:
           # Charts from cluster-test-catalog should be used only for testing purposes.
           helm repo add cluster-test-catalog https://giantswarm.github.io/cluster-test-catalog/
 
+          # Add default-catalog for kamaji-etcd and other default catalog charts
+          helm repo add giantswarm https://giantswarm.github.io/default-catalog/
+
           helm dependency build helm/${{ github.event.repository.name }}
 
           for test_file_path in helm/${{ github.event.repository.name }}/ci/test-*-values.yaml; do

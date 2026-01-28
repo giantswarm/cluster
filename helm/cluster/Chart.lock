@@ -1,0 +1,6 @@
+dependencies:
+- name: kamaji-etcd
+  repository: https://giantswarm.github.io/default-catalog
+  version: 0.2.0
+digest: sha256:ae9cd5c1ac8d9e8fc3d5a8c0865006d5d2618a9c2d05672e42fb0a545fba0368
+generated: "2026-01-29T09:49:22.821724+01:00"

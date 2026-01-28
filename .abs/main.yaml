@@ -2,3 +2,4 @@ chart-dir: helm/cluster
 replace-chart-version-with-git: true
 generate-metadata: true
 catalog-base-url: https://giantswarm.github.io/cluster-catalog/
+ct-config: .abs/ct-config.yaml
