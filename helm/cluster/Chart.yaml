@@ -12,6 +12,6 @@ annotations:
   application.giantswarm.io/team: turtles
 dependencies:
 - name: kamaji-etcd
-  version: "0.2.0"
-  repository: "https://giantswarm.github.io/default-catalog"
+  version: "0.2.99"
+  # repository: "https://giantswarm.github.io/default-catalog"
   condition: providerIntegration.controlPlane.kamaji.enabled

@@ -1,0 +1,40 @@
+apiVersion: kyverno.io/v2
+kind: PolicyException
+metadata:
+  annotations:
+      "helm.sh/hook": pre-install,pre-upgrade
+      "helm.sh/hook-weight": "-5"
+      "helm.sh/hook-delete-policy": before-hook-creation
+  labels:
+    app.kubernetes.io/managed-by: kyverno-policy-operator
+  name: "{{ .Release.Name }}"
+  namespace: policy-exceptions
+spec:
+  background: true
+  exceptions:
+  - policyName: disallow-capabilities-strict
+    ruleNames:
+    - autogen-require-drop-all
+    - require-drop-all
+  - policyName: disallow-privilege-escalation
+    ruleNames:
+    - autogen-privilege-escalation
+    - privilege-escalation
+  - policyName: require-run-as-nonroot
+    ruleNames:
+    - autogen-run-as-non-root
+    - run-as-non-root
+  - policyName: restrict-seccomp-strict
+    ruleNames:
+    - autogen-check-seccomp-strict
+    - check-seccomp-strict
+  match:
+    any:
+    - resources:
+        kinds:
+        - Pod
+        - Job
+        names:
+        - "{{ .Release.Name }}-etcd-*"
+        namespaces:
+        - "{{ .Release.Namespace }}"

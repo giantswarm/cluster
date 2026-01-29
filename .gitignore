@@ -1,2 +1,2 @@
 .github/copilot-instructions.md
-helm/cluster/charts
+helm/cluster/charts/*.tgz

@@ -1,0 +1,45 @@
+{{- if not .Values.certManager.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  labels:
+    {{- include "etcd.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": pre-delete
+    "helm.sh/hook-weight": "10"
+    "helm.sh/hook-delete-policy": "hook-succeeded,before-hook-creation,hook-failed"
+    ignore-check.kube-linter.io/no-read-only-root-fs: "Secret deletion requires write access"
+    ignore-check.kube-linter.io/non-existent-service-account: "ServiceAccount is created by this chart"
+  name: "{{ .Release.Name }}-etcd-teardown"
+  namespace: {{ .Release.Namespace }}
+spec:
+  ttlSecondsAfterFinished: 300
+  template:
+    metadata:
+      name: "{{ .Release.Name }}"
+    spec:
+      serviceAccountName: {{ include "etcd.serviceAccountName" . }}
+      restartPolicy: Never
+      nodeSelector: {{- toYaml .Values.jobs.nodeSelector | nindent 8 }}
+      containers:
+        - name: kubectl
+          image: "{{ printf "%s:%s" .Values.jobs.kubectl.image (default (include "etcd.jobsTagKubeVersion" . | trim) .Values.jobs.kubectl.tag) }}"
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          resources:
+            {{- toYaml .Values.jobs.resources | nindent 12 }}
+          command:
+            - kubectl
+            - --namespace={{ .Release.Namespace }}
+            - delete
+            - secret
+            - --ignore-not-found=true
+            - {{ include "etcd.caSecretName" . }}
+            - {{ include "etcd.clientSecretName" . }}
+      {{- with .Values.jobs.tolerations }}
+      tolerations: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.jobs.affinity }}
+      affinity: {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}
