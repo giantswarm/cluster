@@ -29,6 +29,11 @@ spec:
           type: RuntimeDefault
       containers:
         - name: pause
+          resources:
+            {{- toYaml .Values.jobs.resources | nindent 12 }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+            readOnlyRootFilesystem: true
           image: {{ .Values.jobs.kubectl.image }}:{{ .Values.jobs.kubectl.tag }}
           command:
             - /bin/sh
@@ -41,8 +46,3 @@ spec:
                 sleep 5
               done
               echo "Cleanup complete. Proceeding with etcd deletion."
-            resources:
-              {{- toYaml .Values.jobs.resources | nindent 12 }}
-            securityContext:
-              {{- toYaml .Values.securityContext | nindent 12 }}
-              readOnlyRootFilesystem: true
