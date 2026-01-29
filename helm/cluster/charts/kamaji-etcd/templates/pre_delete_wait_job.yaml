@@ -24,14 +24,25 @@ spec:
         runAsGroup: {{ .Values.securityContext.runAsGroup }}
         runAsNonRoot: true
         fsGroup: {{ .Values.securityContext.runAsGroup }}
+        serviceAccountName: "automation"
         seccompProfile:
           type: RuntimeDefault
       containers:
         - name: pause
           image: {{ .Values.jobs.kubectl.image }}:{{ .Values.jobs.kubectl.tag }}
-          command: ["sh", "-c", "sleep 90"]
-          resources:
-            {{- toYaml .Values.jobs.resources | nindent 12 }}
-          securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
-            readOnlyRootFilesystem: true
+          command:
+            - /bin/sh
+            - -c
+            - |
+              echo "Waiting for TenantControlPlanes to be deleted..."
+              # Loop until no resources are found in the namespace
+              until [ $(kubectl get tenantcontrolplane -n org-giantswarm --no-headers 2>/dev/null | wc -l) -eq 0 ]; do
+                echo "Parent resources still exist. Sleeping..."
+                sleep 5
+              done
+              echo "Cleanup complete. Proceeding with etcd deletion."
+            resources:
+              {{- toYaml .Values.jobs.resources | nindent 12 }}
+            securityContext:
+              {{- toYaml .Values.securityContext | nindent 12 }}
+              readOnlyRootFilesystem: true
