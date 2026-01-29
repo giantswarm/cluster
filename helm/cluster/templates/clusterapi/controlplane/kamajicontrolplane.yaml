@@ -41,7 +41,7 @@ spec:
       {{- end }}
     {{- end }}
   {{- end }}
-  dataStoreName: {{ .dataStoreName | quote | default (include "cluster.resource.name" $) }}
+  dataStoreName: {{ .dataStoreName | default (printf "%s-kamaji-etcd" (include "cluster.resource.name" $)) | quote }}
   {{- with .addons }}
   addons:
     {{- if hasKey . "coreDNS" }}
