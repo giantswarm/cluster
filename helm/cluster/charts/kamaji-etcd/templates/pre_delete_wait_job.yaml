@@ -33,5 +33,5 @@ spec:
           resources:
             {{- toYaml .Values.jobs.resources | nindent 12 }}
           securityContext:
-            {{- toYaml .Values.podSecurityContext | nindent 12 }}
+            {{- toYaml .Values.securityContext | nindent 12 }}
             readOnlyRootFilesystem: true
