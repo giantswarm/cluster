@@ -1,0 +1,3 @@
+---
+chart-repos:
+  - giantswarm=https://giantswarm.github.io/default-catalog/

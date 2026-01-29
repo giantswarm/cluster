@@ -218,6 +218,7 @@ providerIntegration:
       deployment:
         additionalMetadata: {}
         podAdditionalMetadata: {}
+      enabled: false
       kubelet: {}
       network: {}
       scheduler: {}

@@ -776,6 +776,7 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.controlPlane.kamaji.deployment.tolerations[*]` |**None**|**Type:** `object`<br/>|
 | `providerIntegration.controlPlane.kamaji.deployment.topologySpreadConstraints` | **Topology spread constraints** - Topology spread constraints for pod distribution.|**Type:** `array`<br/>|
 | `providerIntegration.controlPlane.kamaji.deployment.topologySpreadConstraints[*]` |**None**|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji.enabled` | **Kamaji control plane enabled** - Flag to enable Kamaji as the control plane provider.|**Type:** `boolean`<br/>**Default:** `false`|
 | `providerIntegration.controlPlane.kamaji.kubelet` | **Kubelet configuration** - Kubelet configuration for the control plane.|**Type:** `object`<br/>|
 | `providerIntegration.controlPlane.kamaji.kubelet.cgroupfs` | **Cgroup filesystem** - Cgroup driver for the kubelet (e.g., 'systemd' or 'cgroupfs').|**Type:** `string`<br/>|
 | `providerIntegration.controlPlane.kamaji.kubelet.preferredAddressTypes` | **Preferred address types** - Ordered list of preferred address types to use for kubelet connections.|**Type:** `array`<br/>|

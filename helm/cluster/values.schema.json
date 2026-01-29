@@ -1219,6 +1219,14 @@
     },
     "type": "object",
     "additionalProperties": false,
+    "patternProperties": {
+        "^kamaji-etcd$": {
+            "type": "object",
+            "title": "Kamaji ETCD subchart values",
+            "description": "Configuration values for the kamaji-etcd subchart dependency that provides etcd storage for Kamaji control planes. For available configuration options, see the kamaji-etcd chart documentation.",
+            "additionalProperties": true
+        }
+    },
     "properties": {
         "global": {
             "type": "object",
@@ -3100,6 +3108,12 @@
                                             }
                                         }
                                     }
+                                },
+                                "enabled": {
+                                    "type": "boolean",
+                                    "title": "Kamaji control plane enabled",
+                                    "description": "Flag to enable Kamaji as the control plane provider.",
+                                    "default": false
                                 },
                                 "kubelet": {
                                     "type": "object",
