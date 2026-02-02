@@ -754,9 +754,23 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.controlPlane.kamaji.apiServer` | **API Server configuration**|**Type:** `object`<br/>|
 | `providerIntegration.controlPlane.kamaji.apiServer.extraArgs` | **Extra arguments** - Additional command-line arguments for the API server.|**Type:** `array`<br/>|
 | `providerIntegration.controlPlane.kamaji.apiServer.extraArgs[*]` |**None**|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kamaji.apiServer.resources` | **Resources** - API server pod resource configuration.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji.apiServer.resources.limits` | **Limits** - API server pod resource limits.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji.apiServer.resources.limits.cpu` | **CPU** - CPU limit for the API server pod.|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kamaji.apiServer.resources.limits.memory` | **Memory** - Memory limit for the API server pod.|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kamaji.apiServer.resources.requests` | **Requests** - API server pod resource requests.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji.apiServer.resources.requests.cpu` | **CPU** - CPU request for the API server pod.|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kamaji.apiServer.resources.requests.memory` | **Memory** - Memory request for the API server pod.|**Type:** `string`<br/>|
 | `providerIntegration.controlPlane.kamaji.controllerManager` | **Controller Manager configuration**|**Type:** `object`<br/>|
 | `providerIntegration.controlPlane.kamaji.controllerManager.extraArgs` | **Extra arguments** - Additional command-line arguments for the controller manager.|**Type:** `array`<br/>|
 | `providerIntegration.controlPlane.kamaji.controllerManager.extraArgs[*]` |**None**|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kamaji.controllerManager.resources` | **Resources** - Controller manager pod resource configuration.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji.controllerManager.resources.limits` | **Limits** - Controller manager pod resource limits.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji.controllerManager.resources.limits.cpu` | **CPU** - CPU limit for the controller manager pod.|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kamaji.controllerManager.resources.limits.memory` | **Memory** - Memory limit for the controller manager pod.|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kamaji.controllerManager.resources.requests` | **Requests** - Controller manager pod resource requests.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji.controllerManager.resources.requests.cpu` | **CPU** - CPU request for the controller manager pod.|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kamaji.controllerManager.resources.requests.memory` | **Memory** - Memory request for the controller manager pod.|**Type:** `string`<br/>|
 | `providerIntegration.controlPlane.kamaji.dataStoreName` | **Data store name** - Name of the Kamaji DataStore to use for this control plane.|**Type:** `string`<br/>|
 | `providerIntegration.controlPlane.kamaji.deployment` | **Deployment configuration** - Configuration for the Kamaji control plane Deployment.|**Type:** `object`<br/>|
 | `providerIntegration.controlPlane.kamaji.deployment.additionalMetadata` | **Additional metadata** - Additional metadata for the Deployment resource.|**Type:** `object`<br/>|
@@ -789,9 +803,17 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.controlPlane.kamaji.network.serviceLabels` | **Service labels** - Labels for the control plane Service.|**Type:** `object`<br/>|
 | `providerIntegration.controlPlane.kamaji.network.serviceLabels.*` |**None**|**Type:** `string`<br/>|
 | `providerIntegration.controlPlane.kamaji.network.serviceType` | **Service type** - Kubernetes Service type (e.g., 'LoadBalancer', 'NodePort', 'ClusterIP').|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kamaji.registry` | **Registry** - Image registry address.|**Type:** `string`<br/>**Default:** `"gsoci.azurecr.io/giantswarm"`|
 | `providerIntegration.controlPlane.kamaji.scheduler` | **Scheduler configuration**|**Type:** `object`<br/>|
 | `providerIntegration.controlPlane.kamaji.scheduler.extraArgs` | **Extra arguments** - Additional command-line arguments for the scheduler.|**Type:** `array`<br/>|
 | `providerIntegration.controlPlane.kamaji.scheduler.extraArgs[*]` |**None**|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kamaji.scheduler.resources` | **Resources** - Scheduler pod resource configuration.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji.scheduler.resources.limits` | **Limits** - Scheduler pod resource limits.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji.scheduler.resources.limits.cpu` | **CPU** - CPU limit for the scheduler pod.|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kamaji.scheduler.resources.limits.memory` | **Memory** - Memory limit for the scheduler pod.|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kamaji.scheduler.resources.requests` | **Requests** - Scheduler pod resource requests.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji.scheduler.resources.requests.cpu` | **CPU** - CPU request for the scheduler pod.|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kamaji.scheduler.resources.requests.memory` | **Memory** - Memory request for the scheduler pod.|**Type:** `string`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig` | **Kubeadm config** - Configuration of control plane nodes.|**Type:** `object`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration` | **Cluster configuration** - Configuration of Kubernetes components.|**Type:** `object`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer` | **API server** - Configuration of API server.|**Type:** `object`<br/>**Default:** `{}`|

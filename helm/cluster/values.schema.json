@@ -2990,6 +2990,47 @@
                                             "items": {
                                                 "type": "string"
                                             }
+                                        },
+                                        "resources": {
+                                            "type": "object",
+                                            "title": "Resources",
+                                            "description": "API server pod resource configuration.",
+                                            "properties": {
+                                                "limits": {
+                                                    "type": "object",
+                                                    "title": "Limits",
+                                                    "description": "API server pod resource limits.",
+                                                    "properties": {
+                                                        "cpu": {
+                                                            "type": "string",
+                                                            "title": "CPU",
+                                                            "description": "CPU limit for the API server pod."
+                                                        },
+                                                        "memory": {
+                                                            "type": "string",
+                                                            "title": "Memory",
+                                                            "description": "Memory limit for the API server pod."
+                                                        }
+                                                    }
+                                                },
+                                                "requests": {
+                                                    "type": "object",
+                                                    "title": "Requests",
+                                                    "description": "API server pod resource requests.",
+                                                    "properties": {
+                                                        "cpu": {
+                                                            "type": "string",
+                                                            "title": "CPU",
+                                                            "description": "CPU request for the API server pod."
+                                                        },
+                                                        "memory": {
+                                                            "type": "string",
+                                                            "title": "Memory",
+                                                            "description": "Memory request for the API server pod."
+                                                        }
+                                                    }
+                                                }
+                                            }
                                         }
                                     }
                                 },
@@ -3004,6 +3045,47 @@
                                             "description": "Additional command-line arguments for the controller manager.",
                                             "items": {
                                                 "type": "string"
+                                            }
+                                        },
+                                        "resources": {
+                                            "type": "object",
+                                            "title": "Resources",
+                                            "description": "Controller manager pod resource configuration.",
+                                            "properties": {
+                                                "limits": {
+                                                    "type": "object",
+                                                    "title": "Limits",
+                                                    "description": "Controller manager pod resource limits.",
+                                                    "properties": {
+                                                        "cpu": {
+                                                            "type": "string",
+                                                            "title": "CPU",
+                                                            "description": "CPU limit for the controller manager pod."
+                                                        },
+                                                        "memory": {
+                                                            "type": "string",
+                                                            "title": "Memory",
+                                                            "description": "Memory limit for the controller manager pod."
+                                                        }
+                                                    }
+                                                },
+                                                "requests": {
+                                                    "type": "object",
+                                                    "title": "Requests",
+                                                    "description": "Controller manager pod resource requests.",
+                                                    "properties": {
+                                                        "cpu": {
+                                                            "type": "string",
+                                                            "title": "CPU",
+                                                            "description": "CPU request for the controller manager pod."
+                                                        },
+                                                        "memory": {
+                                                            "type": "string",
+                                                            "title": "Memory",
+                                                            "description": "Memory request for the controller manager pod."
+                                                        }
+                                                    }
+                                                }
                                             }
                                         }
                                     }
@@ -3164,6 +3246,12 @@
                                         }
                                     }
                                 },
+                                "registry": {
+                                    "type": "string",
+                                    "title": "Registry",
+                                    "description": "Image registry address.",
+                                    "default": "gsoci.azurecr.io/giantswarm"
+                                },
                                 "scheduler": {
                                     "type": "object",
                                     "title": "Scheduler configuration",
@@ -3175,6 +3263,47 @@
                                             "description": "Additional command-line arguments for the scheduler.",
                                             "items": {
                                                 "type": "string"
+                                            }
+                                        },
+                                        "resources": {
+                                            "type": "object",
+                                            "title": "Resources",
+                                            "description": "Scheduler pod resource configuration.",
+                                            "properties": {
+                                                "limits": {
+                                                    "type": "object",
+                                                    "title": "Limits",
+                                                    "description": "Scheduler pod resource limits.",
+                                                    "properties": {
+                                                        "cpu": {
+                                                            "type": "string",
+                                                            "title": "CPU",
+                                                            "description": "CPU limit for the scheduler pod."
+                                                        },
+                                                        "memory": {
+                                                            "type": "string",
+                                                            "title": "Memory",
+                                                            "description": "Memory limit for the scheduler pod."
+                                                        }
+                                                    }
+                                                },
+                                                "requests": {
+                                                    "type": "object",
+                                                    "title": "Requests",
+                                                    "description": "Scheduler pod resource requests.",
+                                                    "properties": {
+                                                        "cpu": {
+                                                            "type": "string",
+                                                            "title": "CPU",
+                                                            "description": "CPU request for the scheduler pod."
+                                                        },
+                                                        "memory": {
+                                                            "type": "string",
+                                                            "title": "Memory",
+                                                            "description": "Memory request for the scheduler pod."
+                                                        }
+                                                    }
+                                                }
                                             }
                                         }
                                     }
