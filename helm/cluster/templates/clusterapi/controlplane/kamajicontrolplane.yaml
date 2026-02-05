@@ -22,6 +22,19 @@ spec:
       - {{ . }}
       {{- end }}
     {{- end }}
+    {{- if and .resources (or .resources.limits .resources.requests) }}
+    {{- with .resources }}
+    resources:
+      {{- with .limits }}
+      limits:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .requests }}
+      requests:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- end }}
+    {{- end }}
   {{- end }}
   {{- with .controllerManager }}
   controllerManager:
@@ -31,6 +44,19 @@ spec:
       - {{ . }}
       {{- end }}
     {{- end }}
+    {{- if and .resources (or .resources.limits .resources.requests) }}
+    {{- with .resources }}
+    resources:
+      {{- with .limits }}
+      limits:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .requests }}
+      requests:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- end }}
+    {{- end }}
   {{- end }}
   {{- with .scheduler }}
   scheduler:
@@ -39,6 +65,19 @@ spec:
       {{- range . }}
       - {{ . }}
       {{- end }}
+    {{- end }}
+    {{- if and .resources (or .resources.limits .resources.requests) }}
+    {{- with .resources }}
+    resources:
+      {{- with .limits }}
+      limits:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .requests }}
+      requests:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- end }}
     {{- end }}
   {{- end }}
   dataStoreName: {{ .dataStoreName | quote | default (include "cluster.resource.name" $) }}
@@ -89,6 +128,50 @@ spec:
     tolerations:
       {{- toYaml . | nindent 6 }}
     {{- end }}
+
+    {{- with .resources }}
+    resources:
+      {{- with .apiServer }}
+      apiServer:
+        {{- with .limits }}
+        limits:
+          {{- if .cpu }}
+          cpu: {{ .cpu | quote }}
+          {{- end }}
+          {{- if .memory }}
+          memory: {{ .memory | quote }}
+          {{- end }}
+        {{- end }}
+      {{- end }}
+      {{- with .controllerManager }}
+      controllerManager:
+        {{- with .limits }}
+        limits:
+          {{- if .cpu }}
+          cpu: {{ .cpu | quote }}
+          {{- end }}
+          {{- if .memory }}
+          memory: {{ .memory | quote }}
+          {{- end }}
+        {{- end }}
+      {{- end }}
+      {{- with .scheduler }}
+      scheduler:
+        {{- with .limits }}
+        limits:
+          {{- if .cpu }}
+          cpu: {{ .cpu | quote }}
+          {{- end }}
+          {{- if .memory }}
+          memory: {{ .memory | quote }}
+          {{- end }}
+        {{- end }}
+      {{- end }}
+    {{- end }}
+
+
+
+
     {{- with .nodeSelector }}
     nodeSelector:
       {{- toYaml . | nindent 6 }}
@@ -132,6 +215,9 @@ spec:
       - {{ . | quote }}
       {{- end }}
     {{- end }}
+  {{- end }}
+  {{- with .registry }}
+  registry: {{ . | quote }}
   {{- end }}
   {{- end }}
   version: v{{ include "cluster.component.kubernetes.version" $ }}

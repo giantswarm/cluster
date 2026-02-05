@@ -213,14 +213,24 @@ providerIntegration:
   controlPlane:
     kamaji:
       addons: {}
-      apiServer: {}
-      controllerManager: {}
+      apiServer:
+        resources:
+          limits: {}
+          requests: {}
+      controllerManager:
+        resources:
+          limits: {}
+          requests: {}
       deployment:
         additionalMetadata: {}
         podAdditionalMetadata: {}
       kubelet: {}
       network: {}
-      scheduler: {}
+      registry: gsoci.azurecr.io/giantswarm
+      scheduler:
+        resources:
+          limits: {}
+          requests: {}
     kubeadmConfig:
       clusterConfiguration:
         apiServer: {}
