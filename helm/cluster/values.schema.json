@@ -2666,20 +2666,20 @@
                     "properties": {
                         "name": {
                             "type": "string",
-                            "description": "Kubectl image repository.",
                             "title": "Repository",
+                            "description": "Kubectl image repository.",
                             "default": "giantswarm/kubectl"
                         },
                         "registry": {
                             "type": "string",
-                            "description": "Registry for kubectl image.",
                             "title": "Registry",
+                            "description": "Registry for kubectl image.",
                             "default": "gsoci.azurecr.io"
                         },
                         "tag": {
                             "type": "string",
-                            "description": "Kubectl image tag.",
                             "title": "Tag",
+                            "description": "Kubectl image tag.",
                             "default": "1.27.3"
                         }
                     }
