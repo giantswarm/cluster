@@ -2653,6 +2653,36 @@
                             }
                         }
                     }
+                },
+                "kubectlImage": {
+                    "type": "object",
+                    "title": "Kubectl image",
+                    "description": "Kubectl image used for running kubectl commands in jobs and hooks.",
+                    "required": [
+                        "name",
+                        "registry",
+                        "tag"
+                    ],
+                    "properties": {
+                        "name": {
+                            "type": "string",
+                            "description": "Kubectl image repository.",
+                            "title": "Repository",
+                            "default": "giantswarm/kubectl"
+                        },
+                        "registry": {
+                            "type": "string",
+                            "description": "Registry for kubectl image.",
+                            "title": "Registry",
+                            "default": "gsoci.azurecr.io"
+                        },
+                        "tag": {
+                            "type": "string",
+                            "description": "Kubectl image tag.",
+                            "title": "Tag",
+                            "default": "1.27.3"
+                        }
+                    }
                 }
             }
         },
