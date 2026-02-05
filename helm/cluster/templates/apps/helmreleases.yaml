@@ -26,6 +26,7 @@
 {{- $providerIntegrationAppConfig = $providerIntegrationAppConfigRaw }}
 {{- end }}
 
+
 {{- /*
     Get (optional) ephemeral app config where we have:
     - flag that indicates if the app is enabled or not
@@ -59,10 +60,12 @@ kind: HelmRelease
 metadata:
   name: {{ include "cluster.resource.name" $ }}-{{ $appName }}
   namespace: {{ $.Release.Namespace }}
-  {{- $annotations := include "cluster.annotations.common.all" $ }}
-  {{- if $annotations }}
+  {{- $combinedAnnotations := (include "cluster.annotations.common.all" $ | fromYaml) | default dict -}}
+  {{- $additional := $app.additionalAnnotations | default dict -}}
+  {{- $combinedAnnotations = merge $combinedAnnotations $additional -}}
+  {{- if $combinedAnnotations }}
   annotations:
-    {{- $annotations | indent 4 }}
+    {{- toYaml $combinedAnnotations | nindent 4 }}
   {{- end }}
   labels:
     {{- include "cluster.labels.common.all" $ | nindent 4 }}
@@ -99,9 +102,14 @@ spec:
     namespace: {{ $.Release.Namespace }}
   {{- end }}
   {{- end }}
+  {{- if not $app.localInstallation | default false }}
   kubeConfig:
     secretRef:
       name: {{ include "cluster.resource.name" $ }}-kubeconfig
+  {{- end }}
+  {{- if $app.serviceAccountName }}
+  serviceAccountName: {{ $app.serviceAccountName }}
+  {{- end }}
   interval: {{ $app.interval | default "5m" }}
   timeout: {{ $app.timeout | default "5m" }}
   install:

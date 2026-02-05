@@ -307,6 +307,8 @@ providerIntegration:
     externalDns:
       enable: true
       configTemplateName: cluster.test.providerIntegration.apps.externalDns.config
+    kamajiEtcd:
+      enable: true
     k8sAuditMetrics:
       enable: true
     k8sDnsNodeCache:

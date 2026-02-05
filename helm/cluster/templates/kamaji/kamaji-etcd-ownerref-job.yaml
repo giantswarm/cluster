@@ -1,0 +1,143 @@
+{{- if (include "isKamaji" $) }}
+---
+# ServiceAccount for the ownerRef job
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ include "cluster.resource.name" $ }}-kamaji-etcd-ownerref
+  namespace: {{ $.Release.Namespace }}
+  labels:
+    {{- include "cluster.labels.common.all" $ | nindent 4 }}
+  annotations:
+    "helm.sh/hook": "post-install,post-upgrade"
+    "helm.sh/hook-delete-policy": "before-hook-creation,hook-succeeded"
+    "helm.sh/hook-weight": "5"
+---
+# Role to get control plane resource and patch HelmRelease
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ include "cluster.resource.name" $ }}-kamaji-etcd-ownerref
+  namespace: {{ $.Release.Namespace }}
+  labels:
+    {{- include "cluster.labels.common.all" $ | nindent 4 }}
+  annotations:
+    "helm.sh/hook": "post-install,post-upgrade"
+    "helm.sh/hook-delete-policy": "before-hook-creation,hook-succeeded"
+    "helm.sh/hook-weight": "5"
+rules:
+  - apiGroups: ["kamaji.clastix.io"]
+    resources:
+      - tenantcontrolplanes
+    resourceNames:
+      - {{ include "cluster.resource.name" $ }}
+    verbs:
+      - get
+  - apiGroups: ["helm.toolkit.fluxcd.io"]
+    resources:
+      - helmreleases
+    resourceNames:
+      - {{ include "cluster.resource.name" $ }}-kamaji-etcd
+    verbs:
+      - get
+      - patch
+      - update
+      - delete
+---
+# RoleBinding for the ownerRef job
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ include "cluster.resource.name" $ }}-kamaji-etcd-ownerref
+  namespace: {{ $.Release.Namespace }}
+  labels:
+    {{- include "cluster.labels.common.all" $ | nindent 4 }}
+  annotations:
+    "helm.sh/hook": "post-install,post-upgrade"
+    "helm.sh/hook-delete-policy": "before-hook-creation,hook-succeeded"
+    "helm.sh/hook-weight": "5"
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ include "cluster.resource.name" $ }}-kamaji-etcd-ownerref
+subjects:
+  - kind: ServiceAccount
+    name: {{ include "cluster.resource.name" $ }}-kamaji-etcd-ownerref
+    namespace: {{ $.Release.Namespace }}
+---
+# Post-install/post-upgrade hook job to add ownerReference to kamaji-etcd HelmRelease
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "cluster.resource.name" $ }}-kamaji-etcd-ownerref
+  namespace: {{ $.Release.Namespace }}
+  labels:
+    {{- include "cluster.labels.common.all" $ | nindent 4 }}
+  annotations:
+    "helm.sh/hook": "post-install,post-upgrade"
+    "helm.sh/hook-delete-policy": "before-hook-creation,hook-succeeded"
+    "helm.sh/hook-weight": "10"
+spec:
+  ttlSecondsAfterFinished: 300 # 5 minutes
+  template:
+    metadata:
+      name: {{ include "cluster.resource.name" $ }}-kamaji-etcd-ownerref
+      namespace: {{ $.Release.Namespace }}
+      labels:
+        {{- include "cluster.labels.common.all" $  | nindent 8 }}
+    spec:
+      restartPolicy: Never
+      serviceAccountName: {{ include "cluster.resource.name" $ }}-kamaji-etcd-ownerref
+      securityContext:
+        runAsUser: {{ include "securityContext.runAsUser" $ }}
+        runAsGroup: {{ include "securityContext.runAsGroup" $ }}
+      containers:
+        - name: add-ownerref
+          {{- include "jobContainerCommon" . | nindent 10 }}
+          command:
+            - "/bin/bash"
+            - "-xc"
+            - |
+              set -o errexit
+              set -o pipefail
+              set -o nounset
+              
+              CP_NAME="{{ include "cluster.resource.name" $ }}"
+              HELMRELEASE_NAME="{{ include "cluster.resource.name" $ }}-kamaji-etcd"
+              NAMESPACE="{{ $.Release.Namespace }}"
+              
+              for i in {1..24}; do
+                if kubectl get tenantcontrolplane.kamaji.clastix.io -n "${NAMESPACE}" "${CP_NAME}" >/dev/null 2>&1; then
+                  echo "Resource found."
+                  break
+                fi
+                
+                if [ $i -eq 24 ]; then
+                  echo "Error: Timed out waiting for TenantControlPlane ${CP_NAME}"
+                  exit 1
+                fi
+                
+                sleep 5
+              done
+              
+              # Get the TenantControlPlane resource details
+              CP_UID=$(kubectl get tenantcontrolplane.kamaji.clastix.io -n ${NAMESPACE} ${CP_NAME} -o jsonpath='{.metadata.uid}')
+              CP_API_VERSION=$(kubectl get tenantcontrolplane.kamaji.clastix.io -n ${NAMESPACE} ${CP_NAME} -o jsonpath='{.apiVersion}')
+              CP_KIND=$(kubectl get tenantcontrolplane.kamaji.clastix.io -n ${NAMESPACE} ${CP_NAME} -o jsonpath='{.kind}')
+              
+              # Add ownerReference to HelmRelease
+              kubectl patch helmrelease "${HELMRELEASE_NAME}" -n "${NAMESPACE}" --type=merge -p "{
+                \"metadata\": {
+                  \"ownerReferences\": [
+                    {
+                      \"apiVersion\": \"${CP_API_VERSION}\",
+                      \"kind\": \"${CP_KIND}\",
+                      \"name\": \"${CP_NAME}\",
+                      \"uid\": \"${CP_UID}\",
+                      \"blockOwnerDeletion\": false,
+                      \"controller\": false
+                    }
+                  ]
+                }
+              }"
+{{- end }}
