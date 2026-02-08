@@ -15,3 +15,5 @@ defaultValues:
   # For all available values see https://github.com/giantswarm/kamaji-etcd-app/blob/main/helm/kamaji-etcd/values.yaml
   persistentVolumeClaim:
     retentionPolicyWhenDeleted: "Delete"
+  datastore:
+    name: {{ include "cluster.resource.name" $ }}
