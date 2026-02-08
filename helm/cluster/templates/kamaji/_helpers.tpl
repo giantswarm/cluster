@@ -11,6 +11,13 @@ Creates a flag indicating whether Kamaji is being used as control plane provider
 {{- end }}
 
 {{/*
+Defines the name of the HelmRelease for the Kamaji Etcd chart.
+*/}}
+{{- define "kamajiEtcdHelmreleaseName" -}}
+{{ include "cluster.resource.name" $ }}-kamaji-etcd
+{{- end }}
+
+{{/*
 Defines common container configuration for Jobs.
 */}}
 

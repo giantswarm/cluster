@@ -17,7 +17,7 @@ rules:
       - clusterroles
       - clusterrolebindings
     resourceNames:
-      - {{ include "cluster.resource.name" $ }}-kamaji-etcd-helmrelease-datastores
+      - {{ include "kamajiEtcdHelmreleaseName" $ }}-helmrelease-datastores
     verbs:
       - delete
       - get
@@ -67,7 +67,7 @@ rules:
       - roles
       - rolebindings
     resourceNames:
-      - {{ include "cluster.resource.name" $ }}-kamaji-etcd-polex
+      - {{ include "kamajiEtcdHelmreleaseName" $ }}-polex
     verbs:
       - delete
       - get
@@ -116,7 +116,7 @@ spec:
   ttlSecondsAfterFinished: 300
   template:
     metadata:
-      name: {{ include "cluster.resource.name" $ }}-kamaji-etcd-ownerref
+      name: {{ include "kamajiEtcdHelmreleaseName" $ }}-ownerref
       namespace: {{ $.Release.Namespace }}
       labels:
         {{- include "cluster.labels.common.all" $  | nindent 8 }}
@@ -146,7 +146,7 @@ spec:
                   DATASTORE_DELETED=true
                 fi
 
-                if ! kubectl get policyexceptions.kyverno.io "{{ include "cluster.resource.name" $ }}-kamaji-etcd" -n policy-exceptions >/dev/null 2>&1; then
+                if ! kubectl get policyexceptions.kyverno.io "{{ include "kamajiEtcdHelmreleaseName" $ }}" -n policy-exceptions >/dev/null 2>&1; then
                   POLICYEXCEPTION_DELETED=true
                 fi
 
@@ -163,11 +163,11 @@ spec:
               done
 
               # Delete cluster-scoped RBAC resources
-              kubectl delete clusterrole {{ include "cluster.resource.name" $ }}-kamaji-etcd-helmrelease-datastores --ignore-not-found=true
-              kubectl delete clusterrolebinding {{ include "cluster.resource.name" $ }}-kamaji-etcd-helmrelease-datastores --ignore-not-found=true
+              kubectl delete clusterrole {{ include "kamajiEtcdHelmreleaseName" $ }}-helmrelease-datastores --ignore-not-found=true
+              kubectl delete clusterrolebinding {{ include "kamajiEtcdHelmreleaseName" $ }}-helmrelease-datastores --ignore-not-found=true
 
               # Delete namespace-scoped RBAC resources in policy-exceptions
-              kubectl delete role {{ include "cluster.resource.name" $ }}-kamaji-etcd-polex -n policy-exceptions --ignore-not-found=true
-              kubectl delete rolebinding {{ include "cluster.resource.name" $ }}-kamaji-etcd-polex -n policy-exceptions --ignore-not-found=true
+              kubectl delete role {{ include "kamajiEtcdHelmreleaseName" $ }}-polex -n policy-exceptions --ignore-not-found=true
+              kubectl delete rolebinding {{ include "kamajiEtcdHelmreleaseName" $ }}-polex -n policy-exceptions --ignore-not-found=true
 
 {{- end }}
