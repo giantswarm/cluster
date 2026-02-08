@@ -19,3 +19,8 @@ defaultValues:
   global:
     podSecurityStandards:
       enforced: {{ .Values.global.podSecurityStandards.enforced }}
+    apps:
+      coreDns:
+        values:
+          mastersInstance:
+            enabled: {{ not (include "isKamaji" $) }}

@@ -128,6 +128,13 @@ Configuration of apps that are part of the cluster.
 | `global.apps.k8sDnsNodeCache.extraConfigs[*].name` | **Name** - Name of the config map or secret. The object must exist in the same namespace as the cluster App.|**Type:** `string`<br/>|
 | `global.apps.k8sDnsNodeCache.extraConfigs[*].priority` | **Priority**|**Type:** `integer`<br/>**Default:** `25`|
 | `global.apps.k8sDnsNodeCache.values` | **Config map** - Helm Values to be passed to the app as user config.|**Type:** `object`<br/>|
+| `global.apps.kamajiEtcd` | **App resource** - Configuration of a default app that is part of the cluster and is deployed as an App resource.|**Type:** `object`<br/>|
+| `global.apps.kamajiEtcd.extraConfigs` | **Extra config maps or secrets** - Extra config maps or secrets that will be used to customize to the app. The desired values must be under configmap or secret key 'values'. The values are merged in the order given, with the later values overwriting earlier, and then inline values overwriting those. Resources must be in the same namespace as the cluster.|**Type:** `array`<br/>|
+| `global.apps.kamajiEtcd.extraConfigs[*]` | **Config map or secret**|**Type:** `object`<br/>|
+| `global.apps.kamajiEtcd.extraConfigs[*].kind` | **Kind** - Specifies whether the resource is a config map or a secret.|**Type:** `string`<br/>**Allowed values:** `configMap`, `secret`<br/>|
+| `global.apps.kamajiEtcd.extraConfigs[*].name` | **Name** - Name of the config map or secret. The object must exist in the same namespace as the cluster App.|**Type:** `string`<br/>|
+| `global.apps.kamajiEtcd.extraConfigs[*].priority` | **Priority**|**Type:** `integer`<br/>**Default:** `25`|
+| `global.apps.kamajiEtcd.values` | **Config map** - Helm Values to be passed to the app as user config.|**Type:** `object`<br/>|
 | `global.apps.metricsServer` | **App resource** - Configuration of a default app that is part of the cluster and is deployed as an App resource.|**Type:** `object`<br/>|
 | `global.apps.metricsServer.extraConfigs` | **Extra config maps or secrets** - Extra config maps or secrets that will be used to customize to the app. The desired values must be under configmap or secret key 'values'. The values are merged in the order given, with the later values overwriting earlier, and then inline values overwriting those. Resources must be in the same namespace as the cluster.|**Type:** `array`<br/>|
 | `global.apps.metricsServer.extraConfigs[*]` | **Config map or secret**|**Type:** `object`<br/>|
@@ -482,6 +489,10 @@ For Giant Swarm internal use only, not stable, or not supported by UIs.
 | `internal.ephemeralConfiguration.apps.PATTERN.versionOverride` | **Version override** - Custom application version that overrides the application version from the release. This is usually a new development version that you want to test, or a newer patch version that you need to deploy in order to put out a production fire in the middle of the night. Use carefully!|**Type:** `string`<br/>**Key pattern:**<br/>`PATTERN`=`[a-z][a-zA-Z]+`<br/>|
 | `internal.ephemeralConfiguration.offlineTesting` | **Offline testing** - Configure how Helm template rendering behaves when it is running during testing (e.g. locally or in the CI) and without connection to cluster.|**Type:** `object`<br/>|
 | `internal.ephemeralConfiguration.offlineTesting.renderWithoutReleaseResource` | **Render without Release resource** - Flag that indicates that Helm should render templates even when Release CR cannot be fetched from the cluster.|**Type:** `boolean`<br/>|
+| `internal.kubectlImage` | **Kubectl image** - Kubectl image used for running kubectl commands in jobs and hooks.|**Type:** `object`<br/>|
+| `internal.kubectlImage.name` | **Repository** - Kubectl image repository.|**Type:** `string`<br/>**Default:** `"giantswarm/kubectl"`|
+| `internal.kubectlImage.registry` | **Registry** - Registry for kubectl image.|**Type:** `string`<br/>**Default:** `"gsoci.azurecr.io"`|
+| `internal.kubectlImage.tag` | **Tag** - Kubectl image tag.|**Type:** `string`<br/>**Default:** `"1.27.3"`|
 
 ### Metadata
 Properties within the `.global.metadata` object
@@ -596,6 +607,9 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.apps.k8sDnsNodeCache` | **Provider integration app config** - App config used to additionally configure an app for a specific provider|**Type:** `object`<br/>|
 | `providerIntegration.apps.k8sDnsNodeCache.configTemplateName` | **Config template name** - Name of the Helm template that has provider-specific app config. Provider-specific app config overrides provider-independent app config, while custom user config overrides both provider-independent and provider-specific default app config.|**Type:** `string`<br/>|
 | `providerIntegration.apps.k8sDnsNodeCache.enable` | **Enable** - Flag that indicates if an app is enabled for a provider. It is false by default, which allows for more incremental and safer adoption of the cluster chart.|**Type:** `boolean`<br/>**Default:** `false`|
+| `providerIntegration.apps.kamajiEtcd` | **Provider integration app config** - App config used to additionally configure an app for a specific provider|**Type:** `object`<br/>|
+| `providerIntegration.apps.kamajiEtcd.configTemplateName` | **Config template name** - Name of the Helm template that has provider-specific app config. Provider-specific app config overrides provider-independent app config, while custom user config overrides both provider-independent and provider-specific default app config.|**Type:** `string`<br/>|
+| `providerIntegration.apps.kamajiEtcd.enable` | **Enable** - Flag that indicates if an app is enabled for a provider. It is false by default, which allows for more incremental and safer adoption of the cluster chart.|**Type:** `boolean`<br/>**Default:** `false`|
 | `providerIntegration.apps.metricsServer` | **Provider integration app config** - App config used to additionally configure an app for a specific provider|**Type:** `object`<br/>|
 | `providerIntegration.apps.metricsServer.configTemplateName` | **Config template name** - Name of the Helm template that has provider-specific app config. Provider-specific app config overrides provider-independent app config, while custom user config overrides both provider-independent and provider-specific default app config.|**Type:** `string`<br/>|
 | `providerIntegration.apps.metricsServer.enable` | **Enable** - Flag that indicates if an app is enabled for a provider. It is false by default, which allows for more incremental and safer adoption of the cluster chart.|**Type:** `boolean`<br/>**Default:** `false`|
