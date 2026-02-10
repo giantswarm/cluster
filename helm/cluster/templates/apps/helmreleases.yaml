@@ -109,7 +109,7 @@ spec:
     namespace: {{ $.Release.Namespace }}
   {{- end }}
   {{- end }}
-  {{- if not $app.localInstallation | default false }}
+  {{- if not ($app.localInstallation | default false) }}
   kubeConfig:
     secretRef:
       name: {{ include "cluster.resource.name" $ }}-kubeconfig
