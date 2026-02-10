@@ -12,7 +12,7 @@
 to avoid naming conflicts in case of multiple clusters deployed in the same namespace.
 */}}
 {{- $releaseName := $appName }}
-{{- if $app.localInstallation}}
+{{- if $app.localInstallation }}
 {{- $releaseName = printf "%s-%s" (include "cluster.resource.name" $) $appName }}
 {{- end }}
 {{- $_ := set $ "appName" $appName }}
