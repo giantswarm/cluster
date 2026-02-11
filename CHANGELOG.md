@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Migrate 20 default apps from App CRs to Flux HelmRelease CRs (`cert-exporter`, `cert-manager`, `chart-operator-extensions`, `cilium-servicemonitors`, `cluster-autoscaler`, `coredns-extensions`, `etcd-defrag`, `etcd-k8s-res-count-exporter`, `external-dns`, `k8s-audit-metrics`, `k8s-dns-node-cache`, `metrics-server`, `net-exporter`, `node-exporter`, `observability-bundle`, `observability-policies`, `prometheus-blackbox-exporter`, `security-bundle`, `teleport-kube-agent`, `vertical-pod-autoscaler`).
+- Add `clusterValues` and `inCluster` support to the HelmRelease template for apps that need cluster values ConfigMaps/Secrets or deploy to the management cluster.
+- Add pre-upgrade migration hook Job to safely remove Chart CR finalizers and delete Chart CRs before the upgrade, preventing chart-operator from uninstalling existing Helm releases during the transition.
+
 ## [5.1.2] - 2026-01-21
 
 ### Changed

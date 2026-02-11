@@ -68,8 +68,13 @@ metadata:
     {{- include "cluster.labels.common.all" $ | nindent 4 }}
 spec:
   releaseName: {{ $appName }}
+  {{- if $app.inCluster }}
+  targetNamespace: {{ $.Release.Namespace }}
+  storageNamespace: {{ $.Release.Namespace }}
+  {{- else }}
   targetNamespace: {{ $app.namespace }}
   storageNamespace: {{ $app.namespace }}
+  {{- end }}
   chart:
     spec:
       chart: {{ $app.chartName | default $app.appName }}
@@ -90,7 +95,11 @@ spec:
       {{- $dependencies = append $dependencies $dependency }}
     {{- end }}
   {{- else if $app.dependsOn }}
+    {{- if kindIs "string" $app.dependsOn }}
+    {{- $dependencies = list $app.dependsOn }}
+    {{- else }}
     {{- $dependencies = $app.dependsOn }}
+    {{- end }}
   {{- end }}
   {{- if $dependencies }}
   dependsOn:
@@ -99,9 +108,13 @@ spec:
     namespace: {{ $.Release.Namespace }}
   {{- end }}
   {{- end }}
+  {{- if $app.inCluster }}
+  serviceAccountName: automation
+  {{- else }}
   kubeConfig:
     secretRef:
       name: {{ include "cluster.resource.name" $ }}-kubeconfig
+  {{- end }}
   interval: {{ $app.interval | default "5m" }}
   timeout: {{ $app.timeout | default "5m" }}
   install:
@@ -140,10 +153,25 @@ spec:
   values: {{- $appHelmValues | toYaml | nindent 4 }}
   {{- end }}
   {{- $extraConfigs := concat ($app.extraConfigs | default list) ($userConfig.extraConfigs | default list) }}
-  {{- if $extraConfigs }}
+  {{- $hasClusterValues := or (($app.clusterValues).configMap) (($app.clusterValues).secret) }}
+  {{- if or $extraConfigs $hasClusterValues }}
   valuesFrom:
+    {{- if ($app.clusterValues).configMap }}
+  - kind: ConfigMap
+    name: {{ include "cluster.resource.name" $ }}-cluster-values
+    valuesKey: values
+    optional: false
+    {{- end }}
+    {{- if ($app.clusterValues).secret }}
+  - kind: Secret
+    name: {{ include "cluster.resource.name" $ }}-cluster-values
+    valuesKey: values
+    optional: false
+    {{- end }}
     {{- range $extraConfig := $extraConfigs }}
-  - kind: {{ $extraConfig.kind }}
+  {{- $kind := $extraConfig.kind }}
+  {{- if eq $kind "configMap" }}{{ $kind = "ConfigMap" }}{{ else if eq $kind "secret" }}{{ $kind = "Secret" }}{{ end }}
+  - kind: {{ $kind }}
     name: {{ $extraConfig.name }}
     valuesKey: values
     optional: {{ $extraConfig.optional | default false  }}
