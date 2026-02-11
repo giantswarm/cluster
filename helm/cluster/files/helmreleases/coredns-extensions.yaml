@@ -4,7 +4,6 @@ configKey: coreDnsExtensions
 clusterValues:
   configMap: true
   secret: false
-dependsOnHelmRelease: true
 dependsOn: vertical-pod-autoscaler-crd
 namespace: kube-system
 # used by renovate
