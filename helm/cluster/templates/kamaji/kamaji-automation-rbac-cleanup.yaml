@@ -1,4 +1,4 @@
-{{- if (include "isKamaji" $) }}
+{{- if (include "kamaji.isEnabled" $) }}
 ---
 # ClusterRole for the automation service account to delete cluster-scoped RBAC resources
 apiVersion: rbac.authorization.k8s.io/v1
@@ -17,7 +17,7 @@ rules:
       - clusterroles
       - clusterrolebindings
     resourceNames:
-      - {{ include "kamajiEtcdHelmreleaseName" $ }}-helmrelease-datastores
+      - {{ include "kamaji.etcdHelmreleaseName" $ }}-helmrelease-datastores
     verbs:
       - delete
       - get
@@ -67,7 +67,7 @@ rules:
       - roles
       - rolebindings
     resourceNames:
-      - {{ include "kamajiEtcdHelmreleaseName" $ }}-polex
+      - {{ include "kamaji.etcdHelmreleaseName" $ }}-polex
     verbs:
       - delete
       - get
@@ -116,7 +116,7 @@ spec:
   ttlSecondsAfterFinished: 300
   template:
     metadata:
-      name: {{ include "kamajiEtcdHelmreleaseName" $ }}-ownerref
+      name: {{ include "kamaji.etcdHelmreleaseName" $ }}-ownerref
       namespace: {{ $.Release.Namespace }}
       labels:
         {{- include "cluster.labels.common.all" $  | nindent 8 }}
@@ -124,11 +124,11 @@ spec:
       restartPolicy: Never
       serviceAccountName: automation
       securityContext:
-        runAsUser: {{ include "securityContext.runAsUser" $ }}
-        runAsGroup: {{ include "securityContext.runAsGroup" $ }}
+        runAsUser: {{ include "kamaji.securityContext.runAsUser" $ }}
+        runAsGroup: {{ include "kamaji.securityContext.runAsGroup" $ }}
       containers:
         - name: cleanup
-          {{- include "jobContainerCommon" . | nindent 10 }}
+          {{- include "kamaji.jobContainerCommon" . | nindent 10 }}
           command:
             - "/bin/bash"
             - "-xc"
@@ -146,7 +146,7 @@ spec:
                   DATASTORE_DELETED=true
                 fi
 
-                if ! kubectl get policyexceptions.kyverno.io "{{ include "kamajiEtcdHelmreleaseName" $ }}" -n policy-exceptions >/dev/null 2>&1; then
+                if ! kubectl get policyexceptions.kyverno.io "{{ include "kamaji.etcdHelmreleaseName" $ }}" -n policy-exceptions >/dev/null 2>&1; then
                   POLICYEXCEPTION_DELETED=true
                 fi
 
@@ -163,11 +163,11 @@ spec:
               done
 
               # Delete cluster-scoped RBAC resources
-              kubectl delete clusterrole {{ include "kamajiEtcdHelmreleaseName" $ }}-helmrelease-datastores --ignore-not-found=true
-              kubectl delete clusterrolebinding {{ include "kamajiEtcdHelmreleaseName" $ }}-helmrelease-datastores --ignore-not-found=true
+              kubectl delete clusterrole {{ include "kamaji.etcdHelmreleaseName" $ }}-helmrelease-datastores --ignore-not-found=true
+              kubectl delete clusterrolebinding {{ include "kamaji.etcdHelmreleaseName" $ }}-helmrelease-datastores --ignore-not-found=true
 
               # Delete namespace-scoped RBAC resources in policy-exceptions
-              kubectl delete role {{ include "kamajiEtcdHelmreleaseName" $ }}-polex -n policy-exceptions --ignore-not-found=true
-              kubectl delete rolebinding {{ include "kamajiEtcdHelmreleaseName" $ }}-polex -n policy-exceptions --ignore-not-found=true
+              kubectl delete role {{ include "kamaji.etcdHelmreleaseName" $ }}-polex -n policy-exceptions --ignore-not-found=true
+              kubectl delete rolebinding {{ include "kamaji.etcdHelmreleaseName" $ }}-polex -n policy-exceptions --ignore-not-found=true
 
 {{- end }}

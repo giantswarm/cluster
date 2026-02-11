@@ -1,4 +1,4 @@
-{{- if (include "isKamaji" $) }}
+{{- if (include "kamaji.isEnabled" $) }}
 apiVersion: controlplane.cluster.x-k8s.io/v1alpha1
 kind: KamajiControlPlane
 metadata:

@@ -1,9 +1,9 @@
-{{- if (include "isKamaji" $) }}
+{{- if (include "kamaji.isEnabled" $) }}
 # ClusterRole for DataStore (cluster-scoped resource)
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: {{ include "kamajiEtcdHelmreleaseName" $ }}-helmrelease-datastores
+  name: {{ include "kamaji.etcdHelmreleaseName" $ }}-helmrelease-datastores
   annotations:
     helm.sh/resource-policy: "keep"
   labels:
@@ -30,7 +30,7 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: {{ include "kamajiEtcdHelmreleaseName" $ }}-helmrelease-datastores
+  name: {{ include "kamaji.etcdHelmreleaseName" $ }}-helmrelease-datastores
   annotations:
     helm.sh/resource-policy: "keep"
   labels:
@@ -38,7 +38,7 @@ metadata:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: {{ include "kamajiEtcdHelmreleaseName" $ }}-helmrelease-datastores
+  name: {{ include "kamaji.etcdHelmreleaseName" $ }}-helmrelease-datastores
 subjects:
   - kind: ServiceAccount
     name: automation
@@ -48,7 +48,7 @@ subjects:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: {{ include "kamajiEtcdHelmreleaseName" $ }}-polex
+  name: {{ include "kamaji.etcdHelmreleaseName" $ }}-polex
   namespace: policy-exceptions
   annotations:
     helm.sh/resource-policy: "keep"
@@ -58,7 +58,7 @@ rules:
     resources:
       - policyexceptions
     resourceNames:
-      - {{ include "kamajiEtcdHelmreleaseName" $ }}  # Only this specific PolicyException
+      - {{ include "kamaji.etcdHelmreleaseName" $ }}  # Only this specific PolicyException
     verbs:
       - delete
       - get
@@ -76,14 +76,14 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: {{ include "kamajiEtcdHelmreleaseName" $ }}-polex
+  name: {{ include "kamaji.etcdHelmreleaseName" $ }}-polex
   namespace: policy-exceptions
   annotations:
     helm.sh/resource-policy: "keep"
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: {{ include "kamajiEtcdHelmreleaseName" $ }}-polex
+  name: {{ include "kamaji.etcdHelmreleaseName" $ }}-polex
 subjects:
   - kind: ServiceAccount
     name: automation

@@ -1,7 +1,7 @@
 {{/*
 Creates a flag indicating whether Kamaji is being used as control plane provider.
 */}}
-{{- define "isKamaji" -}}
+{{- define "kamaji.isEnabled" -}}
     {{- if and
       $.Values.providerIntegration.resourcesApi.controlPlaneResource.enabled
       (eq $.Values.providerIntegration.resourcesApi.controlPlaneResource.provider "kamaji")
@@ -13,7 +13,7 @@ Creates a flag indicating whether Kamaji is being used as control plane provider
 {{/*
 Defines the name of the HelmRelease for the Kamaji Etcd chart.
 */}}
-{{- define "kamajiEtcdHelmreleaseName" -}}
+{{- define "kamaji.etcdHelmreleaseName" -}}
 {{ include "cluster.resource.name" $ }}-kamaji-etcd
 {{- end }}
 
@@ -21,14 +21,14 @@ Defines the name of the HelmRelease for the Kamaji Etcd chart.
 Defines common container configuration for Jobs.
 */}}
 
-{{- define "securityContext.runAsUser" -}}
+{{- define "kamaji.securityContext.runAsUser" -}}
 1000
 {{- end -}}
-{{- define "securityContext.runAsGroup" -}}
+{{- define "kamaji.securityContext.runAsGroup" -}}
 1000
 {{- end -}}
 
-{{- define "jobContainerCommon" -}}
+{{- define "kamaji.jobContainerCommon" -}}
 image: "{{ .Values.internal.kubectlImage.registry }}/{{ .Values.internal.kubectlImage.name }}:{{ .Values.internal.kubectlImage.tag }}"
 securityContext:
   readOnlyRootFilesystem: true

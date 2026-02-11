@@ -11,7 +11,7 @@ serviceAccountName: automation
 # used by renovate
 # repo: giantswarm/kamaji-etcd-app
 version: 0.2.1
-disable: {{ not (eq (include "isKamaji" $) "true") }}
+disable: {{ not (eq (include "kamaji.isEnabled" $) "true") }}
 defaultValues:
   # For all available values see https://github.com/giantswarm/kamaji-etcd-app/blob/main/helm/kamaji-etcd/values.yaml
   persistentVolumeClaim:

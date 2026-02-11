@@ -1,10 +1,10 @@
-{{- if (include "isKamaji" $) }}
+{{- if (include "kamaji.isEnabled" $) }}
 ---
 # ServiceAccount for the ownerRef job
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: {{ include "kamajiEtcdHelmreleaseName" $ }}-ownerref
+  name: {{ include "kamaji.etcdHelmreleaseName" $ }}-ownerref
   namespace: {{ $.Release.Namespace }}
   labels:
     {{- include "cluster.labels.common.all" $ | nindent 4 }}
@@ -17,7 +17,7 @@ metadata:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: {{ include "kamajiEtcdHelmreleaseName" $ }}-ownerref
+  name: {{ include "kamaji.etcdHelmreleaseName" $ }}-ownerref
   namespace: {{ $.Release.Namespace }}
   labels:
     {{- include "cluster.labels.common.all" $ | nindent 4 }}
@@ -37,7 +37,7 @@ rules:
     resources:
       - helmreleases
     resourceNames:
-      - {{ include "kamajiEtcdHelmreleaseName" $ }}
+      - {{ include "kamaji.etcdHelmreleaseName" $ }}
     verbs:
       - get
       - patch
@@ -48,7 +48,7 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: {{ include "kamajiEtcdHelmreleaseName" $ }}-ownerref
+  name: {{ include "kamaji.etcdHelmreleaseName" $ }}-ownerref
   namespace: {{ $.Release.Namespace }}
   labels:
     {{- include "cluster.labels.common.all" $ | nindent 4 }}
@@ -59,17 +59,17 @@ metadata:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: {{ include "kamajiEtcdHelmreleaseName" $ }}-ownerref
+  name: {{ include "kamaji.etcdHelmreleaseName" $ }}-ownerref
 subjects:
   - kind: ServiceAccount
-    name: {{ include "kamajiEtcdHelmreleaseName" $ }}-ownerref
+    name: {{ include "kamaji.etcdHelmreleaseName" $ }}-ownerref
     namespace: {{ $.Release.Namespace }}
 ---
 # Post-install/post-upgrade hook job to add ownerReference to kamaji-etcd HelmRelease
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ include "kamajiEtcdHelmreleaseName" $ }}-ownerref
+  name: {{ include "kamaji.etcdHelmreleaseName" $ }}-ownerref
   namespace: {{ $.Release.Namespace }}
   labels:
     {{- include "cluster.labels.common.all" $ | nindent 4 }}
@@ -81,19 +81,19 @@ spec:
   ttlSecondsAfterFinished: 300 # 5 minutes
   template:
     metadata:
-      name: {{ include "kamajiEtcdHelmreleaseName" $ }}-ownerref
+      name: {{ include "kamaji.etcdHelmreleaseName" $ }}-ownerref
       namespace: {{ $.Release.Namespace }}
       labels:
         {{- include "cluster.labels.common.all" $  | nindent 8 }}
     spec:
       restartPolicy: Never
-      serviceAccountName: {{ include "kamajiEtcdHelmreleaseName" $ }}-ownerref
+      serviceAccountName: {{ include "kamaji.etcdHelmreleaseName" $ }}-ownerref
       securityContext:
-        runAsUser: {{ include "securityContext.runAsUser" $ }}
-        runAsGroup: {{ include "securityContext.runAsGroup" $ }}
+        runAsUser: {{ include "kamaji.securityContext.runAsUser" $ }}
+        runAsGroup: {{ include "kamaji.securityContext.runAsGroup" $ }}
       containers:
         - name: add-ownerref
-          {{- include "jobContainerCommon" . | nindent 10 }}
+          {{- include "kamaji.jobContainerCommon" . | nindent 10 }}
           command:
             - "/bin/bash"
             - "-xc"
@@ -103,7 +103,7 @@ spec:
               set -o nounset
               
               CP_NAME="{{ include "cluster.resource.name" $ }}"
-              HELMRELEASE_NAME="{{ include "kamajiEtcdHelmreleaseName" $ }}"
+              HELMRELEASE_NAME="{{ include "kamaji.etcdHelmreleaseName" $ }}"
               NAMESPACE="{{ $.Release.Namespace }}"
               
               for i in {1..24}; do

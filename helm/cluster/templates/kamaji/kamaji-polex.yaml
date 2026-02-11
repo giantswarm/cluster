@@ -1,4 +1,4 @@
-{{- if (include "isKamaji" $) }}
+{{- if (include "kamaji.isEnabled" $) }}
 apiVersion: kyverno.io/v2
 kind: PolicyException
 metadata:
