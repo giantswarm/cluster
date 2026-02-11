@@ -9,4 +9,4 @@ sources:
   - https://github.com/giantswarm/cluster
 annotations:
   application.giantswarm.io/app-type: cluster
-  application.giantswarm.io/team: turtles
+  application.giantswarm.io/team: tenet
