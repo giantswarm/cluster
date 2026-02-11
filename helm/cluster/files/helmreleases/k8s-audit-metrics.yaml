@@ -3,7 +3,6 @@ configKey: k8sAuditMetrics
 clusterValues:
   configMap: true
   secret: false
-dependsOnHelmRelease: true
 dependsOn: kyverno-crds
 namespace: kube-system
 # used by renovate

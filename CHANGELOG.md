@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add pre-delete hook Job to remove `HelmRelease` CRs when deleting a cluster. This is required because sometimes flux does not have enough time to clean up the `HelmRelease` CRs before the control plane API is deleted.
+
 ## [6.7.0] - 2026-06-17
 
 ### Changed
@@ -71,6 +75,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Helpers: Use `.Chart.AppVersion` in `app.kubernetes.io/version` label.
+- Migrate default apps from `App` CRs to Flux `HelmRelease` CRs.
 
 ## [6.0.0] - 2026-03-09
 
