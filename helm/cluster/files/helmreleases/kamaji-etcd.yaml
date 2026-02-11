@@ -4,7 +4,7 @@ configKey: kamajiEtcd
 additionalAnnotations:
   helm.sh/resource-policy: "keep"
 interval: 1m
-localInstallation: true
+skipKubeConfig: true
 namespace: {{ $.Release.Namespace }}
 serviceAccountName: automation
 # used by renovate
