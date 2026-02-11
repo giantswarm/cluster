@@ -23,4 +23,4 @@ defaultValues:
       coreDns:
         values:
           mastersInstance:
-            enabled: {{ not (include "kamaji.isEnabled" $) }}
+            enabled: {{ include "cluster.internal.apps.coredns.mastersInstance.enabled" $ }}

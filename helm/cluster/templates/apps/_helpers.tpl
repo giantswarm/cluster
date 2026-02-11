@@ -15,6 +15,15 @@
 {{- end -}}
 
 {{/*
+There are cases where we don't want to deploy the coreDns control plane components (for example when using Kamaji.)
+*/}}
+{{- define "cluster.internal.apps.coredns.mastersInstance.enabled" -}}
+    {{- if not (include "kamaji.isEnabled" $) -}}
+        {{- printf "true" -}}
+    {{- end -}}
+{{- end -}}
+
+{{/*
 Resolve App CR inconcistencies when baseDomain is taken from the catalog or from cluster-values.
 See https://github.com/giantswarm/giantswarm/issues/29733
 */}}
