@@ -9,11 +9,11 @@
 {{- $app := tpl (.Files.Get $path) $ | fromYaml }}
 {{- $appName := $app.appName }}
 
-{{- /* For hr installations targeting the MC, we want to add the cluster name as a prefix to the appName 
+{{- /* For hr installations targeting the MC, we want to add the cluster name as a prefix to the appName
 to avoid naming conflicts in case of multiple clusters deployed in the same namespace.
 */}}
 {{- $releaseName := $appName }}
-{{- if $app.prependClusterName }}
+{{- if $app.inCluster }}
 {{- $releaseName = printf "%s-%s" (include "cluster.resource.name" $) $appName }}
 {{- end }}
 {{- $_ := set $ "appName" $appName }}
@@ -104,8 +104,13 @@ metadata:
     {{- include "cluster.labels.common.all" $ | nindent 4 }}
 spec:
   releaseName: {{ $releaseName | trunc 53 | trimSuffix "-" }}
+  {{- if $app.inCluster }}
+  targetNamespace: {{ $.Release.Namespace }}
+  storageNamespace: {{ $.Release.Namespace }}
+  {{- else }}
   targetNamespace: {{ $app.namespace }}
   storageNamespace: {{ $app.namespace }}
+  {{- end }}
   {{- if $app.useOCISource }}
   chartRef:
     kind: OCIRepository
@@ -130,7 +135,11 @@ spec:
       {{- $dependencies = append $dependencies $dependency }}
     {{- end }}
   {{- else if $app.dependsOn }}
+    {{- if kindIs "string" $app.dependsOn }}
+    {{- $dependencies = list $app.dependsOn }}
+    {{- else }}
     {{- $dependencies = $app.dependsOn }}
+    {{- end }}
   {{- end }}
   {{- if $dependencies }}
   dependsOn:
@@ -139,13 +148,12 @@ spec:
     namespace: {{ $.Release.Namespace }}
   {{- end }}
   {{- end }}
-  {{- if not ($app.skipKubeConfig | default false) }}
+  {{- if $app.inCluster }}
+  serviceAccountName: automation
+  {{- else }}
   kubeConfig:
     secretRef:
       name: {{ include "cluster.resource.name" $ }}-kubeconfig
-  {{- end }}
-  {{- if $app.serviceAccountName }}
-  serviceAccountName: {{ $app.serviceAccountName }}
   {{- end }}
   interval: {{ $app.interval | default "5m" }}
   timeout: {{ $app.timeout | default "5m" }}
@@ -185,10 +193,25 @@ spec:
   values: {{- $appHelmValues | toYaml | nindent 4 }}
   {{- end }}
   {{- $extraConfigs := concat ($app.extraConfigs | default list) ($userConfig.extraConfigs | default list) }}
-  {{- if $extraConfigs }}
+  {{- $hasClusterValues := or (($app.clusterValues).configMap) (($app.clusterValues).secret) }}
+  {{- if or $extraConfigs $hasClusterValues }}
   valuesFrom:
+    {{- if ($app.clusterValues).configMap }}
+  - kind: ConfigMap
+    name: {{ include "cluster.resource.name" $ }}-cluster-values
+    valuesKey: values
+    optional: false
+    {{- end }}
+    {{- if ($app.clusterValues).secret }}
+  - kind: Secret
+    name: {{ include "cluster.resource.name" $ }}-cluster-values
+    valuesKey: values
+    optional: false
+    {{- end }}
     {{- range $extraConfig := $extraConfigs }}
-  - kind: {{ $extraConfig.kind }}
+  {{- $kind := $extraConfig.kind }}
+  {{- if eq $kind "configMap" }}{{ $kind = "ConfigMap" }}{{ else if eq $kind "secret" }}{{ $kind = "Secret" }}{{ end }}
+  - kind: {{ $kind }}
     name: {{ $extraConfig.name }}
     valuesKey: values
     optional: {{ $extraConfig.optional | default false  }}

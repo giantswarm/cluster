@@ -5,7 +5,6 @@ clusterValues:
   configMap: true
   secret: false
 inCluster: true
-dependsOnHelmRelease: true
 dependsOn: coredns
 namespace: kube-system
 # used by renovate
