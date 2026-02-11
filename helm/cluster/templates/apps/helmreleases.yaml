@@ -12,7 +12,7 @@
 to avoid naming conflicts in case of multiple clusters deployed in the same namespace.
 */}}
 {{- $releaseName := $appName }}
-{{- if $app.localInstallation }}
+{{- if $app.prependClusterName }}
 {{- $releaseName = printf "%s-%s" (include "cluster.resource.name" $) $appName }}
 {{- end }}
 {{- $_ := set $ "appName" $appName }}
@@ -77,7 +77,7 @@ metadata:
   labels:
     {{- include "cluster.labels.common.all" $ | nindent 4 }}
 spec:
-  releaseName: {{ $releaseName }}
+  releaseName: {{ $app.releaseName | default $appName }}
   targetNamespace: {{ $app.namespace }}
   storageNamespace: {{ $app.namespace }}
   chart:
