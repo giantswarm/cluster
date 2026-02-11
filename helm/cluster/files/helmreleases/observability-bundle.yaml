@@ -1,0 +1,10 @@
+appName: observability-bundle
+# repo: giantswarm/observability-bundle
+version: 3.3.1
+
+inCluster: true
+driftDetection: enabled
+
+defaultValues:
+  managementCluster: {{ $.Values.global.managementCluster }}
+  clusterID: {{ include "cluster.resource.name" $ }}

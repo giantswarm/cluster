@@ -1,0 +1,10 @@
+appName: node-exporter
+chartName: node-exporter-app
+# repo: giantswarm/node-exporter-app
+version: 1.20.13
+dependsOn:
+- kyverno-crds
+- prometheus-operator-crd
+- vertical-pod-autoscaler-crd
+
+namespace: kube-system

@@ -1,0 +1,10 @@
+appName: k8s-audit-metrics
+# repo: giantswarm/k8s-audit-metrics
+version: 0.10.13
+dependsOn:
+- cilium
+- kyverno-crds
+- prometheus-operator-crd
+- vertical-pod-autoscaler-crd
+
+namespace: kube-system

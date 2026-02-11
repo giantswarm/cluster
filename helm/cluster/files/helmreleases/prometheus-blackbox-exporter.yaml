@@ -1,0 +1,8 @@
+appName: prometheus-blackbox-exporter
+# repo: giantswarm/prometheus-blackbox-exporter-app
+version: 0.9.0
+dependsOn:
+- prometheus-operator-crd
+- vertical-pod-autoscaler-crd
+
+namespace: kube-system
