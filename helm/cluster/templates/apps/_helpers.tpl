@@ -20,6 +20,8 @@ There are cases where we don't want to deploy the coreDns control plane componen
 {{- define "cluster.internal.apps.coredns.mastersInstance.enabled" -}}
     {{- if not (include "kamaji.isEnabled" $) -}}
         {{- printf "true" -}}
+    {{- else -}}
+        {{- printf "false" -}}
     {{- end -}}
 {{- end -}}
 
