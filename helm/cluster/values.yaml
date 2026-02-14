@@ -16,6 +16,7 @@ global:
     giantswarmClusterSuite: {}
     k8sAuditMetrics: {}
     k8sDnsNodeCache: {}
+    kamajiEtcd: {}
     metricsServer: {}
     netExporter: {}
     networkPolicies: {}
@@ -138,6 +139,10 @@ internal:
     workers: {}
   ephemeralConfiguration:
     offlineTesting: {}
+  kubectlImage:
+    name: giantswarm/kubectl
+    registry: gsoci.azurecr.io
+    tag: 1.27.3
 providerIntegration:
   apps:
     certExporter:
@@ -167,6 +172,8 @@ providerIntegration:
     k8sAuditMetrics:
       enable: false
     k8sDnsNodeCache:
+      enable: false
+    kamajiEtcd:
       enable: false
     metricsServer:
       enable: false
