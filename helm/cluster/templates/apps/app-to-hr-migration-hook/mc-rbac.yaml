@@ -1,0 +1,39 @@
+{{- if $.Values.providerIntegration.apps }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ include "cluster.resource.name" $ }}-migrate-apps-mc
+  namespace: org-giantswarm
+  labels:
+    {{- include "cluster.labels.common.all" $ | nindent 4 }}
+  annotations:
+    helm.sh/hook: pre-upgrade
+    helm.sh/hook-weight: "-20"
+    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+rules:
+- apiGroups: [""]
+  resources: ["secrets"]
+  verbs: ["get"]
+  resourceNames:
+  - {{ .Values.global.managementCluster }}-kubeconfig
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ include "cluster.resource.name" $ }}-migrate-apps-mc
+  namespace: org-giantswarm
+  labels:
+    {{- include "cluster.labels.common.all" $ | nindent 4 }}
+  annotations:
+    helm.sh/hook: pre-upgrade
+    helm.sh/hook-weight: "-20"
+    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ include "cluster.resource.name" $ }}-migrate-apps-mc
+subjects:
+- kind: ServiceAccount
+  name: {{ include "cluster.resource.name" $ }}-migrate-apps
+  namespace: {{ $.Release.Namespace }}
+{{- end }}
