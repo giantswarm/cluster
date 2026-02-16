@@ -201,12 +201,18 @@ spec:
               echo "  Pausing sub-App CR $SUB_APP"
               kubectl annotate apps.application.giantswarm.io "$SUB_APP" -n "$NAMESPACE" \
                 "operatorkit.giantswarm.io/paused=true" --overwrite 2>/dev/null || true
-
-              WC_CHART_NAME="${SUB_APP#${CLUSTER_NAME}-}"
-              echo "  Cleaning up Chart CR $WC_CHART_NAME on WC"
-              cleanup_wc_chart "$WC_CHART_NAME"
             done
           done
+
+          # Clean up WC Chart CRs for discovered sub-apps (parallel)
+          for SUB_APP in $ALL_SUB_APPS; do
+            SUB_APP=$(echo "$SUB_APP" | tr -d '[:space:]')
+            [ -z "$SUB_APP" ] && continue
+            WC_CHART_NAME="${SUB_APP#${CLUSTER_NAME}-}"
+            echo "  Cleaning up Chart CR $WC_CHART_NAME on WC"
+            cleanup_wc_chart "$WC_CHART_NAME" &
+          done
+          wait || true
 
           # 1c. Clean up WC Chart CRs for non-bundle apps (parallel)
           echo "Phase 1c: Cleaning up WC Chart CRs for non-bundle apps"
