@@ -3,7 +3,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: {{ include "cluster.resource.name" $ }}-migrate-apps-mc
-  namespace: org-giantswarm
+  namespace: giantswarm
   labels:
     {{- include "cluster.labels.common.all" $ | nindent 4 }}
   annotations:
@@ -11,17 +11,15 @@ metadata:
     helm.sh/hook-weight: "-20"
     helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
 rules:
-- apiGroups: [""]
-  resources: ["secrets"]
-  verbs: ["get"]
-  resourceNames:
-  - {{ .Values.global.managementCluster }}-kubeconfig
+- apiGroups: ["application.giantswarm.io"]
+  resources: ["charts"]
+  verbs: ["get", "list", "patch", "delete"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: {{ include "cluster.resource.name" $ }}-migrate-apps-mc
-  namespace: org-giantswarm
+  namespace: giantswarm
   labels:
     {{- include "cluster.labels.common.all" $ | nindent 4 }}
   annotations:
