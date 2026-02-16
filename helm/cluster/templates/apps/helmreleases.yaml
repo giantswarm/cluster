@@ -8,7 +8,8 @@
 {{- /* Configure App values */}}
 {{- $app := tpl (.Files.Get $path) $ | fromYaml }}
 {{- $appName := $app.appName }}
-{{- /* For local installations, we want to add the cluster name as a prefix to the appName 
+
+{{- /* For hr installations targeting the MC, we want to add the cluster name as a prefix to the appName 
 to avoid naming conflicts in case of multiple clusters deployed in the same namespace.
 */}}
 {{- $releaseName := $appName }}
@@ -77,7 +78,7 @@ metadata:
   labels:
     {{- include "cluster.labels.common.all" $ | nindent 4 }}
 spec:
-  releaseName: {{ $app.releaseName | default $appName }}
+  releaseName: {{ $releaseName }}
   targetNamespace: {{ $app.namespace }}
   storageNamespace: {{ $app.namespace }}
   chart:
