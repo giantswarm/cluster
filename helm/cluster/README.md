@@ -489,10 +489,6 @@ For Giant Swarm internal use only, not stable, or not supported by UIs.
 | `internal.ephemeralConfiguration.apps.PATTERN.versionOverride` | **Version override** - Custom application version that overrides the application version from the release. This is usually a new development version that you want to test, or a newer patch version that you need to deploy in order to put out a production fire in the middle of the night. Use carefully!|**Type:** `string`<br/>**Key pattern:**<br/>`PATTERN`=`[a-z][a-zA-Z]+`<br/>|
 | `internal.ephemeralConfiguration.offlineTesting` | **Offline testing** - Configure how Helm template rendering behaves when it is running during testing (e.g. locally or in the CI) and without connection to cluster.|**Type:** `object`<br/>|
 | `internal.ephemeralConfiguration.offlineTesting.renderWithoutReleaseResource` | **Render without Release resource** - Flag that indicates that Helm should render templates even when Release CR cannot be fetched from the cluster.|**Type:** `boolean`<br/>|
-| `internal.kubectlImage` | **Kubectl image** - Kubectl image used for running kubectl commands in jobs and hooks.|**Type:** `object`<br/>|
-| `internal.kubectlImage.name` | **Repository** - Kubectl image repository.|**Type:** `string`<br/>**Default:** `"giantswarm/kubectl"`|
-| `internal.kubectlImage.registry` | **Registry** - Registry for kubectl image.|**Type:** `string`<br/>**Default:** `"gsoci.azurecr.io"`|
-| `internal.kubectlImage.tag` | **Tag** - Kubectl image tag.|**Type:** `string`<br/>**Default:** `"1.27.3"`|
 
 ### Metadata
 Properties within the `.global.metadata` object

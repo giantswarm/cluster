@@ -177,3 +177,8 @@ providerIntegration:
         - label=default
         maxSize: 3
         minSize: 3
+internal:
+  kubectlImage:
+    name: giantswarm/kubectl
+    registry: gsoci.azurecr.io
+    tag: 1.29.9

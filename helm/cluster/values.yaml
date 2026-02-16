@@ -139,10 +139,6 @@ internal:
     workers: {}
   ephemeralConfiguration:
     offlineTesting: {}
-  kubectlImage:
-    name: giantswarm/kubectl
-    registry: gsoci.azurecr.io
-    tag: 1.27.3
 providerIntegration:
   apps:
     certExporter:
