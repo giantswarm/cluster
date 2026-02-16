@@ -5,11 +5,13 @@ Uses label selectors to dynamically discover all apps for this cluster,
 eliminating hardcoded app lists. Handles apps from both the cluster subchart
 and any provider-specific charts (e.g., cluster-aws).
 
-Phase 1 (WC Chart CRs):
+Phase 1 (Pause non-bundle App CRs + WC Chart CRs):
+  - Pause non-bundle App CRs to prevent app-operator from re-creating Chart CRs
   - Pause + remove finalizers + delete ALL Chart CRs on the WC
+  - Bundle App CRs are NOT paused (they need active app-operator for Phase 3)
 
 Phase 2 (Non-bundle App CRs):
-  - Pause + remove finalizers + delete App CRs with version!=0.0.0
+  - Remove finalizers + delete App CRs with version!=0.0.0
   - This includes regular apps and bundle sub-apps
 
 Phase 3 (Bundle App CRs via operator cascade):
@@ -76,12 +78,21 @@ spec:
           WC="--kubeconfig /tmp/wc-kubeconfig"
 
           # ============================================================
-          # Phase 1: Clean up ALL WC Chart CRs
+          # Phase 1: Pause non-bundle App CRs, then clean up WC Chart CRs
           # ============================================================
-          # Pause chart-operator reconciliation on all Chart CRs to prevent
-          # it from re-adding finalizers or uninstalling Helm releases.
-          # Then remove finalizers and delete all Chart CRs.
-          echo "Phase 1: Cleaning up ALL WC Chart CRs"
+          # Pause non-bundle App CRs to prevent app-operator from
+          # re-creating Chart CRs after we delete them (race condition).
+          # Bundle App CRs (version=0.0.0) must NOT be paused because
+          # Phase 3 relies on app-operator to cascade-delete MC Chart CRs.
+          echo "Phase 1a: Pausing non-bundle App CRs"
+
+          kubectl annotate apps.application.giantswarm.io -n "$NAMESPACE" \
+            -l "giantswarm.io/cluster=$CLUSTER_NAME,app-operator.giantswarm.io/version!=0.0.0" \
+            "operatorkit.giantswarm.io/paused=true" --overwrite 2>/dev/null || true
+
+          # Now clean up WC Chart CRs. Pause chart-operator reconciliation
+          # to prevent it from re-adding finalizers or uninstalling Helm releases.
+          echo "Phase 1b: Cleaning up ALL WC Chart CRs"
 
           echo "  Pausing all Chart CRs on WC"
           kubectl $WC annotate chart --all -n "$CHART_NAMESPACE" \
@@ -105,14 +116,10 @@ spec:
           # Target apps labeled with giantswarm.io/cluster but NOT
           # version=0.0.0 (which marks in-cluster/bundle apps and operators).
           # This includes regular apps and bundle sub-apps from all charts.
+          # App CRs were already paused in Phase 1a.
           echo "Phase 2: Cleaning up non-bundle App CRs"
 
           LABEL_SELECTOR="giantswarm.io/cluster=$CLUSTER_NAME,app-operator.giantswarm.io/version!=0.0.0"
-
-          echo "  Pausing non-bundle App CRs"
-          kubectl annotate apps.application.giantswarm.io -n "$NAMESPACE" \
-            -l "$LABEL_SELECTOR" \
-            "operatorkit.giantswarm.io/paused=true" --overwrite 2>/dev/null || true
 
           echo "  Removing finalizers from non-bundle App CRs"
           NON_BUNDLE_APPS=$(kubectl get apps.application.giantswarm.io -n "$NAMESPACE" \
