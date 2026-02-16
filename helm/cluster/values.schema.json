@@ -1330,6 +1330,12 @@
                             "title": "k8s-dns-node-cache",
                             "description": "Configuration of k8s-dns-node-cache. For all available values see https://github.com/giantswarm/k8s-dns-node-cache-app."
                         },
+                        "kamajiEtcd": {
+                            "$ref": "#/$defs/app",
+                            "type": "object",
+                            "title": "kamaji-etcd",
+                            "description": "Configuration of kamaji-etcd. For all available values see https://github.com/giantswarm/kamaji-etcd-app."
+                        },
                         "metricsServer": {
                             "$ref": "#/$defs/app",
                             "type": "object",
@@ -2711,6 +2717,9 @@
                             "$ref": "#/$defs/providerIntegrationAppConfig"
                         },
                         "k8sDnsNodeCache": {
+                            "$ref": "#/$defs/providerIntegrationAppConfig"
+                        },
+                        "kamajiEtcd": {
                             "$ref": "#/$defs/providerIntegrationAppConfig"
                         },
                         "metricsServer": {

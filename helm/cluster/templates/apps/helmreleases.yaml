@@ -8,6 +8,14 @@
 {{- /* Configure App values */}}
 {{- $app := tpl (.Files.Get $path) $ | fromYaml }}
 {{- $appName := $app.appName }}
+
+{{- /* For hr installations targeting the MC, we want to add the cluster name as a prefix to the appName 
+to avoid naming conflicts in case of multiple clusters deployed in the same namespace.
+*/}}
+{{- $releaseName := $appName }}
+{{- if $app.prependClusterName }}
+{{- $releaseName = printf "%s-%s" (include "cluster.resource.name" $) $appName }}
+{{- end }}
 {{- $_ := set $ "appName" $appName }}
 {{- $appKey := $app.configKey | default $appName }}
 
@@ -25,6 +33,7 @@
 */}}
 {{- $providerIntegrationAppConfig = $providerIntegrationAppConfigRaw }}
 {{- end }}
+
 
 {{- /*
     Get (optional) ephemeral app config where we have:
@@ -59,15 +68,17 @@ kind: HelmRelease
 metadata:
   name: {{ include "cluster.resource.name" $ }}-{{ $appName }}
   namespace: {{ $.Release.Namespace }}
-  {{- $annotations := include "cluster.annotations.common.all" $ }}
-  {{- if $annotations }}
+  {{- $combinedAnnotations := (include "cluster.annotations.common.all" $ | fromYaml) | default dict -}}
+  {{- $additional := $app.additionalAnnotations | default dict -}}
+  {{- $combinedAnnotations = merge $combinedAnnotations $additional -}}
+  {{- if $combinedAnnotations }}
   annotations:
-    {{- $annotations | indent 4 }}
+    {{- toYaml $combinedAnnotations | nindent 4 }}
   {{- end }}
   labels:
     {{- include "cluster.labels.common.all" $ | nindent 4 }}
 spec:
-  releaseName: {{ $appName }}
+  releaseName: {{ $releaseName }}
   targetNamespace: {{ $app.namespace }}
   storageNamespace: {{ $app.namespace }}
   chart:
@@ -99,9 +110,14 @@ spec:
     namespace: {{ $.Release.Namespace }}
   {{- end }}
   {{- end }}
+  {{- if not ($app.skipKubeConfig | default false) }}
   kubeConfig:
     secretRef:
       name: {{ include "cluster.resource.name" $ }}-kubeconfig
+  {{- end }}
+  {{- if $app.serviceAccountName }}
+  serviceAccountName: {{ $app.serviceAccountName }}
+  {{- end }}
   interval: {{ $app.interval | default "5m" }}
   timeout: {{ $app.timeout | default "5m" }}
   install:

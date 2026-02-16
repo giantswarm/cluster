@@ -1,0 +1,20 @@
+appName: kamaji-etcd
+catalog: default
+configKey: kamajiEtcd
+additionalAnnotations:
+  helm.sh/resource-policy: "keep"
+interval: 1m
+prependClusterName: true
+skipKubeConfig: true
+namespace: {{ $.Release.Namespace }}
+serviceAccountName: automation
+# used by renovate
+# repo: giantswarm/kamaji-etcd-app
+version: 0.2.1
+disable: {{ not (eq (include "kamaji.isEnabled" $) "true") }}
+defaultValues:
+  # For all available values see https://github.com/giantswarm/kamaji-etcd-app/blob/main/helm/kamaji-etcd/values.yaml
+  persistentVolumeClaim:
+    retentionPolicyWhenDeleted: "Delete"
+  datastore:
+    name: {{ include "cluster.resource.name" $ }}

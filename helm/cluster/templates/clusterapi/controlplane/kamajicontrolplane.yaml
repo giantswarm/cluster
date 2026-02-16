@@ -1,7 +1,4 @@
-{{- if and
-  $.Values.providerIntegration.resourcesApi.controlPlaneResource.enabled
-  (eq $.Values.providerIntegration.resourcesApi.controlPlaneResource.provider "kamaji")
-}}
+{{- if (include "kamaji.isEnabled" $) }}
 apiVersion: controlplane.cluster.x-k8s.io/v1alpha1
 kind: KamajiControlPlane
 metadata:

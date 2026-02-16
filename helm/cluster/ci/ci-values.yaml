@@ -171,6 +171,10 @@ global:
   podSecurityStandards:
     enforced: true
 internal:
+  kubectlImage:
+    name: giantswarm/kubectl
+    registry: gsoci.azurecr.io
+    tag: 1.29.9
   advancedConfiguration:
     controlPlane:
       apiServer:
@@ -307,6 +311,8 @@ providerIntegration:
     externalDns:
       enable: true
       configTemplateName: cluster.test.providerIntegration.apps.externalDns.config
+    kamajiEtcd:
+      enable: true
     k8sAuditMetrics:
       enable: true
     k8sDnsNodeCache:

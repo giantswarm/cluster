@@ -14,6 +14,55 @@ global:
       minSize: 3
       maxSize: 20
 providerIntegration:
+  apps:
+    certExporter:
+      enable: true
+      configTemplateName: cluster.test.providerIntegration.apps.certExporter.config
+    certManager:
+      enable: true
+    chartOperatorExtensions:
+      enable: true
+    cilium:
+      enable: true
+    ciliumServiceMonitors:
+      enable: true
+    clusterAutoscaler:
+      enable: true
+    coreDns:
+      enable: true
+    etcdKubernetesResourcesCountExporter:
+      enable: true
+    externalDns:
+      enable: true
+      configTemplateName: cluster.test.providerIntegration.apps.externalDns.config
+    kamajiEtcd:
+      enable: true
+    k8sAuditMetrics:
+      enable: true
+    k8sDnsNodeCache:
+      enable: true
+    metricsServer:
+      enable: true
+    netExporter:
+      enable: true
+    networkPolicies:
+      enable: true
+    nodeExporter:
+      enable: true
+    observabilityBundle:
+      enable: true
+    observabilityPolicies:
+      enable: true
+    prometheusBlackboxExporter:
+      enable: true
+    securityBundle:
+      enable: true
+    teleportKubeAgent:
+      enable: true
+    verticalPodAutoscaler:
+      enable: true
+    verticalPodAutoscalerCrd:
+      enable: true
   environmentVariables:
     hostName: COREOS_EC2_HOSTNAME
     ipv4: COREOS_EC2_IPV4_LOCAL
@@ -49,7 +98,6 @@ providerIntegration:
         version: v1beta1
       infrastructureMachineTemplateSpecTemplateName: cluster.internal.test.controlPlane.machineTemplate.spec
     kamaji:
-      dataStoreName: default
       apiServer:
         extraArgs:
         - "--enable-admission-plugins=PodSecurity"
@@ -129,3 +177,8 @@ providerIntegration:
         - label=default
         maxSize: 3
         minSize: 3
+internal:
+  kubectlImage:
+    name: giantswarm/kubectl
+    registry: gsoci.azurecr.io
+    tag: 1.29.9

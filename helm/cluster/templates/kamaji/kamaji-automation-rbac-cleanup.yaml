@@ -1,0 +1,173 @@
+{{- if (include "kamaji.isEnabled" $) }}
+---
+# ClusterRole for the automation service account to delete cluster-scoped RBAC resources
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ include "cluster.resource.name" $ }}-kamaji-automation-cleanup
+  labels:
+    {{- include "cluster.labels.common.all" $ | nindent 4 }}
+  annotations:
+    "helm.sh/hook": "post-delete"
+    "helm.sh/hook-delete-policy": "before-hook-creation,hook-succeeded"
+    "helm.sh/hook-weight": "5"
+rules:
+  - apiGroups: ["rbac.authorization.k8s.io"]
+    resources:
+      - clusterroles
+      - clusterrolebindings
+    resourceNames:
+      - {{ include "kamaji.etcdHelmreleaseName" $ }}-helmrelease-datastores
+    verbs:
+      - delete
+      - get
+  - apiGroups: ["rbac.authorization.k8s.io"]
+    resources:
+      - clusterroles
+      - clusterrolebindings
+    verbs:
+      - list
+      - watch
+---
+# ClusterRoleBinding for the automation service account
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ include "cluster.resource.name" $ }}-kamaji-automation-cleanup
+  labels:
+    {{- include "cluster.labels.common.all" $ | nindent 4 }}
+  annotations:
+    "helm.sh/hook": "post-delete"
+    "helm.sh/hook-delete-policy": "before-hook-creation,hook-succeeded"
+    "helm.sh/hook-weight": "5"
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ include "cluster.resource.name" $ }}-kamaji-automation-cleanup
+subjects:
+  - kind: ServiceAccount
+    name: automation
+    namespace: {{ $.Release.Namespace }}
+---
+# Role for the automation service account to delete RBAC resources in policy-exceptions namespace
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ include "cluster.resource.name" $ }}-kamaji-automation-cleanup
+  namespace: policy-exceptions
+  labels:
+    {{- include "cluster.labels.common.all" $ | nindent 4 }}
+  annotations:
+    "helm.sh/hook": "post-delete"
+    "helm.sh/hook-delete-policy": "before-hook-creation,hook-succeeded"
+    "helm.sh/hook-weight": "5"
+rules:
+  - apiGroups: ["rbac.authorization.k8s.io"]
+    resources:
+      - roles
+      - rolebindings
+    resourceNames:
+      - {{ include "kamaji.etcdHelmreleaseName" $ }}-polex
+    verbs:
+      - delete
+      - get
+  - apiGroups: ["rbac.authorization.k8s.io"]
+    resources:
+      - roles
+      - rolebindings
+    verbs:
+      - list
+      - watch
+---
+# RoleBinding for the automation service account in policy-exceptions namespace
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ include "cluster.resource.name" $ }}-kamaji-automation-cleanup
+  namespace: policy-exceptions
+  labels:
+    {{- include "cluster.labels.common.all" $ | nindent 4 }}
+  annotations:
+    "helm.sh/hook": "post-delete"
+    "helm.sh/hook-delete-policy": "before-hook-creation,hook-succeeded"
+    "helm.sh/hook-weight": "5"
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ include "cluster.resource.name" $ }}-kamaji-automation-cleanup
+subjects:
+  - kind: ServiceAccount
+    name: automation
+    namespace: {{ $.Release.Namespace }}
+---
+# Post-delete hook job to clean up RBAC resources with keep policy
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "cluster.resource.name" $ }}-kamaji-automation-cleanup
+  namespace: {{ $.Release.Namespace }}
+  labels:
+    {{- include "cluster.labels.common.all" $ | nindent 4 }}
+  annotations:
+    "helm.sh/hook": "post-delete"
+    "helm.sh/hook-delete-policy": "before-hook-creation,hook-succeeded"
+    "helm.sh/hook-weight": "10"
+spec:
+  ttlSecondsAfterFinished: 300
+  template:
+    metadata:
+      name: {{ include "kamaji.etcdHelmreleaseName" $ }}-ownerref
+      namespace: {{ $.Release.Namespace }}
+      labels:
+        {{- include "cluster.labels.common.all" $  | nindent 8 }}
+    spec:
+      restartPolicy: Never
+      serviceAccountName: automation
+      securityContext:
+        runAsUser: {{ include "kamaji.securityContext.runAsUser" $ }}
+        runAsGroup: {{ include "kamaji.securityContext.runAsGroup" $ }}
+      containers:
+        - name: cleanup
+          {{- include "kamaji.jobContainerCommon" . | nindent 10 }}
+          command:
+            - "/bin/bash"
+            - "-xc"
+            - |
+              set -o errexit
+              set -o pipefail
+              set -o nounset
+              
+              # Wait for Datastore and PolicyException to be deleted
+              for i in $(seq 1 24); do
+                DATASTORE_DELETED=false
+                POLICYEXCEPTION_DELETED=false
+
+                if ! kubectl get datastores.kamaji.clastix.io "{{ include "cluster.resource.name" $ }}" >/dev/null 2>&1; then
+                  DATASTORE_DELETED=true
+                fi
+
+                if ! kubectl get policyexceptions.kyverno.io "{{ include "kamaji.etcdHelmreleaseName" $ }}" -n policy-exceptions >/dev/null 2>&1; then
+                  POLICYEXCEPTION_DELETED=true
+                fi
+
+                if [ "${DATASTORE_DELETED}" = "true" ] && [ "${POLICYEXCEPTION_DELETED}" = "true" ]; then
+                  echo "Both Datastore and PolicyException resources are deleted."
+                  break
+                fi
+
+                if [ $i -eq 24 ]; then
+                  echo "Warning: Timed out waiting for resources to be deleted, proceeding with cleanup anyway."
+                fi
+                
+                sleep 5
+              done
+
+              # Delete cluster-scoped RBAC resources
+              kubectl delete clusterrole {{ include "kamaji.etcdHelmreleaseName" $ }}-helmrelease-datastores --ignore-not-found=true
+              kubectl delete clusterrolebinding {{ include "kamaji.etcdHelmreleaseName" $ }}-helmrelease-datastores --ignore-not-found=true
+
+              # Delete namespace-scoped RBAC resources in policy-exceptions
+              kubectl delete role {{ include "kamaji.etcdHelmreleaseName" $ }}-polex -n policy-exceptions --ignore-not-found=true
+              kubectl delete rolebinding {{ include "kamaji.etcdHelmreleaseName" $ }}-polex -n policy-exceptions --ignore-not-found=true
+
+{{- end }}
