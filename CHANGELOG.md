@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Monitoring: Add ServiceMonitor for blackbox exporter to probe the workload cluster API server `/readyz` endpoint from the management cluster. Configurable via `providerIntegration.monitoring.apiServerProbe`.
+
 ## [5.1.2] - 2026-01-21
 
 ### Changed

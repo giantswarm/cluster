@@ -240,6 +240,12 @@ providerIntegration:
           systemd: {}
     taints: []
   kubernetesVersion: 1.25.16
+  monitoring:
+    apiServerProbe:
+      enabled: false
+      interval: "60s"
+      module: "http_2xx"
+      scrapeTimeout: "10s"
   osImage:
     channel: stable
   registry: {}

@@ -3226,6 +3226,46 @@
                     "title": "Hash salt",
                     "description": "If specified, this token is used as a salt to the hash suffix of some resource names. Can be used to force-recreate some resources."
                 },
+                "monitoring": {
+                    "type": "object",
+                    "title": "Monitoring",
+                    "description": "Monitoring configuration for the cluster on the management cluster.",
+                    "additionalProperties": false,
+                    "properties": {
+                        "apiServerProbe": {
+                            "type": "object",
+                            "title": "API server probe",
+                            "description": "ServiceMonitor for blackbox exporter to probe the workload cluster API server /readyz endpoint from the management cluster.",
+                            "additionalProperties": false,
+                            "properties": {
+                                "enabled": {
+                                    "type": "boolean",
+                                    "title": "Enable",
+                                    "description": "If true, a ServiceMonitor is created in kube-system to probe the API server via the blackbox exporter.",
+                                    "default": false
+                                },
+                                "interval": {
+                                    "type": "string",
+                                    "title": "Scrape interval",
+                                    "description": "How often the blackbox exporter probes the API server endpoint.",
+                                    "default": "60s"
+                                },
+                                "module": {
+                                    "type": "string",
+                                    "title": "Blackbox exporter module",
+                                    "description": "Module configured on the MC blackbox exporter to use for probing. For self-signed API server certs, use a module with insecure_skip_verify.",
+                                    "default": "http_2xx"
+                                },
+                                "scrapeTimeout": {
+                                    "type": "string",
+                                    "title": "Scrape timeout",
+                                    "description": "Timeout for the blackbox exporter probe request.",
+                                    "default": "10s"
+                                }
+                            }
+                        }
+                    }
+                },
                 "kubeadmConfig": {
                     "type": "object",
                     "title": "Provider-specific kubeadm config",
