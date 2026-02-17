@@ -5,18 +5,14 @@ Uses label selectors to dynamically discover all apps for this cluster,
 eliminating hardcoded app lists. Handles apps from both the cluster subchart
 and any provider-specific charts (e.g., cluster-aws).
 
-Phase 1 (Pause non-bundle App CRs + WC Chart CRs):
-  - Pause non-bundle App CRs to prevent app-operator from re-creating Chart CRs
-  - Excludes app-operator and chart-operator (managed externally)
-  - Pause + remove finalizers + delete ALL Chart CRs on the WC
+Phase 1 (Non-bundle App CRs + WC Chart CRs):
+  - Pause non-bundle App CRs (excludes operators via label selector)
+  - Remove finalizers + delete non-bundle App CRs
+  - Once App CRs are gone, clean up ALL WC Chart CRs safely
+    (no risk of app-operator re-creating them)
 
-Phase 2 (Non-bundle App CRs):
-  - Remove finalizers + delete App CRs with version!=0.0.0
-  - Excludes app-operator and chart-operator
-  - This includes regular apps and bundle sub-apps
-
-Phase 3 (Bundle App CRs via operator cascade):
-  - Delete bundle App CRs (version=0.0.0, excluding operators)
+Phase 2 (Bundle App CRs via operator cascade):
+  - Delete remaining bundle App CRs (excluding operators)
   - app-operator cascade-deletes the MC Chart CRs
 
 Flux then adopts the existing Helm releases via the new HelmRelease CRs.
@@ -78,6 +74,12 @@ spec:
             -o jsonpath='{.data.value}' | base64 -d > /tmp/wc-kubeconfig
           WC="--kubeconfig /tmp/wc-kubeconfig"
 
+          # Label selectors
+          # Non-bundle apps: belong to this cluster, version!=0.0.0, excluding operators
+          NON_BUNDLE_SELECTOR="giantswarm.io/cluster=$CLUSTER_NAME,app-operator.giantswarm.io/version!=0.0.0,app.kubernetes.io/name notin (chart-operator)"
+          # All cluster apps (for Phase 2 discovery)
+          CLUSTER_SELECTOR="giantswarm.io/cluster=$CLUSTER_NAME"
+
           # Helper: check if an app is an operator that must be kept alive.
           is_operator() {
             case "$1" in *-app-operator|*-chart-operator) return 0 ;; esac
@@ -85,27 +87,35 @@ spec:
           }
 
           # ============================================================
-          # Phase 1: Pause non-bundle App CRs, then clean up WC Chart CRs
+          # Phase 1: Non-bundle App CRs + WC Chart CRs
           # ============================================================
-          # Pause non-bundle App CRs to prevent app-operator from
-          # re-creating Chart CRs after we delete them (race condition).
-          # app-operator and chart-operator are excluded (managed externally).
-          echo "Phase 1a: Pausing non-bundle App CRs"
 
-          NON_BUNDLE_SELECTOR="giantswarm.io/cluster=$CLUSTER_NAME,app-operator.giantswarm.io/version!=0.0.0"
+          # 1a. Pause non-bundle App CRs to stop app-operator reconciliation.
+          echo "Phase 1a: Pausing non-bundle App CRs"
+          kubectl annotate apps.application.giantswarm.io -n "$NAMESPACE" \
+            -l "$NON_BUNDLE_SELECTOR" \
+            "operatorkit.giantswarm.io/paused=true" --overwrite 2>/dev/null || true
+
+          # 1b. Remove finalizers from non-bundle App CRs.
+          echo "Phase 1b: Removing finalizers from non-bundle App CRs"
           NON_BUNDLE_APPS=$(kubectl get apps.application.giantswarm.io -n "$NAMESPACE" \
             -l "$NON_BUNDLE_SELECTOR" \
             -o jsonpath='{.items[*].metadata.name}' 2>/dev/null) || true
-
           for APP in $NON_BUNDLE_APPS; do
-            is_operator "$APP" && continue
-            kubectl annotate apps.application.giantswarm.io "$APP" -n "$NAMESPACE" \
-              "operatorkit.giantswarm.io/paused=true" --overwrite 2>/dev/null || true
+            kubectl patch apps.application.giantswarm.io "$APP" -n "$NAMESPACE" --type=json \
+              -p='[{"op": "remove", "path": "/metadata/finalizers"}]' 2>/dev/null || true
           done
 
-          # Now clean up WC Chart CRs. Pause chart-operator reconciliation
-          # to prevent it from re-adding finalizers or uninstalling Helm releases.
-          echo "Phase 1b: Cleaning up ALL WC Chart CRs"
+          # 1c. Delete non-bundle App CRs (batch).
+          echo "Phase 1c: Deleting non-bundle App CRs"
+          kubectl delete apps.application.giantswarm.io -n "$NAMESPACE" \
+            -l "$NON_BUNDLE_SELECTOR" \
+            --ignore-not-found=true 2>/dev/null || true
+
+          # 1d. Clean up ALL WC Chart CRs.
+          # Now safe: non-bundle App CRs are gone, so app-operator
+          # cannot re-create Chart CRs on the WC.
+          echo "Phase 1d: Cleaning up ALL WC Chart CRs"
 
           echo "  Pausing all Chart CRs on WC"
           kubectl $WC annotate chart --all -n "$CHART_NAMESPACE" \
@@ -124,33 +134,18 @@ spec:
             --ignore-not-found=true 2>/dev/null || true
 
           # ============================================================
-          # Phase 2: Clean up non-bundle App CRs on MC
+          # Phase 2: Bundle App CRs via operator cascade
           # ============================================================
-          # Remove finalizers and delete non-bundle App CRs.
-          # Excludes app-operator and chart-operator (managed externally).
-          echo "Phase 2: Cleaning up non-bundle App CRs"
-
-          for APP in $NON_BUNDLE_APPS; do
-            is_operator "$APP" && continue
-            kubectl patch apps.application.giantswarm.io "$APP" -n "$NAMESPACE" --type=json \
-              -p='[{"op": "remove", "path": "/metadata/finalizers"}]' 2>/dev/null || true
-            kubectl delete apps.application.giantswarm.io "$APP" -n "$NAMESPACE" \
-              --ignore-not-found=true --wait=false 2>/dev/null || true
-          done
-
-          # ============================================================
-          # Phase 3: Bundle App CRs via operator cascade
-          # ============================================================
-          # Delete bundle App CRs (version=0.0.0) without removing
-          # finalizers. app-operator cascade-deletes the MC Chart CRs,
-          # and chart-operator helm-uninstalls the bundles.
+          # Delete remaining App CRs (bundles) WITHOUT removing finalizers.
+          # app-operator processes the deletion and cascade-deletes the
+          # MC Chart CRs. chart-operator then helm-uninstalls the bundles.
           # Excludes app-operator and chart-operator (must stay alive).
-          echo "Phase 3: Deleting bundle App CRs (operators will clean up MC Chart CRs)"
+          echo "Phase 2: Deleting bundle App CRs (operators will clean up MC Chart CRs)"
 
-          BUNDLE_APPS=$(kubectl get apps.application.giantswarm.io -n "$NAMESPACE" \
-            -l "giantswarm.io/cluster=$CLUSTER_NAME,app-operator.giantswarm.io/version=0.0.0" \
+          REMAINING_APPS=$(kubectl get apps.application.giantswarm.io -n "$NAMESPACE" \
+            -l "$CLUSTER_SELECTOR" \
             -o jsonpath='{.items[*].metadata.name}' 2>/dev/null) || true
-          for APP in $BUNDLE_APPS; do
+          for APP in $REMAINING_APPS; do
             is_operator "$APP" && continue
             kubectl delete apps.application.giantswarm.io "$APP" -n "$NAMESPACE" \
               --ignore-not-found=true --wait=false 2>/dev/null || true
