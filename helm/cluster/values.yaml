@@ -243,9 +243,9 @@ providerIntegration:
   monitoring:
     apiServerProbe:
       enabled: false
-      interval: "60s"
-      module: "http_2xx"
-      scrapeTimeout: "10s"
+      interval: 60s
+      module: http_2xx
+      scrapeTimeout: 10s
   osImage:
     channel: stable
   registry: {}
