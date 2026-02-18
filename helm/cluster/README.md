@@ -1019,6 +1019,12 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.kubeadmConfig.taints[*].key` | **Key**|**Type:** `string`<br/>|
 | `providerIntegration.kubeadmConfig.taints[*].value` | **Value**|**Type:** `string`<br/>|
 | `providerIntegration.kubernetesVersion` | **Kubernetes version**|**Type:** `string`<br/>**Default:** `"1.25.16"`|
+| `providerIntegration.monitoring` | **Monitoring** - Monitoring configuration for the cluster on the management cluster.|**Type:** `object`<br/>|
+| `providerIntegration.monitoring.apiServerProbe` | **API server probe** - ServiceMonitor for blackbox exporter to probe the workload cluster API server /readyz endpoint from the management cluster.|**Type:** `object`<br/>|
+| `providerIntegration.monitoring.apiServerProbe.enabled` | **Enable** - If true, a ServiceMonitor is created in kube-system to probe the API server via the blackbox exporter.|**Type:** `boolean`<br/>**Default:** `false`|
+| `providerIntegration.monitoring.apiServerProbe.interval` | **Scrape interval** - How often the blackbox exporter probes the API server endpoint.|**Type:** `string`<br/>**Default:** `"60s"`|
+| `providerIntegration.monitoring.apiServerProbe.module` | **Blackbox exporter module** - Module configured on the MC blackbox exporter to use for probing. For self-signed API server certs, use a module with insecure_skip_verify.|**Type:** `string`<br/>**Default:** `"http_2xx"`|
+| `providerIntegration.monitoring.apiServerProbe.scrapeTimeout` | **Scrape timeout** - Timeout for the blackbox exporter probe request.|**Type:** `string`<br/>**Default:** `"10s"`|
 | `providerIntegration.osImage` | **OS image (deprecated)** - OS image Helm values have been deprecated. All OS-related information should now be obtained from the Release resource.|**Type:** `object`<br/>|
 | `providerIntegration.osImage.channel` | **Channel**|**Type:** `string`<br/>**Allowed values:** `stable`, `beta`, `alpha`, `lts`<br/>**Default:** `"stable"`|
 | `providerIntegration.osImage.name` | **Name**|**Type:** `string`<br/>|
