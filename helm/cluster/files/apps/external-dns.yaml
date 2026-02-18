@@ -8,7 +8,7 @@ dependsOn: prometheus-operator-crd
 namespace: kube-system
 # used by renovate
 # repo: giantswarm/external-dns-app
-version: 3.3.0
+version: 3.4.0
 defaultValues:
   provider: {{ .Values.providerIntegration.provider }}
   domainFilters:
