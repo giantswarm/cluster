@@ -1,0 +1,91 @@
+{{- if (include "kamaji.isEnabled" $) }}
+# ClusterRole for DataStore (cluster-scoped resource)
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ include "kamaji.etcdHelmreleaseName" $ }}-helmrelease-datastores
+  annotations:
+    helm.sh/resource-policy: "keep"
+  labels:
+    {{- include "cluster.labels.common.all" $ | nindent 4 }}
+rules:
+  - apiGroups: ["kamaji.clastix.io"]
+    resources:
+      - datastores
+    resourceNames:
+      - {{ include "cluster.resource.name" $ }}
+    verbs:
+      - delete
+      - get
+      - patch
+      - update
+  - apiGroups: ["kamaji.clastix.io"]
+    resources:
+      - datastores
+    verbs:
+      - create
+      - list
+---
+# ClusterRoleBinding for DataStore
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ include "kamaji.etcdHelmreleaseName" $ }}-helmrelease-datastores
+  annotations:
+    helm.sh/resource-policy: "keep"
+  labels:
+    {{- include "cluster.labels.common.all" $ | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ include "kamaji.etcdHelmreleaseName" $ }}-helmrelease-datastores
+subjects:
+  - kind: ServiceAccount
+    name: automation
+    namespace: {{ $.Release.Namespace }}
+---
+# Role for PolicyException (created in policy-exceptions namespace)
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ include "kamaji.etcdHelmreleaseName" $ }}-polex
+  namespace: policy-exceptions
+  annotations:
+    helm.sh/resource-policy: "keep"
+rules:
+  # For operations on existing PolicyExceptions (with name restriction)
+  - apiGroups: ["kyverno.io"]
+    resources:
+      - policyexceptions
+    resourceNames:
+      - {{ include "kamaji.etcdHelmreleaseName" $ }}  # Only this specific PolicyException
+    verbs:
+      - delete
+      - get
+      - patch
+      - update
+  # For listing and creating (can't use resourceNames with these verbs)
+  - apiGroups: ["kyverno.io"]
+    resources:
+      - policyexceptions
+    verbs:
+      - create
+      - list
+---
+# RoleBinding for PolicyException in policy-exceptions namespace
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ include "kamaji.etcdHelmreleaseName" $ }}-polex
+  namespace: policy-exceptions
+  annotations:
+    helm.sh/resource-policy: "keep"
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ include "kamaji.etcdHelmreleaseName" $ }}-polex
+subjects:
+  - kind: ServiceAccount
+    name: automation
+    namespace: {{ $.Release.Namespace }}
+{{- end }}

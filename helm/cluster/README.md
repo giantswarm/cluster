@@ -128,6 +128,13 @@ Configuration of apps that are part of the cluster.
 | `global.apps.k8sDnsNodeCache.extraConfigs[*].name` | **Name** - Name of the config map or secret. The object must exist in the same namespace as the cluster App.|**Type:** `string`<br/>|
 | `global.apps.k8sDnsNodeCache.extraConfigs[*].priority` | **Priority**|**Type:** `integer`<br/>**Default:** `25`|
 | `global.apps.k8sDnsNodeCache.values` | **Config map** - Helm Values to be passed to the app as user config.|**Type:** `object`<br/>|
+| `global.apps.kamajiEtcd` | **App resource** - Configuration of a default app that is part of the cluster and is deployed as an App resource.|**Type:** `object`<br/>|
+| `global.apps.kamajiEtcd.extraConfigs` | **Extra config maps or secrets** - Extra config maps or secrets that will be used to customize to the app. The desired values must be under configmap or secret key 'values'. The values are merged in the order given, with the later values overwriting earlier, and then inline values overwriting those. Resources must be in the same namespace as the cluster.|**Type:** `array`<br/>|
+| `global.apps.kamajiEtcd.extraConfigs[*]` | **Config map or secret**|**Type:** `object`<br/>|
+| `global.apps.kamajiEtcd.extraConfigs[*].kind` | **Kind** - Specifies whether the resource is a config map or a secret.|**Type:** `string`<br/>**Allowed values:** `configMap`, `secret`<br/>|
+| `global.apps.kamajiEtcd.extraConfigs[*].name` | **Name** - Name of the config map or secret. The object must exist in the same namespace as the cluster App.|**Type:** `string`<br/>|
+| `global.apps.kamajiEtcd.extraConfigs[*].priority` | **Priority**|**Type:** `integer`<br/>**Default:** `25`|
+| `global.apps.kamajiEtcd.values` | **Config map** - Helm Values to be passed to the app as user config.|**Type:** `object`<br/>|
 | `global.apps.metricsServer` | **App resource** - Configuration of a default app that is part of the cluster and is deployed as an App resource.|**Type:** `object`<br/>|
 | `global.apps.metricsServer.extraConfigs` | **Extra config maps or secrets** - Extra config maps or secrets that will be used to customize to the app. The desired values must be under configmap or secret key 'values'. The values are merged in the order given, with the later values overwriting earlier, and then inline values overwriting those. Resources must be in the same namespace as the cluster.|**Type:** `array`<br/>|
 | `global.apps.metricsServer.extraConfigs[*]` | **Config map or secret**|**Type:** `object`<br/>|
@@ -596,6 +603,9 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.apps.k8sDnsNodeCache` | **Provider integration app config** - App config used to additionally configure an app for a specific provider|**Type:** `object`<br/>|
 | `providerIntegration.apps.k8sDnsNodeCache.configTemplateName` | **Config template name** - Name of the Helm template that has provider-specific app config. Provider-specific app config overrides provider-independent app config, while custom user config overrides both provider-independent and provider-specific default app config.|**Type:** `string`<br/>|
 | `providerIntegration.apps.k8sDnsNodeCache.enable` | **Enable** - Flag that indicates if an app is enabled for a provider. It is false by default, which allows for more incremental and safer adoption of the cluster chart.|**Type:** `boolean`<br/>**Default:** `false`|
+| `providerIntegration.apps.kamajiEtcd` | **Provider integration app config** - App config used to additionally configure an app for a specific provider|**Type:** `object`<br/>|
+| `providerIntegration.apps.kamajiEtcd.configTemplateName` | **Config template name** - Name of the Helm template that has provider-specific app config. Provider-specific app config overrides provider-independent app config, while custom user config overrides both provider-independent and provider-specific default app config.|**Type:** `string`<br/>|
+| `providerIntegration.apps.kamajiEtcd.enable` | **Enable** - Flag that indicates if an app is enabled for a provider. It is false by default, which allows for more incremental and safer adoption of the cluster chart.|**Type:** `boolean`<br/>**Default:** `false`|
 | `providerIntegration.apps.metricsServer` | **Provider integration app config** - App config used to additionally configure an app for a specific provider|**Type:** `object`<br/>|
 | `providerIntegration.apps.metricsServer.configTemplateName` | **Config template name** - Name of the Helm template that has provider-specific app config. Provider-specific app config overrides provider-independent app config, while custom user config overrides both provider-independent and provider-specific default app config.|**Type:** `string`<br/>|
 | `providerIntegration.apps.metricsServer.enable` | **Enable** - Flag that indicates if an app is enabled for a provider. It is false by default, which allows for more incremental and safer adoption of the cluster chart.|**Type:** `boolean`<br/>**Default:** `false`|
@@ -746,6 +756,74 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.connectivity.proxy.noProxy.value[*]` |**None**|**Type:** `string`<br/>|
 | `providerIntegration.connectivity.sshSsoPublicKey` | **SSH public key for single sign-on**|**Type:** `string`<br/>**Default:** `"ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM4cvZ01fLmO9cJbWUj7sfF+NhECgy+Cl0bazSrZX7sU vault-ca@vault.operations.giantswarm.io"`|
 | `providerIntegration.controlPlane` | **Provider-specific control plane configuration**|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji` | **Kamaji control plane configuration** - Configuration specific to Kamaji control plane provider. Only used when controlPlaneResource.provider is set to 'kamaji'.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji.addons` | **Addons configuration** - Configuration for Kubernetes addons managed by Kamaji.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji.addons.coreDNS` | **CoreDNS configuration** - CoreDNS addon configuration.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji.addons.konnectivity` | **Konnectivity configuration** - Konnectivity addon configuration.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji.addons.kubeProxy` | **Kube-proxy configuration** - Kube-proxy addon configuration.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji.apiServer` | **API Server configuration**|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji.apiServer.extraArgs` | **Extra arguments** - Additional command-line arguments for the API server.|**Type:** `array`<br/>|
+| `providerIntegration.controlPlane.kamaji.apiServer.extraArgs[*]` |**None**|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kamaji.apiServer.resources` | **Resources** - API server pod resource configuration.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji.apiServer.resources.limits` | **Limits** - API server pod resource limits.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji.apiServer.resources.limits.cpu` | **CPU** - CPU limit for the API server pod.|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kamaji.apiServer.resources.limits.memory` | **Memory** - Memory limit for the API server pod.|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kamaji.apiServer.resources.requests` | **Requests** - API server pod resource requests.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji.apiServer.resources.requests.cpu` | **CPU** - CPU request for the API server pod.|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kamaji.apiServer.resources.requests.memory` | **Memory** - Memory request for the API server pod.|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kamaji.controllerManager` | **Controller Manager configuration**|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji.controllerManager.extraArgs` | **Extra arguments** - Additional command-line arguments for the controller manager.|**Type:** `array`<br/>|
+| `providerIntegration.controlPlane.kamaji.controllerManager.extraArgs[*]` |**None**|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kamaji.controllerManager.resources` | **Resources** - Controller manager pod resource configuration.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji.controllerManager.resources.limits` | **Limits** - Controller manager pod resource limits.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji.controllerManager.resources.limits.cpu` | **CPU** - CPU limit for the controller manager pod.|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kamaji.controllerManager.resources.limits.memory` | **Memory** - Memory limit for the controller manager pod.|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kamaji.controllerManager.resources.requests` | **Requests** - Controller manager pod resource requests.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji.controllerManager.resources.requests.cpu` | **CPU** - CPU request for the controller manager pod.|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kamaji.controllerManager.resources.requests.memory` | **Memory** - Memory request for the controller manager pod.|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kamaji.dataStoreName` | **Data store name** - Name of the Kamaji DataStore to use for this control plane.|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kamaji.deployment` | **Deployment configuration** - Configuration for the Kamaji control plane Deployment.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji.deployment.additionalMetadata` | **Additional metadata** - Additional metadata for the Deployment resource.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji.deployment.additionalMetadata.annotations` | **Annotations** - Additional annotations for the Deployment.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji.deployment.additionalMetadata.annotations.*` |**None**|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kamaji.deployment.additionalMetadata.labels` | **Labels** - Additional labels for the Deployment.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji.deployment.additionalMetadata.labels.*` |**None**|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kamaji.deployment.affinity` | **Affinity** - Pod affinity and anti-affinity configuration.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji.deployment.nodeSelector` | **Node selector** - Node selector for pod scheduling.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji.deployment.nodeSelector.*` |**None**|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kamaji.deployment.podAdditionalMetadata` | **Pod additional metadata** - Additional metadata for the Pod template.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji.deployment.podAdditionalMetadata.annotations` | **Annotations** - Additional annotations for the Pod.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji.deployment.podAdditionalMetadata.annotations.*` |**None**|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kamaji.deployment.podAdditionalMetadata.labels` | **Labels** - Additional labels for the Pod.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji.deployment.podAdditionalMetadata.labels.*` |**None**|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kamaji.deployment.tolerations` | **Tolerations** - Pod tolerations.|**Type:** `array`<br/>|
+| `providerIntegration.controlPlane.kamaji.deployment.tolerations[*]` |**None**|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji.deployment.topologySpreadConstraints` | **Topology spread constraints** - Topology spread constraints for pod distribution.|**Type:** `array`<br/>|
+| `providerIntegration.controlPlane.kamaji.deployment.topologySpreadConstraints[*]` |**None**|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji.kubelet` | **Kubelet configuration** - Kubelet configuration for the control plane.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji.kubelet.cgroupfs` | **Cgroup filesystem** - Cgroup driver for the kubelet (e.g., 'systemd' or 'cgroupfs').|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kamaji.kubelet.preferredAddressTypes` | **Preferred address types** - Ordered list of preferred address types to use for kubelet connections.|**Type:** `array`<br/>|
+| `providerIntegration.controlPlane.kamaji.kubelet.preferredAddressTypes[*]` |**None**|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kamaji.network` | **Network configuration** - Network configuration for the Kamaji control plane.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji.network.certSANs` | **Certificate SANs** - Additional Subject Alternative Names for the API server certificate.|**Type:** `array`<br/>|
+| `providerIntegration.controlPlane.kamaji.network.certSANs[*]` |**None**|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kamaji.network.serviceAddress` | **Service address** - IP address or hostname for the control plane service.|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kamaji.network.serviceAnnotations` | **Service annotations** - Annotations for the control plane Service.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji.network.serviceAnnotations.*` |**None**|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kamaji.network.serviceLabels` | **Service labels** - Labels for the control plane Service.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji.network.serviceLabels.*` |**None**|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kamaji.network.serviceType` | **Service type** - Kubernetes Service type (e.g., 'LoadBalancer', 'NodePort', 'ClusterIP').|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kamaji.registry` | **Registry** - Image registry address.|**Type:** `string`<br/>**Default:** `"gsoci.azurecr.io/giantswarm"`|
+| `providerIntegration.controlPlane.kamaji.scheduler` | **Scheduler configuration**|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji.scheduler.extraArgs` | **Extra arguments** - Additional command-line arguments for the scheduler.|**Type:** `array`<br/>|
+| `providerIntegration.controlPlane.kamaji.scheduler.extraArgs[*]` |**None**|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kamaji.scheduler.resources` | **Resources** - Scheduler pod resource configuration.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji.scheduler.resources.limits` | **Limits** - Scheduler pod resource limits.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji.scheduler.resources.limits.cpu` | **CPU** - CPU limit for the scheduler pod.|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kamaji.scheduler.resources.limits.memory` | **Memory** - Memory limit for the scheduler pod.|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kamaji.scheduler.resources.requests` | **Requests** - Scheduler pod resource requests.|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kamaji.scheduler.resources.requests.cpu` | **CPU** - CPU request for the scheduler pod.|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kamaji.scheduler.resources.requests.memory` | **Memory** - Memory request for the scheduler pod.|**Type:** `string`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig` | **Kubeadm config** - Configuration of control plane nodes.|**Type:** `object`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration` | **Cluster configuration** - Configuration of Kubernetes components.|**Type:** `object`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer` | **API server** - Configuration of API server.|**Type:** `object`<br/>**Default:** `{}`|
@@ -1034,7 +1112,9 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.resourcesApi.bastionResourceEnabled` | **Bastion resource enabled** - Flag that indicates if the Bastion resource is enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.|**Type:** `boolean`<br/>**Default:** `true`|
 | `providerIntegration.resourcesApi.cleanupHelmReleaseResourcesEnabled` | **Cleanup HelmRelease hook job resource enabled** - Flag that indicates if the Cleanup HelmRelease Hook Job is enabeld and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.|**Type:** `boolean`<br/>**Default:** `false`|
 | `providerIntegration.resourcesApi.clusterResourceEnabled` | **Cluster resource enabled** - Flag that indicates if the Cluster resource is enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.|**Type:** `boolean`<br/>**Default:** `true`|
-| `providerIntegration.resourcesApi.controlPlaneResourceEnabled` | **Control plane resource enabled** - Flag that indicates if the control plane resource is enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.|**Type:** `boolean`<br/>**Default:** `true`|
+| `providerIntegration.resourcesApi.controlPlaneResource` | **Control plane resource** - Configuration for control plane resource provisioning.|**Type:** `object`<br/>|
+| `providerIntegration.resourcesApi.controlPlaneResource.enabled` | **Enabled** - Flag that indicates if the control plane resource is enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.|**Type:** `boolean`<br/>**Default:** `true`|
+| `providerIntegration.resourcesApi.controlPlaneResource.provider` | **Provider** - The control plane provider to use (e.g., kubeadm, kamaji). Only required when enabled is true.|**Type:** `string`<br/>**Allowed values:** `kubeadm`, `external`, `kamaji`<br/>**Default:** `"kubeadm"`|
 | `providerIntegration.resourcesApi.helmRepositoryResourcesEnabled` | **HelmRepository resources enabled** - Flag that indicates if the HelmRepository resources are enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.|**Type:** `boolean`<br/>**Default:** `false`|
 | `providerIntegration.resourcesApi.infrastructureCluster` | **Infrastructure cluster** - Group, version and kind of provider-specific infrastructure cluster resource.|**Type:** `object`<br/>|
 | `providerIntegration.resourcesApi.infrastructureCluster.group` | **API group**|**Type:** `string`<br/>**Example:** `"infrastructure.cluster.x-k8s.io"`<br/>|

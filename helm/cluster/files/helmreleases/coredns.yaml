@@ -19,3 +19,5 @@ defaultValues:
   global:
     podSecurityStandards:
       enforced: {{ .Values.global.podSecurityStandards.enforced }}
+  mastersInstance:
+    enabled: {{ include "cluster.internal.apps.coredns.mastersInstance.enabled" $ }}

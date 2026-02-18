@@ -1,0 +1,222 @@
+{{- if (include "kamaji.isEnabled" $) }}
+apiVersion: controlplane.cluster.x-k8s.io/v1alpha1
+kind: KamajiControlPlane
+metadata:
+  annotations:
+    "helm.sh/resource-policy": keep
+    {{- include "cluster.annotations.custom" $ | indent 4 }}
+  labels:
+    {{- include "cluster.labels.common.all" $ | nindent 4 }}
+  name: {{ include "cluster.resource.name" $ }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  {{- with $.Values.providerIntegration.controlPlane.kamaji }}
+  {{- with .apiServer }}
+  apiServer:
+    {{- with .extraArgs }}
+    extraArgs:
+      {{- range . }}
+      - {{ . }}
+      {{- end }}
+    {{- end }}
+    {{- if and .resources (or .resources.limits .resources.requests) }}
+    {{- with .resources }}
+    resources:
+      {{- with .limits }}
+      limits:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .requests }}
+      requests:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- end }}
+    {{- end }}
+  {{- end }}
+  {{- with .controllerManager }}
+  controllerManager:
+    {{- with .extraArgs }}
+    extraArgs:
+      {{- range . }}
+      - {{ . }}
+      {{- end }}
+    {{- end }}
+    {{- if and .resources (or .resources.limits .resources.requests) }}
+    {{- with .resources }}
+    resources:
+      {{- with .limits }}
+      limits:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .requests }}
+      requests:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- end }}
+    {{- end }}
+  {{- end }}
+  {{- with .scheduler }}
+  scheduler:
+    {{- with .extraArgs }}
+    extraArgs:
+      {{- range . }}
+      - {{ . }}
+      {{- end }}
+    {{- end }}
+    {{- if and .resources (or .resources.limits .resources.requests) }}
+    {{- with .resources }}
+    resources:
+      {{- with .limits }}
+      limits:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .requests }}
+      requests:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- end }}
+    {{- end }}
+  {{- end }}
+  dataStoreName: {{ .dataStoreName | quote | default (include "cluster.resource.name" $) }}
+  {{- with .addons }}
+  addons:
+    {{- if hasKey . "coreDNS" }}
+    coreDNS:
+      {{- toYaml .coreDNS | nindent 6 }}
+    {{- end }}
+    {{- if hasKey . "kubeProxy" }}
+    kubeProxy:
+      {{- toYaml .kubeProxy | nindent 6 }}
+    {{- end }}
+    {{- if hasKey . "konnectivity" }}
+    konnectivity:
+      {{- toYaml .konnectivity | nindent 6 }}
+    {{- end }}
+  {{- end }}
+  {{- with .deployment }}
+  deployment:
+    {{- with .additionalMetadata }}
+    additionalMetadata:
+      {{- with .labels }}
+      labels:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .annotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- end }}
+    {{- with .podAdditionalMetadata }}
+    podAdditionalMetadata:
+      {{- with .labels }}
+      labels:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .annotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- end }}
+    {{- with .affinity }}
+    affinity:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- with .tolerations }}
+    tolerations:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+
+    {{- with .resources }}
+    resources:
+      {{- with .apiServer }}
+      apiServer:
+        {{- with .limits }}
+        limits:
+          {{- if .cpu }}
+          cpu: {{ .cpu | quote }}
+          {{- end }}
+          {{- if .memory }}
+          memory: {{ .memory | quote }}
+          {{- end }}
+        {{- end }}
+      {{- end }}
+      {{- with .controllerManager }}
+      controllerManager:
+        {{- with .limits }}
+        limits:
+          {{- if .cpu }}
+          cpu: {{ .cpu | quote }}
+          {{- end }}
+          {{- if .memory }}
+          memory: {{ .memory | quote }}
+          {{- end }}
+        {{- end }}
+      {{- end }}
+      {{- with .scheduler }}
+      scheduler:
+        {{- with .limits }}
+        limits:
+          {{- if .cpu }}
+          cpu: {{ .cpu | quote }}
+          {{- end }}
+          {{- if .memory }}
+          memory: {{ .memory | quote }}
+          {{- end }}
+        {{- end }}
+      {{- end }}
+    {{- end }}
+
+
+
+
+    {{- with .nodeSelector }}
+    nodeSelector:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- with .topologySpreadConstraints }}
+    topologySpreadConstraints:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+  {{- end }}
+  {{- with .kubelet }}
+  kubelet:
+    {{- with .cgroupfs }}
+    cgroupfs: {{ . | quote }}
+    {{- end }}
+    {{- with .preferredAddressTypes }}
+    preferredAddressTypes:
+      {{- range . }}
+      - {{ . | quote }}
+      {{- end }}
+    {{- end }}
+  {{- end }}
+  {{- with .network }}
+  network:
+    {{- with .serviceAddress }}
+    serviceAddress: {{ . | quote }}
+    {{- end }}
+    {{- with .serviceType }}
+    serviceType: {{ . | quote }}
+    {{- end }}
+    {{- with .serviceAnnotations }}
+    serviceAnnotations:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- with .serviceLabels }}
+    serviceLabels:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- with .certSANs }}
+    certSANs:
+      {{- range . }}
+      - {{ . | quote }}
+      {{- end }}
+    {{- end }}
+  {{- end }}
+  {{- with .registry }}
+  registry: {{ . | quote }}
+  {{- end }}
+  {{- end }}
+  version: v{{ include "cluster.component.kubernetes.version" $ }}
+  replicas: {{ .Values.global.controlPlane.replicas }}
+{{- end }}
