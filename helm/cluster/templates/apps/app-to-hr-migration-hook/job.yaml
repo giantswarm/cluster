@@ -106,11 +106,12 @@ spec:
               -p='[{"op": "remove", "path": "/metadata/finalizers"}]' 2>/dev/null || true
           done
 
-          # 1c. Delete non-bundle App CRs (batch).
+          # 1c. Delete non-bundle App CRs.
           echo "Phase 1c: Deleting non-bundle App CRs"
-          kubectl delete apps.application.giantswarm.io -n "$NAMESPACE" \
-            -l "$NON_BUNDLE_SELECTOR" \
-            --ignore-not-found=true 2>/dev/null || true
+          for APP in $NON_BUNDLE_APPS; do
+            kubectl delete apps.application.giantswarm.io "$APP" -n "$NAMESPACE" \
+              --ignore-not-found=true --wait=false 2>/dev/null || true
+          done
 
           # 1d. Clean up ALL WC Chart CRs.
           # Now safe: non-bundle App CRs are gone, so app-operator
