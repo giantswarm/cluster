@@ -5,6 +5,9 @@ Uses label selectors to dynamically discover all apps for this cluster,
 eliminating hardcoded app lists. Handles apps from both the cluster subchart
 and any provider-specific charts (e.g., cluster-aws).
 
+Phase 0: Remove depends-on annotations from all cluster App CRs to prevent
+  app-operator from pausing MC Chart CRs when dependencies are removed.
+
 Phase 1 (Non-bundle App CRs + WC Chart CRs):
   - Pause non-bundle App CRs (excludes operators via label selector)
   - Remove finalizers + delete non-bundle App CRs
@@ -86,6 +89,17 @@ spec:
             case "$1" in *-app-operator|*-chart-operator) return 0 ;; esac
             return 1
           }
+
+          # ============================================================
+          # Phase 0: Remove dependency annotations
+          # ============================================================
+          # Remove depends-on annotations from all cluster App CRs.
+          # This prevents app-operator from pausing MC Chart CRs when
+          # we later pause/delete the dependency App CRs in Phase 1.
+          echo "Phase 0: Removing depends-on annotations from all cluster App CRs"
+          kubectl annotate apps.application.giantswarm.io -n "$NAMESPACE" \
+            -l "$CLUSTER_SELECTOR" \
+            "app-operator.giantswarm.io/depends-on-" 2>/dev/null || true
 
           # ============================================================
           # Phase 1: Non-bundle App CRs + WC Chart CRs
