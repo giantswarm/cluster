@@ -18,5 +18,5 @@ rules:
   - {{ include "cluster.resource.name" $ }}-kubeconfig
 - apiGroups: ["application.giantswarm.io"]
   resources: ["apps"]
-  verbs: ["get", "list", "patch", "delete"]
+  verbs: ["get", "list", "patch", "delete", "deletecollection"]
 {{- end }}
