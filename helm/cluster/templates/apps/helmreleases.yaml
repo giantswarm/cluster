@@ -67,7 +67,11 @@ metadata:
   labels:
     {{- include "cluster.labels.common.all" $ | nindent 4 }}
 spec:
+  {{- if $app.inCluster }}
+  releaseName: {{ include "cluster.resource.name" $ }}-{{ $appName }}
+  {{- else }}
   releaseName: {{ $appName }}
+  {{- end }}
   {{- if $app.inCluster }}
   targetNamespace: {{ $.Release.Namespace }}
   storageNamespace: {{ $.Release.Namespace }}
