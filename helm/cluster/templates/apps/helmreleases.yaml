@@ -111,9 +111,19 @@ spec:
   targetNamespace: {{ $app.namespace }}
   storageNamespace: {{ $app.namespace }}
   {{- end }}
-  chartRef:
-    kind: OCIRepository
-    name: {{ include "cluster.resource.name" $ }}-{{ $appName }}
+  chart:
+    spec:
+      chart: {{ $app.chartName | default $app.appName }}
+      {{- $appCatalog := $app.catalog -}}
+      {{- $appVersion := $app.version -}}
+      {{- if $.Values.providerIntegration.useReleases }}
+      {{- $appCatalog = include "cluster.app.catalog" $ }}
+      {{- $appVersion = include "cluster.app.version" $ }}
+      {{- end }}
+      version: {{ $ephemeralConfig.versionOverride | default $appVersion }}
+      sourceRef:
+        kind: HelmRepository
+        name: {{ include "cluster.resource.name" $ }}-{{ $ephemeralConfig.catalogOverride | default $appCatalog | default "default" }}
   {{- $dependencies := list }}
   {{- if $.Values.providerIntegration.useReleases}}
     {{- $dependenciesFromRelease := include "cluster.app.dependencies" $ | fromYamlArray }}
