@@ -45,7 +45,7 @@ Common labels
 # need this label on the Cluster resource.
 app: "cluster-{{ .Values.providerIntegration.provider }}"
 app.kubernetes.io/name: {{ include "cluster.chart.name" $ | quote }}
-app.kubernetes.io/version: {{ .Chart.Version | quote }}
+app.kubernetes.io/version: {{ .Chart.Version | replace "+" "_" | trunc 63 | quote }}
 app.kubernetes.io/part-of: "cluster-{{ .Values.providerIntegration.provider }}"
 app.kubernetes.io/instance: {{ .Release.Name | quote }}
 app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
