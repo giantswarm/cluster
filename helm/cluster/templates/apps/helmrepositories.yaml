@@ -1,0 +1,64 @@
+{{- if $.Values.providerIntegration.resourcesApi.helmRepositoryResourcesEnabled }}
+{{- $annotations := include "cluster.annotations.common.all" $ }}
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: {{ include "cluster.resource.name" $ }}-default
+  namespace: {{ $.Release.Namespace }}
+  {{- if $annotations }}
+  annotations:
+    {{- $annotations | indent 4 }}
+  {{- end }}
+  labels:
+    {{- include "cluster.labels.common.all" $ | nindent 4 }}
+spec:
+  interval: 5m
+  url: https://giantswarm.github.io/default-catalog
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: {{ include "cluster.resource.name" $ }}-default-test
+  namespace: {{ $.Release.Namespace }}
+  {{- if $annotations }}
+  annotations:
+    {{- $annotations | indent 4 }}
+  {{- end }}
+  labels:
+    {{- include "cluster.labels.common.all" $ | nindent 4 }}
+spec:
+  interval: 5m
+  url: https://giantswarm.github.io/default-test-catalog
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: {{ include "cluster.resource.name" $ }}-cluster
+  namespace: {{ $.Release.Namespace }}
+  {{- $annotations = include "cluster.annotations.common.all" $ }}
+  {{- if $annotations }}
+  annotations:
+    {{- $annotations | indent 4 }}
+  {{- end }}
+  labels:
+    {{- include "cluster.labels.common.all" $ | nindent 4 }}
+spec:
+  interval: 10m
+  url: https://giantswarm.github.io/cluster-catalog
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: {{ include "cluster.resource.name" $ }}-cluster-test
+  namespace: {{ $.Release.Namespace }}
+  {{- $annotations = include "cluster.annotations.common.all" $ }}
+  {{- if $annotations }}
+  annotations:
+    {{- $annotations | indent 4 }}
+  {{- end }}
+  labels:
+    {{- include "cluster.labels.common.all" $ | nindent 4 }}
+spec:
+  interval: 10m
+  url: https://giantswarm.github.io/cluster-test-catalog
+{{- end }}
