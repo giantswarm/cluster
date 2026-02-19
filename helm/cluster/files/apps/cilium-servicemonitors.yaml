@@ -8,4 +8,4 @@ dependsOn: prometheus-operator-crd
 namespace: kube-system
 # used by renovate
 # repo: giantswarm/cilium-servicemonitors-app
-version: 0.1.3
+version: 0.1.4
