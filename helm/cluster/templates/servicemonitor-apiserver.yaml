@@ -4,8 +4,8 @@ kind: ServiceMonitor
 metadata:
   labels:
     {{- include "cluster.labels.common.all" $ | nindent 4 }}
-  name: {{ include "cluster.resource.name" $ }}-apiserver-probe
-  namespace: kube-system
+  name: {{ $.Values.global.metadata.name }}-apiserver-probe
+  namespace: {{ $.Release.Namespace }}
 spec:
   endpoints:
   - interval: {{ $.Values.providerIntegration.monitoring.apiServerProbe.interval }}
