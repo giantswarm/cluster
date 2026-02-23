@@ -4,7 +4,9 @@ configKey: certManager
 clusterValues:
   configMap: true
   secret: true
-dependsOn: prometheus-operator-crd
+dependsOn:
+  - prometheus-operator-crd
+  - kube-prometheus-stack
 namespace: kube-system
 # used by renovate
 # repo: giantswarm/cert-manager-app
