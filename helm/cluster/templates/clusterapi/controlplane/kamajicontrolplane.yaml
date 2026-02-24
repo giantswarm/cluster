@@ -125,7 +125,6 @@ spec:
     tolerations:
       {{- toYaml . | nindent 6 }}
     {{- end }}
-
     {{- with .resources }}
     resources:
       {{- with .apiServer }}
@@ -165,10 +164,6 @@ spec:
         {{- end }}
       {{- end }}
     {{- end }}
-
-
-
-
     {{- with .nodeSelector }}
     nodeSelector:
       {{- toYaml . | nindent 6 }}
