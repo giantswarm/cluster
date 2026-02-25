@@ -1,0 +1,10 @@
+appName: rbac-bootstrap
+chartName: rbac-bootstrap-app
+configKey: rbacBootstrap
+clusterValues:
+  configMap: true
+  secret: false
+namespace: kube-system
+# used by renovate
+# repo: giantswarm/rbac-bootstrap-app
+version: 0.2.3
