@@ -1,4 +1,5 @@
-appName: rbac-bootstrap
+appName: giantswarm-rbac-bootstrap
+chartName: rbac-bootstrap
 catalog: giantswarm
 configKey: rbacBootstrap
 namespace: kube-system
