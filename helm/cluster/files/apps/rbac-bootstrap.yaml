@@ -8,3 +8,8 @@ namespace: kube-system
 # used by renovate
 # repo: giantswarm/rbac-bootstrap-app
 version: 0.2.3
+defaultValues:
+  bindings:
+    - role: read-all
+      groups:
+        - giantswarm:giantswarm-admins
