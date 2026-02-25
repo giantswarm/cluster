@@ -1,5 +1,4 @@
 appName: rbac-bootstrap
-chartName: rbac-bootstrap-app
 configKey: rbacBootstrap
 clusterValues:
   configMap: true
