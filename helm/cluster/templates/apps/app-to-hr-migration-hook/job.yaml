@@ -163,16 +163,54 @@ spec:
           # app-operator processes the deletion and cascade-deletes the
           # MC Chart CRs. chart-operator then helm-uninstalls the bundles.
           # Excludes app-operator and chart-operator (must stay alive).
+          #
+          # IMPORTANT: We wait for the cascade to complete before exiting.
+          # If we exit early, the main chart upgrade creates new HelmRelease
+          # CRs while the old cascade is still running, causing a race
+          # condition where the old cascade deletes the newly-created
+          # bundle sub-HelmReleases.
           echo "Phase 2: Deleting bundle App CRs (operators will clean up MC Chart CRs)"
 
           REMAINING_APPS=$(kubectl get apps.application.giantswarm.io -n "$NAMESPACE" \
             -l "$CLUSTER_SELECTOR" \
             -o jsonpath='{.items[*].metadata.name}' 2>/dev/null) || true
+          BUNDLE_APPS=""
           for APP in $REMAINING_APPS; do
             is_operator "$APP" && continue
+            echo "  Deleting bundle App CR: $APP"
             kubectl delete apps.application.giantswarm.io "$APP" -n "$NAMESPACE" \
               --ignore-not-found=true --wait=false 2>/dev/null || true
+            BUNDLE_APPS="$BUNDLE_APPS $APP"
           done
+
+          # Wait for all bundle App CRs to be fully deleted (cascade complete).
+          if [ -n "$BUNDLE_APPS" ]; then
+            echo "Waiting for bundle App CR cascade deletion to complete..."
+            TIMEOUT=300
+            ELAPSED=0
+            while [ $ELAPSED -lt $TIMEOUT ]; do
+              ALL_GONE=true
+              for APP in $BUNDLE_APPS; do
+                if kubectl get apps.application.giantswarm.io "$APP" -n "$NAMESPACE" >/dev/null 2>&1; then
+                  ALL_GONE=false
+                  break
+                fi
+              done
+              if [ "$ALL_GONE" = "true" ]; then
+                echo "All bundle App CRs fully deleted after ${ELAPSED}s"
+                break
+              fi
+              sleep 5
+              ELAPSED=$((ELAPSED + 5))
+            done
+            if [ "$ALL_GONE" != "true" ]; then
+              echo "WARNING: Timed out waiting for bundle App CRs to be deleted after ${TIMEOUT}s"
+              echo "Remaining bundle App CRs:"
+              for APP in $BUNDLE_APPS; do
+                kubectl get apps.application.giantswarm.io "$APP" -n "$NAMESPACE" --no-headers 2>/dev/null || true
+              done
+            fi
+          fi
 
           echo "Migration hook completed successfully"
 {{- end }}
