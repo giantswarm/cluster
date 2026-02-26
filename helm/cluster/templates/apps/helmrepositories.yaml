@@ -61,4 +61,20 @@ metadata:
 spec:
   interval: 10m
   url: https://giantswarm.github.io/cluster-test-catalog
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: {{ include "cluster.resource.name" $ }}-giantswarm
+  namespace: {{ $.Release.Namespace }}
+  {{- $annotations = include "cluster.annotations.common.all" $ }}
+  {{- if $annotations }}
+  annotations:
+    {{- $annotations | indent 4 }}
+  {{- end }}
+  labels:
+    {{- include "cluster.labels.common.all" $ | nindent 4 }}
+spec:
+  interval: 10m
+  url: https://giantswarm.github.io/giantswarm-catalog
 {{- end }}
