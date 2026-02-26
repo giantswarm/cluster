@@ -1,5 +1,5 @@
 appName: rbac-bootstrap
-catalog: giantswarm
+useOCISource: true
 configKey: rbacBootstrap
 namespace: kube-system
 # used by renovate

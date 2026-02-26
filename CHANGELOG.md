@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Apps: Use OCIRepository source for `rbac-bootstrap` HelmRelease.
+
 ## [5.2.0] - 2026-02-26
 
 ### Added
