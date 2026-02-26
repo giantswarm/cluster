@@ -7,6 +7,7 @@ clusterValues:
 inCluster: true
 dependsOn: {{ if not (eq $.Values.providerIntegration.provider "aks") }}["coredns"]{{ else }}[]{{ end }}
 namespace: kube-system
+driftDetection: enabled
 # used by renovate
 # repo: giantswarm/observability-bundle
 version: 3.3.0
