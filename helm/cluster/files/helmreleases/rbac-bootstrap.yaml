@@ -1,5 +1,4 @@
-appName: giantswarm-rbac-bootstrap
-chartName: rbac-bootstrap
+appName: rbac-bootstrap
 catalog: giantswarm
 configKey: rbacBootstrap
 namespace: kube-system
@@ -11,4 +10,5 @@ defaultValues:
   bindings:
     - role: read-all
       groups:
-        - giantswarm:giantswarm-admins
+        - giantswarm-ad:giantswarm-admins
+        - giantswarm-github:giantswarm-admins
