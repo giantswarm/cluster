@@ -149,6 +149,10 @@ spec:
       {{- else }}
       retries: -1
       {{- end }}
+  {{- if $app.driftDetection }}
+  driftDetection:
+    mode: {{ $app.driftDetection }}
+  {{- end }}
   {{- /* We have multiple layers of app Helm values, where every next layer overwrites the previous one. */}}
   {{- /* Layer 1: default provider-independent app Helm values */}}
   {{- $appHelmValues := $app.defaultValues | default dict -}}

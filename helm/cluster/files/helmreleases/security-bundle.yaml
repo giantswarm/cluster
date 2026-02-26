@@ -7,6 +7,7 @@ clusterValues:
 dependsOn: prometheus-operator-crd
 inCluster: true
 namespace: kube-system
+driftDetection: enabled
 # used by renovate
 # repo: giantswarm/security-bundle
 version: 1.17.0
