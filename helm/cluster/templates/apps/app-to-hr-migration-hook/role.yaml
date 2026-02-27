@@ -19,4 +19,15 @@ rules:
 - apiGroups: ["application.giantswarm.io"]
   resources: ["apps"]
   verbs: ["get", "list", "patch", "delete", "deletecollection"]
+# Crossplane resources: patch deletionPolicy to Orphan before bundle cascade
+# to protect AWS resources from deletion during migration.
+- apiGroups: ["iam.aws.upbound.io"]
+  resources: ["roles"]
+  verbs: ["get", "list", "patch"]
+- apiGroups: ["sqs.aws.upbound.io"]
+  resources: ["queues", "queuepolicies"]
+  verbs: ["get", "list", "patch"]
+- apiGroups: ["cloudwatchevents.aws.upbound.io"]
+  resources: ["rules", "targets"]
+  verbs: ["get", "list", "patch"]
 {{- end }}
