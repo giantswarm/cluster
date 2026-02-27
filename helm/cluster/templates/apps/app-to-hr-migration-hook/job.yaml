@@ -157,6 +157,38 @@ spec:
             --ignore-not-found=true 2>/dev/null || true
 
           # ============================================================
+          # Phase 1.5: Protect NTH crossplane resources from deletion
+          # ============================================================
+          # The aws-nth-bundle cascade will helm-uninstall the
+          # aws-nth-crossplane-resources sub-app, which deletes crossplane
+          # K8s CRs. The crossplane provider then deletes the actual AWS
+          # resources (IAM roles, SQS queues, CloudWatch rules/targets).
+          #
+          # Setting deletionPolicy=Orphan tells crossplane to keep the
+          # AWS resources even when the K8s CRs are deleted. After
+          # migration, the new HelmRelease recreates the K8s CRs with
+          # the default deletionPolicy=Delete, and crossplane reconciles
+          # them with the existing AWS resources.
+          echo "Phase 1.5: Protecting NTH crossplane resources (deletionPolicy=Orphan)"
+          ORPHAN_PATCH='{"spec":{"deletionPolicy":"Orphan"}}'
+
+          for RES in \
+            "roles.iam.aws.upbound.io/${CLUSTER_NAME}-nth" \
+            "roles.iam.aws.upbound.io/${CLUSTER_NAME}-nth-notification" \
+            "queues.sqs.aws.upbound.io/${CLUSTER_NAME}-nth" \
+            "queuepolicies.sqs.aws.upbound.io/${CLUSTER_NAME}-nth" \
+            "rules.cloudwatchevents.aws.upbound.io/${CLUSTER_NAME}-nth-events" \
+            "targets.cloudwatchevents.aws.upbound.io/${CLUSTER_NAME}-nth-events"; do
+            if kubectl get "$RES" -n "$NAMESPACE" >/dev/null 2>&1; then
+              kubectl patch "$RES" -n "$NAMESPACE" --type=merge -p "$ORPHAN_PATCH" 2>/dev/null && \
+                echo "  Protected: $RES" || \
+                echo "  WARNING: Failed to protect: $RES"
+            else
+              echo "  Skipped (not found): $RES"
+            fi
+          done
+
+          # ============================================================
           # Phase 2: Bundle App CRs via operator cascade
           # ============================================================
           # Delete remaining App CRs (bundles) WITHOUT removing finalizers.
