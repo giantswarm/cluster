@@ -1,21 +1,25 @@
 {{/*
 Pre-upgrade hook to safely migrate default apps from App CRs to HelmReleases.
 
-Uses label selectors to dynamically discover all apps for this cluster,
+Uses label selectors to dynamically discover default apps for this cluster,
 eliminating hardcoded app lists. Handles apps from both the cluster subchart
 and any provider-specific charts (e.g., cluster-aws).
 
-Phase 0: Remove depends-on annotations from all cluster App CRs to prevent
+Only targets App CRs and Chart CRs with the release.giantswarm.io/version
+label, which identifies default apps. Non-default App CRs installed by
+customers are left untouched.
+
+Phase 0: Remove depends-on annotations from default App CRs to prevent
   app-operator from pausing MC Chart CRs when dependencies are removed.
 
 Phase 1 (Non-bundle App CRs + WC Chart CRs):
   - Pause non-bundle App CRs (excludes operators via label selector)
   - Remove finalizers + delete non-bundle App CRs
-  - Once App CRs are gone, clean up ALL WC Chart CRs safely
+  - Once App CRs are gone, clean up default app WC Chart CRs safely
     (no risk of app-operator re-creating them)
 
 Phase 2 (Bundle App CRs via operator cascade):
-  - Delete remaining bundle App CRs (excluding operators)
+  - Delete remaining default bundle App CRs (excluding operators)
   - app-operator cascade-deletes the MC Chart CRs
 
 Flux then adopts the existing Helm releases via the new HelmRelease CRs.
@@ -79,10 +83,13 @@ spec:
           WC="--kubeconfig /tmp/wc-kubeconfig"
 
           # Label selectors
-          # Non-bundle apps: belong to this cluster, version!=0.0.0, excluding operators
-          NON_BUNDLE_SELECTOR="giantswarm.io/cluster=$CLUSTER_NAME,app-operator.giantswarm.io/version!=0.0.0,app.kubernetes.io/name notin (chart-operator)"
-          # All cluster apps (for Phase 2 discovery)
-          CLUSTER_SELECTOR="giantswarm.io/cluster=$CLUSTER_NAME"
+          # Only target default apps (those with release.giantswarm.io/version label).
+          # Non-default App CRs installed by customers must not be touched.
+          DEFAULT_APP_LABEL="release.giantswarm.io/version"
+          # Non-bundle apps: belong to this cluster, version!=0.0.0, excluding operators, default apps only
+          NON_BUNDLE_SELECTOR="giantswarm.io/cluster=$CLUSTER_NAME,app-operator.giantswarm.io/version!=0.0.0,app.kubernetes.io/name notin (chart-operator),$DEFAULT_APP_LABEL"
+          # All default cluster apps (for Phase 0 and Phase 2 discovery)
+          CLUSTER_SELECTOR="giantswarm.io/cluster=$CLUSTER_NAME,$DEFAULT_APP_LABEL"
 
           # Helper: check if an app is an operator that must be kept alive.
           is_operator() {
@@ -93,10 +100,10 @@ spec:
           # ============================================================
           # Phase 0: Remove dependency annotations
           # ============================================================
-          # Remove depends-on annotations from all cluster App CRs.
+          # Remove depends-on annotations from default App CRs.
           # This prevents app-operator from pausing MC Chart CRs when
           # we later pause/delete the dependency App CRs in Phase 1.
-          echo "Phase 0: Removing depends-on annotations from all cluster App CRs"
+          echo "Phase 0: Removing depends-on annotations from default App CRs"
           kubectl annotate apps.application.giantswarm.io -n "$NAMESPACE" \
             -l "$CLUSTER_SELECTOR" \
             "app-operator.giantswarm.io/depends-on-" 2>/dev/null || true
@@ -131,17 +138,20 @@ spec:
             -l "$NON_BUNDLE_SELECTOR" \
             --ignore-not-found=true --wait=false 2>/dev/null || true
 
-          # 1d. Clean up ALL WC Chart CRs.
+          # 1d. Clean up default app WC Chart CRs.
           # Now safe: non-bundle App CRs are gone, so app-operator
           # cannot re-create Chart CRs on the WC.
-          echo "Phase 1d: Cleaning up ALL WC Chart CRs"
+          # Only target Chart CRs with the release label (default apps).
+          echo "Phase 1d: Cleaning up default app WC Chart CRs"
 
-          echo "  Pausing all Chart CRs on WC"
-          kubectl $WC annotate chart --all -n "$CHART_NAMESPACE" \
+          echo "  Pausing default app Chart CRs on WC"
+          kubectl $WC annotate chart -n "$CHART_NAMESPACE" \
+            -l "$DEFAULT_APP_LABEL" \
             "operatorkit.giantswarm.io/paused=true" --overwrite 2>/dev/null || true
 
-          echo "  Removing finalizers from all Chart CRs on WC"
+          echo "  Removing finalizers from default app Chart CRs on WC"
           CHARTS=$(kubectl $WC get chart -n "$CHART_NAMESPACE" \
+            -l "$DEFAULT_APP_LABEL" \
             -o jsonpath='{.items[*].metadata.name}' 2>/dev/null) || true
           COUNT=0
           for CHART in $CHARTS; do
@@ -152,8 +162,9 @@ spec:
           done
           wait
 
-          echo "  Deleting all Chart CRs on WC"
-          kubectl $WC delete chart --all -n "$CHART_NAMESPACE" \
+          echo "  Deleting default app Chart CRs on WC"
+          kubectl $WC delete chart -n "$CHART_NAMESPACE" \
+            -l "$DEFAULT_APP_LABEL" \
             --ignore-not-found=true 2>/dev/null || true
 
           # ============================================================
