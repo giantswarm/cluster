@@ -1,0 +1,84 @@
+{{/*
+Pre-delete hook to remove Flux finalizers from HelmReleases before cluster deletion.
+
+When a cluster is deleted, Flux tries to `helm uninstall` each HelmRelease against
+the workload cluster. If the WC API goes down before Flux finishes (which is common
+with 40+ HelmReleases), the remaining HRs get stuck with `finalizers.fluxcd.io`,
+blocking CAPI cluster garbage collection indefinitely.
+
+This hook runs before `helm uninstall` removes the chart's resources, so all HRs
+still exist and the WC is still up. By stripping Flux finalizers here, the subsequent
+`helm uninstall` deletes the HR objects instantly without Flux needing to reach the WC.
+*/}}
+{{- if $.Values.providerIntegration.apps }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "cluster.resource.name" $ }}-cleanup-hrs
+  namespace: {{ $.Release.Namespace }}
+  labels:
+    {{- include "cluster.labels.common.all" $ | nindent 4 }}
+  annotations:
+    helm.sh/hook: pre-delete
+    helm.sh/hook-weight: "-10"
+    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+spec:
+  backoffLimit: 3
+  ttlSecondsAfterFinished: 300
+  template:
+    metadata:
+      labels:
+        {{- include "cluster.labels.common.all" $ | nindent 8 }}
+    spec:
+      serviceAccountName: {{ include "cluster.resource.name" $ }}-cleanup-hrs
+      restartPolicy: Never
+      containers:
+      - name: kubectl
+        image: gsoci.azurecr.io/giantswarm/kubectl:{{ .Values.providerIntegration.kubernetesVersion }}
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1000
+          runAsGroup: 1000
+          allowPrivilegeEscalation: false
+          seccompProfile:
+            type: RuntimeDefault
+          capabilities:
+            drop:
+            - ALL
+        resources:
+          requests:
+            cpu: 10m
+            memory: 128Mi
+          limits:
+            cpu: 200m
+            memory: 512Mi
+        command:
+        - /bin/sh
+        - -c
+        - |
+          set -eu
+          CLUSTER_NAME="{{ include "cluster.resource.name" $ }}"
+          NAMESPACE="{{ $.Release.Namespace }}"
+          BATCH_SIZE=10
+
+          echo "Removing Flux finalizers from HelmReleases for cluster $CLUSTER_NAME"
+
+          HELMRELEASES=$(kubectl get helmreleases.helm.toolkit.fluxcd.io -n "$NAMESPACE" \
+            -l "giantswarm.io/cluster=$CLUSTER_NAME" \
+            -o jsonpath='{.items[*].metadata.name}' 2>/dev/null) || true
+
+          COUNT=0
+          TOTAL=0
+          for HR in $HELMRELEASES; do
+            TOTAL=$((TOTAL + 1))
+            (kubectl patch helmreleases.helm.toolkit.fluxcd.io "$HR" -n "$NAMESPACE" --type=json \
+              -p='[{"op": "remove", "path": "/metadata/finalizers"}]' 2>/dev/null && \
+              echo "  Removed finalizers: $HR" || \
+              echo "  Skipped (no finalizers or not found): $HR") &
+            COUNT=$((COUNT + 1))
+            if [ $((COUNT % BATCH_SIZE)) -eq 0 ]; then wait; fi
+          done
+          wait
+
+          echo "Processed $TOTAL HelmReleases for cluster $CLUSTER_NAME"
+{{- end }}
