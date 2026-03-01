@@ -1,0 +1,17 @@
+{{- if $.Values.providerIntegration.apps }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ include "cluster.resource.name" $ }}-cleanup-hrs
+  namespace: {{ $.Release.Namespace }}
+  labels:
+    {{- include "cluster.labels.common.all" $ | nindent 4 }}
+  annotations:
+    helm.sh/hook: pre-delete
+    helm.sh/hook-weight: "-20"
+    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+rules:
+- apiGroups: ["helm.toolkit.fluxcd.io"]
+  resources: ["helmreleases"]
+  verbs: ["get", "list", "patch"]
+{{- end }}
