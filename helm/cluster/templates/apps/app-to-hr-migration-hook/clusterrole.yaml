@@ -1,0 +1,25 @@
+{{- if $.Values.providerIntegration.apps }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ include "cluster.resource.name" $ }}-migrate-apps
+  labels:
+    {{- include "cluster.labels.common.all" $ | nindent 4 }}
+  annotations:
+    helm.sh/hook: pre-upgrade
+    helm.sh/hook-weight: "-20"
+    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+# Crossplane resources are cluster-scoped and require a ClusterRole.
+# Patch deletionPolicy to Orphan before bundle cascade to protect
+# AWS resources from deletion during migration.
+rules:
+- apiGroups: ["iam.aws.upbound.io"]
+  resources: ["roles"]
+  verbs: ["get", "list", "patch"]
+- apiGroups: ["sqs.aws.upbound.io"]
+  resources: ["queues", "queuepolicies"]
+  verbs: ["get", "list", "patch"]
+- apiGroups: ["cloudwatchevents.aws.upbound.io"]
+  resources: ["rules", "targets"]
+  verbs: ["get", "list", "patch"]
+{{- end }}
