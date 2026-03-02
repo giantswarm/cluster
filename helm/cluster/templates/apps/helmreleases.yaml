@@ -144,6 +144,7 @@ spec:
   upgrade:
     disableWait: {{ $app.disableWait | default false }}
     remediation:
+      remediateLastFailure: true
       {{- if hasKey $app "remediationRetries" }}
       retries: {{ $app.remediationRetries }}
       {{- else }}
