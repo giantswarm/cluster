@@ -62,15 +62,20 @@ spec:
           NAMESPACE="{{ $.Release.Namespace }}"
           BATCH_SIZE=10
 
-          echo "Suspending HelmReleases and removing Flux finalizers for cluster $CLUSTER_NAME"
+          echo "Cleaning up HelmReleases for cluster $CLUSTER_NAME"
 
           HELMRELEASES=$(kubectl get helmreleases.helm.toolkit.fluxcd.io -n "$NAMESPACE" \
             -l "giantswarm.io/cluster=$CLUSTER_NAME" \
             -o jsonpath='{.items[*].metadata.name}' 2>/dev/null) || true
 
+          if [ -z "$HELMRELEASES" ]; then
+            echo "No HelmReleases found"
+            exit 0
+          fi
+
           # Step 1: Suspend all HRs to stop Flux from reconciling them.
           # This prevents Flux from re-adding finalizers after we remove them.
-          echo "  Suspending HelmReleases"
+          echo "  Step 1: Suspending HelmReleases"
           COUNT=0
           for HR in $HELMRELEASES; do
             (kubectl patch helmreleases.helm.toolkit.fluxcd.io "$HR" -n "$NAMESPACE" \
@@ -80,14 +85,36 @@ spec:
           done
           wait
 
-          # Step 2: Remove finalizers from all HRs.
-          echo "  Removing finalizers"
+          # Brief pause to let in-flight reconciliations complete before
+          # removing finalizers, reducing the chance of Flux re-adding them.
+          sleep 5
+
+          # Step 2: Remove finalizers. Two passes to handle any race condition
+          # where an in-flight reconciliation re-adds the finalizer after suspend.
+          for PASS in 1 2; do
+            echo "  Step 2 pass $PASS: Removing finalizers"
+            COUNT=0
+            for HR in $HELMRELEASES; do
+              (kubectl patch helmreleases.helm.toolkit.fluxcd.io "$HR" -n "$NAMESPACE" --type=json \
+                -p='[{"op": "remove", "path": "/metadata/finalizers"}]' 2>/dev/null || true) &
+              COUNT=$((COUNT + 1))
+              if [ $((COUNT % BATCH_SIZE)) -eq 0 ]; then wait; fi
+            done
+            wait
+            [ "$PASS" -eq 1 ] && sleep 3
+          done
+
+          # Step 3: Delete all HRs. This cleans up bundle sub-HRs (e.g. kyverno,
+          # alloy-logs) that are not chart resources and would otherwise be orphaned
+          # after helm uninstall deletes only the parent bundle HRs.
+          # Since HRs are suspended with no finalizers, deletion is instant.
+          echo "  Step 3: Deleting HelmReleases"
           COUNT=0
           TOTAL=0
           for HR in $HELMRELEASES; do
             TOTAL=$((TOTAL + 1))
-            (kubectl patch helmreleases.helm.toolkit.fluxcd.io "$HR" -n "$NAMESPACE" --type=json \
-              -p='[{"op": "remove", "path": "/metadata/finalizers"}]' 2>/dev/null || true) &
+            (kubectl delete helmreleases.helm.toolkit.fluxcd.io "$HR" -n "$NAMESPACE" \
+              --wait=false 2>/dev/null || true) &
             COUNT=$((COUNT + 1))
             if [ $((COUNT % BATCH_SIZE)) -eq 0 ]; then wait; fi
           done
