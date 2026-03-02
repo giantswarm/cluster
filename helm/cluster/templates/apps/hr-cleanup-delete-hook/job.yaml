@@ -1,5 +1,5 @@
 {{/*
-Pre-delete hook to remove Flux finalizers from HelmReleases before cluster deletion.
+Pre-delete hook to suspend HelmReleases and remove Flux finalizers before cluster deletion.
 
 When a cluster is deleted, Flux tries to `helm uninstall` each HelmRelease against
 the workload cluster. If the WC API goes down before Flux finishes (which is common
@@ -7,8 +7,9 @@ with 40+ HelmReleases), the remaining HRs get stuck with `finalizers.fluxcd.io`,
 blocking CAPI cluster garbage collection indefinitely.
 
 This hook runs before `helm uninstall` removes the chart's resources, so all HRs
-still exist and the WC is still up. By stripping Flux finalizers here, the subsequent
-`helm uninstall` deletes the HR objects instantly without Flux needing to reach the WC.
+still exist and the WC is still up. We first suspend each HR to stop Flux from
+reconciling it (which would re-add the finalizer), then remove the finalizer. The
+subsequent `helm uninstall` can then delete the HR objects instantly.
 */}}
 {{- if $.Values.providerIntegration.apps }}
 apiVersion: batch/v1
@@ -61,20 +62,32 @@ spec:
           NAMESPACE="{{ $.Release.Namespace }}"
           BATCH_SIZE=10
 
-          echo "Removing Flux finalizers from HelmReleases for cluster $CLUSTER_NAME"
+          echo "Suspending HelmReleases and removing Flux finalizers for cluster $CLUSTER_NAME"
 
           HELMRELEASES=$(kubectl get helmreleases.helm.toolkit.fluxcd.io -n "$NAMESPACE" \
             -l "giantswarm.io/cluster=$CLUSTER_NAME" \
             -o jsonpath='{.items[*].metadata.name}' 2>/dev/null) || true
 
+          # Step 1: Suspend all HRs to stop Flux from reconciling them.
+          # This prevents Flux from re-adding finalizers after we remove them.
+          echo "  Suspending HelmReleases"
+          COUNT=0
+          for HR in $HELMRELEASES; do
+            (kubectl patch helmreleases.helm.toolkit.fluxcd.io "$HR" -n "$NAMESPACE" \
+              --type=merge -p='{"spec":{"suspend":true}}' 2>/dev/null || true) &
+            COUNT=$((COUNT + 1))
+            if [ $((COUNT % BATCH_SIZE)) -eq 0 ]; then wait; fi
+          done
+          wait
+
+          # Step 2: Remove finalizers from all HRs.
+          echo "  Removing finalizers"
           COUNT=0
           TOTAL=0
           for HR in $HELMRELEASES; do
             TOTAL=$((TOTAL + 1))
             (kubectl patch helmreleases.helm.toolkit.fluxcd.io "$HR" -n "$NAMESPACE" --type=json \
-              -p='[{"op": "remove", "path": "/metadata/finalizers"}]' 2>/dev/null && \
-              echo "  Removed finalizers: $HR" || \
-              echo "  Skipped (no finalizers or not found): $HR") &
+              -p='[{"op": "remove", "path": "/metadata/finalizers"}]' 2>/dev/null || true) &
             COUNT=$((COUNT + 1))
             if [ $((COUNT % BATCH_SIZE)) -eq 0 ]; then wait; fi
           done
