@@ -145,6 +145,7 @@ spec:
     disableWait: {{ $app.disableWait | default false }}
     remediation:
       remediateLastFailure: true
+      strategy: uninstall
       {{- if hasKey $app "remediationRetries" }}
       retries: {{ $app.remediationRetries }}
       {{- else }}
