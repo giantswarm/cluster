@@ -95,7 +95,7 @@ spec:
         - name: add-ownerref
           {{- include "kamaji.jobContainerCommon" . | nindent 10 }}
           command:
-            - "/bin/bash"
+            - "/bin/sh"
             - "-xc"
             - |
               set -o errexit

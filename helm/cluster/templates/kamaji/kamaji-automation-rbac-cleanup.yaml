@@ -130,7 +130,7 @@ spec:
         - name: cleanup
           {{- include "kamaji.jobContainerCommon" . | nindent 10 }}
           command:
-            - "/bin/bash"
+            - "/bin/sh"
             - "-xc"
             - |
               set -o errexit
@@ -138,15 +138,16 @@ spec:
               set -o nounset
               
               # Wait for Datastore and PolicyException to be deleted
-              for i in $(seq 1 24); do
-                DATASTORE_DELETED=false
-                POLICYEXCEPTION_DELETED=false
 
-                if ! kubectl get datastores.kamaji.clastix.io "{{ include "cluster.resource.name" $ }}" >/dev/null 2>&1; then
+              DATASTORE_DELETED=false
+              POLICYEXCEPTION_DELETED=false
+
+              for i in $(seq 1 24); do
+                if [ "${DATASTORE_DELETED}" = "false" ] && ! kubectl get datastores.kamaji.clastix.io "{{ include "cluster.resource.name" $ }}" >/dev/null 2>&1; then
                   DATASTORE_DELETED=true
                 fi
 
-                if ! kubectl get policyexceptions.kyverno.io "{{ include "kamaji.etcdHelmreleaseName" $ }}" -n policy-exceptions >/dev/null 2>&1; then
+                if [ "${POLICYEXCEPTION_DELETED}" = "false" ] && ! kubectl get policyexceptions.kyverno.io "{{ include "kamaji.etcdHelmreleaseName" $ }}" -n policy-exceptions >/dev/null 2>&1; then
                   POLICYEXCEPTION_DELETED=true
                 fi
 
@@ -157,9 +158,9 @@ spec:
 
                 if [ $i -eq 24 ]; then
                   echo "Warning: Timed out waiting for resources to be deleted, proceeding with cleanup anyway."
+                else
+                  sleep 5
                 fi
-                
-                sleep 5
               done
 
               # Delete cluster-scoped RBAC resources
