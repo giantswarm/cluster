@@ -84,7 +84,7 @@ spec:
   url: oci://gsoci.azurecr.io/charts/giantswarm/{{ $app.chartName | default $app.appName }}
   ref:
     tag: "{{ $ephemeralConfig.versionOverride | default $appVersion }}"
-  interval: 1h
+  interval: 24h
   timeout: 60s
 {{- end }}
 ---
