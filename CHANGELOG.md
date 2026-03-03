@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [5.3.0] - 2026-02-26
+
+### Changed
+
+- Apps: Use OCIRepository source for `rbac-bootstrap` HelmRelease.
+
+## [5.2.0] - 2026-02-26
+
+### Added
+
+- Apps: Add `rbac-bootstrap` as a default HelmRelease app with a default ClusterRoleBinding for `giantswarm:giantswarm-admins`.
+
 ## [5.1.2] - 2026-01-21
 
 ### Changed
@@ -904,7 +916,9 @@ For Kubernetes <v1.29, you will need to re-enable it using the respective values
 
 - Update and clean up the template repo.
 
-[Unreleased]: https://github.com/giantswarm/cluster/compare/v5.1.2...HEAD
+[Unreleased]: https://github.com/giantswarm/cluster/compare/v5.3.0...HEAD
+[5.3.0]: https://github.com/giantswarm/cluster/compare/v5.2.0...v5.3.0
+[5.2.0]: https://github.com/giantswarm/cluster/compare/v5.1.2...v5.2.0
 [5.1.2]: https://github.com/giantswarm/cluster/compare/v5.1.1...v5.1.2
 [5.1.1]: https://github.com/giantswarm/cluster/compare/v5.1.0...v5.1.1
 [5.1.0]: https://github.com/giantswarm/cluster/compare/v5.0.0...v5.1.0

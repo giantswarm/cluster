@@ -7,4 +7,4 @@ dependsOn: prometheus-operator-crd
 namespace: giantswarm
 # used by renovate
 # repo: giantswarm/chart-operator-extensions
-version: 1.1.2
+version: 1.1.3

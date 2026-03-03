@@ -1,0 +1,14 @@
+appName: rbac-bootstrap
+useOCISource: true
+configKey: rbacBootstrap
+namespace: kube-system
+# used by renovate
+# repo: giantswarm/rbac-bootstrap-app
+version: 0.2.3
+interval: 1m
+defaultValues:
+  bindings:
+    - role: read-all
+      groups:
+        - giantswarm-ad:giantswarm-admins
+        - giantswarm-github:giantswarm-admins

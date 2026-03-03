@@ -26,6 +26,7 @@ global:
     observabilityPolicies: {}
     priorityClasses: {}
     prometheusBlackboxExporter: {}
+    rbacBootstrap: {}
     securityBundle: {}
     teleportKubeAgent: {}
     verticalPodAutoscaler: {}
@@ -188,6 +189,8 @@ providerIntegration:
     priorityClasses:
       enable: false
     prometheusBlackboxExporter:
+      enable: false
+    rbacBootstrap:
       enable: false
     securityBundle:
       enable: false
