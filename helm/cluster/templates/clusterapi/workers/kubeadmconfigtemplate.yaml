@@ -2,7 +2,7 @@
 {{- if eq $.Values.providerIntegration.resourcesApi.nodePoolKind "MachineDeployment" }}
 {{- range $nodePoolName, $nodePoolConfig := $.Values.global.nodePools | default $.Values.providerIntegration.workers.defaultNodePools }}
 {{- $_ := set $ "nodePool" (dict "name" $nodePoolName "config" $nodePoolConfig) }}
-apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
+apiVersion: bootstrap.cluster.x-k8s.io/v1beta2
 kind: KubeadmConfigTemplate
 metadata:
   labels:

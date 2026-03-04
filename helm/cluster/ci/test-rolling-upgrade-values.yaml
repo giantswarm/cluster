@@ -25,7 +25,6 @@ global:
       replicas: 100
       strategy:
         rollingUpdate:
-          deletePolicy: Newest
           maxSurge: "10%"
           maxUnavailable: "1"
 

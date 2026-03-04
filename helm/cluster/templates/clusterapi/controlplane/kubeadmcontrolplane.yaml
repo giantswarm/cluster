@@ -2,7 +2,7 @@
   $.Values.providerIntegration.resourcesApi.controlPlaneResource.enabled
   (eq $.Values.providerIntegration.resourcesApi.controlPlaneResource.provider "kubeadm")
 }}
-apiVersion: controlplane.cluster.x-k8s.io/v1beta1
+apiVersion: controlplane.cluster.x-k8s.io/v1beta2
 kind: KubeadmControlPlane
 metadata:
   annotations:
@@ -17,57 +17,78 @@ spec:
     metadata:
       labels:
         {{- include "cluster.labels.common.all" $ | nindent 8 }}
-    infrastructureRef:
-      apiVersion: {{ $.Values.providerIntegration.controlPlane.resources.infrastructureMachineTemplate.group }}/{{ $.Values.providerIntegration.controlPlane.resources.infrastructureMachineTemplate.version }}
-      kind: {{ $.Values.providerIntegration.controlPlane.resources.infrastructureMachineTemplate.kind }}
-      {{- $_ := set $ "osImage" $.Values.providerIntegration.osImage }}
-      {{- $_ = set $ "kubernetesVersion" $.Values.providerIntegration.kubernetesVersion }}
-      name: {{ include "cluster.resource.name" $ }}-control-plane-{{ include "cluster.data.hash" (dict "data" (include $.Values.providerIntegration.controlPlane.resources.infrastructureMachineTemplateSpecTemplateName $) "salt" $.Values.providerIntegration.hashSalt) }}
+    spec:
+      infrastructureRef:
+        apiGroup: {{ $.Values.providerIntegration.controlPlane.resources.infrastructureMachineTemplate.group }}
+        kind: {{ $.Values.providerIntegration.controlPlane.resources.infrastructureMachineTemplate.kind }}
+        {{- $_ := set $ "osImage" $.Values.providerIntegration.osImage }}
+        {{- $_ = set $ "kubernetesVersion" $.Values.providerIntegration.kubernetesVersion }}
+        name: {{ include "cluster.resource.name" $ }}-control-plane-{{ include "cluster.data.hash" (dict "data" (include $.Values.providerIntegration.controlPlane.resources.infrastructureMachineTemplateSpecTemplateName $) "salt" $.Values.providerIntegration.hashSalt) }}
   kubeadmConfigSpec:
-    diskSetup:
-      # Workaround for https://github.com/kubernetes-sigs/cluster-api/issues/7679.
-      # Don't define partitions here, they are defined in "ignition.containerLinuxConfig.additionalConfig"
-      {{- include "cluster.internal.controlPlane.kubeadm.diskSetup" $ | indent 6 }}
-    mounts:
-    {{- include "cluster.internal.controlPlane.kubeadm.mounts" $ | indent 2 }}
+    # Workaround for https://github.com/kubernetes-sigs/cluster-api/issues/7679.
+    # Don't define partitions here, they are defined in "ignition.containerLinuxConfig.additionalConfig"
+    {{- $diskSetup := include "cluster.internal.controlPlane.kubeadm.diskSetup" $ }}
+    {{- if $diskSetup }}
+    diskSetup: {{- $diskSetup | nindent 6 }}
+    {{- end }}
+    {{- $mounts := include "cluster.internal.controlPlane.kubeadm.mounts" $ }}
+    {{- if $mounts }}
+    mounts: {{- $mounts | nindent 4 }}
+    {{- end }}
     format: ignition
-    ignition:
-      {{- include "cluster.internal.controlPlane.kubeadm.ignition" $ | indent 6 }}
+    {{- $ignition := include "cluster.internal.controlPlane.kubeadm.ignition" $ }}
+    {{- if $ignition }}
+    ignition: {{- $ignition | nindent 6 }}
+    {{- end }}
     clusterConfiguration:
       # Avoid accessibility issues (e.g. on private clusters) and potential future rate limits for
       # the default `registry.k8s.io`.
       imageRepository: {{ include "cluster.image.registry" $ }}/giantswarm
-      # API server configuration
-      apiServer:
-        {{- include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer" $ | indent 8 }}
-      controllerManager:
-        {{- include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.controllerManager" $ | indent 8 }}
-      scheduler:
-        {{- include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.scheduler" $ | indent 8 }}
-      etcd:
-        {{- include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.etcd" $ | indent 8 }}
-      networking:
-        {{- include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.networking" $ | indent 8 }}
-    initConfiguration:
-      {{- include "cluster.internal.controlPlane.kubeadm.initConfiguration" $ | indent 6 }}
-    joinConfiguration:
-      {{- include "cluster.internal.controlPlane.kubeadm.joinConfiguration" $ | indent 6 }}
-    files:
-    {{- include "cluster.internal.controlPlane.kubeadm.files" $ | indent 4 }}
-    preKubeadmCommands:
-    {{- include "cluster.internal.controlPlane.kubeadm.preKubeadmCommands" $ | indent 4 }}
+      {{- $apiServer := include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer" $ }}
+      {{- if $apiServer }}
+      apiServer: {{- $apiServer | nindent 8 }}
+      {{- end }}
+      {{- $controllerManager := include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.controllerManager" $ }}
+      {{- if $controllerManager }}
+      controllerManager: {{- $controllerManager | nindent 8 }}
+      {{- end }}
+      {{- $scheduler := include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.scheduler" $ }}
+      {{- if $scheduler }}
+      scheduler: {{- $scheduler | nindent 8 }}
+      {{- end }}
+      {{- $etcd := include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.etcd" $ }}
+      {{- if $etcd }}
+      etcd: {{- $etcd | nindent 8 }}
+      {{- end }}
+    {{- $initConfiguration := include "cluster.internal.controlPlane.kubeadm.initConfiguration" $ }}
+    {{- if $initConfiguration }}
+    initConfiguration: {{- $initConfiguration | nindent 6 }}
+    {{- end }}
+    {{- $joinConfiguration := include "cluster.internal.controlPlane.kubeadm.joinConfiguration" $ }}
+    {{- if $joinConfiguration }}
+    joinConfiguration: {{- $joinConfiguration | nindent 6 }}
+    {{- end }}
+    {{- $files := include "cluster.internal.controlPlane.kubeadm.files" $ }}
+    {{- if $files }}
+    files: {{- $files | nindent 4 }}
+    {{- end }}
+    {{- $preKubeadmCommands := include "cluster.internal.controlPlane.kubeadm.preKubeadmCommands" $ }}
+    {{- if $preKubeadmCommands }}
+    preKubeadmCommands: {{- $preKubeadmCommands | nindent 4 }}
+    {{- end }}
     {{- $postKubeadmCommands := include "cluster.internal.controlPlane.kubeadm.postKubeadmCommands" $ }}
     {{- if $postKubeadmCommands }}
-    postKubeadmCommands:
-    {{- $postKubeadmCommands | indent 4 }}
+    postKubeadmCommands: {{- $postKubeadmCommands | nindent 4 }}
     {{- end }}
     {{- $users := include "cluster.internal.kubeadm.users" $ }}
     {{- if $users }}
-    users:
-    {{- $users | indent 4 }}
+    users: {{- $users | nindent 4 }}
     {{- end }}
   replicas: {{ .Values.global.controlPlane.replicas }}
-  rolloutBefore:
-    {{- toYaml $.Values.internal.advancedConfiguration.controlPlane.rolloutBefore | nindent 4 }}
+  {{- $rolloutBefore := $.Values.internal.advancedConfiguration.controlPlane.rolloutBefore }}
+  {{- if $rolloutBefore }}
+  rollout:
+    before: {{- toYaml $rolloutBefore | nindent 6 }}
+  {{- end }}
   version: v{{ include "cluster.component.kubernetes.version" $ }}
 {{- end }}

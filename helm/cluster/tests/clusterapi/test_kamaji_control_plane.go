@@ -60,8 +60,8 @@ var _ = Describe("Kamaji Control Plane", func() {
 		cpKind := yq.Run(manifests, query)
 		Expect(strings.TrimSpace(cpKind)).To(Equal("KamajiControlPlane"))
 
-		query = "select(.kind==\"Cluster\") | .spec.controlPlaneRef.apiVersion"
+		query = "select(.kind==\"Cluster\") | .spec.controlPlaneRef.apiGroup"
 		cpAPIVersion := yq.Run(manifests, query)
-		Expect(strings.TrimSpace(cpAPIVersion)).To(Equal("controlplane.cluster.x-k8s.io/v1alpha1"))
+		Expect(strings.TrimSpace(cpAPIVersion)).To(Equal("controlplane.cluster.x-k8s.io"))
 	})
 })

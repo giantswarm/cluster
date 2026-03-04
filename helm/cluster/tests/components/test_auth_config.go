@@ -43,7 +43,7 @@ var _ = Describe("auth config", func() {
 		kcp := yq.Run(manifests, kcpQuery)
 
 		// Check if the flag is set correctly in KubeadmControlPlane
-		flagQuery := `.spec.kubeadmConfigSpec.clusterConfiguration.apiServer.extraArgs["authentication-config"]`
+		flagQuery := `.spec.kubeadmConfigSpec.clusterConfiguration.apiServer.extraArgs[] | select(.name == "authentication-config") | .value`
 		authConfigFlag := yq.Run(kcp, flagQuery)
 		Expect(strings.TrimSpace(authConfigFlag)).To(Equal("/etc/kubernetes/policies/auth-config.yaml"))
 

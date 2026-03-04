@@ -1,6 +1,6 @@
 {{- if $.Values.providerIntegration.resourcesApi.bastionResourceEnabled }}
 {{- if .Values.global.connectivity.bastion.enabled }}
-apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
+apiVersion: bootstrap.cluster.x-k8s.io/v1beta2
 kind: KubeadmConfigTemplate
 metadata:
   annotations:

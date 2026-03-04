@@ -1,15 +1,12 @@
 {{- define "cluster.internal.controlPlane.kubeadm.diskSetup" }}
+{{- if $.Values.providerIntegration.controlPlane.kubeadmConfig.diskSetup.filesystems }}
 filesystems:
-{{- include "cluster.internal.controlPlane.kubeadm.diskSetup.filesystems" $ }}
-{{- end }}
-
-{{- define "cluster.internal.controlPlane.kubeadm.diskSetup.filesystems" }}
 {{- range $.Values.providerIntegration.controlPlane.kubeadmConfig.diskSetup.filesystems }}
 - device: {{ .device }}
   {{- if .extraOpts }}
   extraOpts: 
   {{- range .extraOpts }}
-    - {{ . }}
+  - {{ . }}
   {{- end }}
   {{- end }}
   filesystem: {{ .filesystem }}
@@ -23,5 +20,6 @@ filesystems:
   {{- if .replaceFS }}
   replaceFS: {{ .replaceFS }}
   {{- end }}
+{{- end }}
 {{- end }}
 {{- end }}

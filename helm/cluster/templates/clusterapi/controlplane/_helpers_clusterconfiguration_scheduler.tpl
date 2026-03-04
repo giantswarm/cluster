@@ -1,10 +1,13 @@
 {{- define "cluster.internal.controlPlane.kubeadm.clusterConfiguration.scheduler" }}
 extraArgs:
-  authorization-always-allow-paths: "/healthz,/readyz,/livez,/metrics"
-  bind-address: 0.0.0.0
-  {{- if include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.scheduler.featureGates" $ }}
-  feature-gates: {{ include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.scheduler.featureGates" $ }}
-  {{- end }}
+- name: authorization-always-allow-paths
+  value: "/healthz,/readyz,/livez,/metrics"
+- name: bind-address
+  value: 0.0.0.0
+{{- if include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.scheduler.featureGates" $ }}
+- name: feature-gates
+  value: {{ include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.scheduler.featureGates" $ }}
+{{- end }}
 {{- end }}
 
 {{- define "cluster.internal.controlPlane.kubeadm.clusterConfiguration.scheduler.featureGates" }}

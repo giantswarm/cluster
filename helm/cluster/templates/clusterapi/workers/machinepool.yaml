@@ -2,7 +2,7 @@
 {{- if eq $.Values.providerIntegration.resourcesApi.nodePoolKind "MachinePool" }}
 {{- range $nodePoolName, $nodePoolConfig := $.Values.global.nodePools | default $.Values.providerIntegration.workers.defaultNodePools }}
 {{- $_ := set $ "nodePool" (dict "name" $nodePoolName "config" $nodePoolConfig) }}
-apiVersion: cluster.x-k8s.io/v1beta1
+apiVersion: cluster.x-k8s.io/v1beta2
 kind: MachinePool
 metadata:
   annotations:
@@ -39,17 +39,17 @@ spec:
         {{- end }}
         {{- else }}
         configRef:
-          apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
+          apiGroup: bootstrap.cluster.x-k8s.io
           kind: KubeadmConfig
           name: {{ include "cluster.resource.name" $ }}-{{ $nodePoolName }}-{{ include "cluster.internal.workers.kubeadmConfig.spec.hash" $ }}
         {{- end }}
       clusterName: {{ include "cluster.resource.name" $ }}
       infrastructureRef:
         {{- if eq $nodePoolConfig.type "karpenter" }}
-        apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
+        apiGroup: infrastructure.cluster.x-k8s.io
         kind: KarpenterMachinePool
         {{- else }}
-        apiVersion: {{ $.Values.providerIntegration.resourcesApi.infrastructureMachinePool.group }}/{{ $.Values.providerIntegration.resourcesApi.infrastructureMachinePool.version }}
+        apiGroup: {{ $.Values.providerIntegration.resourcesApi.infrastructureMachinePool.group }}
         kind: {{ $.Values.providerIntegration.resourcesApi.infrastructureMachinePool.kind }}
         {{- end }}
         name: {{ include "cluster.resource.name" $ }}-{{ $nodePoolName }}
