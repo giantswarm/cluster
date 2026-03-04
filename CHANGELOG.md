@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [5.3.1] - 2026-03-04
+
 ### Fixed
 
 - Apps: Change `rbac-bootstrap` default role from `read-all` to `view` and add additional groups for token forwarded cases.
@@ -919,7 +921,8 @@ For Kubernetes <v1.29, you will need to re-enable it using the respective values
 
 - Update and clean up the template repo.
 
-[Unreleased]: https://github.com/giantswarm/cluster/compare/v5.3.0...HEAD
+[Unreleased]: https://github.com/giantswarm/cluster/compare/v5.3.1...HEAD
+[5.3.1]: https://github.com/giantswarm/cluster/compare/v5.3.0...v5.3.1
 [5.3.0]: https://github.com/giantswarm/cluster/compare/v5.2.0...v5.3.0
 [5.2.0]: https://github.com/giantswarm/cluster/compare/v5.1.2...v5.2.0
 [5.1.2]: https://github.com/giantswarm/cluster/compare/v5.1.1...v5.1.2
