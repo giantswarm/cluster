@@ -116,7 +116,7 @@ spec:
   ttlSecondsAfterFinished: 300
   template:
     metadata:
-      name: {{ include "kamaji.etcdHelmreleaseName" $ }}-ownerref
+      name: {{ include "cluster.resource.name" $ }}-kamaji-automation-cleanup
       namespace: {{ $.Release.Namespace }}
       labels:
         {{- include "cluster.labels.common.all" $  | nindent 8 }}
