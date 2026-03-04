@@ -1,20 +1,29 @@
 {{- define "cluster.internal.controlPlane.kubeadm.clusterConfiguration.controllerManager" }}
 extraArgs:
-  allocate-node-cidrs: "true"
-  authorization-always-allow-paths: "/healthz,/readyz,/livez,/metrics"
-  bind-address: 0.0.0.0
-  cloud-provider: external
-{{- if $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.cloudConfig  }}
-  cloud-config: {{ $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.cloudConfig  }}
+- name: allocate-node-cidrs
+  value: "true"
+- name: authorization-always-allow-paths
+  value: "/healthz,/readyz,/livez,/metrics"
+- name: bind-address
+  value: 0.0.0.0
+- name: cloud-provider
+  value: external
+{{- if $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.cloudConfig }}
+- name: cloud-config
+  value: {{ $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.cloudConfig }}
 {{- end }}
-  cluster-cidr: {{ $.Values.global.connectivity.network.pods.cidrBlocks | first }}
-{{- if $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.controllerManager.externalCloudVolumePlugin  }}
-  external-cloud-volume-plugin: {{ $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.controllerManager.externalCloudVolumePlugin  }}
+- name: cluster-cidr
+  value: {{ $.Values.global.connectivity.network.pods.cidrBlocks | first }}
+{{- if $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.controllerManager.externalCloudVolumePlugin }}
+- name: external-cloud-volume-plugin
+  value: {{ $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.controllerManager.externalCloudVolumePlugin }}
 {{- end }}
-  {{- if include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.controllerManager.featureGates" $ }}
-  feature-gates: {{ include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.controllerManager.featureGates" $ }}
-  {{- end }}
-  terminated-pod-gc-threshold: {{ $.Values.internal.advancedConfiguration.controlPlane.controllerManager.terminatedPodGCThreshold | quote }}
+{{- if include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.controllerManager.featureGates" $ }}
+- name: feature-gates
+  value: {{ include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.controllerManager.featureGates" $ }}
+{{- end }}
+- name: terminated-pod-gc-threshold
+  value: {{ $.Values.internal.advancedConfiguration.controlPlane.controllerManager.terminatedPodGCThreshold | quote }}
 {{- if $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.cloudConfig  }}
 extraVolumes:
   - name: cloud-config
