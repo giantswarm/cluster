@@ -8,7 +8,9 @@ version: 0.2.3
 interval: 1m
 defaultValues:
   bindings:
-    - role: read-all
+    - role: view
       groups:
         - giantswarm-ad:giantswarm-admins
+        - giantswarm-ad:giantswarm:giantswarm-admins
+        - giantswarm-github:giantswarm:giantswarm-admins
         - giantswarm-github:giantswarm-admins
