@@ -1,35 +1,40 @@
 {{- define "cluster.internal.machinehealthcheck.commonspec" -}}
 {{- if eq .machineType "controlPlane" }}
-maxUnhealthy: {{ .maxUnhealthy | default "40%" | quote }}
+remediation:
+  triggerIf:
+    unhealthyLessThanOrEqualTo: {{ .maxUnhealthy | default "40%" | quote }}
 {{- else if eq .machineType "workers" }}
-maxUnhealthy: {{ .maxUnhealthy | default "20%" | quote }}
+remediation:
+  triggerIf:
+    unhealthyLessThanOrEqualTo: {{ .maxUnhealthy | default "20%" | quote }}
 {{- else }}
   {{- fail "Invalid/missing machineType" }}
 {{- end }}
-nodeStartupTimeout: {{ .nodeStartupTimeout | default "8m0s" | quote }}
-unhealthyConditions:
+checks:
+  nodeStartupTimeoutSeconds: {{ include "cluster.durationToSeconds" (.nodeStartupTimeout | default "8m0s") }}
+  unhealthyNodeConditions:
   - type: Ready
     status: Unknown
-    timeout: {{ .unhealthyUnknownTimeout | default "10m0s" | quote }}
+    timeoutSeconds: {{ include "cluster.durationToSeconds" (.unhealthyUnknownTimeout | default "10m0s") }}
   - type: Ready
     status: "False"
-    timeout: {{ .unhealthyNotReadyTimeout | default "10m0s" | quote }}
+    timeoutSeconds: {{ include "cluster.durationToSeconds" (.unhealthyNotReadyTimeout | default "10m0s") }}
 
   {{- /* Conditions of node-problem-detector-app */}}
   {{- if .diskFullContainerdTimeout }}
   - type: DiskFullContainerd
     status: "True"
-    timeout: {{ .diskFullContainerdTimeout | quote }}
+    timeoutSeconds: {{ include "cluster.durationToSeconds" .diskFullContainerdTimeout }}
   {{- end }}
   {{- if .diskFullKubeletTimeout }}
   - type: DiskFullKubelet
     status: "True"
-    timeout: {{ .diskFullKubeletTimeout | quote }}
+    timeoutSeconds: {{ include "cluster.durationToSeconds" .diskFullKubeletTimeout }}
   {{- end }}
   {{- if .diskFullVarLogTimeout }}
   - type: DiskFullVarLog
     status: "True"
-    timeout: {{ .diskFullVarLogTimeout | quote }}
+    timeoutSeconds: {{ include "cluster.durationToSeconds" .diskFullVarLogTimeout }}
   {{- end }}
 {{- end -}}
 

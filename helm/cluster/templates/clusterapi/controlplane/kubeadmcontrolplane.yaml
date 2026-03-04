@@ -2,7 +2,7 @@
   $.Values.providerIntegration.resourcesApi.controlPlaneResource.enabled
   (eq $.Values.providerIntegration.resourcesApi.controlPlaneResource.provider "kubeadm")
 }}
-apiVersion: controlplane.cluster.x-k8s.io/v1beta1
+apiVersion: controlplane.cluster.x-k8s.io/v1beta2
 kind: KubeadmControlPlane
 metadata:
   annotations:
@@ -18,7 +18,7 @@ spec:
       labels:
         {{- include "cluster.labels.common.all" $ | nindent 8 }}
     infrastructureRef:
-      apiVersion: {{ $.Values.providerIntegration.controlPlane.resources.infrastructureMachineTemplate.group }}/{{ $.Values.providerIntegration.controlPlane.resources.infrastructureMachineTemplate.version }}
+      apiGroup: {{ $.Values.providerIntegration.controlPlane.resources.infrastructureMachineTemplate.group }}
       kind: {{ $.Values.providerIntegration.controlPlane.resources.infrastructureMachineTemplate.kind }}
       {{- $_ := set $ "osImage" $.Values.providerIntegration.osImage }}
       {{- $_ = set $ "kubernetesVersion" $.Values.providerIntegration.kubernetesVersion }}
@@ -67,7 +67,8 @@ spec:
     {{- $users | indent 4 }}
     {{- end }}
   replicas: {{ .Values.global.controlPlane.replicas }}
-  rolloutBefore:
-    {{- toYaml $.Values.internal.advancedConfiguration.controlPlane.rolloutBefore | nindent 4 }}
+  rollout:
+    before:
+      {{- toYaml $.Values.internal.advancedConfiguration.controlPlane.rolloutBefore | nindent 6 }}
   version: v{{ include "cluster.component.kubernetes.version" $ }}
 {{- end }}

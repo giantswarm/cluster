@@ -5,7 +5,7 @@
 {{- if required "machineHealthCheck enabled property is required" $nodePoolConfig.machineHealthCheck.enabled }}
 {{- if eq $.Values.providerIntegration.resourcesApi.nodePoolKind "MachineDeployment" }}
 {{- $_ := set $ "nodePool" (dict "name" $nodePoolName "config" $nodePoolConfig) }}
-apiVersion: cluster.x-k8s.io/v1beta1
+apiVersion: cluster.x-k8s.io/v1beta2
 kind: MachineHealthCheck
 metadata:
   {{- $annotations := include "cluster.annotations.custom" $ }}
@@ -33,7 +33,7 @@ spec:
   {{- $_ := mergeOverwrite $machineHealthCheck $nodePoolConfig.machineHealthCheck }}
   {{- include "cluster.internal.machinehealthcheck.commonspec" $machineHealthCheck | nindent 4 }}
 {{- else if eq $.Values.providerIntegration.resourcesApi.nodePoolKind "MachinePool" }}
-apiVersion: cluster.x-k8s.io/v1beta1
+apiVersion: cluster.x-k8s.io/v1beta2
 kind: MachineHealthCheck
 metadata:
   {{- $annotations := include "cluster.annotations.custom" $ }}
