@@ -1,6 +1,6 @@
 {{- if $.Values.providerIntegration.resourcesApi.bastionResourceEnabled }}
 {{- if .Values.global.connectivity.bastion.enabled }}
-apiVersion: cluster.x-k8s.io/v1beta1
+apiVersion: cluster.x-k8s.io/v1beta2
 kind: MachineDeployment
 metadata:
   annotations:
@@ -18,11 +18,12 @@ spec:
     matchLabels:
       cluster.x-k8s.io/cluster-name: {{ include "cluster.resource.name" $ }}
       cluster.x-k8s.io/deployment-name: {{ include "cluster.resource.name" $ }}-bastion
-  strategy:
-    rollingUpdate:
-      maxSurge: 1
-      maxUnavailable: 1
-    type: RollingUpdate
+  rollout:
+    strategy:
+      type: RollingUpdate
+      rollingUpdate:
+        maxSurge: 1
+        maxUnavailable: 1
   template:
     metadata:
       annotations:
@@ -34,12 +35,12 @@ spec:
     spec:
       bootstrap:
         configRef:
-          apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
+          apiGroup: bootstrap.cluster.x-k8s.io
           kind: KubeadmConfigTemplate
           name: {{ include "cluster.resource.name" $ }}-bastion-{{ include "cluster.data.hash" (dict "data" (include "cluster.internal.bastion.kubeadmconfigtemplate.spec" $) "salt" $.Values.providerIntegration.hashSalt) }}
       clusterName: {{ include "cluster.resource.name" $ }}
       infrastructureRef:
-        apiVersion: {{ $.Values.providerIntegration.resourcesApi.bastion.infrastructureMachineTemplate.group }}/{{ $.Values.providerIntegration.resourcesApi.bastion.infrastructureMachineTemplate.version }}
+        apiGroup: {{ $.Values.providerIntegration.resourcesApi.bastion.infrastructureMachineTemplate.group }}
         kind: {{ $.Values.providerIntegration.resourcesApi.bastion.infrastructureMachineTemplate.kind }}
         name: {{ include "cluster.resource.name" $ }}-bastion-{{ include "cluster.data.hash" (dict "data" (include $.Values.providerIntegration.resourcesApi.bastion.infrastructureMachineTemplateSpecTemplateName $) "salt" $.Values.providerIntegration.hashSalt) }}
       version: {{ $.Values.providerIntegration.kubernetesVersion }}

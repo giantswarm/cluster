@@ -10,18 +10,25 @@
 nodeRegistration:
   name: {{ printf "${%s}" $.Values.providerIntegration.environmentVariables.hostName }}
   kubeletExtraArgs:
-    cgroup-driver: systemd
-    cloud-provider: external
-    {{- $k8sVersion := include "cluster.component.kubernetes.version" $ | trimPrefix "v" }}
-    {{- if or (eq $k8sVersion "N/A") (semverCompare "<1.34.0-0" $k8sVersion) }}
-    {{- if $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.cloudConfig  }}
-    cloud-config: {{ $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.cloudConfig  }}
-    {{- end }}
-    {{- end }}
-    healthz-bind-address: 0.0.0.0
-    node-ip: {{ printf "${%s}" $.Values.providerIntegration.environmentVariables.ipv4 }}
-    node-labels: ip={{ printf "${%s}" $.Values.providerIntegration.environmentVariables.ipv4 }},role=worker,giantswarm.io/machine-pool={{ include "cluster.resource.name" $ }}-{{ $nodePool.name }}{{- if $nodePool.config.customNodeLabels }},{{ join "," $nodePool.config.customNodeLabels }}{{- end }}
-    v: "2"
+  - name: cgroup-driver
+    value: systemd
+  - name: cloud-provider
+    value: external
+  {{- $k8sVersion := include "cluster.component.kubernetes.version" $ | trimPrefix "v" }}
+  {{- if or (eq $k8sVersion "N/A") (semverCompare "<1.34.0-0" $k8sVersion) }}
+  {{- if $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.cloudConfig  }}
+  - name: cloud-config
+    value: {{ $.Values.providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.cloudConfig  }}
+  {{- end }}
+  {{- end }}
+  - name: healthz-bind-address
+    value: 0.0.0.0
+  - name: node-ip
+    value: {{ printf "${%s}" $.Values.providerIntegration.environmentVariables.ipv4 }}
+  - name: node-labels
+    value: ip={{ printf "${%s}" $.Values.providerIntegration.environmentVariables.ipv4 }},role=worker,giantswarm.io/machine-pool={{ include "cluster.resource.name" $ }}-{{ $nodePool.name }}{{- if $nodePool.config.customNodeLabels }},{{ join "," $nodePool.config.customNodeLabels }}{{- end }}
+  - name: v
+    value: "2"
   {{- $taints := concat $.Values.providerIntegration.kubeadmConfig.taints $.Values.providerIntegration.workers.kubeadmConfig.taints (or $nodePool.config.customNodeTaints list) }}
   {{- if eq $nodePool.config.type "karpenter" }}
     {{- $taints = append $taints (dict "key" "karpenter.sh/unregistered" "effect" "NoExecute" "value" "karpenter") }}

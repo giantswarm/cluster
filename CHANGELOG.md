@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Cluster API: Migrate to API `v1beta2`.
+
+### Removed
+
+- Cluster API: Remove `strategy.rollingUpdate.deletePolicy` from node pools.
+
 ## [5.3.1] - 2026-03-04
 
 ### Fixed
