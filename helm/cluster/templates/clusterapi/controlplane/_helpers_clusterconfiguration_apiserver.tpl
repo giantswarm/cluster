@@ -7,12 +7,6 @@ certSANs:
 {{- if $.Values.internal.advancedConfiguration.controlPlane.apiServer.extraCertificateSANs }}
 {{ toYaml $.Values.internal.advancedConfiguration.controlPlane.apiServer.extraCertificateSANs }}
 {{- end }}
-{{- /*
-    Timeout for the API server to appear.
-    TODO: this should be aligned with alerts, i.e. time here should be less than the time after
-          which we alert for API server replica being down.
-*/}}
-timeoutForControlPlane: 20m
 extraArgs:
 {{- if .Values.internal.advancedConfiguration.controlPlane.apiServer.admissionConfiguration }}
 - name: admission-control-config-file

@@ -21,4 +21,6 @@ nodeRegistration:
   {{- end }}
 patches:
   directory: /etc/kubernetes/patches
+timeouts:
+  controlPlaneComponentHealthCheckSeconds: 1200
 {{- end }}
