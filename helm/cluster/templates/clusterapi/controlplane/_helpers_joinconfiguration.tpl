@@ -1,5 +1,4 @@
 {{- define "cluster.internal.controlPlane.kubeadm.joinConfiguration" }}
-discovery: {}
 controlPlane:
   localAPIEndpoint:
     bindPort: {{ $.Values.internal.advancedConfiguration.controlPlane.apiServer.bindPort | default 6443 }}

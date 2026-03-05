@@ -3,7 +3,6 @@ skipPhases:
 - addon/kube-proxy
 - addon/coredns
 localAPIEndpoint:
-  advertiseAddress: ""
   bindPort: {{ $.Values.internal.advancedConfiguration.controlPlane.apiServer.bindPort | default 6443 }}
 nodeRegistration:
   kubeletExtraArgs:
