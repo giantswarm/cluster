@@ -60,10 +60,6 @@ spec:
       {{- if $etcd }}
       etcd: {{- $etcd | nindent 8 }}
       {{- end }}
-      {{- $networking := include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.networking" $ }}
-      {{- if $networking }}
-      networking: {{- $networking | nindent 8 }}
-      {{- end }}
     {{- $initConfiguration := include "cluster.internal.controlPlane.kubeadm.initConfiguration" $ }}
     {{- if $initConfiguration }}
     initConfiguration: {{- $initConfiguration | nindent 6 }}
