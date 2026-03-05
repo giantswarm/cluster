@@ -98,7 +98,7 @@ extraArgs:
   value: {{ include "cluster.internal.kubeadm.tlsCipherSuites" $ | fromYamlArray | join "," }}
 {{- range $argName, $argValue := $.Values.internal.advancedConfiguration.controlPlane.apiServer.extraArgs }}
 - name: {{ $argName }}
-  value: {{ if kindIs "string" $argValue }}{{ $argValue | quote }}{{ else }}{{ $argValue }}{{ end }}
+  value: {{ $argValue | quote }}
 {{- end }}
 extraVolumes:
 - name: auditlog
