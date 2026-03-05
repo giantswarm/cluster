@@ -10,7 +10,7 @@ namespace: {{ $.Release.Namespace }}
 serviceAccountName: automation
 # used by renovate
 # repo: giantswarm/kamaji-etcd-app
-version: 0.2.1
+version: 0.3.0
 disable: {{ not (eq (include "kamaji.isEnabled" $) "true") }}
 defaultValues:
   # For all available values see https://github.com/giantswarm/kamaji-etcd-app/blob/main/helm/kamaji-etcd/values.yaml
