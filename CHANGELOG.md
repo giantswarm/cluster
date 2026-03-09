@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [6.0.0] - 2026-03-09
+
 ### Added
 
 - Control Plane: Add Kamaji control plane support with `KamajiControlPlane` resource, Kamaji etcd HelmRelease, automation RBAC, and cleanup jobs. ([#740](https://github.com/giantswarm/cluster/pull/740))
@@ -934,7 +936,8 @@ For Kubernetes <v1.29, you will need to re-enable it using the respective values
 
 - Update and clean up the template repo.
 
-[Unreleased]: https://github.com/giantswarm/cluster/compare/v5.3.1...HEAD
+[Unreleased]: https://github.com/giantswarm/cluster/compare/v6.0.0...HEAD
+[6.0.0]: https://github.com/giantswarm/cluster/compare/v5.3.1...v6.0.0
 [5.3.1]: https://github.com/giantswarm/cluster/compare/v5.3.0...v5.3.1
 [5.3.0]: https://github.com/giantswarm/cluster/compare/v5.2.0...v5.3.0
 [5.2.0]: https://github.com/giantswarm/cluster/compare/v5.1.2...v5.2.0
