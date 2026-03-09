@@ -66,7 +66,6 @@ to avoid naming conflicts in case of multiple clusters deployed in the same name
 {{- if $.Values.providerIntegration.useReleases }}
 {{- $appVersion = include "cluster.app.version" $ }}
 {{- end }}
-{{- if $app.useOCISource }}
 ---
 apiVersion: source.toolkit.fluxcd.io/v1beta2
 kind: OCIRepository
@@ -86,7 +85,6 @@ spec:
     tag: "{{ $ephemeralConfig.versionOverride | default $appVersion }}"
   interval: 24h
   timeout: 60s
-{{- end }}
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
