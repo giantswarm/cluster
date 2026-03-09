@@ -549,3 +549,44 @@ true
 false
 {{- end }}
 {{- end }}
+
+{{/*
+Converts a Go duration string (e.g. "8m0s", "10m", "300s", "1h30m0s") to an integer number of seconds.
+
+Each unit (h, m, s) is extracted independently with a lazy regex, so any valid combination is handled.
+
+Note: time.ParseDuration is not available in Helm/Sprig's template FuncMap, hence this helper.
+*/}}
+{{- define "cluster.durationToSeconds" -}}
+{{- /* Convert duration to string and trim. */ -}}
+{{- $duration := . | toString | trim -}}
+
+{{- /* Check if this is a valid duration. */ -}}
+{{- if not (regexMatch "[0-9]+[hms]" $duration) -}}
+{{- fail (printf "cluster.durationToSeconds: cannot parse duration %q" $duration) -}}
+{{- end -}}
+
+{{- /* Define total seconds to add to. */ -}}
+{{- $total := 0 -}}
+
+{{- /* Extract hours, if present */ -}}
+{{- if regexMatch "[0-9]+h" $duration -}}
+{{- $hours := regexReplaceAll "^.*?([0-9]+)h.*$" $duration "${1}" | int -}}
+{{- $total = add $total (mul $hours 3600) -}}
+{{- end -}}
+
+{{- /* Extract minutes, if present */ -}}
+{{- if regexMatch "[0-9]+m" $duration -}}
+{{- $minutes := regexReplaceAll "^.*?([0-9]+)m.*$" $duration "${1}" | int -}}
+{{- $total = add $total (mul $minutes 60) -}}
+{{- end -}}
+
+{{- /* Extract seconds, if present */ -}}
+{{- if regexMatch "[0-9]+s" $duration -}}
+{{- $seconds := regexReplaceAll "^.*?([0-9]+)s$" $duration "${1}" | int -}}
+{{- $total = add $total $seconds -}}
+{{- end -}}
+
+{{- /* Return total */ -}}
+{{- $total -}}
+{{- end -}}

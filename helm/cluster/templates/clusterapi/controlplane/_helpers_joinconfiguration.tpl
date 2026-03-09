@@ -1,15 +1,19 @@
 {{- define "cluster.internal.controlPlane.kubeadm.joinConfiguration" }}
-discovery: {}
 controlPlane:
   localAPIEndpoint:
     bindPort: {{ $.Values.internal.advancedConfiguration.controlPlane.apiServer.bindPort | default 6443 }}
 nodeRegistration:
   kubeletExtraArgs:
-    cloud-provider: external
-    cgroup-driver: systemd
-    node-ip: {{ printf "${%s}" $.Values.providerIntegration.environmentVariables.ipv4 }}
-    node-labels: ip={{ printf "${%s}" $.Values.providerIntegration.environmentVariables.ipv4 }}
-    register-with-taints: 'node-role.kubernetes.io/control-plane="":NoSchedule'
+  - name: cloud-provider
+    value: external
+  - name: cgroup-driver
+    value: systemd
+  - name: node-ip
+    value: {{ printf "${%s}" $.Values.providerIntegration.environmentVariables.ipv4 }}
+  - name: node-labels
+    value: ip={{ printf "${%s}" $.Values.providerIntegration.environmentVariables.ipv4 }}
+  - name: register-with-taints
+    value: 'node-role.kubernetes.io/control-plane="":NoSchedule'
   name: {{ printf "${%s}" $.Values.providerIntegration.environmentVariables.hostName }}
   {{- with (concat $.Values.providerIntegration.kubeadmConfig.taints $.Values.providerIntegration.controlPlane.kubeadmConfig.taints $.Values.global.controlPlane.customNodeTaints ) }}
   taints:
@@ -17,4 +21,6 @@ nodeRegistration:
   {{- end }}
 patches:
   directory: /etc/kubernetes/patches
+timeouts:
+  controlPlaneComponentHealthCheckSeconds: 1200
 {{- end }}
