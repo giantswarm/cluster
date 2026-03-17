@@ -1,0 +1,16 @@
+appName: cluster-autoscaler-crossplane-resources
+configKey: clusterAutoscalerCrossplaneResources
+namespace: {{ .Release.Namespace }}
+useOCISource: true
+# repo: giantswarm/cluster-autoscaler-crossplane-resources
+version: 1.0.0
+
+prependClusterName: true
+skipKubeConfig: true
+serviceAccountName: automation
+
+defaultValues:
+  provider:
+    name: {{ .Values.providerIntegration.provider }}
+  cluster:
+    name: {{ include "cluster.resource.name" . }}

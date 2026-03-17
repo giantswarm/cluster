@@ -103,7 +103,7 @@ metadata:
   labels:
     {{- include "cluster.labels.common.all" $ | nindent 4 }}
 spec:
-  releaseName: {{ $releaseName }}
+  releaseName: {{ $releaseName | trunc 53 | trimSuffix "-" }}
   targetNamespace: {{ $app.namespace }}
   storageNamespace: {{ $app.namespace }}
   {{- if $app.useOCISource }}

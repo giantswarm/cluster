@@ -8,6 +8,7 @@ global:
     cilium: {}
     ciliumServiceMonitors: {}
     clusterAutoscaler: {}
+    clusterAutoscalerCrossplaneResources: {}
     coreDns: {}
     coreDnsExtensions: {}
     etcdDefrag: {}
@@ -153,6 +154,8 @@ providerIntegration:
     ciliumServiceMonitors:
       enable: false
     clusterAutoscaler:
+      enable: false
+    clusterAutoscalerCrossplaneResources:
       enable: false
     coreDns:
       enable: false
