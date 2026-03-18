@@ -75,7 +75,7 @@ metadata:
   labels:
     {{- include "cluster.labels.common.all" $ | nindent 4 }}
     giantswarm.io/managed-by: {{ .Chart.Name }}
-    {{- if $app.inCluster }}
+    {{- if or $app.inCluster $providerIntegrationAppConfig.inCluster }}
     app-operator.giantswarm.io/version: 0.0.0
     {{- end }}
   name: {{ $.Values.global.metadata.name }}-{{ $app.appName }}
@@ -87,7 +87,7 @@ spec:
   {{- end }}
   catalog: {{ $ephemeralConfig.catalogOverride | default $appCatalog | default "default" }}
   name: {{ $app.chartName | default $app.appName }}
-  {{- if $app.inCluster }}
+  {{- if or $app.inCluster $providerIntegrationAppConfig.inCluster }}
   namespace: {{ $.Release.Namespace }}
   kubeConfig:
     inCluster: true
