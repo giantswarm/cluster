@@ -13,11 +13,13 @@ metadata:
     {{ $key }}: {{ $val | quote }}
     {{- end }}
     {{- end }}
+    {{- if eq ($.Values.providerIntegration.apps.clusterAutoscaler.cloudProvider | default "") "clusterapi" }}
     {{- if $nodePoolConfig.minSize }}
     cluster.x-k8s.io/cluster-api-autoscaler-node-group-min-size: {{ $nodePoolConfig.minSize | quote }}
     {{- end }}
     {{- if $nodePoolConfig.maxSize }}
     cluster.x-k8s.io/cluster-api-autoscaler-node-group-max-size: {{ $nodePoolConfig.maxSize | quote }}
+    {{- end }}
     {{- end }}
   labels:
     {{- include "cluster.labels.common.all" $ | nindent 4 }}
