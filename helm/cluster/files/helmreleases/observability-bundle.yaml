@@ -1,9 +1,6 @@
 # Includes prometheus-operator-crd
 appName: observability-bundle
 configKey: observabilityBundle
-clusterValues:
-  configMap: true
-  secret: false
 inCluster: true
 dependsOn: {{ if not (eq $.Values.providerIntegration.provider "aks") }}["coredns"]{{ else }}[]{{ end }}
 namespace: kube-system
@@ -13,3 +10,4 @@ driftDetection: enabled
 version: 3.3.0
 defaultValues:
   managementCluster: {{ $.Values.global.managementCluster }}
+  clusterID: {{ include "cluster.resource.name" $ }}
