@@ -967,6 +967,11 @@
             "description": "App config used to additionally configure an app for a specific provider",
             "additionalProperties": false,
             "properties": {
+                "cloudProvider": {
+                    "type": "string",
+                    "title": "Cloud provider",
+                    "description": "Cloud provider used by the app. Used to enable provider-specific behaviour in the cluster chart (e.g. setting CAPI autoscaler annotations when set to 'clusterapi')."
+                },
                 "configTemplateName": {
                     "type": "string",
                     "title": "Config template name",
@@ -976,6 +981,12 @@
                     "type": "boolean",
                     "title": "Enable",
                     "description": "Flag that indicates if an app is enabled for a provider. It is false by default, which allows for more incremental and safer adoption of the cluster chart.",
+                    "default": false
+                },
+                "inCluster": {
+                    "type": "boolean",
+                    "title": "In-cluster",
+                    "description": "Flag that indicates if the app should be deployed to the management cluster org-namespace using in-cluster credentials, instead of the workload cluster.",
                     "default": false
                 }
             }
