@@ -1,8 +1,5 @@
 appName: chart-operator-extensions
 configKey: chartOperatorExtensions
-clusterValues:
-  configMap: false
-  secret: false
 dependsOn: prometheus-operator-crd
 namespace: giantswarm
 # used by renovate
