@@ -1,14 +1,19 @@
 appName: teleport-kube-agent
 configKey: teleportKubeAgent
-clusterValues:
-  configMap: true
-  secret: true
 forceUpgrade: true
 dependsOn: prometheus-operator-crd
 namespace: kube-system
 # used by renovate
 # repo: giantswarm/teleport-kube-agent-app
 version: 0.10.8
+defaultValues:
+  {{- if .Values.global.connectivity.proxy.enabled }}
+  cluster:
+    proxy:
+      noProxy: {{ .Values.global.connectivity.proxy.noProxy | quote }}
+      http: {{ .Values.global.connectivity.proxy.httpProxy | quote }}
+      https: {{ .Values.global.connectivity.proxy.httpsProxy | quote }}
+  {{- end }}
 # a list of extraConfigs for the App,
 # It can be secret or configmap
 # https://github.com/giantswarm/rfc/tree/main/multi-layer-app-config#example

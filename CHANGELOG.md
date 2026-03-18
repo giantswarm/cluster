@@ -45,6 +45,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Helpers: Use `.Chart.AppVersion` in `app.kubernetes.io/version` label.
 - Migrate default apps from `App` CRs to Flux `HelmRelease` CRs.
+- Remove `clusterValues` references from HelmRelease app definitions and pass required values explicitly via `defaultValues`.
 
 ## [6.0.0] - 2026-03-09
 

@@ -1,10 +1,10 @@
 appName: cert-exporter
 configKey: certExporter
-clusterValues:
-  configMap: true
-  secret: false
 dependsOn: kyverno-crds
 namespace: kube-system
 # used by renovate
 # repo: giantswarm/cert-exporter
 version: 2.10.1
+defaultValues:
+  ciliumNetworkPolicy:
+    enabled: true
