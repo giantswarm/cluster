@@ -9,8 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Apps: Support `providerIntegration.apps.<key>.inCluster` to deploy an app to the management cluster org-namespace using in-cluster credentials.
-- MachineDeployment: Add CAPI autoscaler annotations (`cluster-api-autoscaler-node-group-min-size`/`max-size`) when `minSize`/`maxSize` are set on a node pool.
+- Apps: Deploy `cluster-autoscaler` inCluster in azure.
+- MachineDeployment: Add CAPI autoscaler annotations (`cluster-api-autoscaler-node-group-min-size`/`max-size`) when `minSize`/`maxSize` are set on a node pool (only in azure).
 
 ## [6.1.0] - 2026-03-17
 

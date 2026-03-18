@@ -35,9 +35,6 @@
 {{- end }}
 {{- end }}
 
-{{- /* Determine if the app should be deployed in-cluster (to MC org-namespace) */}}
-{{- $inCluster := or $app.inCluster $providerIntegrationAppConfig.inCluster }}
-
 {{- /* Determine if the App CR should be rendered or not */}}
 {{- /* Cluster chart */}}
 {{- $shouldRenderApp := not (or $app.disable $ephemeralConfig.disable) }}
@@ -78,7 +75,7 @@ metadata:
   labels:
     {{- include "cluster.labels.common.all" $ | nindent 4 }}
     giantswarm.io/managed-by: {{ .Chart.Name }}
-    {{- if $inCluster }}
+    {{- if $app.inCluster }}
     app-operator.giantswarm.io/version: 0.0.0
     {{- end }}
   name: {{ $.Values.global.metadata.name }}-{{ $app.appName }}
@@ -90,7 +87,7 @@ spec:
   {{- end }}
   catalog: {{ $ephemeralConfig.catalogOverride | default $appCatalog | default "default" }}
   name: {{ $app.chartName | default $app.appName }}
-  {{- if $inCluster }}
+  {{- if $app.inCluster }}
   namespace: {{ $.Release.Namespace }}
   kubeConfig:
     inCluster: true

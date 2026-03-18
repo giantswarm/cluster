@@ -13,7 +13,7 @@ metadata:
     {{ $key }}: {{ $val | quote }}
     {{- end }}
     {{- end }}
-    {{- if eq ($.Values.providerIntegration.apps.clusterAutoscaler.cloudProvider | default "") "clusterapi" }}
+    {{- if eq .Values.providerIntegration.provider "azure" }}
     {{- if $nodePoolConfig.minSize }}
     cluster.x-k8s.io/cluster-api-autoscaler-node-group-min-size: {{ $nodePoolConfig.minSize | quote }}
     {{- end }}
