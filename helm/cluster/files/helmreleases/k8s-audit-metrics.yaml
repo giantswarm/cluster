@@ -1,8 +1,5 @@
 appName: k8s-audit-metrics
 configKey: k8sAuditMetrics
-clusterValues:
-  configMap: true
-  secret: false
 dependsOn: kyverno-crds
 namespace: kube-system
 # used by renovate
