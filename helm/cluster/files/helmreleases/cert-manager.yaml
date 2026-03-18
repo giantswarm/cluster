@@ -1,9 +1,6 @@
 appName: cert-manager
 chartName: cert-manager-app
 configKey: certManager
-clusterValues:
-  configMap: true
-  secret: true
 dependsOn:
   - prometheus-operator-crd
   - kube-prometheus-stack
@@ -22,3 +19,8 @@ defaultValues:
     defaultIssuerGroup: cert-manager.io
   ciliumNetworkPolicy:
     enabled: true
+  {{- if .Values.global.connectivity.proxy.enabled }}
+  no_proxy: {{ .Values.global.connectivity.proxy.noProxy | quote }}
+  http_proxy: {{ .Values.global.connectivity.proxy.httpProxy | quote }}
+  https_proxy: {{ .Values.global.connectivity.proxy.httpsProxy | quote }}
+  {{- end }}

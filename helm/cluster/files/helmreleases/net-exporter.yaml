@@ -1,8 +1,5 @@
 appName: net-exporter
 configKey: netExporter
-clusterValues:
-  configMap: true
-  secret: false
 dependsOn: prometheus-operator-crd
 namespace: kube-system
 # used by renovate
