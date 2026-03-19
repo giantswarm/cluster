@@ -4,7 +4,7 @@ configKey: clusterAutoscaler
 clusterValues:
   configMap: true
   secret: true
-inCluster: {{ eq .Values.providerIntegration.provider "azure" }}
+inCluster: {{ eq $.Values.providerIntegration.provider "azure" }}
 dependsOn: kyverno-crds
 namespace: kube-system
 # used by renovate
