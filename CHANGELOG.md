@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Apps: Deploy `cluster-autoscaler` inCluster in azure.
 - MachineDeployment: Add CAPI autoscaler annotations (`cluster-api-autoscaler-node-group-min-size`/`max-size`) when `minSize`/`maxSize` are set on a node pool (only in azure).
 
+### Changed
+
+- Apps: Skip `kyverno-crds` dependency for `cluster-autoscaler` when deployed inCluster.
+
 ## [6.1.0] - 2026-03-17
 
 ### Added

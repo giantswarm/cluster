@@ -5,7 +5,7 @@ clusterValues:
   configMap: true
   secret: true
 inCluster: {{ eq $.Values.providerIntegration.provider "azure" }}
-dependsOn: kyverno-crds
+dependsOn: {{ if not (eq $.Values.providerIntegration.provider "azure") }}kyverno-crds{{ else }}[]{{ end }}
 namespace: kube-system
 # used by renovate
 # repo: giantswarm/cluster-autoscaler-app
