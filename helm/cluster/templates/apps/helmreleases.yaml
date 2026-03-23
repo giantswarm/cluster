@@ -180,7 +180,7 @@ spec:
   {{- $appHelmValues = mergeOverwrite $appHelmValues (deepCopy $userConfig.values) -}}
   {{- end }}
   {{- if $appHelmValues }}
-  values: {{- $appHelmValues | toYaml | nindent 4 }}
+  values: {{- (tpl ($appHelmValues | toYaml | toString) $) | nindent 4 }}
   {{- end }}
   {{- $extraConfigs := concat ($app.extraConfigs | default list) ($userConfig.extraConfigs | default list) }}
   {{- $hasClusterValues := or (($app.clusterValues).configMap) (($app.clusterValues).secret) }}
