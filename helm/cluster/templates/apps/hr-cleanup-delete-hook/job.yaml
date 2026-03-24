@@ -121,4 +121,40 @@ spec:
           wait
 
           echo "Processed $TOTAL HelmReleases for cluster $CLUSTER_NAME"
+
+          # Step 4: Clean up OCIRepositories created by bundle sub-HRs.
+          # Bundle HelmReleases (observability-bundle, security-bundle, etc.) create
+          # sub-OCIRepositories as chart sources. Since we deleted the bundle HRs without
+          # letting Flux run `helm uninstall`, these OCIRepositories are orphaned.
+          echo "  Step 4: Cleaning up OCIRepositories"
+          OCIREPOSITORIES=$(kubectl get ocirepositories.source.toolkit.fluxcd.io -n "$NAMESPACE" \
+            -l "giantswarm.io/cluster=$CLUSTER_NAME" \
+            -o jsonpath='{.items[*].metadata.name}' 2>/dev/null) || true
+
+          if [ -n "$OCIREPOSITORIES" ]; then
+            echo "    Removing finalizers from OCIRepositories"
+            COUNT=0
+            for OCI in $OCIREPOSITORIES; do
+              (kubectl patch ocirepositories.source.toolkit.fluxcd.io "$OCI" -n "$NAMESPACE" --type=json \
+                -p='[{"op": "remove", "path": "/metadata/finalizers"}]' 2>/dev/null || true) &
+              COUNT=$((COUNT + 1))
+              if [ $((COUNT % BATCH_SIZE)) -eq 0 ]; then wait; fi
+            done
+            wait
+
+            echo "    Deleting OCIRepositories"
+            OCI_TOTAL=0
+            COUNT=0
+            for OCI in $OCIREPOSITORIES; do
+              OCI_TOTAL=$((OCI_TOTAL + 1))
+              (kubectl delete ocirepositories.source.toolkit.fluxcd.io "$OCI" -n "$NAMESPACE" \
+                --wait=false 2>/dev/null || true) &
+              COUNT=$((COUNT + 1))
+              if [ $((COUNT % BATCH_SIZE)) -eq 0 ]; then wait; fi
+            done
+            wait
+            echo "  Processed $OCI_TOTAL OCIRepositories for cluster $CLUSTER_NAME"
+          else
+            echo "  No OCIRepositories found"
+          fi
 {{- end }}
