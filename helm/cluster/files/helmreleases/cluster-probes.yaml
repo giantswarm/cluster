@@ -1,0 +1,15 @@
+appName: cluster-probes
+useOCISource: true
+configKey: clusterProbes
+namespace: cluster
+# used by renovate
+# repo: giantswarm/cluster-probes
+version: 0.1.0
+skipKubeConfig: true
+defaultValues:
+  interval: 60s
+  module: http_2xx_insecure
+  scrapeTimeout: 10s
+  clusterName: "{{ .Values.global.metadata.name }}"
+  baseDomain: "{{ .Values.global.connectivity.baseDomain }}"
+  apiServerPort: "{{ .Values.global.controlPlane.apiServerPort }}"
