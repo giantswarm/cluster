@@ -1,11 +1,13 @@
 appName: cluster-probes
 useOCISource: true
 configKey: clusterProbes
-namespace: cluster
+namespace: {{ .Release.Namespace }}
 # used by renovate
 # repo: giantswarm/cluster-probes
 version: 0.0.0-48edc105b3028bd02085ddc7f514b114a2b3a850
+prependClusterName: true
 skipKubeConfig: true
+serviceAccountName: automation
 defaultValues:
   interval: 60s
   module: http_2xx_insecure
