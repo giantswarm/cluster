@@ -20,7 +20,7 @@ defaultValues:
   ciliumNetworkPolicy:
     enabled: true
   {{- if .Values.global.connectivity.proxy.enabled }}
-  no_proxy: {{ .Values.global.connectivity.proxy.noProxy | quote }}
+  no_proxy: {{ include "cluster.connectivity.proxy.noProxy" (dict "global" .Values.global "providerIntegration" .Values.providerIntegration) | quote }}
   http_proxy: {{ .Values.global.connectivity.proxy.httpProxy | quote }}
   https_proxy: {{ .Values.global.connectivity.proxy.httpsProxy | quote }}
   {{- end }}
