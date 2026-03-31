@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Apps: Deploy `cluster-autoscaler` inCluster in Azure.
+- MachineDeployment: Add CAPI autoscaler annotations (`cluster-api-autoscaler-node-group-min-size`/`max-size`) when `minSize`/`maxSize` are set on a node pool (only in Azure).
+
+### Changed
+
+- Apps: Skip `kyverno-crds` dependency for `cluster-autoscaler` when deployed inCluster.
 - Apps: Add cluster-probes HelmRelease to deploy ServiceMonitors for probing workload cluster API server endpoint from the management cluster. Configurable via `global.apps.clusterProbes` with default module `http_2xx_insecure` for self-signed certificates.
 
 ## [6.1.0] - 2026-03-17
