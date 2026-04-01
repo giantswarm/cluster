@@ -7,4 +7,4 @@ clusterValues:
 namespace: kube-system
 # used by renovate
 # repo: giantswarm/prometheus-blackbox-exporter
-version: 0.6.0
+version: 0.7.0

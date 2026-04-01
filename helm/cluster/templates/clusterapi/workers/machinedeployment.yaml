@@ -13,6 +13,14 @@ metadata:
     {{ $key }}: {{ $val | quote }}
     {{- end }}
     {{- end }}
+    {{- if eq $.Values.providerIntegration.provider "azure" }}
+    {{- if $nodePoolConfig.minSize }}
+    cluster.x-k8s.io/cluster-api-autoscaler-node-group-min-size: {{ $nodePoolConfig.minSize | quote }}
+    {{- end }}
+    {{- if $nodePoolConfig.maxSize }}
+    cluster.x-k8s.io/cluster-api-autoscaler-node-group-max-size: {{ $nodePoolConfig.maxSize | quote }}
+    {{- end }}
+    {{- end }}
   labels:
     {{- include "cluster.labels.common.all" $ | nindent 4 }}
     giantswarm.io/machine-deployment: {{ include "cluster.resource.name" $ }}-{{ $nodePoolName }}

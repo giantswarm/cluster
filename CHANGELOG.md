@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [6.2.0] - 2026-03-31
+
+### Added
+
+- Apps: Deploy `cluster-autoscaler` inCluster in Azure.
+- MachineDeployment: Add CAPI autoscaler annotations (`cluster-api-autoscaler-node-group-min-size`/`max-size`) when `minSize`/`maxSize` are set on a node pool (only in Azure).
+
+### Changed
+
+- Apps: Skip `kyverno-crds` dependency for `cluster-autoscaler` when deployed inCluster.
+- Apps: Add cluster-probes HelmRelease to deploy ServiceMonitors for probing workload cluster API server endpoint from the management cluster. Configurable via `global.apps.clusterProbes` with default module `http_2xx_insecure` for self-signed certificates.
+
 ## [6.1.0] - 2026-03-17
 
 ### Added
@@ -946,7 +958,8 @@ For Kubernetes <v1.29, you will need to re-enable it using the respective values
 
 - Update and clean up the template repo.
 
-[Unreleased]: https://github.com/giantswarm/cluster/compare/v6.1.0...HEAD
+[Unreleased]: https://github.com/giantswarm/cluster/compare/v6.2.0...HEAD
+[6.2.0]: https://github.com/giantswarm/cluster/compare/v6.1.0...v6.2.0
 [6.1.0]: https://github.com/giantswarm/cluster/compare/v6.0.0...v6.1.0
 [6.0.0]: https://github.com/giantswarm/cluster/compare/v5.3.1...v6.0.0
 [5.3.1]: https://github.com/giantswarm/cluster/compare/v5.3.0...v5.3.1
