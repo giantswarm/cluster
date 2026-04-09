@@ -56,7 +56,13 @@ metadata:
       {{- $dependencies = append $dependencies (printf "%s-%s" $.Values.global.metadata.name $dependency) }}
     {{- end }}
   {{- else if $app.dependsOn }}
-    {{- $dependencies = append $dependencies (printf "%s-%s" $.Values.global.metadata.name $app.dependsOn) }}
+    {{- if kindIs "string" $app.dependsOn }}
+      {{- $dependencies = append $dependencies (printf "%s-%s" $.Values.global.metadata.name $app.dependsOn) }}
+    {{- else }}
+      {{- range $_, $dep := $app.dependsOn }}
+        {{- $dependencies = append $dependencies (printf "%s-%s" $.Values.global.metadata.name $dep) }}
+      {{- end }}
+    {{- end }}
   {{- end }}
   {{- if or $annotations $dependencies }}
   annotations:

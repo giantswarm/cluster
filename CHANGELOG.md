@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Apps: Support `dependsOn` as a list in the App CR template to allow expressing multiple dependencies per app.
+- Apps: Make `prometheus-blackbox-exporter` depend on `vertical-pod-autoscaler-crd` (in addition to the existing `prometheus-operator-crd` dependency), ensuring VPA CRDs are installed before deploying it.
+
 ## [6.3.0] - 2026-04-02
 
 ### Changed
