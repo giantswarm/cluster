@@ -15,6 +15,7 @@ global:
     etcdDefrag: {}
     etcdKubernetesResourcesCountExporter: {}
     externalDns: {}
+    externalDnsCrossplaneResources: {}
     giantswarmClusterSuite: {}
     k8sAuditMetrics: {}
     k8sDnsNodeCache: {}
@@ -169,6 +170,8 @@ providerIntegration:
     etcdKubernetesResourcesCountExporter:
       enable: false
     externalDns:
+      enable: false
+    externalDnsCrossplaneResources:
       enable: false
     giantswarmClusterSuite:
       enable: false

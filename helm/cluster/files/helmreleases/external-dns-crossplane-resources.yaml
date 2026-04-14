@@ -1,0 +1,15 @@
+appName: external-dns-crossplane-resources
+configKey: externalDnsCrossplaneResources
+namespace: {{ .Release.Namespace }}
+useOCISource: true
+# repo: giantswarm/external-dns-crossplane-resources
+version: 0.2.0
+
+prependClusterName: true
+skipKubeConfig: true
+serviceAccountName: automation
+
+defaultValues:
+  provider: {{ .Values.providerIntegration.provider }}
+  clusterName: {{ include "cluster.resource.name" . }}
+  baseDomain: {{ include "cluster.internal.apps.baseDomain" . }}
