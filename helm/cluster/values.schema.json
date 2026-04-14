@@ -1314,6 +1314,12 @@
                             "title": "external-dns",
                             "description": "Configuration of external-dns. For all available values see https://github.com/giantswarm/external-dns-app."
                         },
+                        "externalDnsCrossplaneResources": {
+                            "$ref": "#/$defs/helmRelease",
+                            "type": "object",
+                            "title": "external-dns-crossplane-resources",
+                            "description": "Configuration of external-dns-crossplane-resources. For all available values see https://github.com/giantswarm/external-dns-crossplane-resources."
+                        },
                         "giantswarmClusterSuite": {
                             "$ref": "#/$defs/helmRelease",
                             "type": "object",
@@ -2722,6 +2728,9 @@
                             "$ref": "#/$defs/providerIntegrationAppConfig"
                         },
                         "externalDns": {
+                            "$ref": "#/$defs/providerIntegrationAppConfig"
+                        },
+                        "externalDnsCrossplaneResources": {
                             "$ref": "#/$defs/providerIntegrationAppConfig"
                         },
                         "giantswarmClusterSuite": {
