@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [6.4.0] - 2026-04-15
+
 ### Added
 
 - Apps: Add External DNS Crossplane Resources.
@@ -968,7 +970,8 @@ For Kubernetes <v1.29, you will need to re-enable it using the respective values
 
 - Update and clean up the template repo.
 
-[Unreleased]: https://github.com/giantswarm/cluster/compare/v6.3.0...HEAD
+[Unreleased]: https://github.com/giantswarm/cluster/compare/v6.4.0...HEAD
+[6.4.0]: https://github.com/giantswarm/cluster/compare/v6.3.0...v6.4.0
 [6.3.0]: https://github.com/giantswarm/cluster/compare/v6.2.0...v6.3.0
 [6.2.0]: https://github.com/giantswarm/cluster/compare/v6.1.0...v6.2.0
 [6.1.0]: https://github.com/giantswarm/cluster/compare/v6.0.0...v6.1.0
