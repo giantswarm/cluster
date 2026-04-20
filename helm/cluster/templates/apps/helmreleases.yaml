@@ -142,6 +142,9 @@ spec:
   interval: {{ $app.interval | default "5m" }}
   timeout: {{ $app.timeout | default "5m" }}
   install:
+    {{- if $app.createNamespace }}
+    createNamespace: true
+    {{- end }}
     remediation:
       {{- if hasKey $app "remediationRetries" }}
       retries: {{ $app.remediationRetries }}
