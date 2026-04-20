@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Add pre-delete hook Job to remove `HelmRelease` CRs when deleting a cluster. This is required because sometimes flux does not have enough time to clean up the `HelmRelease` CRs before the control plane API is deleted.
+- HelmReleases: Support `createNamespace` field in app definitions, rendering `spec.install.createNamespace: true` on the HelmRelease when set.
 
 ### Fixed
 
