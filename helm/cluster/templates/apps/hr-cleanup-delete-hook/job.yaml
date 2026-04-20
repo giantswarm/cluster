@@ -1,0 +1,160 @@
+{{/*
+Pre-delete hook to suspend HelmReleases and remove Flux finalizers before cluster deletion.
+
+When a cluster is deleted, Flux tries to `helm uninstall` each HelmRelease against
+the workload cluster. If the WC API goes down before Flux finishes (which is common
+with 40+ HelmReleases), the remaining HRs get stuck with `finalizers.fluxcd.io`,
+blocking CAPI cluster garbage collection indefinitely.
+
+This hook runs before `helm uninstall` removes the chart's resources, so all HRs
+still exist and the WC is still up. We first suspend each HR to stop Flux from
+reconciling it (which would re-add the finalizer), then remove the finalizer. The
+subsequent `helm uninstall` can then delete the HR objects instantly.
+*/}}
+{{- if $.Values.providerIntegration.apps }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "cluster.resource.name" $ }}-cleanup-hrs
+  namespace: {{ $.Release.Namespace }}
+  labels:
+    {{- include "cluster.labels.common.all" $ | nindent 4 }}
+  annotations:
+    helm.sh/hook: pre-delete
+    helm.sh/hook-weight: "-10"
+    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+spec:
+  backoffLimit: 3
+  ttlSecondsAfterFinished: 300
+  template:
+    metadata:
+      labels:
+        {{- include "cluster.labels.common.all" $ | nindent 8 }}
+    spec:
+      serviceAccountName: {{ include "cluster.resource.name" $ }}-cleanup-hrs
+      restartPolicy: Never
+      containers:
+      - name: kubectl
+        image: gsoci.azurecr.io/giantswarm/kubectl:{{ .Values.providerIntegration.kubernetesVersion }}
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1000
+          runAsGroup: 1000
+          allowPrivilegeEscalation: false
+          seccompProfile:
+            type: RuntimeDefault
+          capabilities:
+            drop:
+            - ALL
+        resources:
+          requests:
+            cpu: 10m
+            memory: 128Mi
+          limits:
+            cpu: 200m
+            memory: 512Mi
+        command:
+        - /bin/sh
+        - -c
+        - |
+          set -eu
+          CLUSTER_NAME="{{ include "cluster.resource.name" $ }}"
+          NAMESPACE="{{ $.Release.Namespace }}"
+          BATCH_SIZE=10
+
+          echo "Cleaning up HelmReleases for cluster $CLUSTER_NAME"
+
+          HELMRELEASES=$(kubectl get helmreleases.helm.toolkit.fluxcd.io -n "$NAMESPACE" \
+            -l "giantswarm.io/cluster=$CLUSTER_NAME" \
+            -o jsonpath='{.items[*].metadata.name}' 2>/dev/null) || true
+
+          if [ -z "$HELMRELEASES" ]; then
+            echo "No HelmReleases found"
+            exit 0
+          fi
+
+          # Step 1: Suspend all HRs to stop Flux from reconciling them.
+          # This prevents Flux from re-adding finalizers after we remove them.
+          echo "  Step 1: Suspending HelmReleases"
+          COUNT=0
+          for HR in $HELMRELEASES; do
+            (kubectl patch helmreleases.helm.toolkit.fluxcd.io "$HR" -n "$NAMESPACE" \
+              --type=merge -p='{"spec":{"suspend":true}}' 2>/dev/null || true) &
+            COUNT=$((COUNT + 1))
+            if [ $((COUNT % BATCH_SIZE)) -eq 0 ]; then wait; fi
+          done
+          wait
+
+          # Brief pause to let in-flight reconciliations complete before
+          # removing finalizers, reducing the chance of Flux re-adding them.
+          sleep 5
+
+          # Step 2: Remove finalizers. Two passes to handle any race condition
+          # where an in-flight reconciliation re-adds the finalizer after suspend.
+          for PASS in 1 2; do
+            echo "  Step 2 pass $PASS: Removing finalizers"
+            COUNT=0
+            for HR in $HELMRELEASES; do
+              (kubectl patch helmreleases.helm.toolkit.fluxcd.io "$HR" -n "$NAMESPACE" --type=json \
+                -p='[{"op": "remove", "path": "/metadata/finalizers"}]' 2>/dev/null || true) &
+              COUNT=$((COUNT + 1))
+              if [ $((COUNT % BATCH_SIZE)) -eq 0 ]; then wait; fi
+            done
+            wait
+            [ "$PASS" -eq 1 ] && sleep 3
+          done
+
+          # Step 3: Delete all HRs. This cleans up bundle sub-HRs (e.g. kyverno,
+          # alloy-logs) that are not chart resources and would otherwise be orphaned
+          # after helm uninstall deletes only the parent bundle HRs.
+          # Since HRs are suspended with no finalizers, deletion is instant.
+          echo "  Step 3: Deleting HelmReleases"
+          COUNT=0
+          TOTAL=0
+          for HR in $HELMRELEASES; do
+            TOTAL=$((TOTAL + 1))
+            (kubectl delete helmreleases.helm.toolkit.fluxcd.io "$HR" -n "$NAMESPACE" \
+              --wait=false 2>/dev/null || true) &
+            COUNT=$((COUNT + 1))
+            if [ $((COUNT % BATCH_SIZE)) -eq 0 ]; then wait; fi
+          done
+          wait
+
+          echo "Processed $TOTAL HelmReleases for cluster $CLUSTER_NAME"
+
+          # Step 4: Clean up OCIRepositories created by bundle sub-HRs.
+          # Bundle HelmReleases (observability-bundle, security-bundle, etc.) create
+          # sub-OCIRepositories as chart sources. Since we deleted the bundle HRs without
+          # letting Flux run `helm uninstall`, these OCIRepositories are orphaned.
+          echo "  Step 4: Cleaning up OCIRepositories"
+          OCIREPOSITORIES=$(kubectl get ocirepositories.source.toolkit.fluxcd.io -n "$NAMESPACE" \
+            -l "giantswarm.io/cluster=$CLUSTER_NAME" \
+            -o jsonpath='{.items[*].metadata.name}' 2>/dev/null) || true
+
+          if [ -n "$OCIREPOSITORIES" ]; then
+            echo "    Removing finalizers from OCIRepositories"
+            COUNT=0
+            for OCI in $OCIREPOSITORIES; do
+              (kubectl patch ocirepositories.source.toolkit.fluxcd.io "$OCI" -n "$NAMESPACE" --type=json \
+                -p='[{"op": "remove", "path": "/metadata/finalizers"}]' 2>/dev/null || true) &
+              COUNT=$((COUNT + 1))
+              if [ $((COUNT % BATCH_SIZE)) -eq 0 ]; then wait; fi
+            done
+            wait
+
+            echo "    Deleting OCIRepositories"
+            OCI_TOTAL=0
+            COUNT=0
+            for OCI in $OCIREPOSITORIES; do
+              OCI_TOTAL=$((OCI_TOTAL + 1))
+              (kubectl delete ocirepositories.source.toolkit.fluxcd.io "$OCI" -n "$NAMESPACE" \
+                --wait=false 2>/dev/null || true) &
+              COUNT=$((COUNT + 1))
+              if [ $((COUNT % BATCH_SIZE)) -eq 0 ]; then wait; fi
+            done
+            wait
+            echo "  Processed $OCI_TOTAL OCIRepositories for cluster $CLUSTER_NAME"
+          else
+            echo "  No OCIRepositories found"
+          fi
+{{- end }}

@@ -1,5 +1,4 @@
 appName: rbac-bootstrap
-useOCISource: true
 configKey: rbacBootstrap
 namespace: kube-system
 # used by renovate

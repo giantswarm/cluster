@@ -1,10 +1,9 @@
 appName: cert-manager
 chartName: cert-manager-app
 configKey: certManager
-clusterValues:
-  configMap: true
-  secret: true
-dependsOn: prometheus-operator-crd
+dependsOn:
+  - prometheus-operator-crd
+  - kube-prometheus-stack
 namespace: kube-system
 # used by renovate
 # repo: giantswarm/cert-manager-app
@@ -20,3 +19,8 @@ defaultValues:
     defaultIssuerGroup: cert-manager.io
   ciliumNetworkPolicy:
     enabled: true
+  {{- if .Values.global.connectivity.proxy.enabled }}
+  no_proxy: {{ include "cluster.connectivity.proxy.noProxy" (dict "global" .Values.global "providerIntegration" .Values.providerIntegration) | quote }}
+  http_proxy: {{ .Values.global.connectivity.proxy.httpProxy | quote }}
+  https_proxy: {{ .Values.global.connectivity.proxy.httpsProxy | quote }}
+  {{- end }}

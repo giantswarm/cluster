@@ -1,12 +1,12 @@
 appName: security-bundle
 configKey: securityBundle
 catalog: giantswarm
-clusterValues:
-  configMap: true
-  secret: false
 dependsOn: prometheus-operator-crd
 inCluster: true
 namespace: kube-system
+driftDetection: enabled
 # used by renovate
 # repo: giantswarm/security-bundle
 version: 1.17.0
+defaultValues:
+  clusterID: {{ include "cluster.resource.name" $ }}

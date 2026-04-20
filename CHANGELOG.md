@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add pre-delete hook Job to remove `HelmRelease` CRs when deleting a cluster. This is required because sometimes flux does not have enough time to clean up the `HelmRelease` CRs before the control plane API is deleted.
+- HelmReleases: Support `createNamespace` field in app definitions, rendering `spec.install.createNamespace: true` on the HelmRelease when set.
+
+### Fixed
+
+- HelmReleases: Apply `tpl` to rendered values, matching the behavior of the old `apps.yaml` template. This ensures template expressions in provider-specific values (e.g., `{{ include "aws-partition" $ }}`) are resolved before being written into the HelmRelease `spec.values`.
+
 ## [6.4.0] - 2026-04-15
 
 ### Added
@@ -40,6 +49,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Helpers: Use `.Chart.AppVersion` in `app.kubernetes.io/version` label.
+- Migrate default apps from `App` CRs to Flux `HelmRelease` CRs.
+- Remove `clusterValues` references from HelmRelease app definitions and pass required values explicitly via `defaultValues`.
 
 ## [6.0.0] - 2026-03-09
 

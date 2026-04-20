@@ -1,10 +1,8 @@
 appName: chart-operator-extensions
 configKey: chartOperatorExtensions
-clusterValues:
-  configMap: false
-  secret: false
 dependsOn: prometheus-operator-crd
 namespace: giantswarm
+createNamespace: true
 # used by renovate
 # repo: giantswarm/chart-operator-extensions
 version: 1.1.3

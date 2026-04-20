@@ -1,9 +1,6 @@
 appName: cilium-servicemonitors
 configKey: ciliumServiceMonitors
 enabled: true
-clusterValues:
-  configMap: false
-  secret: false
 dependsOn: prometheus-operator-crd
 namespace: kube-system
 # used by renovate
