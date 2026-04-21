@@ -1,6 +1,9 @@
 appName: prometheus-blackbox-exporter
 configKey: prometheusBlackboxExporter
-dependsOn: prometheus-operator-crd
+dependsOn:
+  - prometheus-operator-crd
+  - vertical-pod-autoscaler-crd
+dependsOnHelmRelease: true
 clusterValues:
   configMap: true
   secret: false
