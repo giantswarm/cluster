@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Control Plane: Make etcd image tag configurable. ([#841](https://github.com/giantswarm/cluster/pull/841))
+
 ## [6.4.0] - 2026-04-15
 
 ### Added
@@ -130,6 +134,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Add required install values to a `required.yaml` file and update values schema.
+
+## [4.4.1] - 2026-04-21
+
+### Changed
+
+- Control Plane: Make etcd image tag configurable. ([#841](https://github.com/giantswarm/cluster/pull/841))
 
 ## [4.4.0] - 2025-10-28
 
@@ -985,7 +995,8 @@ For Kubernetes <v1.29, you will need to re-enable it using the respective values
 [5.0.0]: https://github.com/giantswarm/cluster/compare/v4.6.0...v5.0.0
 [4.6.0]: https://github.com/giantswarm/cluster/compare/v4.5.1...v4.6.0
 [4.5.1]: https://github.com/giantswarm/cluster/compare/v4.5.0...v4.5.1
-[4.5.0]: https://github.com/giantswarm/cluster/compare/v4.4.0...v4.5.0
+[4.5.0]: https://github.com/giantswarm/cluster/compare/v4.4.1...v4.5.0
+[4.4.1]: https://github.com/giantswarm/cluster/compare/v4.4.0...v4.4.1
 [4.4.0]: https://github.com/giantswarm/cluster/compare/v4.3.0...v4.4.0
 [4.3.0]: https://github.com/giantswarm/cluster/compare/v4.2.0...v4.3.0
 [4.2.0]: https://github.com/giantswarm/cluster/compare/v4.1.0...v4.2.0

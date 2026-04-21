@@ -441,6 +441,7 @@ For Giant Swarm internal use only, not stable, or not supported by UIs.
 | `internal.advancedConfiguration.controlPlane.etcd.experimental` | **Experimental**|**Type:** `object`<br/>|
 | `internal.advancedConfiguration.controlPlane.etcd.experimental.peerSkipClientSanVerification` | **Peer skip client SAN verification** - Skip verification of SAN field in client certificate for peer connections.|**Type:** `boolean`<br/>|
 | `internal.advancedConfiguration.controlPlane.etcd.extraArgs` | **Extra args**|**Type:** `object`<br/>|
+| `internal.advancedConfiguration.controlPlane.etcd.imageTag` | **Image tag** - The tag of the etcd image.|**Type:** `string`<br/>|
 | `internal.advancedConfiguration.controlPlane.etcd.initialCluster` | **Initial cluster** - Initial cluster configuration for bootstrapping.|**Type:** `string`<br/>|
 | `internal.advancedConfiguration.controlPlane.etcd.initialClusterState` | **Initial cluster state**|**Type:** `string`<br/>**Allowed values:** `new`, `existing`<br/>|
 | `internal.advancedConfiguration.controlPlane.etcd.quotaBackendBytesGiB` | **Quota backend bytes in GiB** - Raise the etcd default backend bytes limit up to 16GiB.|**Type:** `integer`<br/>**Default:** `8`|

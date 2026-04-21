@@ -2448,6 +2448,11 @@
                                             "type": "object",
                                             "title": "Extra args"
                                         },
+                                        "imageTag": {
+                                            "type": "string",
+                                            "title": "Image tag",
+                                            "description": "The tag of the etcd image."
+                                        },
                                         "initialCluster": {
                                             "type": "string",
                                             "title": "Initial cluster",
