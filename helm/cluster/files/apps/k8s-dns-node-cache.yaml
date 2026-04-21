@@ -6,4 +6,4 @@ dependsOn: kyverno-crds
 namespace: kube-system
 # used by renovate
 # repo: giantswarm/k8s-dns-node-cache-app
-version: 2.9.2
+version: 2.11.0
