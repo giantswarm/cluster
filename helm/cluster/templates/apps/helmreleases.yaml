@@ -153,8 +153,14 @@ spec:
       {{- end }}
   upgrade:
     disableWait: {{ $app.disableWait | default false }}
-    strategy:
-      name: RetryOnFailure
+    remediation:
+      remediateLastFailure: true
+      strategy: uninstall
+      {{- if hasKey $app "remediationRetries" }}
+      retries: {{ $app.remediationRetries }}
+      {{- else }}
+      retries: -1
+      {{- end }}
   {{- if $app.driftDetection }}
   driftDetection:
     mode: {{ $app.driftDetection }}
