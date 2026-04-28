@@ -106,7 +106,7 @@ spec:
           echo "Phase 0: Removing depends-on annotations from default App CRs"
           kubectl annotate apps.application.giantswarm.io -n "$NAMESPACE" \
             -l "$CLUSTER_SELECTOR" \
-            "app-operator.giantswarm.io/depends-on-" 2>/dev/null || true
+            "app-operator.giantswarm.io/depends-on-"
 
           # ============================================================
           # Phase 1: Non-bundle App CRs + WC Chart CRs
@@ -116,15 +116,16 @@ spec:
           echo "Phase 1a: Pausing non-bundle App CRs"
           kubectl annotate apps.application.giantswarm.io -n "$NAMESPACE" \
             -l "$NON_BUNDLE_SELECTOR" \
-            "operatorkit.giantswarm.io/paused=true" --overwrite 2>/dev/null || true
+            "operatorkit.giantswarm.io/paused=true" --overwrite
 
           # 1b. Remove finalizers from non-bundle App CRs (parallel batches).
           echo "Phase 1b: Removing finalizers from non-bundle App CRs"
           NON_BUNDLE_APPS=$(kubectl get apps.application.giantswarm.io -n "$NAMESPACE" \
             -l "$NON_BUNDLE_SELECTOR" \
-            -o jsonpath='{.items[*].metadata.name}' 2>/dev/null) || true
+            -o jsonpath='{.items[*].metadata.name}')
           COUNT=0
           for APP in $NON_BUNDLE_APPS; do
+            # Individual patches may fail if the app has no finalizers — that's OK.
             (kubectl patch apps.application.giantswarm.io "$APP" -n "$NAMESPACE" --type=json \
               -p='[{"op": "remove", "path": "/metadata/finalizers"}]' 2>/dev/null || true) &
             COUNT=$((COUNT + 1))
@@ -136,7 +137,7 @@ spec:
           echo "Phase 1c: Deleting non-bundle App CRs"
           kubectl delete apps.application.giantswarm.io -n "$NAMESPACE" \
             -l "$NON_BUNDLE_SELECTOR" \
-            --ignore-not-found=true --wait=false 2>/dev/null || true
+            --ignore-not-found=true --wait=false
 
           # 1d. Clean up default app WC Chart CRs.
           # Now safe: non-bundle App CRs are gone, so app-operator
@@ -147,14 +148,15 @@ spec:
           echo "  Pausing default app Chart CRs on WC"
           kubectl $WC annotate chart -n "$CHART_NAMESPACE" \
             -l "$DEFAULT_APP_LABEL" \
-            "operatorkit.giantswarm.io/paused=true" --overwrite 2>/dev/null || true
+            "operatorkit.giantswarm.io/paused=true" --overwrite
 
           echo "  Removing finalizers from default app Chart CRs on WC"
           CHARTS=$(kubectl $WC get chart -n "$CHART_NAMESPACE" \
             -l "$DEFAULT_APP_LABEL" \
-            -o jsonpath='{.items[*].metadata.name}' 2>/dev/null) || true
+            -o jsonpath='{.items[*].metadata.name}')
           COUNT=0
           for CHART in $CHARTS; do
+            # Individual patches may fail if the chart has no finalizers — that's OK.
             (kubectl $WC patch chart "$CHART" -n "$CHART_NAMESPACE" --type=json \
               -p='[{"op": "remove", "path": "/metadata/finalizers"}]' 2>/dev/null || true) &
             COUNT=$((COUNT + 1))
@@ -165,7 +167,7 @@ spec:
           echo "  Deleting default app Chart CRs on WC"
           kubectl $WC delete chart -n "$CHART_NAMESPACE" \
             -l "$DEFAULT_APP_LABEL" \
-            --ignore-not-found=true 2>/dev/null || true
+            --ignore-not-found=true
 
           # ============================================================
           # Phase 2: Bundle App CRs via operator cascade
@@ -184,13 +186,13 @@ spec:
 
           REMAINING_APPS=$(kubectl get apps.application.giantswarm.io -n "$NAMESPACE" \
             -l "$CLUSTER_SELECTOR" \
-            -o jsonpath='{.items[*].metadata.name}' 2>/dev/null) || true
+            -o jsonpath='{.items[*].metadata.name}')
           BUNDLE_APPS=""
           for APP in $REMAINING_APPS; do
             is_operator "$APP" && continue
             echo "  Deleting bundle App CR: $APP"
             kubectl delete apps.application.giantswarm.io "$APP" -n "$NAMESPACE" \
-              --ignore-not-found=true --wait=false 2>/dev/null || true
+              --ignore-not-found=true --wait=false
             BUNDLE_APPS="$BUNDLE_APPS $APP"
           done
 
@@ -215,11 +217,12 @@ spec:
               ELAPSED=$((ELAPSED + 5))
             done
             if [ "$ALL_GONE" != "true" ]; then
-              echo "WARNING: Timed out waiting for bundle App CRs to be deleted after ${TIMEOUT}s"
+              echo "ERROR: Timed out waiting for bundle App CRs to be deleted after ${TIMEOUT}s"
               echo "Remaining bundle App CRs:"
               for APP in $BUNDLE_APPS; do
                 kubectl get apps.application.giantswarm.io "$APP" -n "$NAMESPACE" --no-headers 2>/dev/null || true
               done
+              exit 1
             fi
           fi
 
