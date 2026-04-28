@@ -1,6 +1,7 @@
 appName: net-exporter
 configKey: netExporter
 dependsOn: prometheus-operator-crd
+timeout: 15m
 namespace: kube-system
 # used by renovate
 # repo: giantswarm/net-exporter
