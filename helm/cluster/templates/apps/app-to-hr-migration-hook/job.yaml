@@ -214,6 +214,27 @@ spec:
           wait
           echo "  Stripped finalizers from $COUNT bundle sub-App CRs"
 
+          # Now delete the sub-App CRs themselves. Without finalizers, deletion
+          # is instant. This prevents app-operator from recreating WC Chart CRs
+          # later (which would happen even when paused, because the sub-App CRs
+          # are still being watched).
+          # When Phase 2's bundle cascade runs `helm uninstall`, the bundle
+          # chart's manifest still references these sub-App CRs but they're
+          # already gone — Helm handles this gracefully.
+          if [ -n "$SUB_APPS" ]; then
+            echo "  Deleting bundle sub-App CRs"
+            COUNT=0
+            for APP in $SUB_APPS; do
+              is_operator "$APP" && continue
+              (kubectl delete apps.application.giantswarm.io "$APP" -n "$NAMESPACE" \
+                --ignore-not-found=true --wait=false 2>/dev/null || true) &
+              COUNT=$((COUNT + 1))
+              if [ $((COUNT % BATCH_SIZE)) -eq 0 ]; then wait; fi
+            done
+            wait
+            echo "  Deleted $COUNT bundle sub-App CRs"
+          fi
+
           # Pause, strip finalizers, and delete the corresponding WC Chart CRs by name.
           if [ -n "$SUB_CHART_NAMES" ]; then
             echo "  Cleaning up bundle sub-app WC Chart CRs by name"
