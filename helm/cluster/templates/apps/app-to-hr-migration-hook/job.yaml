@@ -98,12 +98,36 @@ spec:
           }
 
           # ============================================================
-          # Phase 0: Remove dependency annotations
+          # Phase 0a: Scale chart-operator down to 0 in the WC
+          # ============================================================
+          # This prevents chart-operator from running `helm uninstall` on any
+          # Chart CR that gets deleted during the migration. Even with paused
+          # annotations and stripped finalizers, race conditions in the
+          # informer cache can cause chart-operator to process deletions and
+          # uninstall the actual application.
+          # Flux will reinstall chart-operator via its new HelmRelease after
+          # the migration completes. Customer apps' Chart CRs remain in the
+          # WC unmodified — they'll resume reconciliation once chart-operator
+          # is back up.
+          echo "Phase 0a: Scaling chart-operator to 0 in the WC"
+          kubectl $WC scale deployment chart-operator -n giantswarm --replicas=0 || true
+          # Wait for chart-operator pods to actually terminate
+          for i in 1 2 3 4 5 6 7 8 9 10; do
+            PODS=$(kubectl $WC get pods -n giantswarm -l app=chart-operator --no-headers 2>/dev/null | wc -l | tr -d ' ')
+            if [ "$PODS" -eq 0 ]; then
+              echo "  chart-operator is down"
+              break
+            fi
+            sleep 3
+          done
+
+          # ============================================================
+          # Phase 0b: Remove dependency annotations
           # ============================================================
           # Remove depends-on annotations from default App CRs.
           # This prevents app-operator from pausing MC Chart CRs when
           # we later pause/delete the dependency App CRs in Phase 1.
-          echo "Phase 0: Removing depends-on annotations from default App CRs"
+          echo "Phase 0b: Removing depends-on annotations from default App CRs"
           kubectl annotate apps.application.giantswarm.io -n "$NAMESPACE" \
             -l "$CLUSTER_SELECTOR" \
             "app-operator.giantswarm.io/depends-on-"
