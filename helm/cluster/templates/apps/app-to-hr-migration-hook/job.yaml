@@ -22,11 +22,13 @@ uninstall runs.
                             do NOT have release.giantswarm.io/version
 
 Phases:
-  0: Strip depends-on annotations from default App CRs.
-  A: Pause everything (MC default Apps + sub-Apps + WC Chart CRs).
-  B: Strip finalizers from everything.
-  C: Delete everything (instant — no operator processing).
-  D: Delete bundle App CRs and wait for cascade.
+  0:  Strip depends-on annotations from default App CRs.
+  0b: Scale chart-operator on the WC to 0 (removes the actor that runs
+      `helm uninstall` on the WC).
+  A:  Pause everything (MC default Apps + sub-Apps + WC Chart CRs).
+  B:  Strip finalizers from everything.
+  C:  Delete everything (instant — no operator processing).
+  D:  Delete bundle App CRs and wait for cascade.
 
 Phase A buys us defense in depth — once operatorkit observes the pause, it
 skips reconciles. Phase B is the load-bearing protection — with finalizers
@@ -205,6 +207,41 @@ spec:
           kubectl annotate apps.application.giantswarm.io -n "$NAMESPACE" \
             -l "$CLUSTER_SELECTOR" \
             "app-operator.giantswarm.io/depends-on-"
+
+          # ============================================================
+          # Phase 0b: Scale chart-operator on the WC down to 0
+          # ============================================================
+          # Bundle sub-app Chart CRs in the WC are repeatedly observed to
+          # have their underlying helm releases uninstalled across
+          # 5-cluster concurrent migration runs (Round 34/35/37 — same set
+          # of 10 apps every time, only bundle sub-apps, never non-bundle
+          # default apps). Phase C.5 forensic re-checks have ruled out
+          # the in-flight `app-operator` reconcile race as the trigger.
+          # The pattern points strongly at chart-operator on the WC
+          # processing a Chart CR deletion event with a stale informer
+          # cache (operator's cached object still has the finalizer we
+          # stripped), running `helm uninstall`, and only then noticing
+          # the live state.
+          #
+          # Scaling chart-operator on the WC to 0 BEFORE we touch any
+          # WC Chart CR removes the actor that runs `helm uninstall` on
+          # the WC. Any deletion event we then issue is processed by K8s
+          # alone (no controller). chart-operator on the WC is restored
+          # automatically by Flux (its new HelmRelease in 35.0.0-jose)
+          # after the migration completes.
+          echo "Phase 0b: Scaling chart-operator on the WC to 0"
+          kubectl $WC scale deployment chart-operator -n "$CHART_NAMESPACE" \
+            --replicas=0
+          # Wait for the existing pod to terminate so the actor is truly gone.
+          for i in 1 2 3 4 5 6 7 8 9 10; do
+            PODS=$(kubectl $WC get pods -n "$CHART_NAMESPACE" -l app=chart-operator --no-headers 2>/dev/null | wc -l | tr -d ' ')
+            if [ "$PODS" -eq 0 ]; then
+              echo "  chart-operator on WC is down"
+              break
+            fi
+            echo "  waiting for chart-operator pod to terminate (attempt $i)"
+            sleep 3
+          done
 
           # ============================================================
           # Phase A: Pause everything
