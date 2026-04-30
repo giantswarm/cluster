@@ -98,36 +98,12 @@ spec:
           }
 
           # ============================================================
-          # Phase 0a: Scale chart-operator down to 0 in the WC
-          # ============================================================
-          # This prevents chart-operator from running `helm uninstall` on any
-          # Chart CR that gets deleted during the migration. Even with paused
-          # annotations and stripped finalizers, race conditions in the
-          # informer cache can cause chart-operator to process deletions and
-          # uninstall the actual application.
-          # Flux will reinstall chart-operator via its new HelmRelease after
-          # the migration completes. Customer apps' Chart CRs remain in the
-          # WC unmodified — they'll resume reconciliation once chart-operator
-          # is back up.
-          echo "Phase 0a: Scaling chart-operator to 0 in the WC"
-          kubectl $WC scale deployment chart-operator -n giantswarm --replicas=0 || true
-          # Wait for chart-operator pods to actually terminate
-          for i in 1 2 3 4 5 6 7 8 9 10; do
-            PODS=$(kubectl $WC get pods -n giantswarm -l app=chart-operator --no-headers 2>/dev/null | wc -l | tr -d ' ')
-            if [ "$PODS" -eq 0 ]; then
-              echo "  chart-operator is down"
-              break
-            fi
-            sleep 3
-          done
-
-          # ============================================================
-          # Phase 0b: Remove dependency annotations
+          # Phase 0: Remove dependency annotations
           # ============================================================
           # Remove depends-on annotations from default App CRs.
           # This prevents app-operator from pausing MC Chart CRs when
           # we later pause/delete the dependency App CRs in Phase 1.
-          echo "Phase 0b: Removing depends-on annotations from default App CRs"
+          echo "Phase 0: Removing depends-on annotations from default App CRs"
           kubectl annotate apps.application.giantswarm.io -n "$NAMESPACE" \
             -l "$CLUSTER_SELECTOR" \
             "app-operator.giantswarm.io/depends-on-"
@@ -163,12 +139,11 @@ spec:
             -l "$NON_BUNDLE_SELECTOR" \
             --ignore-not-found=true --wait=false
 
-          # 1d. Clean up direct default app WC Chart CRs.
+          # 1d. Clean up default app WC Chart CRs.
           # Now safe: non-bundle App CRs are gone, so app-operator
           # cannot re-create Chart CRs on the WC.
-          # Only targets Chart CRs with the release label (direct default apps).
-          # Bundle sub-app Chart CRs are handled in Phase 1e by name.
-          echo "Phase 1d: Cleaning up direct default app WC Chart CRs"
+          # Only target Chart CRs with the release label (default apps).
+          echo "Phase 1d: Cleaning up default app WC Chart CRs"
 
           echo "  Pausing default app Chart CRs on WC"
           kubectl $WC annotate chart -n "$CHART_NAMESPACE" \
@@ -195,104 +170,12 @@ spec:
             --ignore-not-found=true
 
           # ============================================================
-          # Phase 1e: Strip finalizers from bundle sub-App CRs
-          # ============================================================
-          # Bundle sub-App CRs (e.g. kyverno, kyverno-crds) are created by
-          # bundle charts (security-bundle, observability-bundle). They belong
-          # to the cluster but do NOT have the release.giantswarm.io/version
-          # label (only the parent bundle and direct default apps have it).
-          #
-          # We must strip their finalizers BEFORE Phase 2 triggers the bundle
-          # cascade. Otherwise, when the cascade deletes sub-App CRs,
-          # app-operator processes their finalizers → creates new Chart CRs
-          # in the WC → chart-operator runs helm uninstall → the actual
-          # application (e.g. kyverno) gets uninstalled from the WC.
-          echo "Phase 1e: Neutralizing bundle sub-App CRs and their WC Chart CRs"
-          SUB_APP_SELECTOR="giantswarm.io/cluster=$CLUSTER_NAME,!$DEFAULT_APP_LABEL,app.kubernetes.io/name notin (app-operator,chart-operator)"
-
-          # Pause MC sub-App CRs first to stop app-operator from reconciling
-          # them. Without this, app-operator re-creates WC Chart CRs after we
-          # delete them.
-          echo "  Pausing bundle sub-App CRs"
-          kubectl annotate apps.application.giantswarm.io -n "$NAMESPACE" \
-            -l "$SUB_APP_SELECTOR" \
-            "operatorkit.giantswarm.io/paused=true" --overwrite
-
-          SUB_APPS=$(kubectl get apps.application.giantswarm.io -n "$NAMESPACE" \
-            -l "$SUB_APP_SELECTOR" \
-            -o jsonpath='{.items[*].metadata.name}')
-
-          # Collect the Chart CR names in the WC (strip the cluster prefix).
-          SUB_CHART_NAMES=""
-          for APP in $SUB_APPS; do
-            is_operator "$APP" && continue
-            CHART_NAME="${APP#${CLUSTER_NAME}-}"
-            SUB_CHART_NAMES="$SUB_CHART_NAMES $CHART_NAME"
-          done
-
-          # Step 1: Clean up the WC Chart CRs FIRST. This is critical: if we
-          # delete the MC sub-App CRs first, app-operator may react to the
-          # deletion event (even when paused) and recreate WC Chart CRs.
-          # By deleting WC Chart CRs first while sub-App CRs still exist (but
-          # paused), there's nothing for app-operator to recreate.
-          if [ -n "$SUB_CHART_NAMES" ]; then
-            echo "  Cleaning up bundle sub-app WC Chart CRs by name"
-            COUNT=0
-            for CHART in $SUB_CHART_NAMES; do
-              (kubectl $WC annotate chart "$CHART" -n "$CHART_NAMESPACE" \
-                "operatorkit.giantswarm.io/paused=true" --overwrite 2>/dev/null
-              kubectl $WC patch chart "$CHART" -n "$CHART_NAMESPACE" --type=json \
-                -p='[{"op": "remove", "path": "/metadata/finalizers"}]' 2>/dev/null
-              kubectl $WC delete chart "$CHART" -n "$CHART_NAMESPACE" \
-                --ignore-not-found=true 2>/dev/null) &
-              COUNT=$((COUNT + 1))
-              if [ $((COUNT % BATCH_SIZE)) -eq 0 ]; then wait; fi
-            done
-            wait
-            echo "  Cleaned up $COUNT bundle sub-app WC Chart CRs"
-          fi
-
-          # Step 2: Strip finalizers from MC sub-App CRs (parallel batches).
-          echo "  Stripping finalizers from sub-App CRs"
-          COUNT=0
-          for APP in $SUB_APPS; do
-            is_operator "$APP" && continue
-            (kubectl patch apps.application.giantswarm.io "$APP" -n "$NAMESPACE" --type=json \
-              -p='[{"op": "remove", "path": "/metadata/finalizers"}]' 2>/dev/null || true) &
-            COUNT=$((COUNT + 1))
-            if [ $((COUNT % BATCH_SIZE)) -eq 0 ]; then wait; fi
-          done
-          wait
-          echo "  Stripped finalizers from $COUNT bundle sub-App CRs"
-
-          # Step 3: Delete the MC sub-App CRs. Without finalizers, deletion is
-          # instant. The WC Chart CRs are already gone, so even if app-operator
-          # reacts to the deletion event, there's nothing to clean up.
-          if [ -n "$SUB_APPS" ]; then
-            echo "  Deleting bundle sub-App CRs"
-            COUNT=0
-            for APP in $SUB_APPS; do
-              is_operator "$APP" && continue
-              (kubectl delete apps.application.giantswarm.io "$APP" -n "$NAMESPACE" \
-                --ignore-not-found=true --wait=false 2>/dev/null || true) &
-              COUNT=$((COUNT + 1))
-              if [ $((COUNT % BATCH_SIZE)) -eq 0 ]; then wait; fi
-            done
-            wait
-            echo "  Deleted $COUNT bundle sub-App CRs"
-          fi
-
-          # ============================================================
           # Phase 2: Bundle App CRs via operator cascade
           # ============================================================
           # Delete remaining App CRs (bundles) WITHOUT removing finalizers.
           # app-operator processes the deletion and cascade-deletes the
           # MC Chart CRs. chart-operator then helm-uninstalls the bundles.
           # Excludes app-operator and chart-operator (must stay alive).
-          #
-          # Since bundle sub-App CRs had their finalizers stripped in Phase 1e,
-          # the cascade deletion is safe: sub-App CRs are deleted instantly
-          # without triggering helm uninstall on the WC applications.
           #
           # IMPORTANT: We wait for the cascade to complete before exiting.
           # If we exit early, the main chart upgrade creates new HelmRelease
