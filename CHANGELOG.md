@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Control Plane: Make etcd image tag configurable. ([#841](https://github.com/giantswarm/cluster/pull/841))
 
+### Fixed
+
+- Chart: Require `global.release.version` if using Releases to give a better rendering error message.
+
 ## [6.4.0] - 2026-04-15
 
 ### Added
