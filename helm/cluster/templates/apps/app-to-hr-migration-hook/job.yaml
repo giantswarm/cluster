@@ -46,7 +46,12 @@ metadata:
   annotations:
     helm.sh/hook: pre-upgrade
     helm.sh/hook-weight: "-10"
-    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+    # Note: only `before-hook-creation` is set here — hook-succeeded is omitted
+    # on purpose so the pod sticks around after success and we can pull logs
+    # for forensic analysis when something goes wrong. The job itself is GC'd
+    # by the next pre-upgrade hook (before-hook-creation policy) and by
+    # `ttlSecondsAfterFinished` once it succeeds.
+    helm.sh/hook-delete-policy: before-hook-creation
 spec:
   backoffLimit: 6
   ttlSecondsAfterFinished: 300
@@ -215,6 +220,35 @@ spec:
           pause_charts_in_wc "bundle sub-app Chart CRs" "$WC_CHART_SUBAPP_SELECTOR"
 
           # ============================================================
+          # Phase A.5: Synchronization barrier
+          # ============================================================
+          # operatorkit checks the pause annotation at the start of each
+          # reconcile loop. A reconcile that started BEFORE we set the pause
+          # can still complete its handlers — including (for app-operator)
+          # creating a fresh WC Chart CR, or (for chart-operator on the WC)
+          # re-adding its finalizer to a Chart CR we just stripped.
+          #
+          # Sleep long enough for any in-flight reconcile to drain.
+          # operatorkit's default rate-limit base delay + reconcile interval
+          # is on the order of 10s; we sleep 30s to be safe.
+          echo "Phase A.5: Sleeping 30s for operators to observe the pause"
+          sleep 30
+
+          # Snapshot for forensic trail. Print counts so a later log scrape
+          # can confirm what selectors matched at this point. (kubectl
+          # annotate is not a clean way to verify annotations were set; the
+          # counts let us cross-check against later phases.)
+          echo "Phase A.5: Selector coverage snapshot:"
+          NB_COUNT=$(kubectl get apps.application.giantswarm.io -n "$NAMESPACE" -l "$NON_BUNDLE_SELECTOR" --no-headers 2>/dev/null | wc -l | tr -d ' ')
+          SUB_COUNT=$(kubectl get apps.application.giantswarm.io -n "$NAMESPACE" -l "$SUB_APP_SELECTOR" --no-headers 2>/dev/null | wc -l | tr -d ' ')
+          WC_DIRECT_COUNT=$(kubectl $WC get chart -n "$CHART_NAMESPACE" -l "$WC_CHART_DIRECT_SELECTOR" --no-headers 2>/dev/null | wc -l | tr -d ' ')
+          WC_SUB_COUNT=$(kubectl $WC get chart -n "$CHART_NAMESPACE" -l "$WC_CHART_SUBAPP_SELECTOR" --no-headers 2>/dev/null | wc -l | tr -d ' ')
+          echo "  non-bundle MC App CRs:       ${NB_COUNT}"
+          echo "  bundle sub-App CRs (MC):     ${SUB_COUNT}"
+          echo "  direct default WC Chart CRs: ${WC_DIRECT_COUNT}"
+          echo "  bundle sub-app WC Chart CRs: ${WC_SUB_COUNT}"
+
+          # ============================================================
           # Phase B: Strip finalizers from everything
           # ============================================================
           # This is the critical step that closes the race. With every
@@ -238,6 +272,41 @@ spec:
           delete_apps_in_mc "bundle sub-App CRs" "$SUB_APP_SELECTOR"
           delete_charts_in_wc "direct default app Chart CRs" "$WC_CHART_DIRECT_SELECTOR"
           delete_charts_in_wc "bundle sub-app Chart CRs" "$WC_CHART_SUBAPP_SELECTOR"
+
+          # ============================================================
+          # Phase C.5: Forensic re-check for resurrected resources
+          # ============================================================
+          # Wait briefly, then re-list. If anything matching our selectors
+          # came back (because some operator's reconcile created it after
+          # Phase B's strip), we want to know — these are the resources
+          # that, if they have a finalizer attached, can drive `chart-operator`
+          # on the WC into running `helm uninstall`.
+          sleep 5
+          echo "Phase C.5: Forensic re-check for resurrected resources"
+          NB_RESURR=$(kubectl get apps.application.giantswarm.io -n "$NAMESPACE" -l "$NON_BUNDLE_SELECTOR" --no-headers 2>/dev/null | wc -l | tr -d ' ')
+          SUB_RESURR=$(kubectl get apps.application.giantswarm.io -n "$NAMESPACE" -l "$SUB_APP_SELECTOR" --no-headers 2>/dev/null | wc -l | tr -d ' ')
+          WC_DIRECT_RESURR=$(kubectl $WC get chart -n "$CHART_NAMESPACE" -l "$WC_CHART_DIRECT_SELECTOR" --no-headers 2>/dev/null | wc -l | tr -d ' ')
+          WC_SUB_RESURR=$(kubectl $WC get chart -n "$CHART_NAMESPACE" -l "$WC_CHART_SUBAPP_SELECTOR" --no-headers 2>/dev/null | wc -l | tr -d ' ')
+          echo "  non-bundle MC App CRs:       ${NB_RESURR} (expected 0)"
+          echo "  bundle sub-App CRs (MC):     ${SUB_RESURR} (expected 0)"
+          echo "  direct default WC Chart CRs: ${WC_DIRECT_RESURR} (expected 0)"
+          echo "  bundle sub-app WC Chart CRs: ${WC_SUB_RESURR} (expected 0)"
+          if [ "$NB_RESURR" != "0" ] || [ "$SUB_RESURR" != "0" ] || [ "$WC_DIRECT_RESURR" != "0" ] || [ "$WC_SUB_RESURR" != "0" ]; then
+            echo "  WARNING: resurrected resources detected. Listing names + finalizers:"
+            kubectl get apps.application.giantswarm.io -n "$NAMESPACE" -l "$NON_BUNDLE_SELECTOR" -o custom-columns="KIND:.kind,NAME:.metadata.name,FINALIZERS:.metadata.finalizers" 2>/dev/null || true
+            kubectl get apps.application.giantswarm.io -n "$NAMESPACE" -l "$SUB_APP_SELECTOR" -o custom-columns="KIND:.kind,NAME:.metadata.name,FINALIZERS:.metadata.finalizers" 2>/dev/null || true
+            kubectl $WC get chart -n "$CHART_NAMESPACE" -l "$WC_CHART_DIRECT_SELECTOR" -o custom-columns="KIND:.kind,NAME:.metadata.name,FINALIZERS:.metadata.finalizers" 2>/dev/null || true
+            kubectl $WC get chart -n "$CHART_NAMESPACE" -l "$WC_CHART_SUBAPP_SELECTOR" -o custom-columns="KIND:.kind,NAME:.metadata.name,FINALIZERS:.metadata.finalizers" 2>/dev/null || true
+            echo "  Re-running Phase B + C on resurrected set:"
+            strip_app_finalizers "non-bundle App CRs (resurrected)" "$NON_BUNDLE_SELECTOR"
+            strip_app_finalizers "bundle sub-App CRs (resurrected)" "$SUB_APP_SELECTOR"
+            strip_chart_finalizers "direct default app Chart CRs (resurrected)" "$WC_CHART_DIRECT_SELECTOR"
+            strip_chart_finalizers "bundle sub-app Chart CRs (resurrected)" "$WC_CHART_SUBAPP_SELECTOR"
+            delete_apps_in_mc "non-bundle App CRs (resurrected)" "$NON_BUNDLE_SELECTOR"
+            delete_apps_in_mc "bundle sub-App CRs (resurrected)" "$SUB_APP_SELECTOR"
+            delete_charts_in_wc "direct default app Chart CRs (resurrected)" "$WC_CHART_DIRECT_SELECTOR"
+            delete_charts_in_wc "bundle sub-app Chart CRs (resurrected)" "$WC_CHART_SUBAPP_SELECTOR"
+          fi
 
           # ============================================================
           # Phase D: Bundle App CRs via operator cascade
@@ -296,5 +365,13 @@ spec:
             fi
           fi
 
+          # ============================================================
+          # Forensic event dump
+          # ============================================================
+          echo ""
+          echo "=== WC events in $CHART_NAMESPACE namespace (last 30, sorted by time) ==="
+          kubectl $WC get events -n "$CHART_NAMESPACE" --sort-by='.lastTimestamp' 2>&1 | tail -30 || true
+
+          echo ""
           echo "Migration hook completed successfully"
 {{- end }}
