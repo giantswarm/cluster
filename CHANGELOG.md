@@ -12,6 +12,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add pre-delete hook Job to remove `HelmRelease` CRs when deleting a cluster. This is required because sometimes flux does not have enough time to clean up the `HelmRelease` CRs before the control plane API is deleted.
 - HelmReleases: Support `createNamespace` field in app definitions, rendering `spec.install.createNamespace: true` on the HelmRelease when set.
 
+### Changed
+
+- Migration hook: handle bundle sub-Apps (e.g. `kyverno`, `alloy-events`) with the same pause + strip-finalizers + delete sequence already used for non-bundle default Apps, and extend the WC Chart CR cleanup to cover their Chart CRs as well. This prevents the bundle cascade in the final phase from triggering `helm uninstall` on the underlying applications via `app-operator` → WC Chart CR deletion → `chart-operator` reconciliation.
+- Migration hook: bump `backoffLimit` from 3 to 6 to give the job more retries on transient API errors.
+
 ### Fixed
 
 - HelmReleases: Apply `tpl` to rendered values, matching the behavior of the old `apps.yaml` template. This ensures template expressions in provider-specific values (e.g., `{{ include "aws-partition" $ }}`) are resolved before being written into the HelmRelease `spec.values`.
