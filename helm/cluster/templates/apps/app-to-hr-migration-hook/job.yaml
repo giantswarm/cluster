@@ -1,8 +1,19 @@
 {{/*
 Pre-upgrade hook to safely migrate default apps from App CRs to HelmReleases.
 
-Discovers default apps and bundle sub-apps dynamically via labels.
-Customer-installed Apps and Charts are left untouched.
+The defining problem this hook solves is the race between MC App CR deletion
+and WC Chart CR cleanup. Concretely:
+  - app-operator (MC) reacts to a sub-App CR deletion by issuing DELETE on
+    the corresponding WC Chart CR
+  - if that WC Chart CR still has its chart-operator finalizer, chart-operator
+    on the WC processes the deletion and runs helm uninstall on the underlying
+    application
+  - the application gets uninstalled, then Flux later re-installs it fresh
+
+To close this race we strip every relevant finalizer in the system BEFORE any
+deletion happens. With finalizers gone, even if app-operator races and deletes
+a WC Chart CR, chart-operator's deletion handler is never invoked → no helm
+uninstall runs.
 
   - Direct default apps:    have release.giantswarm.io/version, version!=0.0.0
   - Bundle App CRs:         have release.giantswarm.io/version, version=0.0.0
@@ -12,17 +23,17 @@ Customer-installed Apps and Charts are left untouched.
 
 Phases:
   0: Strip depends-on annotations from default App CRs.
-  1: Pause + strip finalizers + delete direct default App CRs in MC.
-  2: Pause + strip finalizers + delete bundle sub-App CRs in MC.
-  3: Pause + strip finalizers + delete WC Chart CRs (direct + sub-app).
-  4: Delete bundle App CRs and wait for cascade.
+  A: Pause everything (MC default Apps + sub-Apps + WC Chart CRs).
+  B: Strip finalizers from everything.
+  C: Delete everything (instant — no operator processing).
+  D: Delete bundle App CRs and wait for cascade.
 
-After phases 1-3, no MC App CR or WC Chart CR exists for any direct default
-app or sub-app. Phase 4's cascade triggers helm uninstall on each bundle
-release in the MC. That helm uninstall fires DELETE on the sub-App CRs the
-bundle rendered — they're already gone, so it's a no-op. The underlying WC
-helm releases are never touched, leaving them adoptable by the new
-HelmRelease objects from the upgraded cluster chart.
+Phase A buys us defense in depth — once operatorkit observes the pause, it
+skips reconciles. Phase B is the load-bearing protection — with finalizers
+gone, even an in-flight reconcile that we missed cannot trigger helm uninstall.
+Phase C is then a no-op for the operators. Phase D triggers the bundle helm
+release uninstall on the MC; that uninstall fires DELETE on sub-App CRs the
+bundle had rendered, but they're already gone, so it's a no-op.
 */}}
 {{- if $.Values.providerIntegration.apps }}
 apiVersion: batch/v1
@@ -93,7 +104,7 @@ spec:
           # Bundle sub-Apps: rendered by helm (managed-by=Helm) and lack the
           # release label (only direct defaults and bundles have it).
           SUB_APP_SELECTOR="giantswarm.io/cluster=$CLUSTER_NAME,$HELM_MANAGED_LABEL,!$DEFAULT_APP_LABEL,$EXCLUDE_OPERATORS"
-          # Discovery selectors used by Phase 0 and Phase 4.
+          # Discovery selectors used by Phase 0 and Phase D.
           CLUSTER_SELECTOR="giantswarm.io/cluster=$CLUSTER_NAME,$DEFAULT_APP_LABEL"
 
           # WC Chart CRs:
@@ -109,51 +120,46 @@ spec:
             return 1
           }
 
-          # Helper: pause + strip finalizers + delete a set of MC App CRs
-          # selected by label. Mirrors the b76ca37 sequence for non-bundle Apps.
-          # Args: $1=phase id (e.g. "1" or "2"), $2=description, $3=selector
-          neutralize_apps_in_mc() {
-            PHASE_ID="$1"
-            DESC="$2"
-            SEL="$3"
-
-            echo "Phase ${PHASE_ID}a: Pausing $DESC"
+          # Pause MC App CRs by selector.
+          pause_apps_in_mc() {
+            DESC="$1"; SEL="$2"
+            echo "  Pausing $DESC"
             kubectl annotate apps.application.giantswarm.io -n "$NAMESPACE" \
               -l "$SEL" \
               "operatorkit.giantswarm.io/paused=true" --overwrite
+          }
 
-            echo "Phase ${PHASE_ID}b: Removing finalizers from $DESC"
+          # Pause WC Chart CRs by selector.
+          pause_charts_in_wc() {
+            DESC="$1"; SEL="$2"
+            echo "  Pausing $DESC"
+            kubectl $WC annotate chart -n "$CHART_NAMESPACE" \
+              -l "$SEL" \
+              "operatorkit.giantswarm.io/paused=true" --overwrite
+          }
+
+          # Strip finalizers from MC App CRs by selector. Individual patches may
+          # fail if the resource has no finalizers — that's OK.
+          strip_app_finalizers() {
+            DESC="$1"; SEL="$2"
+            echo "  Stripping finalizers from $DESC"
             APPS=$(kubectl get apps.application.giantswarm.io -n "$NAMESPACE" \
               -l "$SEL" \
               -o jsonpath='{.items[*].metadata.name}')
             COUNT=0
             for APP in $APPS; do
-              # Individual patches may fail if the app has no finalizers — that's OK.
               (kubectl patch apps.application.giantswarm.io "$APP" -n "$NAMESPACE" --type=json \
                 -p='[{"op": "remove", "path": "/metadata/finalizers"}]' 2>/dev/null || true) &
               COUNT=$((COUNT + 1))
               if [ $((COUNT % BATCH_SIZE)) -eq 0 ]; then wait; fi
             done
             wait
-
-            echo "Phase ${PHASE_ID}c: Deleting $DESC"
-            kubectl delete apps.application.giantswarm.io -n "$NAMESPACE" \
-              -l "$SEL" \
-              --ignore-not-found=true --wait=false
           }
 
-          # Helper: pause + strip finalizers + delete WC Chart CRs by label.
-          # Args: $1=description, $2=selector
-          neutralize_charts_in_wc() {
-            DESC="$1"
-            SEL="$2"
-
-            echo "  Pausing $DESC"
-            kubectl $WC annotate chart -n "$CHART_NAMESPACE" \
-              -l "$SEL" \
-              "operatorkit.giantswarm.io/paused=true" --overwrite
-
-            echo "  Removing finalizers from $DESC"
+          # Strip finalizers from WC Chart CRs by selector.
+          strip_chart_finalizers() {
+            DESC="$1"; SEL="$2"
+            echo "  Stripping finalizers from $DESC"
             CHARTS=$(kubectl $WC get chart -n "$CHART_NAMESPACE" \
               -l "$SEL" \
               -o jsonpath='{.items[*].metadata.name}')
@@ -165,7 +171,20 @@ spec:
               if [ $((COUNT % BATCH_SIZE)) -eq 0 ]; then wait; fi
             done
             wait
+          }
 
+          # Delete MC App CRs by selector.
+          delete_apps_in_mc() {
+            DESC="$1"; SEL="$2"
+            echo "  Deleting $DESC"
+            kubectl delete apps.application.giantswarm.io -n "$NAMESPACE" \
+              -l "$SEL" \
+              --ignore-not-found=true --wait=false
+          }
+
+          # Delete WC Chart CRs by selector.
+          delete_charts_in_wc() {
+            DESC="$1"; SEL="$2"
             echo "  Deleting $DESC"
             kubectl $WC delete chart -n "$CHART_NAMESPACE" \
               -l "$SEL" \
@@ -183,47 +202,58 @@ spec:
             "app-operator.giantswarm.io/depends-on-"
 
           # ============================================================
-          # Phase 1: Direct (non-bundle) default App CRs in MC
+          # Phase A: Pause everything
           # ============================================================
-          neutralize_apps_in_mc "1" "non-bundle App CRs" "$NON_BUNDLE_SELECTOR"
+          # Add the operatorkit pause annotation to every resource we are
+          # about to clean up. Once operatorkit observes the annotation it
+          # skips the resource's reconcile entirely. This is defence in depth;
+          # the load-bearing protection is Phase B.
+          echo "Phase A: Pausing all resources to be cleaned up"
+          pause_apps_in_mc "non-bundle App CRs" "$NON_BUNDLE_SELECTOR"
+          pause_apps_in_mc "bundle sub-App CRs" "$SUB_APP_SELECTOR"
+          pause_charts_in_wc "direct default app Chart CRs" "$WC_CHART_DIRECT_SELECTOR"
+          pause_charts_in_wc "bundle sub-app Chart CRs" "$WC_CHART_SUBAPP_SELECTOR"
 
           # ============================================================
-          # Phase 2: Bundle sub-App CRs in MC (kyverno, alloy-events, etc.)
+          # Phase B: Strip finalizers from everything
           # ============================================================
-          # Same treatment as Phase 1: pause + strip + delete. Bypassing
-          # app-operator (via stripped finalizers) means it never asks the
-          # WC's chart-operator to uninstall anything. The dangerous flow
-          # is "bundle helm uninstall → DELETE on sub-App CR → app-operator
-          # cleanup → WC Chart CR deletion → chart-operator helm uninstall".
-          # Removing the sub-App CR ourselves with finalizer already stripped
-          # eliminates that path.
-          neutralize_apps_in_mc "2" "bundle sub-App CRs" "$SUB_APP_SELECTOR"
+          # This is the critical step that closes the race. With every
+          # finalizer removed, app-operator's deletion handler can't trigger
+          # chart-operator's helm uninstall — even if a stale-cache reconcile
+          # races and deletes a WC Chart CR after our pause annotation, the
+          # Chart CR has no finalizer, so chart-operator never runs uninstall.
+          echo "Phase B: Stripping finalizers from all resources"
+          strip_app_finalizers "non-bundle App CRs" "$NON_BUNDLE_SELECTOR"
+          strip_app_finalizers "bundle sub-App CRs" "$SUB_APP_SELECTOR"
+          strip_chart_finalizers "direct default app Chart CRs" "$WC_CHART_DIRECT_SELECTOR"
+          strip_chart_finalizers "bundle sub-app Chart CRs" "$WC_CHART_SUBAPP_SELECTOR"
 
           # ============================================================
-          # Phase 3: WC Chart CRs cleanup (direct + sub-app)
+          # Phase C: Delete everything
           # ============================================================
-          # Now safe: every MC App CR that pointed at one of these Chart CRs
-          # has been deleted in Phase 1 or Phase 2, so nothing on the MC side
-          # will recreate them.
-          echo "Phase 3: Cleaning up WC Chart CRs"
-          neutralize_charts_in_wc "direct default app Chart CRs on WC" "$WC_CHART_DIRECT_SELECTOR"
-          neutralize_charts_in_wc "bundle sub-app Chart CRs on WC" "$WC_CHART_SUBAPP_SELECTOR"
+          # All deletions are now instant — no finalizers to process, no
+          # operator handlers fire. Order between MC and WC no longer matters.
+          echo "Phase C: Deleting all neutralized resources"
+          delete_apps_in_mc "non-bundle App CRs" "$NON_BUNDLE_SELECTOR"
+          delete_apps_in_mc "bundle sub-App CRs" "$SUB_APP_SELECTOR"
+          delete_charts_in_wc "direct default app Chart CRs" "$WC_CHART_DIRECT_SELECTOR"
+          delete_charts_in_wc "bundle sub-app Chart CRs" "$WC_CHART_SUBAPP_SELECTOR"
 
           # ============================================================
-          # Phase 4: Bundle App CRs via operator cascade
+          # Phase D: Bundle App CRs via operator cascade
           # ============================================================
           # Delete remaining bundle App CRs WITHOUT removing finalizers.
           # app-operator processes each deletion → cascade-deletes the MC
           # Chart CR → chart-operator on MC runs helm uninstall on the bundle
           # release. The bundle release manifest references the now-already-gone
-          # sub-App CRs (Phase 2), so helm's DELETE returns 404 and continues.
+          # sub-App CRs (Phase C), so helm's DELETE returns 404 and continues.
           # Excludes app-operator and chart-operator.
           #
           # We wait for the cascade to complete before exiting. If we exited
           # earlier, the main chart upgrade would create new HelmRelease CRs
           # while the cascade was still uninstalling bundles, racing against
           # the new HRs.
-          echo "Phase 4: Deleting bundle App CRs (operators will clean up MC Chart CRs)"
+          echo "Phase D: Deleting bundle App CRs (operators will clean up MC Chart CRs)"
 
           REMAINING_APPS=$(kubectl get apps.application.giantswarm.io -n "$NAMESPACE" \
             -l "$CLUSTER_SELECTOR" \
