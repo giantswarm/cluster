@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Migration hook: add Phase A.5 — sleep 30s after pausing to give operatorkit time to observe the annotation, then snapshot per-selector resource counts so later log scrapes can confirm what selectors matched.
 - Migration hook: add Phase C.5 — re-list selectors after deletion, log any resurrected resources, and re-run the strip+delete sequence on them. Resurrected resources are the smoking gun for an in-flight reconcile that beat our pause.
 - Migration hook: dump WC events from the `giantswarm` namespace at the end of the hook for forensic correlation with `chart-operator` helm-uninstall events.
+- Migration hook: scale `chart-operator` on the WC to 0 in Phase 0b — *before* any WC Chart CR is touched. Across rounds 34/35/37 (concurrent 5-cluster), a consistent set of 10 bundle sub-apps (security/observability/aws-nth) was helm-uninstalled on a single random cluster despite the rest of the hook completing cleanly. Phase C.5 forensic re-checks ruled out the in-flight app-operator reconcile race; the only remaining viable mechanism is `chart-operator` on the WC processing a deletion event with a stale informer cache. Scaling its deployment to 0 removes the actor before we issue any deletes. Flux's HelmRelease for `chart-operator` brings it back up after the migration completes.
 
 ### Fixed
 
