@@ -398,52 +398,21 @@ spec:
           # sub-App CRs (Phase C), so helm's DELETE returns 404 and continues.
           # Excludes app-operator and chart-operator.
           #
-          # We wait for the cascade to complete before exiting. If we exited
-          # earlier, the main chart upgrade would create new HelmRelease CRs
-          # while the cascade was still uninstalling bundles, racing against
-          # the new HRs.
-          echo "Phase D: Deleting bundle App CRs (operators will clean up MC Chart CRs)"
+          # We fire the deletes with --wait=false and exit. The cascade runs
+          # in the background while the main chart upgrade proceeds. Phase 0b
+          # has scaled chart-operator-WC to 0, so the in-flight cascade cannot
+          # uninstall any helm releases on the WC during the upgrade.
+          echo "Phase D: Deleting bundle App CRs (operators will clean up MC Chart CRs in background)"
 
           REMAINING_APPS=$(kubectl_retry get apps.application.giantswarm.io -n "$NAMESPACE" \
             -l "$CLUSTER_SELECTOR" \
             -o jsonpath='{.items[*].metadata.name}')
-          BUNDLE_APPS=""
           for APP in $REMAINING_APPS; do
             is_operator "$APP" && continue
             echo "  Deleting bundle App CR: $APP"
             kubectl_retry delete apps.application.giantswarm.io "$APP" -n "$NAMESPACE" \
               --ignore-not-found=true --wait=false
-            BUNDLE_APPS="$BUNDLE_APPS $APP"
           done
-
-          if [ -n "$BUNDLE_APPS" ]; then
-            echo "Waiting for bundle App CR cascade deletion to complete..."
-            TIMEOUT=300
-            ELAPSED=0
-            while [ $ELAPSED -lt $TIMEOUT ]; do
-              ALL_GONE=true
-              for APP in $BUNDLE_APPS; do
-                if kubectl get apps.application.giantswarm.io "$APP" -n "$NAMESPACE" >/dev/null 2>&1; then
-                  ALL_GONE=false
-                  break
-                fi
-              done
-              if [ "$ALL_GONE" = "true" ]; then
-                echo "All bundle App CRs fully deleted after ${ELAPSED}s"
-                break
-              fi
-              sleep 5
-              ELAPSED=$((ELAPSED + 5))
-            done
-            if [ "$ALL_GONE" != "true" ]; then
-              echo "ERROR: Timed out waiting for bundle App CRs to be deleted after ${TIMEOUT}s"
-              echo "Remaining bundle App CRs:"
-              for APP in $BUNDLE_APPS; do
-                kubectl get apps.application.giantswarm.io "$APP" -n "$NAMESPACE" --no-headers 2>/dev/null || true
-              done
-              exit 1
-            fi
-          fi
 
           # ============================================================
           # Forensic event dump
