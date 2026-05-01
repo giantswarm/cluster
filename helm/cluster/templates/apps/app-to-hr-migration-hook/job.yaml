@@ -242,6 +242,25 @@ spec:
           }
 
           # ============================================================
+          # Phase 0a: Lift the helm upgrade timeout on our own App CR
+          # ============================================================
+          # The cluster's App CR (the one that deploys this very chart) has
+          # `spec.upgrade.timeout` defaulting to 5m. Under fresh-state
+          # 5-cluster concurrent migration load, kubectl's client-side
+          # rate-limiter and the MC API server's auth/throttle interactions
+          # push our Phase A→C work past 5m, helm hits the timeout, marks
+          # the upgrade failed, and the cycle repeats. This patch only
+          # affects FUTURE retries (chart-operator-MC re-reads the App CR
+          # at the start of each helm upgrade), so the current run will
+          # still hit 5m if it's the first attempt — but the next retry
+          # will get a generous window. Phase 0b protections still hold,
+          # so the wasted first attempt cannot uninstall anything.
+          echo "Phase 0a: Lifting spec.upgrade.timeout on $CLUSTER_NAME App CR to 15m"
+          kubectl_retry patch apps.application.giantswarm.io "$CLUSTER_NAME" \
+            -n "$NAMESPACE" --type merge \
+            -p '{"spec":{"upgrade":{"timeout":"15m"}}}' || true
+
+          # ============================================================
           # Phase 0: Remove dependency annotations
           # ============================================================
           # Prevents app-operator from pausing MC Chart CRs in reaction to
