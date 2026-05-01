@@ -105,26 +105,35 @@ spec:
           #
           # Up to 5 attempts with linear backoff (2s, 4s, 6s, 8s, 10s).
           # Only retries on transient errors; non-transient errors fail fast.
+          # Important: capture stdout and stderr SEPARATELY so callers that
+          # pipe stdout (e.g. into `base64 -d` or `jsonpath` parsing) don't
+          # get polluted with kubectl warnings (rate-limit, deprecated APIs).
           kubectl_retry() {
-            local max=5 i=1 out rc
+            local max=5 i=1 rc
+            local errfile="/tmp/kubectl_retry.err.$$"
             while [ $i -le $max ]; do
-              out=$(kubectl "$@" 2>&1)
+              kubectl "$@" 2>"$errfile"
               rc=$?
               if [ $rc -eq 0 ]; then
-                echo "$out"
+                # On success, propagate any stderr (warnings) but NOT into stdout.
+                cat "$errfile" >&2
+                rm -f "$errfile"
                 return 0
               fi
-              if echo "$out" | grep -qE "Unauthorized|connection refused|i/o timeout|TLS handshake|the server is currently unable|EOF"; then
+              if grep -qE "Unauthorized|connection refused|i/o timeout|TLS handshake|the server is currently unable|EOF" "$errfile"; then
                 echo "  RETRY: kubectl $1 returned transient error (attempt $i/$max), waiting $((i * 2))s" >&2
-                echo "  $out" >&2
+                cat "$errfile" >&2
                 sleep $((i * 2))
                 i=$((i + 1))
                 continue
               fi
-              echo "$out" >&2
+              cat "$errfile" >&2
+              rm -f "$errfile"
               return $rc
             done
             echo "  ERROR: kubectl $1 exhausted $max retries" >&2
+            cat "$errfile" >&2
+            rm -f "$errfile"
             return 1
           }
 
