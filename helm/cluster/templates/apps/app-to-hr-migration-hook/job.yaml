@@ -291,18 +291,42 @@ spec:
           # alone (no controller). chart-operator on the WC is restored
           # automatically by Flux (its new HelmRelease in 35.0.0-jose)
           # after the migration completes.
-          echo "Phase 0b: Scaling chart-operator on the WC to 0"
+          #
+          # IMPORTANT: We force-delete the pod with `--grace-period=0
+          # --force` rather than letting the SIGTERM-driven graceful
+          # shutdown play out. Round 43 evidence: with the timeout
+          # pre-set so there is no retry storm and only a single hook
+          # execution, 2/5 clusters still lost a bundle sub-app. The
+          # remaining viable mechanism is chart-operator's
+          # `terminationGracePeriodSeconds` window: after `kubectl scale
+          # --replicas=0` lands SIGTERM, the pod has up to 30s to drain
+          # its work queue, and any queued reconcile that resolves to
+          # `helm uninstall` (stale informer cache observing a
+          # finalizer/deletionTimestamp transition) fires DURING graceful
+          # shutdown. Force-delete eliminates that window.
+          echo "Phase 0b: Scaling chart-operator deployment on the WC to 0"
           kubectl_retry $WC scale deployment chart-operator -n "$CHART_NAMESPACE" \
             --replicas=0
-          # Wait for the existing pod to terminate so the actor is truly gone.
-          for i in 1 2 3 4 5 6 7 8 9 10; do
+          # Force-delete every existing chart-operator pod so it terminates
+          # immediately instead of getting up to terminationGracePeriodSeconds
+          # to drain reconciles that could fire helm uninstall.
+          PODS=$(kubectl $WC get pods -n "$CHART_NAMESPACE" -l app=chart-operator -o jsonpath='{.items[*].metadata.name}' 2>/dev/null)
+          for POD in $PODS; do
+            echo "  Force-deleting chart-operator pod: $POD"
+            kubectl_retry $WC delete pod "$POD" -n "$CHART_NAMESPACE" \
+              --grace-period=0 --force --ignore-not-found=true || true
+          done
+          # Confirm no chart-operator pods remain. Replicas=0 prevents the
+          # ReplicaSet from re-creating; force-delete made the existing pods
+          # disappear immediately.
+          for i in 1 2 3 4 5; do
             PODS=$(kubectl $WC get pods -n "$CHART_NAMESPACE" -l app=chart-operator --no-headers 2>/dev/null | wc -l | tr -d ' ')
             if [ "$PODS" -eq 0 ]; then
               echo "  chart-operator on WC is down"
               break
             fi
-            echo "  waiting for chart-operator pod to terminate (attempt $i)"
-            sleep 3
+            echo "  still seeing $PODS chart-operator pod(s) (attempt $i)"
+            sleep 2
           done
 
           # ============================================================
