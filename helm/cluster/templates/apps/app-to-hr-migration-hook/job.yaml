@@ -94,9 +94,43 @@ spec:
           CHART_NAMESPACE="giantswarm"
           BATCH_SIZE=10
 
+          # Retry wrapper for kubectl. Under 5-cluster concurrent migration
+          # load the MC API server intermittently rejects requests with
+          # `Unauthorized` (transient auth-cache issue). Without this wrapper
+          # `set -eu` causes the hook script to exit on the first such
+          # rejection — helm marks the upgrade failed, chart-operator retries,
+          # and the cycle repeats. Across rounds 34/35/37/39 this retry storm
+          # correlated with bundle sub-app uninstalls because chart-operator
+          # on the WC came back up between attempts.
+          #
+          # Up to 5 attempts with linear backoff (2s, 4s, 6s, 8s, 10s).
+          # Only retries on transient errors; non-transient errors fail fast.
+          kubectl_retry() {
+            local max=5 i=1 out rc
+            while [ $i -le $max ]; do
+              out=$(kubectl "$@" 2>&1)
+              rc=$?
+              if [ $rc -eq 0 ]; then
+                echo "$out"
+                return 0
+              fi
+              if echo "$out" | grep -qE "Unauthorized|connection refused|i/o timeout|TLS handshake|the server is currently unable|EOF"; then
+                echo "  RETRY: kubectl $1 returned transient error (attempt $i/$max), waiting $((i * 2))s" >&2
+                echo "  $out" >&2
+                sleep $((i * 2))
+                i=$((i + 1))
+                continue
+              fi
+              echo "$out" >&2
+              return $rc
+            done
+            echo "  ERROR: kubectl $1 exhausted $max retries" >&2
+            return 1
+          }
+
           # Fetch WC kubeconfig
           echo "Fetching WC kubeconfig for $CLUSTER_NAME"
-          kubectl get secret -n "$NAMESPACE" "${CLUSTER_NAME}-kubeconfig" \
+          kubectl_retry get secret -n "$NAMESPACE" "${CLUSTER_NAME}-kubeconfig" \
             -o jsonpath='{.data.value}' | base64 -d > /tmp/wc-kubeconfig
           WC="--kubeconfig /tmp/wc-kubeconfig"
 
@@ -131,7 +165,7 @@ spec:
           pause_apps_in_mc() {
             DESC="$1"; SEL="$2"
             echo "  Pausing $DESC"
-            kubectl annotate apps.application.giantswarm.io -n "$NAMESPACE" \
+            kubectl_retry annotate apps.application.giantswarm.io -n "$NAMESPACE" \
               -l "$SEL" \
               "operatorkit.giantswarm.io/paused=true" --overwrite
           }
@@ -140,7 +174,7 @@ spec:
           pause_charts_in_wc() {
             DESC="$1"; SEL="$2"
             echo "  Pausing $DESC"
-            kubectl $WC annotate chart -n "$CHART_NAMESPACE" \
+            kubectl_retry $WC annotate chart -n "$CHART_NAMESPACE" \
               -l "$SEL" \
               "operatorkit.giantswarm.io/paused=true" --overwrite
           }
@@ -150,7 +184,7 @@ spec:
           strip_app_finalizers() {
             DESC="$1"; SEL="$2"
             echo "  Stripping finalizers from $DESC"
-            APPS=$(kubectl get apps.application.giantswarm.io -n "$NAMESPACE" \
+            APPS=$(kubectl_retry get apps.application.giantswarm.io -n "$NAMESPACE" \
               -l "$SEL" \
               -o jsonpath='{.items[*].metadata.name}')
             COUNT=0
@@ -167,7 +201,7 @@ spec:
           strip_chart_finalizers() {
             DESC="$1"; SEL="$2"
             echo "  Stripping finalizers from $DESC"
-            CHARTS=$(kubectl $WC get chart -n "$CHART_NAMESPACE" \
+            CHARTS=$(kubectl_retry $WC get chart -n "$CHART_NAMESPACE" \
               -l "$SEL" \
               -o jsonpath='{.items[*].metadata.name}')
             COUNT=0
@@ -184,7 +218,7 @@ spec:
           delete_apps_in_mc() {
             DESC="$1"; SEL="$2"
             echo "  Deleting $DESC"
-            kubectl delete apps.application.giantswarm.io -n "$NAMESPACE" \
+            kubectl_retry delete apps.application.giantswarm.io -n "$NAMESPACE" \
               -l "$SEL" \
               --ignore-not-found=true --wait=false
           }
@@ -193,7 +227,7 @@ spec:
           delete_charts_in_wc() {
             DESC="$1"; SEL="$2"
             echo "  Deleting $DESC"
-            kubectl $WC delete chart -n "$CHART_NAMESPACE" \
+            kubectl_retry $WC delete chart -n "$CHART_NAMESPACE" \
               -l "$SEL" \
               --ignore-not-found=true
           }
@@ -204,7 +238,7 @@ spec:
           # Prevents app-operator from pausing MC Chart CRs in reaction to
           # dependency App CRs being removed in subsequent phases.
           echo "Phase 0: Removing depends-on annotations from default App CRs"
-          kubectl annotate apps.application.giantswarm.io -n "$NAMESPACE" \
+          kubectl_retry annotate apps.application.giantswarm.io -n "$NAMESPACE" \
             -l "$CLUSTER_SELECTOR" \
             "app-operator.giantswarm.io/depends-on-"
 
@@ -230,7 +264,7 @@ spec:
           # automatically by Flux (its new HelmRelease in 35.0.0-jose)
           # after the migration completes.
           echo "Phase 0b: Scaling chart-operator on the WC to 0"
-          kubectl $WC scale deployment chart-operator -n "$CHART_NAMESPACE" \
+          kubectl_retry $WC scale deployment chart-operator -n "$CHART_NAMESPACE" \
             --replicas=0
           # Wait for the existing pod to terminate so the actor is truly gone.
           for i in 1 2 3 4 5 6 7 8 9 10; do
@@ -276,10 +310,10 @@ spec:
           # annotate is not a clean way to verify annotations were set; the
           # counts let us cross-check against later phases.)
           echo "Phase A.5: Selector coverage snapshot:"
-          NB_COUNT=$(kubectl get apps.application.giantswarm.io -n "$NAMESPACE" -l "$NON_BUNDLE_SELECTOR" --no-headers 2>/dev/null | wc -l | tr -d ' ')
-          SUB_COUNT=$(kubectl get apps.application.giantswarm.io -n "$NAMESPACE" -l "$SUB_APP_SELECTOR" --no-headers 2>/dev/null | wc -l | tr -d ' ')
-          WC_DIRECT_COUNT=$(kubectl $WC get chart -n "$CHART_NAMESPACE" -l "$WC_CHART_DIRECT_SELECTOR" --no-headers 2>/dev/null | wc -l | tr -d ' ')
-          WC_SUB_COUNT=$(kubectl $WC get chart -n "$CHART_NAMESPACE" -l "$WC_CHART_SUBAPP_SELECTOR" --no-headers 2>/dev/null | wc -l | tr -d ' ')
+          NB_COUNT=$(kubectl_retry get apps.application.giantswarm.io -n "$NAMESPACE" -l "$NON_BUNDLE_SELECTOR" --no-headers 2>/dev/null | wc -l | tr -d ' ')
+          SUB_COUNT=$(kubectl_retry get apps.application.giantswarm.io -n "$NAMESPACE" -l "$SUB_APP_SELECTOR" --no-headers 2>/dev/null | wc -l | tr -d ' ')
+          WC_DIRECT_COUNT=$(kubectl_retry $WC get chart -n "$CHART_NAMESPACE" -l "$WC_CHART_DIRECT_SELECTOR" --no-headers 2>/dev/null | wc -l | tr -d ' ')
+          WC_SUB_COUNT=$(kubectl_retry $WC get chart -n "$CHART_NAMESPACE" -l "$WC_CHART_SUBAPP_SELECTOR" --no-headers 2>/dev/null | wc -l | tr -d ' ')
           echo "  non-bundle MC App CRs:       ${NB_COUNT}"
           echo "  bundle sub-App CRs (MC):     ${SUB_COUNT}"
           echo "  direct default WC Chart CRs: ${WC_DIRECT_COUNT}"
@@ -320,10 +354,10 @@ spec:
           # on the WC into running `helm uninstall`.
           sleep 5
           echo "Phase C.5: Forensic re-check for resurrected resources"
-          NB_RESURR=$(kubectl get apps.application.giantswarm.io -n "$NAMESPACE" -l "$NON_BUNDLE_SELECTOR" --no-headers 2>/dev/null | wc -l | tr -d ' ')
-          SUB_RESURR=$(kubectl get apps.application.giantswarm.io -n "$NAMESPACE" -l "$SUB_APP_SELECTOR" --no-headers 2>/dev/null | wc -l | tr -d ' ')
-          WC_DIRECT_RESURR=$(kubectl $WC get chart -n "$CHART_NAMESPACE" -l "$WC_CHART_DIRECT_SELECTOR" --no-headers 2>/dev/null | wc -l | tr -d ' ')
-          WC_SUB_RESURR=$(kubectl $WC get chart -n "$CHART_NAMESPACE" -l "$WC_CHART_SUBAPP_SELECTOR" --no-headers 2>/dev/null | wc -l | tr -d ' ')
+          NB_RESURR=$(kubectl_retry get apps.application.giantswarm.io -n "$NAMESPACE" -l "$NON_BUNDLE_SELECTOR" --no-headers 2>/dev/null | wc -l | tr -d ' ')
+          SUB_RESURR=$(kubectl_retry get apps.application.giantswarm.io -n "$NAMESPACE" -l "$SUB_APP_SELECTOR" --no-headers 2>/dev/null | wc -l | tr -d ' ')
+          WC_DIRECT_RESURR=$(kubectl_retry $WC get chart -n "$CHART_NAMESPACE" -l "$WC_CHART_DIRECT_SELECTOR" --no-headers 2>/dev/null | wc -l | tr -d ' ')
+          WC_SUB_RESURR=$(kubectl_retry $WC get chart -n "$CHART_NAMESPACE" -l "$WC_CHART_SUBAPP_SELECTOR" --no-headers 2>/dev/null | wc -l | tr -d ' ')
           echo "  non-bundle MC App CRs:       ${NB_RESURR} (expected 0)"
           echo "  bundle sub-App CRs (MC):     ${SUB_RESURR} (expected 0)"
           echo "  direct default WC Chart CRs: ${WC_DIRECT_RESURR} (expected 0)"
@@ -361,14 +395,14 @@ spec:
           # the new HRs.
           echo "Phase D: Deleting bundle App CRs (operators will clean up MC Chart CRs)"
 
-          REMAINING_APPS=$(kubectl get apps.application.giantswarm.io -n "$NAMESPACE" \
+          REMAINING_APPS=$(kubectl_retry get apps.application.giantswarm.io -n "$NAMESPACE" \
             -l "$CLUSTER_SELECTOR" \
             -o jsonpath='{.items[*].metadata.name}')
           BUNDLE_APPS=""
           for APP in $REMAINING_APPS; do
             is_operator "$APP" && continue
             echo "  Deleting bundle App CR: $APP"
-            kubectl delete apps.application.giantswarm.io "$APP" -n "$NAMESPACE" \
+            kubectl_retry delete apps.application.giantswarm.io "$APP" -n "$NAMESPACE" \
               --ignore-not-found=true --wait=false
             BUNDLE_APPS="$BUNDLE_APPS $APP"
           done
