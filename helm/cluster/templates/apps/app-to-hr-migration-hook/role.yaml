@@ -11,11 +11,20 @@ metadata:
     helm.sh/hook-weight: "-20"
     helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
 rules:
+# Read the cluster's WC kubeconfig at the start of the hook script.
 - apiGroups: [""]
   resources: ["secrets"]
   verbs: ["get"]
   resourceNames:
   - {{ include "cluster.resource.name" $ }}-kubeconfig
+# Phase D needs to poll the bundle helm release secrets in this namespace
+# to confirm chart-operator-MC's `helm uninstall` actually finished before
+# the hook exits. Helm release secrets are named
+# `sh.helm.release.v1.<release-name>.v<rev>` and live in the same namespace
+# as the App CR (org-<org>).
+- apiGroups: [""]
+  resources: ["secrets"]
+  verbs: ["get", "list"]
 - apiGroups: ["application.giantswarm.io"]
   resources: ["apps"]
   verbs: ["get", "list", "patch", "delete", "deletecollection"]
