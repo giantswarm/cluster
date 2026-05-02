@@ -357,8 +357,10 @@ spec:
             -o jsonpath='{.items[*].metadata.name}')
           echo "  Pausing bundle Chart CRs on MC (by name)"
           for B in $BUNDLE_APP_NAMES; do
-            kubectl annotate chart "$B" -n "$CHART_NAMESPACE" \
-              "operatorkit.giantswarm.io/paused=true" --overwrite 2>/dev/null || true
+            if kubectl_retry get chart "$B" -n "$CHART_NAMESPACE" >/dev/null; then
+              kubectl_retry annotate chart "$B" -n "$CHART_NAMESPACE" \
+                "operatorkit.giantswarm.io/paused=true" --overwrite
+            fi
           done
 
           # ============================================================
@@ -421,10 +423,12 @@ spec:
           # App CRs' labels, so a label selector wouldn't match them).
           echo "  Stripping finalizers from bundle Chart CRs on MC"
           for B in $BUNDLE_APP_NAMES; do
-            (kubectl patch chart "$B" -n "$CHART_NAMESPACE" --type=json \
-              -p='[{"op": "remove", "path": "/metadata/finalizers"}]' 2>/dev/null || true) &
+            if kubectl_retry get chart "$B" -n "$CHART_NAMESPACE" >/dev/null; then
+              kubectl_retry patch chart "$B" -n "$CHART_NAMESPACE" --type=json \
+                -p='[{"op": "remove", "path": "/metadata/finalizers"}]' 2>&1 \
+                | grep -vE 'no value found|unable to find' || true
+            fi
           done
-          wait
 
           # ============================================================
           # Phase C: Delete everything
@@ -506,8 +510,8 @@ spec:
           delete_apps_in_mc "bundle App CRs" "$BUNDLE_APP_SELECTOR"
           echo "  Deleting bundle Chart CRs on MC (by name)"
           for B in $BUNDLE_APP_NAMES; do
-            kubectl delete chart "$B" -n "$CHART_NAMESPACE" \
-              --ignore-not-found=true --wait=false 2>/dev/null || true
+            kubectl_retry delete chart "$B" -n "$CHART_NAMESPACE" \
+              --ignore-not-found=true --wait=false
           done
 
           # ============================================================
