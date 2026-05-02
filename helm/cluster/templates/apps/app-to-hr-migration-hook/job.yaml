@@ -492,14 +492,25 @@ spec:
           # We need the cluster App CR's `spec.upgrade.timeout` to be at least
           # ~15m for this wait + the rest of the hook to fit comfortably.
           echo "Phase D: Cascade-deleting bundle App CRs (wait for full uninstall on MC)"
+          # Snapshot the bundle App CR names BEFORE delete — once they're gone
+          # we still need to poll for their helm release secrets to confirm
+          # chart-operator-MC's helm uninstall actually finished.
+          BUNDLE_APP_NAMES_FOR_DRAIN=$(kubectl_retry get apps.application.giantswarm.io \
+            -n "$NAMESPACE" -l "$BUNDLE_APP_SELECTOR" \
+            -o jsonpath='{.items[*].metadata.name}')
           delete_apps_in_mc "bundle App CRs" "$BUNDLE_APP_SELECTOR"
           BUNDLE_DRAIN_TIMEOUT=720
           ELAPSED=0
+          # First wait for the App CRs themselves to disappear. App CR removal
+          # signals that app-operator's deletion handler ran (which deletes
+          # the bundle Chart CR). It does NOT signal that chart-operator-MC's
+          # helm uninstall on the bundle release has completed — the App CR's
+          # finalizer is removed before the Chart CR's finalizer chain finishes.
           while [ $ELAPSED -lt $BUNDLE_DRAIN_TIMEOUT ]; do
             REMAINING=$(kubectl get apps.application.giantswarm.io -n "$NAMESPACE" \
               -l "$BUNDLE_APP_SELECTOR" --no-headers 2>/dev/null | wc -l | tr -d ' ')
             if [ "$REMAINING" = "0" ]; then
-              echo "  All bundle App CRs fully drained after ${ELAPSED}s"
+              echo "  All bundle App CRs gone after ${ELAPSED}s; now waiting for helm release secrets"
               break
             fi
             REMAINING_NAMES=$(kubectl get apps.application.giantswarm.io -n "$NAMESPACE" \
@@ -510,9 +521,41 @@ spec:
           done
           if [ "$REMAINING" != "0" ]; then
             echo "  WARNING: bundle App CRs did not drain within ${BUNDLE_DRAIN_TIMEOUT}s"
-            echo "  Listing remaining App CRs + finalizers + chart-operator state:"
             kubectl get apps.application.giantswarm.io -n "$NAMESPACE" -l "$BUNDLE_APP_SELECTOR" \
               -o custom-columns="NAME:.metadata.name,FINALIZERS:.metadata.finalizers,DELETIONTS:.metadata.deletionTimestamp" 2>/dev/null || true
+          fi
+          # Now poll for the bundle helm release SECRETS to be gone. This is
+          # the load-bearing check: helm release secrets stay in storage until
+          # chart-operator-MC's helm uninstall fully completes. Without this
+          # wait, the hook exits while secrets are still in storage; helm-
+          # controller's takeOwnership upgrade then claims the release; later
+          # chart-operator-MC's uninstall finishes and wipes the secrets,
+          # which deletes the manifest items (sub-app HRs) and triggers
+          # helm-controller to uninstall the WC sub-app releases.
+          echo "  Polling bundle helm release secrets to confirm uninstall completion..."
+          while [ $ELAPSED -lt $BUNDLE_DRAIN_TIMEOUT ]; do
+            ALL_GONE=true
+            STILL_PRESENT=""
+            for B in $BUNDLE_APP_NAMES_FOR_DRAIN; do
+              SECRET_COUNT=$(kubectl get secrets -n "$NAMESPACE" -l owner=helm,name="$B" \
+                --no-headers 2>/dev/null | wc -l | tr -d ' ')
+              if [ "$SECRET_COUNT" != "0" ]; then
+                ALL_GONE=false
+                STILL_PRESENT="$STILL_PRESENT $B(${SECRET_COUNT})"
+              fi
+            done
+            if [ "$ALL_GONE" = "true" ]; then
+              echo "  All bundle helm release secrets gone after ${ELAPSED}s — uninstall fully complete"
+              break
+            fi
+            echo "  Bundle helm release secrets still present at ${ELAPSED}/${BUNDLE_DRAIN_TIMEOUT}s:$STILL_PRESENT"
+            sleep 10
+            ELAPSED=$((ELAPSED + 10))
+          done
+          if [ "$ALL_GONE" != "true" ]; then
+            echo "  WARNING: bundle helm release secrets still present after ${BUNDLE_DRAIN_TIMEOUT}s"
+            echo "  Listing remaining helm release secrets:"
+            kubectl get secrets -n "$NAMESPACE" -l owner=helm 2>/dev/null | head -20 || true
           fi
 
           # ============================================================
