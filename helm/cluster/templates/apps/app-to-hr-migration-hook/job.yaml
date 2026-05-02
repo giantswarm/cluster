@@ -346,22 +346,16 @@ spec:
           pause_apps_in_mc "bundle App CRs" "$BUNDLE_APP_SELECTOR"
           pause_charts_in_wc "direct default app Chart CRs" "$WC_CHART_DIRECT_SELECTOR"
           pause_charts_in_wc "bundle sub-app Chart CRs" "$WC_CHART_SUBAPP_SELECTOR"
-          # Bundle Chart CRs on MC: chart-operator-MC runs them. Pausing prevents
-          # any in-flight reconcile from running helm uninstall on the bundle
-          # release when we strip the finalizer + delete in Phase B/C.
-          # Bundle Chart CRs on MC don't carry the same labels as bundle App CRs
-          # (specifically, app-operator.giantswarm.io/version is absent on the
-          # Chart CR), so we resolve them by name from the App CR list.
-          BUNDLE_APP_NAMES=$(kubectl_retry get apps.application.giantswarm.io -n "$NAMESPACE" \
-            -l "$BUNDLE_APP_SELECTOR" \
-            -o jsonpath='{.items[*].metadata.name}')
-          echo "  Pausing bundle Chart CRs on MC (by name)"
-          for B in $BUNDLE_APP_NAMES; do
-            if kubectl_retry get chart "$B" -n "$CHART_NAMESPACE" >/dev/null; then
-              kubectl_retry annotate chart "$B" -n "$CHART_NAMESPACE" \
-                "operatorkit.giantswarm.io/paused=true" --overwrite
-            fi
-          done
+          # Bundle Chart CRs on MC are app-operator-created, not helm-rendered;
+          # helm doesn't track them. We rely entirely on stripping the bundle
+          # App CR's finalizer (Phase B) so app-operator never processes the
+          # bundle App CR deletion → never deletes the bundle Chart CR →
+          # chart-operator-MC's deletion handler never fires → bundle helm
+          # release stays alive for Flux's HR to adopt. The orphaned bundle
+          # Chart CR sits idle and is harmless.
+          # We don't manipulate bundle Chart CRs in the giantswarm namespace
+          # because the helm-running ServiceAccount cannot grant chart RBAC
+          # there (cross-namespace Role create + delete denied).
 
           # ============================================================
           # Phase A.5: Synchronization barrier
@@ -386,16 +380,13 @@ spec:
           NB_COUNT=$(kubectl_retry get apps.application.giantswarm.io -n "$NAMESPACE" -l "$NON_BUNDLE_SELECTOR" --no-headers 2>/dev/null | wc -l | tr -d ' ')
           SUB_COUNT=$(kubectl_retry get apps.application.giantswarm.io -n "$NAMESPACE" -l "$SUB_APP_SELECTOR" --no-headers 2>/dev/null | wc -l | tr -d ' ')
           BUNDLE_COUNT=$(kubectl_retry get apps.application.giantswarm.io -n "$NAMESPACE" -l "$BUNDLE_APP_SELECTOR" --no-headers 2>/dev/null | wc -l | tr -d ' ')
-          BUNDLE_CHART_COUNT=0
-          for B in $(kubectl get apps.application.giantswarm.io -n "$NAMESPACE" -l "$BUNDLE_APP_SELECTOR" -o jsonpath='{.items[*].metadata.name}' 2>/dev/null); do
-            kubectl get chart "$B" -n "$CHART_NAMESPACE" >/dev/null 2>&1 && BUNDLE_CHART_COUNT=$((BUNDLE_CHART_COUNT + 1)) || true
-          done
+          BUNDLE_APP_NAMES=$(kubectl_retry get apps.application.giantswarm.io -n "$NAMESPACE" -l "$BUNDLE_APP_SELECTOR" -o jsonpath='{.items[*].metadata.name}' 2>/dev/null)
           WC_DIRECT_COUNT=$(kubectl_retry $WC get chart -n "$CHART_NAMESPACE" -l "$WC_CHART_DIRECT_SELECTOR" --no-headers 2>/dev/null | wc -l | tr -d ' ')
           WC_SUB_COUNT=$(kubectl_retry $WC get chart -n "$CHART_NAMESPACE" -l "$WC_CHART_SUBAPP_SELECTOR" --no-headers 2>/dev/null | wc -l | tr -d ' ')
           echo "  non-bundle MC App CRs:       ${NB_COUNT}"
           echo "  bundle sub-App CRs (MC):     ${SUB_COUNT}"
           echo "  bundle App CRs (MC):         ${BUNDLE_COUNT}"
-          echo "  bundle Chart CRs (MC):       ${BUNDLE_CHART_COUNT}"
+          echo "  bundle App names:            $BUNDLE_APP_NAMES"
           echo "  direct default WC Chart CRs: ${WC_DIRECT_COUNT}"
           echo "  bundle sub-app WC Chart CRs: ${WC_SUB_COUNT}"
 
@@ -413,22 +404,11 @@ spec:
           strip_app_finalizers "bundle App CRs" "$BUNDLE_APP_SELECTOR"
           strip_chart_finalizers "direct default app Chart CRs" "$WC_CHART_DIRECT_SELECTOR"
           strip_chart_finalizers "bundle sub-app Chart CRs" "$WC_CHART_SUBAPP_SELECTOR"
-          # Bundle Chart CRs on MC: stripping the chart-operator-MC finalizer is
-          # what stops chart-operator-MC from running helm uninstall on the bundle
-          # release when we delete the Chart CR. Bundle helm releases on MC
-          # MUST stay alive so Flux's new HelmRelease for the bundle can adopt
-          # them via takeOwnership. Round 44 forensic logs proved this is the
-          # actual root cause of the sub-app uninstall race.
-          # Bundle Chart CRs are resolved by name (their labels differ from the
-          # App CRs' labels, so a label selector wouldn't match them).
-          echo "  Stripping finalizers from bundle Chart CRs on MC"
-          for B in $BUNDLE_APP_NAMES; do
-            if kubectl_retry get chart "$B" -n "$CHART_NAMESPACE" >/dev/null; then
-              kubectl_retry patch chart "$B" -n "$CHART_NAMESPACE" --type=json \
-                -p='[{"op": "remove", "path": "/metadata/finalizers"}]' 2>&1 \
-                | grep -vE 'no value found|unable to find' || true
-            fi
-          done
+          # See note in Phase A: bundle Chart CRs on MC are not touched. The
+          # bundle App CR's finalizer being stripped above is the load-bearing
+          # protection — app-operator never processes the App CR deletion, so
+          # the cascade to bundle Chart CR delete never happens, so
+          # chart-operator-MC's deletion handler never runs helm uninstall.
 
           # ============================================================
           # Phase C: Delete everything
@@ -506,13 +486,8 @@ spec:
           # stripped their finalizers. We can now delete them instantly without
           # any controller running helm uninstall. The bundle helm release on
           # MC stays alive for Flux's HR to adopt cleanly.
-          echo "Phase D: Deleting bundle App CRs + bundle Chart CRs on MC (no helm uninstall fired)"
+          echo "Phase D: Deleting bundle App CRs (instant — finalizer stripped in Phase B)"
           delete_apps_in_mc "bundle App CRs" "$BUNDLE_APP_SELECTOR"
-          echo "  Deleting bundle Chart CRs on MC (by name)"
-          for B in $BUNDLE_APP_NAMES; do
-            kubectl_retry delete chart "$B" -n "$CHART_NAMESPACE" \
-              --ignore-not-found=true --wait=false
-          done
 
           # ============================================================
           # Forensic event dump
