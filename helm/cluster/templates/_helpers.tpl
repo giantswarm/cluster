@@ -57,7 +57,7 @@ giantswarm.io/service-priority: {{ .Values.global.metadata.servicePriority }}
 cluster.x-k8s.io/cluster-name: {{ include "cluster.resource.name" $ | quote }}
 cluster.x-k8s.io/watch-filter: capi
 {{- if $.Values.providerIntegration.useReleases }}
-release.giantswarm.io/version: {{ .Values.global.release.version | trimPrefix "v" | quote }}
+release.giantswarm.io/version: {{ .Values.global.release.version | required "global.release.version is required" | trimPrefix "v" | quote }}
 {{- end }}
 {{- end -}}
 
