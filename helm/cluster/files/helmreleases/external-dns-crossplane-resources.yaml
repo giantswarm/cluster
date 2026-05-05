@@ -5,9 +5,7 @@ useOCISource: true
 # repo: giantswarm/external-dns-crossplane-resources
 version: 0.3.0
 
-prependClusterName: true
-skipKubeConfig: true
-serviceAccountName: automation
+inCluster: true
 
 defaultValues:
   provider: {{ .Values.providerIntegration.provider }}
