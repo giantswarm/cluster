@@ -4,6 +4,15 @@ local:
   {{- if $etcdConfig.dataDir }}
   dataDir: {{ $etcdConfig.dataDir | quote }}
   {{- end }}
+  {{- if $etcdConfig.imageTag }}
+  imageTag: {{ $etcdConfig.imageTag | quote }}
+  {{- else if $.Values.providerIntegration.useReleases }}
+  {{- $_ := set $ "componentName" "etcd" }}
+  {{- $version := include "cluster.component.version" $ }}
+  {{- if ne $version "N/A" }}
+  imageTag: {{ printf "v%s" $version | quote }}
+  {{- end }}
+  {{- end }}
   {{- /*
     All extraArgs must be strings, as the extraArg object is a map[string]string so numbers
     and booleans must be quoted here.

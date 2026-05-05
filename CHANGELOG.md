@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Control Plane: Make etcd image tag configurable. ([#841](https://github.com/giantswarm/cluster/pull/841))
+- Chart: Require `global.release.version` if using Releases to give a better rendering error message.
 - Migration hook: handle bundle sub-Apps (e.g. `kyverno`, `alloy-events`) with the same pause + strip-finalizers + delete sequence already used for non-bundle default Apps, and extend the WC Chart CR cleanup to cover their Chart CRs as well. This prevents the bundle cascade in the final phase from triggering `helm uninstall` on the underlying applications via `app-operator` → WC Chart CR deletion → `chart-operator` reconciliation.
 - Migration hook: bump `backoffLimit` from 3 to 6 to give the job more retries on transient API errors.
 - Migration hook: reorder cleanup phases to close the race between MC sub-App CR deletion and WC Chart CR finalizer-strip. The hook now (A) pauses every MC App CR and WC Chart CR, then (B) strips finalizers from every one of them, and only then (C) deletes them. With finalizers gone everywhere before any deletion happens, an in-flight `app-operator` reconcile that races our pause cannot trigger `chart-operator`'s helm-uninstall path on the WC.
@@ -157,6 +159,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Add required install values to a `required.yaml` file and update values schema.
+
+## [4.4.1] - 2026-04-21
+
+### Changed
+
+- Control Plane: Make etcd image tag configurable. ([#841](https://github.com/giantswarm/cluster/pull/841))
 
 ## [4.4.0] - 2025-10-28
 
@@ -1012,7 +1020,8 @@ For Kubernetes <v1.29, you will need to re-enable it using the respective values
 [5.0.0]: https://github.com/giantswarm/cluster/compare/v4.6.0...v5.0.0
 [4.6.0]: https://github.com/giantswarm/cluster/compare/v4.5.1...v4.6.0
 [4.5.1]: https://github.com/giantswarm/cluster/compare/v4.5.0...v4.5.1
-[4.5.0]: https://github.com/giantswarm/cluster/compare/v4.4.0...v4.5.0
+[4.5.0]: https://github.com/giantswarm/cluster/compare/v4.4.1...v4.5.0
+[4.4.1]: https://github.com/giantswarm/cluster/compare/v4.4.0...v4.4.1
 [4.4.0]: https://github.com/giantswarm/cluster/compare/v4.3.0...v4.4.0
 [4.3.0]: https://github.com/giantswarm/cluster/compare/v4.2.0...v4.3.0
 [4.2.0]: https://github.com/giantswarm/cluster/compare/v4.1.0...v4.2.0
