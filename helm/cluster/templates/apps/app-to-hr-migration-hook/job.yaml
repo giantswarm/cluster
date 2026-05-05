@@ -90,7 +90,10 @@ spec:
         - /bin/sh
         - -c
         - |
-          set -euo pipefail
+          # /bin/sh in the kubectl image is dash, which does not support
+          # `set -o pipefail`. We keep the strict `-eu` we've always had
+          # (errexit + nounset); pipefail is a bash-only extension here.
+          set -eu
           CLUSTER_NAME="{{ include "cluster.resource.name" $ }}"
           NAMESPACE="{{ $.Release.Namespace }}"
           CHART_NAMESPACE="giantswarm"
@@ -99,7 +102,7 @@ spec:
           # Retry wrapper for kubectl. Under 5-cluster concurrent migration
           # load the MC API server intermittently rejects requests with
           # `Unauthorized` (transient auth-cache issue). Without this wrapper
-          # `set -euo pipefail` causes the hook script to exit on the first such
+          # `set -eu` causes the hook script to exit on the first such
           # rejection — helm marks the upgrade failed, chart-operator retries,
           # and the cycle repeats. Across rounds 34/35/37/39 this retry storm
           # correlated with bundle sub-app uninstalls because chart-operator
