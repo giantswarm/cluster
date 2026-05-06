@@ -1,15 +1,69 @@
 {{/*
-Pre-delete hook to suspend HelmReleases and remove Flux finalizers before cluster deletion.
+Pre-delete hook that force-cleans HelmReleases targeting the workload cluster
+before the WC control plane is torn down — and deliberately leaves
+HelmReleases targeting the management cluster alone.
 
-When a cluster is deleted, Flux tries to `helm uninstall` each HelmRelease against
-the workload cluster. If the WC API goes down before Flux finishes (which is common
-with 40+ HelmReleases), the remaining HRs get stuck with `finalizers.fluxcd.io`,
-blocking CAPI cluster garbage collection indefinitely.
+WHY this hook exists at all (the WC-targeted case):
 
-This hook runs before `helm uninstall` removes the chart's resources, so all HRs
-still exist and the WC is still up. We first suspend each HR to stop Flux from
-reconciling it (which would re-add the finalizer), then remove the finalizer. The
-subsequent `helm uninstall` can then delete the HR objects instantly.
+When a cluster App CR is deleted, the subsequent `helm uninstall <cluster>`
+cascades through the manifests it rendered and issues `kubectl delete` on
+every HelmRelease. Each HR carries `finalizers.fluxcd.io`, so K8s holds
+it in `Terminating` until helm-controller runs `helm uninstall` on the
+underlying release and clears the finalizer.
+
+For HRs that target the WORKLOAD cluster (`spec.kubeConfig.secretRef`
+set so helm-controller talks to the WC apiserver), the WC tear-down races
+helm-controller. With 40+ such HRs and a fast CAPI tear-down, the WC
+apiserver disappears before helm-controller finishes uninstalling all of
+them — the remaining HRs are stuck in `Terminating` with the Flux
+finalizer indefinitely, blocking CAPI cluster garbage collection.
+
+This hook unblocks that path FOR WC-TARGETED HRs ONLY: suspend each HR
+(so Flux stops re-adding the finalizer), strip the finalizer, then delete
+the HR. The WC-side helm release storage is never formally uninstalled,
+but that's fine — the WC is being torn down anyway and its helm storage
+goes with it.
+
+WHY we deliberately DO NOT touch MC-targeted HRs:
+
+Bundle HelmReleases (security-bundle, observability-bundle, aws-nth-bundle,
+karpenter-bundle, aws-ebs-csi-driver-bundle) and their sub-HRs that
+target the MC (notably aws-nth-crossplane-resources,
+cert-manager-crossplane-resources, cilium-crossplane-resources) all have
+`spec.kubeConfig` empty. Their helm release storage and the manifests
+they render live on the MC, not the WC.
+
+For these, helm-controller can reach the MC apiserver throughout the
+cluster delete, so `helm uninstall` against their MC-side release runs
+cleanly. Critically, the manifests those releases create include
+Crossplane CRs (`Role`, `Queue`, ...) that map 1:1 to AWS IAM roles and
+SQS queues. Stripping the finalizer would skip `helm uninstall`, leaving
+those Crossplane CRs in place, so Crossplane never gets the deletion
+event for the AWS-side resources — silently leaking IAM roles and SQS
+queues on every cluster delete.
+
+So MC-targeted HRs are deliberately left alone. The subsequent
+`helm uninstall <cluster>` deletes them in the normal way; helm-controller
+picks each up via the Flux finalizer, runs `helm uninstall` on the
+MC-side release, removes the finalizer; the parent `helm uninstall`
+waits (default `--wait=true`) for the cascade to finish.
+
+Trade-off: if helm-controller is wedged, the cluster delete blocks on
+the MC-side cascade. That's a much better failure mode than silently
+leaking AWS resources — it's loud, rare, observable, and the fix is to
+unstick helm-controller and retry.
+
+NOTE on OCIRepositories:
+
+A previous version of this hook had a Step 4 that stripped finalizers
+from OCIRepositories and force-deleted them. That was needed because the
+old code force-deleted bundle HRs without letting helm-controller run
+`helm uninstall`, which orphaned the OCIRepositories the bundle releases
+had rendered. Now that we let bundle HRs go through helm-controller's
+normal uninstall path, each bundle's `helm uninstall` removes its
+rendered OCIRepositories naturally, and OCIRepositories rendered
+directly by cluster-aws are removed by the parent `helm uninstall`
+itself. Step 4 is no longer needed.
 */}}
 {{- if $.Values.providerIntegration.apps }}
 apiVersion: batch/v1
@@ -62,22 +116,37 @@ spec:
           NAMESPACE="{{ $.Release.Namespace }}"
           BATCH_SIZE=10
 
-          echo "Cleaning up HelmReleases for cluster $CLUSTER_NAME"
+          echo "Cleaning up WC-targeted HelmReleases for cluster $CLUSTER_NAME"
 
-          HELMRELEASES=$(kubectl get helmreleases.helm.toolkit.fluxcd.io -n "$NAMESPACE" \
+          # Discover every HR labelled with our cluster, paired with its
+          # `spec.kubeConfig.secretRef.name`. The presence of that field is
+          # how we tell WC-targeted (helm-controller talks to the WC apiserver
+          # via that kubeconfig secret) from MC-targeted (field empty,
+          # helm-controller talks to the MC). See the file header for why
+          # we only act on the WC set.
+          HR_PAIRS=$(kubectl get helmreleases.helm.toolkit.fluxcd.io -n "$NAMESPACE" \
             -l "giantswarm.io/cluster=$CLUSTER_NAME" \
-            -o jsonpath='{.items[*].metadata.name}' 2>/dev/null) || true
+            -o jsonpath='{range .items[*]}{.metadata.name}|{.spec.kubeConfig.secretRef.name}{"\n"}{end}' 2>/dev/null) || true
 
-          if [ -z "$HELMRELEASES" ]; then
-            echo "No HelmReleases found"
+          # Filter by the second field. WC-targeted: secretRef.name non-empty.
+          # MC-targeted: secretRef.name empty.
+          WC_HELMRELEASES=$(echo "$HR_PAIRS" | awk -F'|' 'NF==2 && $2 != "" {print $1}')
+          MC_COUNT=$(echo "$HR_PAIRS" | awk -F'|' 'NF==2 && $2 == "" {print $1}' | grep -c . || true)
+          WC_COUNT=$(echo "$WC_HELMRELEASES" | grep -c . || true)
+          echo "  WC-targeted: $WC_COUNT (force-cleaned by this hook)"
+          echo "  MC-targeted: $MC_COUNT (left for helm-controller to uninstall normally)"
+
+          if [ -z "$WC_HELMRELEASES" ]; then
+            echo "No WC-targeted HelmReleases found; nothing to do."
             exit 0
           fi
 
-          # Step 1: Suspend all HRs to stop Flux from reconciling them.
-          # This prevents Flux from re-adding finalizers after we remove them.
-          echo "  Step 1: Suspending HelmReleases"
+          # Step 1: Suspend WC-targeted HRs to stop Flux from reconciling them.
+          # This prevents Flux from re-adding the finalizer after we remove it
+          # in Step 2.
+          echo "  Step 1: Suspending WC-targeted HelmReleases"
           COUNT=0
-          for HR in $HELMRELEASES; do
+          for HR in $WC_HELMRELEASES; do
             (kubectl patch helmreleases.helm.toolkit.fluxcd.io "$HR" -n "$NAMESPACE" \
               --type=merge -p='{"spec":{"suspend":true}}' 2>/dev/null || true) &
             COUNT=$((COUNT + 1))
@@ -89,12 +158,13 @@ spec:
           # removing finalizers, reducing the chance of Flux re-adding them.
           sleep 5
 
-          # Step 2: Remove finalizers. Two passes to handle any race condition
-          # where an in-flight reconciliation re-adds the finalizer after suspend.
+          # Step 2: Remove finalizers from WC-targeted HRs. Two passes to handle
+          # the race where an in-flight reconciliation re-adds the finalizer
+          # after suspend lands.
           for PASS in 1 2; do
-            echo "  Step 2 pass $PASS: Removing finalizers"
+            echo "  Step 2 pass $PASS: Removing finalizers from WC-targeted HelmReleases"
             COUNT=0
-            for HR in $HELMRELEASES; do
+            for HR in $WC_HELMRELEASES; do
               (kubectl patch helmreleases.helm.toolkit.fluxcd.io "$HR" -n "$NAMESPACE" --type=json \
                 -p='[{"op": "remove", "path": "/metadata/finalizers"}]' 2>/dev/null || true) &
               COUNT=$((COUNT + 1))
@@ -104,14 +174,15 @@ spec:
             [ "$PASS" -eq 1 ] && sleep 3
           done
 
-          # Step 3: Delete all HRs. This cleans up bundle sub-HRs (e.g. kyverno,
-          # alloy-logs) that are not chart resources and would otherwise be orphaned
-          # after helm uninstall deletes only the parent bundle HRs.
-          # Since HRs are suspended with no finalizers, deletion is instant.
-          echo "  Step 3: Deleting HelmReleases"
+          # Step 3: Delete WC-targeted HRs. With suspend + no finalizer, this
+          # is instant. We deliberately do NOT delete MC-targeted HRs here —
+          # they are deleted by the subsequent `helm uninstall <cluster>`,
+          # with helm-controller running `helm uninstall` against each
+          # MC-side release in the normal way (header explains why).
+          echo "  Step 3: Deleting WC-targeted HelmReleases"
           COUNT=0
           TOTAL=0
-          for HR in $HELMRELEASES; do
+          for HR in $WC_HELMRELEASES; do
             TOTAL=$((TOTAL + 1))
             (kubectl delete helmreleases.helm.toolkit.fluxcd.io "$HR" -n "$NAMESPACE" \
               --wait=false 2>/dev/null || true) &
@@ -120,41 +191,6 @@ spec:
           done
           wait
 
-          echo "Processed $TOTAL HelmReleases for cluster $CLUSTER_NAME"
-
-          # Step 4: Clean up OCIRepositories created by bundle sub-HRs.
-          # Bundle HelmReleases (observability-bundle, security-bundle, etc.) create
-          # sub-OCIRepositories as chart sources. Since we deleted the bundle HRs without
-          # letting Flux run `helm uninstall`, these OCIRepositories are orphaned.
-          echo "  Step 4: Cleaning up OCIRepositories"
-          OCIREPOSITORIES=$(kubectl get ocirepositories.source.toolkit.fluxcd.io -n "$NAMESPACE" \
-            -l "giantswarm.io/cluster=$CLUSTER_NAME" \
-            -o jsonpath='{.items[*].metadata.name}' 2>/dev/null) || true
-
-          if [ -n "$OCIREPOSITORIES" ]; then
-            echo "    Removing finalizers from OCIRepositories"
-            COUNT=0
-            for OCI in $OCIREPOSITORIES; do
-              (kubectl patch ocirepositories.source.toolkit.fluxcd.io "$OCI" -n "$NAMESPACE" --type=json \
-                -p='[{"op": "remove", "path": "/metadata/finalizers"}]' 2>/dev/null || true) &
-              COUNT=$((COUNT + 1))
-              if [ $((COUNT % BATCH_SIZE)) -eq 0 ]; then wait; fi
-            done
-            wait
-
-            echo "    Deleting OCIRepositories"
-            OCI_TOTAL=0
-            COUNT=0
-            for OCI in $OCIREPOSITORIES; do
-              OCI_TOTAL=$((OCI_TOTAL + 1))
-              (kubectl delete ocirepositories.source.toolkit.fluxcd.io "$OCI" -n "$NAMESPACE" \
-                --wait=false 2>/dev/null || true) &
-              COUNT=$((COUNT + 1))
-              if [ $((COUNT % BATCH_SIZE)) -eq 0 ]; then wait; fi
-            done
-            wait
-            echo "  Processed $OCI_TOTAL OCIRepositories for cluster $CLUSTER_NAME"
-          else
-            echo "  No OCIRepositories found"
-          fi
+          echo "Processed $TOTAL WC-targeted HelmReleases for cluster $CLUSTER_NAME"
+          echo "Leaving $MC_COUNT MC-targeted HelmReleases for helm-controller-driven uninstall."
 {{- end }}
