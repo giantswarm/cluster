@@ -1,0 +1,6 @@
+# Ensure kube-apiserver runs without a random MCS category level so audit logs can be
+# shared with other processes (k8s-audit-metrics).
+- op: add
+  path: /spec/securityContext/seLinuxOptions
+  value:
+    level: s0
