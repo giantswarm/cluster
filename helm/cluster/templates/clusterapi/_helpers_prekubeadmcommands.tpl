@@ -11,8 +11,16 @@
 {{- include "cluster.internal.kubeadm.preKubeadmCommands.flatcar" $ }}
 {{- include "cluster.internal.kubeadm.preKubeadmCommands.ssh" $ }}
 {{- include "cluster.internal.kubeadm.preKubeadmCommands.proxy" $ }}
+{{- include "cluster.internal.kubeadm.preKubeadmCommands.selinux" $ }}
 {{- include "cluster.internal.kubeadm.preKubeadmCommands.provider" $ }}
 {{- include "cluster.internal.kubeadm.preKubeadmCommands.custom" $ }}
+{{- end }}
+
+{{- define "cluster.internal.kubeadm.preKubeadmCommands.selinux" }}
+{{- if ne $.Values.global.components.selinux.mode "disabled" }}
+# Fix labels for `/etc/kubernetes`
+- restorecon -RFv /etc/kubernetes
+{{- end }}
 {{- end }}
 
 {{- define "cluster.internal.kubeadm.preKubeadmCommands.flatcar" }}
