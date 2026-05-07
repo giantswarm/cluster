@@ -18,6 +18,9 @@
 
 {{- define "cluster.internal.kubeadm.preKubeadmCommands.selinux" }}
 {{- if ne $.Values.global.components.selinux.mode "disabled" }}
+# Fix label for kube-apiserver audit log directory
+- mkdir -p /var/log/apiserver
+- chcon -R -t container_file_t /var/log/apiserver
 # Fix labels for `/etc/kubernetes`
 - restorecon -RFv /etc/kubernetes
 {{- end }}
