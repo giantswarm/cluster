@@ -23,7 +23,7 @@ providerIntegration:
     controlPlaneResourceEnabled: true
     infrastructureCluster:
       group: infrastructure.cluster.x-k8s.io
-      kind: GiantCluster
+      kind: AWSCluster
       version: v1beta1
     machineHealthCheckResourceEnabled: true
     machinePoolResourcesEnabled: true
@@ -31,7 +31,7 @@ providerIntegration:
     infrastructureMachinePool:
       group: infrastructure.cluster.x-k8s.io
       version: v1beta1
-      kind: GiantMachinePool
+      kind: AWSMachinePool
     helmRepositoryResourcesEnabled: true
   controlPlane:
     kubeadmConfig:
@@ -46,7 +46,7 @@ providerIntegration:
     resources:
       infrastructureMachineTemplate:
         group: infrastructure.cluster.x-k8s.io
-        kind: GiantMachineTemplate
+        kind: AWSMachineTemplate
         version: v1beta1
       infrastructureMachineTemplateSpecTemplateName: cluster.internal.test.controlPlane.machineTemplate.spec
   workers:
