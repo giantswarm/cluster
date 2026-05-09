@@ -55,4 +55,4 @@ global:
     baseDomain: example.gigantic.io
   metadata:
     name: tainted
-    organization: org-mcorgface
+    organization: giantswarm
