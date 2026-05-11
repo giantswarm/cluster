@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Add `kyverno` to `dependsOn` of HelmReleases that produce Kyverno-validated resources (ClusterPolicy / PolicyException): `cert-exporter`, `cluster-autoscaler` (non-azure providers only), `etcd-defrag`, `etcd-kubernetes-resources-count-exporter`, `k8s-audit-metrics`, `k8s-dns-node-cache`, `node-exporter`, `observability-policies`. Without this dep, those chart upgrades can race against kyverno's own admission-controller rolling restart and fail mid-patch (`connection refused` / `no route to host` / `context deadline exceeded` against `kyverno-svc`), which then wedges Flux helm-controller v1.3.0 on a missing rollback target.
+
 ### Added
 
 - Add pre-delete hook Job to remove `HelmRelease` CRs when deleting a cluster. This is required because sometimes flux does not have enough time to clean up the `HelmRelease` CRs before the control plane API is deleted.
