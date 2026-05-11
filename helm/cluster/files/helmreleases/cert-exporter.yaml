@@ -1,6 +1,8 @@
 appName: cert-exporter
 configKey: certExporter
-dependsOn: kyverno-crds
+dependsOn:
+- kyverno-crds
+- kyverno
 namespace: kube-system
 # used by renovate
 # repo: giantswarm/cert-exporter
