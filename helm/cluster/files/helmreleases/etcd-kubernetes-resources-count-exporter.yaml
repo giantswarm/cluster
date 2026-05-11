@@ -1,7 +1,9 @@
 appName: etcd-k8s-res-count-exporter
 chartName: etcd-kubernetes-resources-count-exporter
 configKey: etcdKubernetesResourcesCountExporter
-dependsOn: kyverno-crds
+dependsOn:
+- kyverno-crds
+- kyverno
 namespace: kube-system
 # used by renovate
 # repo: giantswarm/etcd-kubernetes-resources-count-exporter
