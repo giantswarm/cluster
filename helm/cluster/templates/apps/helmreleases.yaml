@@ -153,6 +153,9 @@ spec:
       {{- end }}
   upgrade:
     disableWait: {{ $app.disableWait | default false }}
+    remediation:
+      retries: -1
+      remediateLastFailure: false
   {{- if $app.driftDetection }}
   driftDetection:
     mode: {{ $app.driftDetection }}
