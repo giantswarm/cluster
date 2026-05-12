@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- HelmReleases: add `upgrade.remediation.remediateLastFailure: false` (with `retries: -1`) so Flux helm-controller skips the rollback/uninstall step on upgrade failure and re-attempts the upgrade on its next reconcile interval. This avoids the wedge that occurs when adopting chart-operator-installed v1 releases (helm-controller refuses to roll back to a release it didn't create, which gates retries in the default behaviour).
+
 ### Added
 
 - Add pre-delete hook Job to remove `HelmRelease` CRs when deleting a cluster. This is required because sometimes flux does not have enough time to clean up the `HelmRelease` CRs before the control plane API is deleted.
