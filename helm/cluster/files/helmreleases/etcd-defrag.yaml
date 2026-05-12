@@ -1,8 +1,6 @@
 appName: etcd-defrag
 configKey: etcdDefrag
-dependsOn:
-- kyverno-crds
-- kyverno
+dependsOn: kyverno-crds
 namespace: kube-system
 # used by renovate
 # repo: giantswarm/etcd-defrag-app
