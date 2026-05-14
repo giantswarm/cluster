@@ -173,6 +173,19 @@ spec:
           WC_CHART_DIRECT_SELECTOR="$DEFAULT_APP_LABEL"
           WC_CHART_SUBAPP_SELECTOR="$HELM_MANAGED_LABEL,$EXCLUDE_OPERATORS"
 
+          # Bundle sub-HRs on MC: helm-managed HRs in org-* that belong to a
+          # bundle's helm release (not the cluster-aws release itself).
+          # Most bundles (security-bundle, observability-bundle, karpenter-bundle,
+          # aws-ebs-csi-driver-bundle) render sub-App CRs and are covered by
+          # $SUB_APP_SELECTOR. aws-nth-bundle's chart, however, renders HRs
+          # directly. Without neutralizing them here, Phase D's bundle helm
+          # uninstall DELETEs them, helm-controller's finalizer fires, and the
+          # managed WC release is uninstalled — see Round 68's regression.
+          # The instance-label differentiator works because cluster-aws-rendered
+          # HRs carry app.kubernetes.io/instance=<cluster> while bundle-rendered
+          # HRs carry app.kubernetes.io/instance=<cluster>-<bundle-name>.
+          SUB_HR_SELECTOR="giantswarm.io/cluster=$CLUSTER_NAME,$HELM_MANAGED_LABEL,app.kubernetes.io/instance!=$CLUSTER_NAME"
+
           # Helper: check if an app is an operator that must be kept alive.
           is_operator() {
             case "$1" in *-app-operator|*-chart-operator) return 0 ;; esac
@@ -248,6 +261,59 @@ spec:
             kubectl_retry $WC delete chart.application.giantswarm.io -n "$CHART_NAMESPACE" \
               -l "$SEL" \
               --ignore-not-found=true
+          }
+
+          # Pause MC HRs by selector (suspend Flux reconciliation).
+          pause_hrs_in_mc() {
+            DESC="$1"; SEL="$2"
+            echo "  Suspending $DESC"
+            HRS=$(kubectl_retry get helmreleases.helm.toolkit.fluxcd.io -n "$NAMESPACE" \
+              -l "$SEL" \
+              -o jsonpath='{.items[*].metadata.name}')
+            COUNT=0
+            for HR in $HRS; do
+              (kubectl patch helmreleases.helm.toolkit.fluxcd.io "$HR" -n "$NAMESPACE" --type=merge \
+                -p '{"spec":{"suspend":true}}' 2>/dev/null || true) &
+              COUNT=$((COUNT + 1))
+              if [ $((COUNT % BATCH_SIZE)) -eq 0 ]; then wait; fi
+            done
+            wait
+          }
+
+          # Strip finalizers from MC HRs by selector. The critical step: with
+          # finalizers.fluxcd.io gone, when Phase D's helm uninstall deletes
+          # these HRs, helm-controller's deletion handler does NOT run
+          # `helm uninstall` on the managed WC release, so the WC release
+          # survives intact. The new bundle HR (created by cluster-aws's
+          # post-migration template) re-renders these inner HRs, and Flux's
+          # default takeOwnership adopts the existing WC release on next
+          # reconcile.
+          strip_hr_finalizers() {
+            DESC="$1"; SEL="$2"
+            echo "  Stripping finalizers from $DESC"
+            HRS=$(kubectl_retry get helmreleases.helm.toolkit.fluxcd.io -n "$NAMESPACE" \
+              -l "$SEL" \
+              -o jsonpath='{.items[*].metadata.name}')
+            COUNT=0
+            for HR in $HRS; do
+              (kubectl patch helmreleases.helm.toolkit.fluxcd.io "$HR" -n "$NAMESPACE" --type=json \
+                -p='[{"op": "remove", "path": "/metadata/finalizers"}]' 2>/dev/null || true) &
+              COUNT=$((COUNT + 1))
+              if [ $((COUNT % BATCH_SIZE)) -eq 0 ]; then wait; fi
+            done
+            wait
+          }
+
+          # Delete MC HRs by selector. With finalizers stripped, deletion is
+          # instant. We could let Phase D's helm uninstall delete them, but
+          # explicit deletion in Phase C keeps the order deterministic and
+          # matches the existing pattern for the App/Chart categories.
+          delete_hrs_in_mc() {
+            DESC="$1"; SEL="$2"
+            echo "  Deleting $DESC"
+            kubectl_retry delete helmreleases.helm.toolkit.fluxcd.io -n "$NAMESPACE" \
+              -l "$SEL" \
+              --ignore-not-found=true --wait=false
           }
 
           # ============================================================
@@ -361,6 +427,7 @@ spec:
           pause_apps_in_mc "bundle sub-App CRs" "$SUB_APP_SELECTOR"
           pause_charts_in_wc "direct default app Chart CRs" "$WC_CHART_DIRECT_SELECTOR"
           pause_charts_in_wc "bundle sub-app Chart CRs" "$WC_CHART_SUBAPP_SELECTOR"
+          pause_hrs_in_mc "bundle sub-HRs" "$SUB_HR_SELECTOR"
           # Bundle App CRs are intentionally NOT paused. We WANT the cascade
           # (app-operator → bundle Chart CR delete → chart-operator-MC →
           # helm uninstall on the bundle release on MC) to fire in Phase D.
@@ -405,12 +472,14 @@ spec:
           BUNDLE_NAMES_SNAPSHOT=$(kubectl_retry get apps.application.giantswarm.io -n "$NAMESPACE" -l "$BUNDLE_APP_SELECTOR" -o jsonpath='{.items[*].metadata.name}' 2>/dev/null)
           WC_DIRECT_COUNT=$(kubectl_retry $WC get chart.application.giantswarm.io -n "$CHART_NAMESPACE" -l "$WC_CHART_DIRECT_SELECTOR" --no-headers 2>/dev/null | wc -l | tr -d ' ')
           WC_SUB_COUNT=$(kubectl_retry $WC get chart.application.giantswarm.io -n "$CHART_NAMESPACE" -l "$WC_CHART_SUBAPP_SELECTOR" --no-headers 2>/dev/null | wc -l | tr -d ' ')
+          SUB_HR_COUNT=$(kubectl_retry get helmreleases.helm.toolkit.fluxcd.io -n "$NAMESPACE" -l "$SUB_HR_SELECTOR" --no-headers 2>/dev/null | wc -l | tr -d ' ')
           echo "  non-bundle MC App CRs:       ${NB_COUNT}"
           echo "  bundle sub-App CRs (MC):     ${SUB_COUNT}"
           echo "  bundle App CRs (MC):         ${BUNDLE_COUNT}"
           echo "  bundle App names:            $BUNDLE_NAMES_SNAPSHOT"
           echo "  direct default WC Chart CRs: ${WC_DIRECT_COUNT}"
           echo "  bundle sub-app WC Chart CRs: ${WC_SUB_COUNT}"
+          echo "  bundle sub-HRs (MC):         ${SUB_HR_COUNT}"
 
           # ============================================================
           # Phase B: Strip finalizers from everything
@@ -425,6 +494,7 @@ spec:
           strip_app_finalizers "bundle sub-App CRs" "$SUB_APP_SELECTOR"
           strip_chart_finalizers "direct default app Chart CRs" "$WC_CHART_DIRECT_SELECTOR"
           strip_chart_finalizers "bundle sub-app Chart CRs" "$WC_CHART_SUBAPP_SELECTOR"
+          strip_hr_finalizers "bundle sub-HRs" "$SUB_HR_SELECTOR"
           # Bundle App CR finalizers are intentionally NOT stripped (see Phase A)
           # — Phase D needs the cascade to fire so chart-operator-MC fully
           # uninstalls the bundle helm release on MC before the hook exits.
@@ -439,6 +509,7 @@ spec:
           delete_apps_in_mc "bundle sub-App CRs" "$SUB_APP_SELECTOR"
           delete_charts_in_wc "direct default app Chart CRs" "$WC_CHART_DIRECT_SELECTOR"
           delete_charts_in_wc "bundle sub-app Chart CRs" "$WC_CHART_SUBAPP_SELECTOR"
+          delete_hrs_in_mc "bundle sub-HRs" "$SUB_HR_SELECTOR"
 
           # ============================================================
           # Phase C.5: Forensic re-check for resurrected resources
@@ -454,25 +525,30 @@ spec:
           SUB_RESURR=$(kubectl_retry get apps.application.giantswarm.io -n "$NAMESPACE" -l "$SUB_APP_SELECTOR" --no-headers 2>/dev/null | wc -l | tr -d ' ')
           WC_DIRECT_RESURR=$(kubectl_retry $WC get chart.application.giantswarm.io -n "$CHART_NAMESPACE" -l "$WC_CHART_DIRECT_SELECTOR" --no-headers 2>/dev/null | wc -l | tr -d ' ')
           WC_SUB_RESURR=$(kubectl_retry $WC get chart.application.giantswarm.io -n "$CHART_NAMESPACE" -l "$WC_CHART_SUBAPP_SELECTOR" --no-headers 2>/dev/null | wc -l | tr -d ' ')
+          SUB_HR_RESURR=$(kubectl_retry get helmreleases.helm.toolkit.fluxcd.io -n "$NAMESPACE" -l "$SUB_HR_SELECTOR" --no-headers 2>/dev/null | wc -l | tr -d ' ')
           echo "  non-bundle MC App CRs:       ${NB_RESURR} (expected 0)"
           echo "  bundle sub-App CRs (MC):     ${SUB_RESURR} (expected 0)"
           echo "  direct default WC Chart CRs: ${WC_DIRECT_RESURR} (expected 0)"
           echo "  bundle sub-app WC Chart CRs: ${WC_SUB_RESURR} (expected 0)"
-          if [ "$NB_RESURR" != "0" ] || [ "$SUB_RESURR" != "0" ] || [ "$WC_DIRECT_RESURR" != "0" ] || [ "$WC_SUB_RESURR" != "0" ]; then
+          echo "  bundle sub-HRs (MC):         ${SUB_HR_RESURR} (expected 0)"
+          if [ "$NB_RESURR" != "0" ] || [ "$SUB_RESURR" != "0" ] || [ "$WC_DIRECT_RESURR" != "0" ] || [ "$WC_SUB_RESURR" != "0" ] || [ "$SUB_HR_RESURR" != "0" ]; then
             echo "  WARNING: resurrected resources detected. Listing names + finalizers:"
             kubectl get apps.application.giantswarm.io -n "$NAMESPACE" -l "$NON_BUNDLE_SELECTOR" -o custom-columns="KIND:.kind,NAME:.metadata.name,FINALIZERS:.metadata.finalizers" 2>/dev/null || true
             kubectl get apps.application.giantswarm.io -n "$NAMESPACE" -l "$SUB_APP_SELECTOR" -o custom-columns="KIND:.kind,NAME:.metadata.name,FINALIZERS:.metadata.finalizers" 2>/dev/null || true
             kubectl $WC get chart.application.giantswarm.io -n "$CHART_NAMESPACE" -l "$WC_CHART_DIRECT_SELECTOR" -o custom-columns="KIND:.kind,NAME:.metadata.name,FINALIZERS:.metadata.finalizers" 2>/dev/null || true
             kubectl $WC get chart.application.giantswarm.io -n "$CHART_NAMESPACE" -l "$WC_CHART_SUBAPP_SELECTOR" -o custom-columns="KIND:.kind,NAME:.metadata.name,FINALIZERS:.metadata.finalizers" 2>/dev/null || true
+            kubectl get helmreleases.helm.toolkit.fluxcd.io -n "$NAMESPACE" -l "$SUB_HR_SELECTOR" -o custom-columns="KIND:.kind,NAME:.metadata.name,FINALIZERS:.metadata.finalizers" 2>/dev/null || true
             echo "  Re-running Phase B + C on resurrected set:"
             strip_app_finalizers "non-bundle App CRs (resurrected)" "$NON_BUNDLE_SELECTOR"
             strip_app_finalizers "bundle sub-App CRs (resurrected)" "$SUB_APP_SELECTOR"
             strip_chart_finalizers "direct default app Chart CRs (resurrected)" "$WC_CHART_DIRECT_SELECTOR"
             strip_chart_finalizers "bundle sub-app Chart CRs (resurrected)" "$WC_CHART_SUBAPP_SELECTOR"
+            strip_hr_finalizers "bundle sub-HRs (resurrected)" "$SUB_HR_SELECTOR"
             delete_apps_in_mc "non-bundle App CRs (resurrected)" "$NON_BUNDLE_SELECTOR"
             delete_apps_in_mc "bundle sub-App CRs (resurrected)" "$SUB_APP_SELECTOR"
             delete_charts_in_wc "direct default app Chart CRs (resurrected)" "$WC_CHART_DIRECT_SELECTOR"
             delete_charts_in_wc "bundle sub-app Chart CRs (resurrected)" "$WC_CHART_SUBAPP_SELECTOR"
+            delete_hrs_in_mc "bundle sub-HRs (resurrected)" "$SUB_HR_SELECTOR"
           fi
 
           # ============================================================

@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Migration hook: extend Phase A/B/C/C.5 with a sixth neutralization category for bundle-rendered MC HelmReleases (`SUB_HR_SELECTOR`). Without this, `aws-nth-bundle`'s inner HRs (`<cluster>-aws-node-termination-handler`, `<cluster>-aws-nth-crossplane-resources`) were getting deleted as part of Phase D's bundle helm uninstall manifest, which fired Flux helm-controller's finalizer and ran `helm uninstall` on the managed WC release. Round 68 saw this on 5/5 clusters (10 total uninstalls). The new category pauses the inner HRs and strips their `finalizers.fluxcd.io` in Phase A/B so Phase D's helm uninstall deletes the HR objects without triggering Flux GC of the WC releases. Adds matching RBAC for HelmReleases.
 - HelmReleases: add `upgrade.remediation.remediateLastFailure: false` (with `retries: -1`) so Flux helm-controller skips the rollback/uninstall step on upgrade failure and re-attempts the upgrade on its next reconcile interval. This avoids the wedge that occurs when adopting chart-operator-installed v1 releases (helm-controller refuses to roll back to a release it didn't create, which gates retries in the default behaviour).
 
 ### Added
