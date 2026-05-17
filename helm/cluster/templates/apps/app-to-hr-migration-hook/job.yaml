@@ -317,6 +317,40 @@ spec:
           }
 
           # ============================================================
+          # Gate: skip the hook on already-migrated clusters
+          # ============================================================
+          # The migration is a one-time transformation that converts default
+          # App CRs to HelmRelease CRs. Once a cluster has been migrated to
+          # release v35.0.0 (or any prerelease/patch of v35+), there are no
+          # default App CRs left to migrate — Phase A-D would be no-ops, but
+          # Phase 0b would still scale chart-operator-WC to 0 unnecessarily,
+          # creating a ~5min window where no Chart CR reconciles run on the
+          # WC (app-operator-MC's chart-operator-special-path reconciles it
+          # back to replicas=1 on its next cycle, but during the gap any
+          # user-managed Chart CRs on the WC pause).
+          #
+          # The pre-upgrade hook runs BEFORE helm applies the new manifest,
+          # so the live Cluster CR still carries the PREVIOUS release's
+          # release.giantswarm.io/version label. We extract the major
+          # version (string-cut, not semver-parse) so that prereleases like
+          # "35.0.0-jose" correctly compare as v35+: MAJOR is just the
+          # leading numeric segment. Fall through and run the hook if we
+          # can't determine the version — that's the safer default.
+          CURRENT_RELEASE=$(kubectl_retry get cluster.cluster.x-k8s.io \
+            "$CLUSTER_NAME" -n "$NAMESPACE" \
+            -o jsonpath='{.metadata.labels.release\.giantswarm\.io/version}' 2>/dev/null || true)
+          if [ -n "$CURRENT_RELEASE" ]; then
+            MAJOR=$(echo "$CURRENT_RELEASE" | cut -d'.' -f1)
+            if [ "$MAJOR" -ge 35 ] 2>/dev/null; then
+              echo "Gate: cluster ${CLUSTER_NAME} is on release ${CURRENT_RELEASE} (major>=35); migration already done, skipping hook"
+              exit 0
+            fi
+            echo "Gate: cluster ${CLUSTER_NAME} is on release ${CURRENT_RELEASE} (major<35); running migration"
+          else
+            echo "Gate: could not read release.giantswarm.io/version label from Cluster CR ${CLUSTER_NAME}; running migration for safety"
+          fi
+
+          # ============================================================
           # Phase 0a: Lift the helm upgrade timeout on our own App CR
           # ============================================================
           # The cluster's App CR (the one that deploys this very chart) has
