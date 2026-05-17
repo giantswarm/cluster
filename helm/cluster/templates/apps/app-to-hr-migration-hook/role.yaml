@@ -36,4 +36,11 @@ rules:
 - apiGroups: ["helm.toolkit.fluxcd.io"]
   resources: ["helmreleases"]
   verbs: ["get", "list", "patch", "delete", "deletecollection"]
+# The gate at the top of the hook script reads the live Cluster CR's
+# release.giantswarm.io/version label to decide whether to run or skip.
+- apiGroups: ["cluster.x-k8s.io"]
+  resources: ["clusters"]
+  verbs: ["get"]
+  resourceNames:
+  - {{ include "cluster.resource.name" $ }}
 {{- end }}
