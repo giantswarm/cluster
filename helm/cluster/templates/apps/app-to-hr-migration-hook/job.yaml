@@ -700,6 +700,23 @@ spec:
           fi
 
           # ============================================================
+          # Phase E: Scale chart-operator on the WC back up to 1
+          # ============================================================
+          # Phase 0b scaled chart-operator-WC to 0 to neutralize it during
+          # Phase A-D. Nothing else in the system restores it after the
+          # migration: app-operator-MC reconciles the cluster's
+          # chart-operator App CR but only checks helm release status
+          # ("deployed"), not the live Deployment's replica count — so
+          # the kubectl-scale damage is permanent without this step.
+          #
+          # If we skip this, every post-migration cluster ends up with
+          # chart-operator-WC at replicas=0, and user-managed App CRs on
+          # the WC stop reconciling.
+          echo "Phase E: Scaling chart-operator deployment on the WC back to 1"
+          kubectl_retry $WC scale deployment chart-operator -n "$CHART_NAMESPACE" \
+            --replicas=1
+
+          # ============================================================
           # Forensic event dump
           # ============================================================
           echo ""
