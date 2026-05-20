@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [4.4.2] - 2026-05-20
+
+### Changed
+
+- Chart: Fix validation errors.
+
 ## [4.4.1] - 2026-04-21
 
 ### Changed
@@ -851,7 +857,8 @@ For Kubernetes <v1.29, you will need to re-enable it using the respective values
 
 - Update and clean up the template repo.
 
-[Unreleased]: https://github.com/giantswarm/cluster/compare/v4.4.1...HEAD
+[Unreleased]: https://github.com/giantswarm/cluster/compare/v4.4.2...HEAD
+[4.4.2]: https://github.com/giantswarm/cluster/compare/v4.4.1...v4.4.2
 [4.4.1]: https://github.com/giantswarm/cluster/compare/v4.4.0...v4.4.1
 [4.4.0]: https://github.com/giantswarm/cluster/compare/v4.3.0...v4.4.0
 [4.3.0]: https://github.com/giantswarm/cluster/compare/v4.2.0...v4.3.0
