@@ -74,7 +74,7 @@ extraArgs:
   {{- /* Returning the tls cipher suites map object use fromYamlArray when converting to string */}}
   tls-cipher-suites: {{ include "cluster.internal.kubeadm.tlsCipherSuites" $ | fromYamlArray | join "," }}
   {{- range $argName, $argValue := $.Values.internal.advancedConfiguration.controlPlane.apiServer.extraArgs }}
-  {{ $argName }}: {{ if kindIs "string" $argValue }}{{ $argValue | quote }}{{ else }}{{ $argValue }}{{ end }}
+  {{ $argName }}: {{ $argValue | quote }}
   {{- end }}
 extraVolumes:
 - name: auditlog
