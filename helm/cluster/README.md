@@ -33,182 +33,182 @@ Configuration of apps that are part of the cluster.
 | `global.apps.capiNodeLabeler` | **App resource** - Configuration of a default app that is part of the cluster and is deployed as an App resource.|**Type:** `object`<br/>|
 | `global.apps.capiNodeLabeler.extraConfigs` | **Extra config maps or secrets** - Extra config maps or secrets that will be used to customize to the app. The desired values must be under configmap or secret key 'values'. The values are merged in the order given, with the later values overwriting earlier, and then inline values overwriting those. Resources must be in the same namespace as the cluster.|**Type:** `array`<br/>|
 | `global.apps.capiNodeLabeler.extraConfigs[*]` | **Config map or secret**|**Type:** `object`<br/>|
-| `global.apps.capiNodeLabeler.extraConfigs[*].kind` | **Kind** - Specifies whether the resource is a config map or a secret.|**Type:** `string`<br/>|
+| `global.apps.capiNodeLabeler.extraConfigs[*].kind` | **Kind** - Specifies whether the resource is a config map or a secret.|**Type:** `string`<br/>**Allowed values:** `configMap`, `secret`<br/>|
 | `global.apps.capiNodeLabeler.extraConfigs[*].name` | **Name** - Name of the config map or secret. The object must exist in the same namespace as the cluster App.|**Type:** `string`<br/>|
 | `global.apps.capiNodeLabeler.extraConfigs[*].priority` | **Priority**|**Type:** `integer`<br/>**Default:** `25`|
 | `global.apps.capiNodeLabeler.values` | **Config map** - Helm Values to be passed to the app as user config.|**Type:** `object`<br/>|
 | `global.apps.certExporter` | **App resource** - Configuration of a default app that is part of the cluster and is deployed as an App resource.|**Type:** `object`<br/>|
 | `global.apps.certExporter.extraConfigs` | **Extra config maps or secrets** - Extra config maps or secrets that will be used to customize to the app. The desired values must be under configmap or secret key 'values'. The values are merged in the order given, with the later values overwriting earlier, and then inline values overwriting those. Resources must be in the same namespace as the cluster.|**Type:** `array`<br/>|
 | `global.apps.certExporter.extraConfigs[*]` | **Config map or secret**|**Type:** `object`<br/>|
-| `global.apps.certExporter.extraConfigs[*].kind` | **Kind** - Specifies whether the resource is a config map or a secret.|**Type:** `string`<br/>|
+| `global.apps.certExporter.extraConfigs[*].kind` | **Kind** - Specifies whether the resource is a config map or a secret.|**Type:** `string`<br/>**Allowed values:** `configMap`, `secret`<br/>|
 | `global.apps.certExporter.extraConfigs[*].name` | **Name** - Name of the config map or secret. The object must exist in the same namespace as the cluster App.|**Type:** `string`<br/>|
 | `global.apps.certExporter.extraConfigs[*].priority` | **Priority**|**Type:** `integer`<br/>**Default:** `25`|
 | `global.apps.certExporter.values` | **Config map** - Helm Values to be passed to the app as user config.|**Type:** `object`<br/>|
 | `global.apps.certManager` | **App resource** - Configuration of a default app that is part of the cluster and is deployed as an App resource.|**Type:** `object`<br/>|
 | `global.apps.certManager.extraConfigs` | **Extra config maps or secrets** - Extra config maps or secrets that will be used to customize to the app. The desired values must be under configmap or secret key 'values'. The values are merged in the order given, with the later values overwriting earlier, and then inline values overwriting those. Resources must be in the same namespace as the cluster.|**Type:** `array`<br/>|
 | `global.apps.certManager.extraConfigs[*]` | **Config map or secret**|**Type:** `object`<br/>|
-| `global.apps.certManager.extraConfigs[*].kind` | **Kind** - Specifies whether the resource is a config map or a secret.|**Type:** `string`<br/>|
+| `global.apps.certManager.extraConfigs[*].kind` | **Kind** - Specifies whether the resource is a config map or a secret.|**Type:** `string`<br/>**Allowed values:** `configMap`, `secret`<br/>|
 | `global.apps.certManager.extraConfigs[*].name` | **Name** - Name of the config map or secret. The object must exist in the same namespace as the cluster App.|**Type:** `string`<br/>|
 | `global.apps.certManager.extraConfigs[*].priority` | **Priority**|**Type:** `integer`<br/>**Default:** `25`|
 | `global.apps.certManager.values` | **Config map** - Helm Values to be passed to the app as user config.|**Type:** `object`<br/>|
 | `global.apps.chartOperatorExtensions` | **App resource** - Configuration of a default app that is part of the cluster and is deployed as an App resource.|**Type:** `object`<br/>|
 | `global.apps.chartOperatorExtensions.extraConfigs` | **Extra config maps or secrets** - Extra config maps or secrets that will be used to customize to the app. The desired values must be under configmap or secret key 'values'. The values are merged in the order given, with the later values overwriting earlier, and then inline values overwriting those. Resources must be in the same namespace as the cluster.|**Type:** `array`<br/>|
 | `global.apps.chartOperatorExtensions.extraConfigs[*]` | **Config map or secret**|**Type:** `object`<br/>|
-| `global.apps.chartOperatorExtensions.extraConfigs[*].kind` | **Kind** - Specifies whether the resource is a config map or a secret.|**Type:** `string`<br/>|
+| `global.apps.chartOperatorExtensions.extraConfigs[*].kind` | **Kind** - Specifies whether the resource is a config map or a secret.|**Type:** `string`<br/>**Allowed values:** `configMap`, `secret`<br/>|
 | `global.apps.chartOperatorExtensions.extraConfigs[*].name` | **Name** - Name of the config map or secret. The object must exist in the same namespace as the cluster App.|**Type:** `string`<br/>|
 | `global.apps.chartOperatorExtensions.extraConfigs[*].priority` | **Priority**|**Type:** `integer`<br/>**Default:** `25`|
 | `global.apps.chartOperatorExtensions.values` | **Config map** - Helm Values to be passed to the app as user config.|**Type:** `object`<br/>|
 | `global.apps.cilium` | **App** - Configuration of a default app that is part of the cluster and is deployed as a HelmRelease resource.|**Type:** `object`<br/>|
 | `global.apps.cilium.extraConfigs` | **Extra config maps or secrets** - Extra config maps or secrets that will be used to customize to the app. The desired values must be under configmap or secret key 'values'. The values are merged in the order given, with the later values overwriting earlier, and then inline values overwriting those. Resources must be in the same namespace as the cluster.|**Type:** `array`<br/>|
 | `global.apps.cilium.extraConfigs[*]` | **Config map or secret**|**Type:** `object`<br/>|
-| `global.apps.cilium.extraConfigs[*].kind` | **Kind** - Specifies whether the resource is a config map or a secret.|**Type:** `string`<br/>|
+| `global.apps.cilium.extraConfigs[*].kind` | **Kind** - Specifies whether the resource is a config map or a secret.|**Type:** `string`<br/>**Allowed values:** `ConfigMap`, `Secret`<br/>|
 | `global.apps.cilium.extraConfigs[*].name` | **Name** - Name of the config map or secret. The object must exist in the same namespace as the cluster App.|**Type:** `string`<br/>|
 | `global.apps.cilium.extraConfigs[*].optional` | **Optional** - Optional marks this ValuesReference as optional. When set, a not found error for the values reference is ignored, but any ValuesKey, TargetPath or transient error will still result in a reconciliation failure.|**Type:** `boolean`<br/>|
 | `global.apps.cilium.values` | **Values** - Values to be passed to the app. Values will have higher priority than values from configmaps.|**Type:** `object`<br/>|
 | `global.apps.ciliumServiceMonitors` | **App resource** - Configuration of a default app that is part of the cluster and is deployed as an App resource.|**Type:** `object`<br/>|
 | `global.apps.ciliumServiceMonitors.extraConfigs` | **Extra config maps or secrets** - Extra config maps or secrets that will be used to customize to the app. The desired values must be under configmap or secret key 'values'. The values are merged in the order given, with the later values overwriting earlier, and then inline values overwriting those. Resources must be in the same namespace as the cluster.|**Type:** `array`<br/>|
 | `global.apps.ciliumServiceMonitors.extraConfigs[*]` | **Config map or secret**|**Type:** `object`<br/>|
-| `global.apps.ciliumServiceMonitors.extraConfigs[*].kind` | **Kind** - Specifies whether the resource is a config map or a secret.|**Type:** `string`<br/>|
+| `global.apps.ciliumServiceMonitors.extraConfigs[*].kind` | **Kind** - Specifies whether the resource is a config map or a secret.|**Type:** `string`<br/>**Allowed values:** `configMap`, `secret`<br/>|
 | `global.apps.ciliumServiceMonitors.extraConfigs[*].name` | **Name** - Name of the config map or secret. The object must exist in the same namespace as the cluster App.|**Type:** `string`<br/>|
 | `global.apps.ciliumServiceMonitors.extraConfigs[*].priority` | **Priority**|**Type:** `integer`<br/>**Default:** `25`|
 | `global.apps.ciliumServiceMonitors.values` | **Config map** - Helm Values to be passed to the app as user config.|**Type:** `object`<br/>|
 | `global.apps.clusterAutoscaler` | **App resource** - Configuration of a default app that is part of the cluster and is deployed as an App resource.|**Type:** `object`<br/>|
 | `global.apps.clusterAutoscaler.extraConfigs` | **Extra config maps or secrets** - Extra config maps or secrets that will be used to customize to the app. The desired values must be under configmap or secret key 'values'. The values are merged in the order given, with the later values overwriting earlier, and then inline values overwriting those. Resources must be in the same namespace as the cluster.|**Type:** `array`<br/>|
 | `global.apps.clusterAutoscaler.extraConfigs[*]` | **Config map or secret**|**Type:** `object`<br/>|
-| `global.apps.clusterAutoscaler.extraConfigs[*].kind` | **Kind** - Specifies whether the resource is a config map or a secret.|**Type:** `string`<br/>|
+| `global.apps.clusterAutoscaler.extraConfigs[*].kind` | **Kind** - Specifies whether the resource is a config map or a secret.|**Type:** `string`<br/>**Allowed values:** `configMap`, `secret`<br/>|
 | `global.apps.clusterAutoscaler.extraConfigs[*].name` | **Name** - Name of the config map or secret. The object must exist in the same namespace as the cluster App.|**Type:** `string`<br/>|
 | `global.apps.clusterAutoscaler.extraConfigs[*].priority` | **Priority**|**Type:** `integer`<br/>**Default:** `25`|
 | `global.apps.clusterAutoscaler.values` | **Config map** - Helm Values to be passed to the app as user config.|**Type:** `object`<br/>|
 | `global.apps.coreDns` | **App** - Configuration of a default app that is part of the cluster and is deployed as a HelmRelease resource.|**Type:** `object`<br/>|
 | `global.apps.coreDns.extraConfigs` | **Extra config maps or secrets** - Extra config maps or secrets that will be used to customize to the app. The desired values must be under configmap or secret key 'values'. The values are merged in the order given, with the later values overwriting earlier, and then inline values overwriting those. Resources must be in the same namespace as the cluster.|**Type:** `array`<br/>|
 | `global.apps.coreDns.extraConfigs[*]` | **Config map or secret**|**Type:** `object`<br/>|
-| `global.apps.coreDns.extraConfigs[*].kind` | **Kind** - Specifies whether the resource is a config map or a secret.|**Type:** `string`<br/>|
+| `global.apps.coreDns.extraConfigs[*].kind` | **Kind** - Specifies whether the resource is a config map or a secret.|**Type:** `string`<br/>**Allowed values:** `ConfigMap`, `Secret`<br/>|
 | `global.apps.coreDns.extraConfigs[*].name` | **Name** - Name of the config map or secret. The object must exist in the same namespace as the cluster App.|**Type:** `string`<br/>|
 | `global.apps.coreDns.extraConfigs[*].optional` | **Optional** - Optional marks this ValuesReference as optional. When set, a not found error for the values reference is ignored, but any ValuesKey, TargetPath or transient error will still result in a reconciliation failure.|**Type:** `boolean`<br/>|
 | `global.apps.coreDns.values` | **Values** - Values to be passed to the app. Values will have higher priority than values from configmaps.|**Type:** `object`<br/>|
 | `global.apps.coreDnsExtensions` | **App resource** - Configuration of a default app that is part of the cluster and is deployed as an App resource.|**Type:** `object`<br/>|
 | `global.apps.coreDnsExtensions.extraConfigs` | **Extra config maps or secrets** - Extra config maps or secrets that will be used to customize to the app. The desired values must be under configmap or secret key 'values'. The values are merged in the order given, with the later values overwriting earlier, and then inline values overwriting those. Resources must be in the same namespace as the cluster.|**Type:** `array`<br/>|
 | `global.apps.coreDnsExtensions.extraConfigs[*]` | **Config map or secret**|**Type:** `object`<br/>|
-| `global.apps.coreDnsExtensions.extraConfigs[*].kind` | **Kind** - Specifies whether the resource is a config map or a secret.|**Type:** `string`<br/>|
+| `global.apps.coreDnsExtensions.extraConfigs[*].kind` | **Kind** - Specifies whether the resource is a config map or a secret.|**Type:** `string`<br/>**Allowed values:** `configMap`, `secret`<br/>|
 | `global.apps.coreDnsExtensions.extraConfigs[*].name` | **Name** - Name of the config map or secret. The object must exist in the same namespace as the cluster App.|**Type:** `string`<br/>|
 | `global.apps.coreDnsExtensions.extraConfigs[*].priority` | **Priority**|**Type:** `integer`<br/>**Default:** `25`|
 | `global.apps.coreDnsExtensions.values` | **Config map** - Helm Values to be passed to the app as user config.|**Type:** `object`<br/>|
 | `global.apps.etcdDefrag` | **App resource** - Configuration of a default app that is part of the cluster and is deployed as an App resource.|**Type:** `object`<br/>|
 | `global.apps.etcdDefrag.extraConfigs` | **Extra config maps or secrets** - Extra config maps or secrets that will be used to customize to the app. The desired values must be under configmap or secret key 'values'. The values are merged in the order given, with the later values overwriting earlier, and then inline values overwriting those. Resources must be in the same namespace as the cluster.|**Type:** `array`<br/>|
 | `global.apps.etcdDefrag.extraConfigs[*]` | **Config map or secret**|**Type:** `object`<br/>|
-| `global.apps.etcdDefrag.extraConfigs[*].kind` | **Kind** - Specifies whether the resource is a config map or a secret.|**Type:** `string`<br/>|
+| `global.apps.etcdDefrag.extraConfigs[*].kind` | **Kind** - Specifies whether the resource is a config map or a secret.|**Type:** `string`<br/>**Allowed values:** `configMap`, `secret`<br/>|
 | `global.apps.etcdDefrag.extraConfigs[*].name` | **Name** - Name of the config map or secret. The object must exist in the same namespace as the cluster App.|**Type:** `string`<br/>|
 | `global.apps.etcdDefrag.extraConfigs[*].priority` | **Priority**|**Type:** `integer`<br/>**Default:** `25`|
 | `global.apps.etcdDefrag.values` | **Config map** - Helm Values to be passed to the app as user config.|**Type:** `object`<br/>|
 | `global.apps.etcdKubernetesResourcesCountExporter` | **App resource** - Configuration of a default app that is part of the cluster and is deployed as an App resource.|**Type:** `object`<br/>|
 | `global.apps.etcdKubernetesResourcesCountExporter.extraConfigs` | **Extra config maps or secrets** - Extra config maps or secrets that will be used to customize to the app. The desired values must be under configmap or secret key 'values'. The values are merged in the order given, with the later values overwriting earlier, and then inline values overwriting those. Resources must be in the same namespace as the cluster.|**Type:** `array`<br/>|
 | `global.apps.etcdKubernetesResourcesCountExporter.extraConfigs[*]` | **Config map or secret**|**Type:** `object`<br/>|
-| `global.apps.etcdKubernetesResourcesCountExporter.extraConfigs[*].kind` | **Kind** - Specifies whether the resource is a config map or a secret.|**Type:** `string`<br/>|
+| `global.apps.etcdKubernetesResourcesCountExporter.extraConfigs[*].kind` | **Kind** - Specifies whether the resource is a config map or a secret.|**Type:** `string`<br/>**Allowed values:** `configMap`, `secret`<br/>|
 | `global.apps.etcdKubernetesResourcesCountExporter.extraConfigs[*].name` | **Name** - Name of the config map or secret. The object must exist in the same namespace as the cluster App.|**Type:** `string`<br/>|
 | `global.apps.etcdKubernetesResourcesCountExporter.extraConfigs[*].priority` | **Priority**|**Type:** `integer`<br/>**Default:** `25`|
 | `global.apps.etcdKubernetesResourcesCountExporter.values` | **Config map** - Helm Values to be passed to the app as user config.|**Type:** `object`<br/>|
 | `global.apps.externalDns` | **App resource** - Configuration of a default app that is part of the cluster and is deployed as an App resource.|**Type:** `object`<br/>|
 | `global.apps.externalDns.extraConfigs` | **Extra config maps or secrets** - Extra config maps or secrets that will be used to customize to the app. The desired values must be under configmap or secret key 'values'. The values are merged in the order given, with the later values overwriting earlier, and then inline values overwriting those. Resources must be in the same namespace as the cluster.|**Type:** `array`<br/>|
 | `global.apps.externalDns.extraConfigs[*]` | **Config map or secret**|**Type:** `object`<br/>|
-| `global.apps.externalDns.extraConfigs[*].kind` | **Kind** - Specifies whether the resource is a config map or a secret.|**Type:** `string`<br/>|
+| `global.apps.externalDns.extraConfigs[*].kind` | **Kind** - Specifies whether the resource is a config map or a secret.|**Type:** `string`<br/>**Allowed values:** `configMap`, `secret`<br/>|
 | `global.apps.externalDns.extraConfigs[*].name` | **Name** - Name of the config map or secret. The object must exist in the same namespace as the cluster App.|**Type:** `string`<br/>|
 | `global.apps.externalDns.extraConfigs[*].priority` | **Priority**|**Type:** `integer`<br/>**Default:** `25`|
 | `global.apps.externalDns.values` | **Config map** - Helm Values to be passed to the app as user config.|**Type:** `object`<br/>|
 | `global.apps.giantswarmClusterSuite` | **App** - Configuration of a default app that is part of the cluster and is deployed as a HelmRelease resource.|**Type:** `object`<br/>|
 | `global.apps.giantswarmClusterSuite.extraConfigs` | **Extra config maps or secrets** - Extra config maps or secrets that will be used to customize to the app. The desired values must be under configmap or secret key 'values'. The values are merged in the order given, with the later values overwriting earlier, and then inline values overwriting those. Resources must be in the same namespace as the cluster.|**Type:** `array`<br/>|
 | `global.apps.giantswarmClusterSuite.extraConfigs[*]` | **Config map or secret**|**Type:** `object`<br/>|
-| `global.apps.giantswarmClusterSuite.extraConfigs[*].kind` | **Kind** - Specifies whether the resource is a config map or a secret.|**Type:** `string`<br/>|
+| `global.apps.giantswarmClusterSuite.extraConfigs[*].kind` | **Kind** - Specifies whether the resource is a config map or a secret.|**Type:** `string`<br/>**Allowed values:** `ConfigMap`, `Secret`<br/>|
 | `global.apps.giantswarmClusterSuite.extraConfigs[*].name` | **Name** - Name of the config map or secret. The object must exist in the same namespace as the cluster App.|**Type:** `string`<br/>|
 | `global.apps.giantswarmClusterSuite.extraConfigs[*].optional` | **Optional** - Optional marks this ValuesReference as optional. When set, a not found error for the values reference is ignored, but any ValuesKey, TargetPath or transient error will still result in a reconciliation failure.|**Type:** `boolean`<br/>|
 | `global.apps.giantswarmClusterSuite.values` | **Values** - Values to be passed to the app. Values will have higher priority than values from configmaps.|**Type:** `object`<br/>|
 | `global.apps.k8sAuditMetrics` | **App resource** - Configuration of a default app that is part of the cluster and is deployed as an App resource.|**Type:** `object`<br/>|
 | `global.apps.k8sAuditMetrics.extraConfigs` | **Extra config maps or secrets** - Extra config maps or secrets that will be used to customize to the app. The desired values must be under configmap or secret key 'values'. The values are merged in the order given, with the later values overwriting earlier, and then inline values overwriting those. Resources must be in the same namespace as the cluster.|**Type:** `array`<br/>|
 | `global.apps.k8sAuditMetrics.extraConfigs[*]` | **Config map or secret**|**Type:** `object`<br/>|
-| `global.apps.k8sAuditMetrics.extraConfigs[*].kind` | **Kind** - Specifies whether the resource is a config map or a secret.|**Type:** `string`<br/>|
+| `global.apps.k8sAuditMetrics.extraConfigs[*].kind` | **Kind** - Specifies whether the resource is a config map or a secret.|**Type:** `string`<br/>**Allowed values:** `configMap`, `secret`<br/>|
 | `global.apps.k8sAuditMetrics.extraConfigs[*].name` | **Name** - Name of the config map or secret. The object must exist in the same namespace as the cluster App.|**Type:** `string`<br/>|
 | `global.apps.k8sAuditMetrics.extraConfigs[*].priority` | **Priority**|**Type:** `integer`<br/>**Default:** `25`|
 | `global.apps.k8sAuditMetrics.values` | **Config map** - Helm Values to be passed to the app as user config.|**Type:** `object`<br/>|
 | `global.apps.k8sDnsNodeCache` | **App resource** - Configuration of a default app that is part of the cluster and is deployed as an App resource.|**Type:** `object`<br/>|
 | `global.apps.k8sDnsNodeCache.extraConfigs` | **Extra config maps or secrets** - Extra config maps or secrets that will be used to customize to the app. The desired values must be under configmap or secret key 'values'. The values are merged in the order given, with the later values overwriting earlier, and then inline values overwriting those. Resources must be in the same namespace as the cluster.|**Type:** `array`<br/>|
 | `global.apps.k8sDnsNodeCache.extraConfigs[*]` | **Config map or secret**|**Type:** `object`<br/>|
-| `global.apps.k8sDnsNodeCache.extraConfigs[*].kind` | **Kind** - Specifies whether the resource is a config map or a secret.|**Type:** `string`<br/>|
+| `global.apps.k8sDnsNodeCache.extraConfigs[*].kind` | **Kind** - Specifies whether the resource is a config map or a secret.|**Type:** `string`<br/>**Allowed values:** `configMap`, `secret`<br/>|
 | `global.apps.k8sDnsNodeCache.extraConfigs[*].name` | **Name** - Name of the config map or secret. The object must exist in the same namespace as the cluster App.|**Type:** `string`<br/>|
 | `global.apps.k8sDnsNodeCache.extraConfigs[*].priority` | **Priority**|**Type:** `integer`<br/>**Default:** `25`|
 | `global.apps.k8sDnsNodeCache.values` | **Config map** - Helm Values to be passed to the app as user config.|**Type:** `object`<br/>|
 | `global.apps.metricsServer` | **App resource** - Configuration of a default app that is part of the cluster and is deployed as an App resource.|**Type:** `object`<br/>|
 | `global.apps.metricsServer.extraConfigs` | **Extra config maps or secrets** - Extra config maps or secrets that will be used to customize to the app. The desired values must be under configmap or secret key 'values'. The values are merged in the order given, with the later values overwriting earlier, and then inline values overwriting those. Resources must be in the same namespace as the cluster.|**Type:** `array`<br/>|
 | `global.apps.metricsServer.extraConfigs[*]` | **Config map or secret**|**Type:** `object`<br/>|
-| `global.apps.metricsServer.extraConfigs[*].kind` | **Kind** - Specifies whether the resource is a config map or a secret.|**Type:** `string`<br/>|
+| `global.apps.metricsServer.extraConfigs[*].kind` | **Kind** - Specifies whether the resource is a config map or a secret.|**Type:** `string`<br/>**Allowed values:** `configMap`, `secret`<br/>|
 | `global.apps.metricsServer.extraConfigs[*].name` | **Name** - Name of the config map or secret. The object must exist in the same namespace as the cluster App.|**Type:** `string`<br/>|
 | `global.apps.metricsServer.extraConfigs[*].priority` | **Priority**|**Type:** `integer`<br/>**Default:** `25`|
 | `global.apps.metricsServer.values` | **Config map** - Helm Values to be passed to the app as user config.|**Type:** `object`<br/>|
 | `global.apps.netExporter` | **App resource** - Configuration of a default app that is part of the cluster and is deployed as an App resource.|**Type:** `object`<br/>|
 | `global.apps.netExporter.extraConfigs` | **Extra config maps or secrets** - Extra config maps or secrets that will be used to customize to the app. The desired values must be under configmap or secret key 'values'. The values are merged in the order given, with the later values overwriting earlier, and then inline values overwriting those. Resources must be in the same namespace as the cluster.|**Type:** `array`<br/>|
 | `global.apps.netExporter.extraConfigs[*]` | **Config map or secret**|**Type:** `object`<br/>|
-| `global.apps.netExporter.extraConfigs[*].kind` | **Kind** - Specifies whether the resource is a config map or a secret.|**Type:** `string`<br/>|
+| `global.apps.netExporter.extraConfigs[*].kind` | **Kind** - Specifies whether the resource is a config map or a secret.|**Type:** `string`<br/>**Allowed values:** `configMap`, `secret`<br/>|
 | `global.apps.netExporter.extraConfigs[*].name` | **Name** - Name of the config map or secret. The object must exist in the same namespace as the cluster App.|**Type:** `string`<br/>|
 | `global.apps.netExporter.extraConfigs[*].priority` | **Priority**|**Type:** `integer`<br/>**Default:** `25`|
 | `global.apps.netExporter.values` | **Config map** - Helm Values to be passed to the app as user config.|**Type:** `object`<br/>|
 | `global.apps.networkPolicies` | **App** - Configuration of a default app that is part of the cluster and is deployed as a HelmRelease resource.|**Type:** `object`<br/>|
 | `global.apps.networkPolicies.extraConfigs` | **Extra config maps or secrets** - Extra config maps or secrets that will be used to customize to the app. The desired values must be under configmap or secret key 'values'. The values are merged in the order given, with the later values overwriting earlier, and then inline values overwriting those. Resources must be in the same namespace as the cluster.|**Type:** `array`<br/>|
 | `global.apps.networkPolicies.extraConfigs[*]` | **Config map or secret**|**Type:** `object`<br/>|
-| `global.apps.networkPolicies.extraConfigs[*].kind` | **Kind** - Specifies whether the resource is a config map or a secret.|**Type:** `string`<br/>|
+| `global.apps.networkPolicies.extraConfigs[*].kind` | **Kind** - Specifies whether the resource is a config map or a secret.|**Type:** `string`<br/>**Allowed values:** `ConfigMap`, `Secret`<br/>|
 | `global.apps.networkPolicies.extraConfigs[*].name` | **Name** - Name of the config map or secret. The object must exist in the same namespace as the cluster App.|**Type:** `string`<br/>|
 | `global.apps.networkPolicies.extraConfigs[*].optional` | **Optional** - Optional marks this ValuesReference as optional. When set, a not found error for the values reference is ignored, but any ValuesKey, TargetPath or transient error will still result in a reconciliation failure.|**Type:** `boolean`<br/>|
 | `global.apps.networkPolicies.values` | **Values** - Values to be passed to the app. Values will have higher priority than values from configmaps.|**Type:** `object`<br/>|
 | `global.apps.nodeExporter` | **App resource** - Configuration of a default app that is part of the cluster and is deployed as an App resource.|**Type:** `object`<br/>|
 | `global.apps.nodeExporter.extraConfigs` | **Extra config maps or secrets** - Extra config maps or secrets that will be used to customize to the app. The desired values must be under configmap or secret key 'values'. The values are merged in the order given, with the later values overwriting earlier, and then inline values overwriting those. Resources must be in the same namespace as the cluster.|**Type:** `array`<br/>|
 | `global.apps.nodeExporter.extraConfigs[*]` | **Config map or secret**|**Type:** `object`<br/>|
-| `global.apps.nodeExporter.extraConfigs[*].kind` | **Kind** - Specifies whether the resource is a config map or a secret.|**Type:** `string`<br/>|
+| `global.apps.nodeExporter.extraConfigs[*].kind` | **Kind** - Specifies whether the resource is a config map or a secret.|**Type:** `string`<br/>**Allowed values:** `configMap`, `secret`<br/>|
 | `global.apps.nodeExporter.extraConfigs[*].name` | **Name** - Name of the config map or secret. The object must exist in the same namespace as the cluster App.|**Type:** `string`<br/>|
 | `global.apps.nodeExporter.extraConfigs[*].priority` | **Priority**|**Type:** `integer`<br/>**Default:** `25`|
 | `global.apps.nodeExporter.values` | **Config map** - Helm Values to be passed to the app as user config.|**Type:** `object`<br/>|
 | `global.apps.observabilityBundle` | **App resource** - Configuration of a default app that is part of the cluster and is deployed as an App resource.|**Type:** `object`<br/>|
 | `global.apps.observabilityBundle.extraConfigs` | **Extra config maps or secrets** - Extra config maps or secrets that will be used to customize to the app. The desired values must be under configmap or secret key 'values'. The values are merged in the order given, with the later values overwriting earlier, and then inline values overwriting those. Resources must be in the same namespace as the cluster.|**Type:** `array`<br/>|
 | `global.apps.observabilityBundle.extraConfigs[*]` | **Config map or secret**|**Type:** `object`<br/>|
-| `global.apps.observabilityBundle.extraConfigs[*].kind` | **Kind** - Specifies whether the resource is a config map or a secret.|**Type:** `string`<br/>|
+| `global.apps.observabilityBundle.extraConfigs[*].kind` | **Kind** - Specifies whether the resource is a config map or a secret.|**Type:** `string`<br/>**Allowed values:** `configMap`, `secret`<br/>|
 | `global.apps.observabilityBundle.extraConfigs[*].name` | **Name** - Name of the config map or secret. The object must exist in the same namespace as the cluster App.|**Type:** `string`<br/>|
 | `global.apps.observabilityBundle.extraConfigs[*].priority` | **Priority**|**Type:** `integer`<br/>**Default:** `25`|
 | `global.apps.observabilityBundle.values` | **Config map** - Helm Values to be passed to the app as user config.|**Type:** `object`<br/>|
 | `global.apps.observabilityPolicies` | **App resource** - Configuration of a default app that is part of the cluster and is deployed as an App resource.|**Type:** `object`<br/>|
 | `global.apps.observabilityPolicies.extraConfigs` | **Extra config maps or secrets** - Extra config maps or secrets that will be used to customize to the app. The desired values must be under configmap or secret key 'values'. The values are merged in the order given, with the later values overwriting earlier, and then inline values overwriting those. Resources must be in the same namespace as the cluster.|**Type:** `array`<br/>|
 | `global.apps.observabilityPolicies.extraConfigs[*]` | **Config map or secret**|**Type:** `object`<br/>|
-| `global.apps.observabilityPolicies.extraConfigs[*].kind` | **Kind** - Specifies whether the resource is a config map or a secret.|**Type:** `string`<br/>|
+| `global.apps.observabilityPolicies.extraConfigs[*].kind` | **Kind** - Specifies whether the resource is a config map or a secret.|**Type:** `string`<br/>**Allowed values:** `configMap`, `secret`<br/>|
 | `global.apps.observabilityPolicies.extraConfigs[*].name` | **Name** - Name of the config map or secret. The object must exist in the same namespace as the cluster App.|**Type:** `string`<br/>|
 | `global.apps.observabilityPolicies.extraConfigs[*].priority` | **Priority**|**Type:** `integer`<br/>**Default:** `25`|
 | `global.apps.observabilityPolicies.values` | **Config map** - Helm Values to be passed to the app as user config.|**Type:** `object`<br/>|
 | `global.apps.prometheusBlackboxExporter` | **App resource** - Configuration of a default app that is part of the cluster and is deployed as an App resource.|**Type:** `object`<br/>|
 | `global.apps.prometheusBlackboxExporter.extraConfigs` | **Extra config maps or secrets** - Extra config maps or secrets that will be used to customize to the app. The desired values must be under configmap or secret key 'values'. The values are merged in the order given, with the later values overwriting earlier, and then inline values overwriting those. Resources must be in the same namespace as the cluster.|**Type:** `array`<br/>|
 | `global.apps.prometheusBlackboxExporter.extraConfigs[*]` | **Config map or secret**|**Type:** `object`<br/>|
-| `global.apps.prometheusBlackboxExporter.extraConfigs[*].kind` | **Kind** - Specifies whether the resource is a config map or a secret.|**Type:** `string`<br/>|
+| `global.apps.prometheusBlackboxExporter.extraConfigs[*].kind` | **Kind** - Specifies whether the resource is a config map or a secret.|**Type:** `string`<br/>**Allowed values:** `configMap`, `secret`<br/>|
 | `global.apps.prometheusBlackboxExporter.extraConfigs[*].name` | **Name** - Name of the config map or secret. The object must exist in the same namespace as the cluster App.|**Type:** `string`<br/>|
 | `global.apps.prometheusBlackboxExporter.extraConfigs[*].priority` | **Priority**|**Type:** `integer`<br/>**Default:** `25`|
 | `global.apps.prometheusBlackboxExporter.values` | **Config map** - Helm Values to be passed to the app as user config.|**Type:** `object`<br/>|
 | `global.apps.securityBundle` | **App resource** - Configuration of a default app that is part of the cluster and is deployed as an App resource.|**Type:** `object`<br/>|
 | `global.apps.securityBundle.extraConfigs` | **Extra config maps or secrets** - Extra config maps or secrets that will be used to customize to the app. The desired values must be under configmap or secret key 'values'. The values are merged in the order given, with the later values overwriting earlier, and then inline values overwriting those. Resources must be in the same namespace as the cluster.|**Type:** `array`<br/>|
 | `global.apps.securityBundle.extraConfigs[*]` | **Config map or secret**|**Type:** `object`<br/>|
-| `global.apps.securityBundle.extraConfigs[*].kind` | **Kind** - Specifies whether the resource is a config map or a secret.|**Type:** `string`<br/>|
+| `global.apps.securityBundle.extraConfigs[*].kind` | **Kind** - Specifies whether the resource is a config map or a secret.|**Type:** `string`<br/>**Allowed values:** `configMap`, `secret`<br/>|
 | `global.apps.securityBundle.extraConfigs[*].name` | **Name** - Name of the config map or secret. The object must exist in the same namespace as the cluster App.|**Type:** `string`<br/>|
 | `global.apps.securityBundle.extraConfigs[*].priority` | **Priority**|**Type:** `integer`<br/>**Default:** `25`|
 | `global.apps.securityBundle.values` | **Config map** - Helm Values to be passed to the app as user config.|**Type:** `object`<br/>|
 | `global.apps.teleportKubeAgent` | **App resource** - Configuration of a default app that is part of the cluster and is deployed as an App resource.|**Type:** `object`<br/>|
 | `global.apps.teleportKubeAgent.extraConfigs` | **Extra config maps or secrets** - Extra config maps or secrets that will be used to customize to the app. The desired values must be under configmap or secret key 'values'. The values are merged in the order given, with the later values overwriting earlier, and then inline values overwriting those. Resources must be in the same namespace as the cluster.|**Type:** `array`<br/>|
 | `global.apps.teleportKubeAgent.extraConfigs[*]` | **Config map or secret**|**Type:** `object`<br/>|
-| `global.apps.teleportKubeAgent.extraConfigs[*].kind` | **Kind** - Specifies whether the resource is a config map or a secret.|**Type:** `string`<br/>|
+| `global.apps.teleportKubeAgent.extraConfigs[*].kind` | **Kind** - Specifies whether the resource is a config map or a secret.|**Type:** `string`<br/>**Allowed values:** `configMap`, `secret`<br/>|
 | `global.apps.teleportKubeAgent.extraConfigs[*].name` | **Name** - Name of the config map or secret. The object must exist in the same namespace as the cluster App.|**Type:** `string`<br/>|
 | `global.apps.teleportKubeAgent.extraConfigs[*].priority` | **Priority**|**Type:** `integer`<br/>**Default:** `25`|
 | `global.apps.teleportKubeAgent.values` | **Config map** - Helm Values to be passed to the app as user config.|**Type:** `object`<br/>|
 | `global.apps.verticalPodAutoscaler` | **App resource** - Configuration of a default app that is part of the cluster and is deployed as an App resource.|**Type:** `object`<br/>|
 | `global.apps.verticalPodAutoscaler.extraConfigs` | **Extra config maps or secrets** - Extra config maps or secrets that will be used to customize to the app. The desired values must be under configmap or secret key 'values'. The values are merged in the order given, with the later values overwriting earlier, and then inline values overwriting those. Resources must be in the same namespace as the cluster.|**Type:** `array`<br/>|
 | `global.apps.verticalPodAutoscaler.extraConfigs[*]` | **Config map or secret**|**Type:** `object`<br/>|
-| `global.apps.verticalPodAutoscaler.extraConfigs[*].kind` | **Kind** - Specifies whether the resource is a config map or a secret.|**Type:** `string`<br/>|
+| `global.apps.verticalPodAutoscaler.extraConfigs[*].kind` | **Kind** - Specifies whether the resource is a config map or a secret.|**Type:** `string`<br/>**Allowed values:** `configMap`, `secret`<br/>|
 | `global.apps.verticalPodAutoscaler.extraConfigs[*].name` | **Name** - Name of the config map or secret. The object must exist in the same namespace as the cluster App.|**Type:** `string`<br/>|
 | `global.apps.verticalPodAutoscaler.extraConfigs[*].priority` | **Priority**|**Type:** `integer`<br/>**Default:** `25`|
 | `global.apps.verticalPodAutoscaler.values` | **Config map** - Helm Values to be passed to the app as user config.|**Type:** `object`<br/>|
 | `global.apps.verticalPodAutoscalerCrd` | **App** - Configuration of a default app that is part of the cluster and is deployed as a HelmRelease resource.|**Type:** `object`<br/>|
 | `global.apps.verticalPodAutoscalerCrd.extraConfigs` | **Extra config maps or secrets** - Extra config maps or secrets that will be used to customize to the app. The desired values must be under configmap or secret key 'values'. The values are merged in the order given, with the later values overwriting earlier, and then inline values overwriting those. Resources must be in the same namespace as the cluster.|**Type:** `array`<br/>|
 | `global.apps.verticalPodAutoscalerCrd.extraConfigs[*]` | **Config map or secret**|**Type:** `object`<br/>|
-| `global.apps.verticalPodAutoscalerCrd.extraConfigs[*].kind` | **Kind** - Specifies whether the resource is a config map or a secret.|**Type:** `string`<br/>|
+| `global.apps.verticalPodAutoscalerCrd.extraConfigs[*].kind` | **Kind** - Specifies whether the resource is a config map or a secret.|**Type:** `string`<br/>**Allowed values:** `ConfigMap`, `Secret`<br/>|
 | `global.apps.verticalPodAutoscalerCrd.extraConfigs[*].name` | **Name** - Name of the config map or secret. The object must exist in the same namespace as the cluster App.|**Type:** `string`<br/>|
 | `global.apps.verticalPodAutoscalerCrd.extraConfigs[*].optional` | **Optional** - Optional marks this ValuesReference as optional. When set, a not found error for the values reference is ignored, but any ValuesKey, TargetPath or transient error will still result in a reconciliation failure.|**Type:** `boolean`<br/>|
 | `global.apps.verticalPodAutoscalerCrd.values` | **Values** - Values to be passed to the app. Values will have higher priority than values from configmaps.|**Type:** `object`<br/>|
@@ -243,7 +243,7 @@ Advanced configuration of components that are running on all nodes.
 | `global.components.containerd.selinux` | **SELinux configuration** - SELinux configuration for containerd.|**Type:** `object`<br/>|
 | `global.components.containerd.selinux.enabled` | **Enabled** - Enabling this will configure containerd to do SELinux relabeling to containers.|**Type:** `boolean`<br/>**Default:** `false`|
 | `global.components.selinux` | **SELinux** - Configuration of SELinux.|**Type:** `object`<br/>|
-| `global.components.selinux.mode` | **SELinux mode** - Configure SELinux mode: 'enforcing', 'permissive' or 'disabled'.|**Type:** `string`<br/>**Default:** `"permissive"`|
+| `global.components.selinux.mode` | **SELinux mode** - Configure SELinux mode: 'enforcing', 'permissive' or 'disabled'.|**Type:** `string`<br/>**Allowed values:** `enforcing`, `permissive`, `disabled`<br/>**Default:** `"permissive"`|
 
 ### Connectivity
 Properties within the `.global.connectivity` object
@@ -279,13 +279,13 @@ Configuration of the control plane.
 | `global.controlPlane.apiServerPort` | **API server port** - The API server Load Balancer port. This option sets the Spec.ClusterNetwork.APIServerPort field on the Cluster CR. In CAPI this field isn't used currently. It is instead used in providers. In CAPA this sets only the public facing port of the Load Balancer. In CAPZ both the public facing and the destination port are set to this value. CAPV and CAPVCD do not use it.|**Type:** `integer`<br/>**Default:** `6443`|
 | `global.controlPlane.customNodeTaints` | **Custom node taints**|**Type:** `array`<br/>**Default:** `[]`|
 | `global.controlPlane.customNodeTaints[*]` |**None**|**Type:** `object`<br/>|
-| `global.controlPlane.customNodeTaints[*].effect` | **Effect**|**Type:** `string`<br/>|
+| `global.controlPlane.customNodeTaints[*].effect` | **Effect**|**Type:** `string`<br/>**Allowed values:** `NoSchedule`, `PreferNoSchedule`, `NoExecute`<br/>|
 | `global.controlPlane.customNodeTaints[*].key` | **Key**|**Type:** `string`<br/>|
 | `global.controlPlane.customNodeTaints[*].value` | **Value**|**Type:** `string`<br/>|
 | `global.controlPlane.machineHealthCheck` | **Machine health check**|**Type:** `object`<br/>|
 | `global.controlPlane.machineHealthCheck.enabled` | **Enable**|**Type:** `boolean`<br/>**Default:** `true`|
 | `global.controlPlane.machineHealthCheck.maxUnhealthy` | **Maximum unhealthy nodes**|**Type:** `string`<br/>**Example:** `"40%"`<br/>**Default:** `"40%"`|
-| `global.controlPlane.machineHealthCheck.nodeStartupTimeout` | **Node startup timeout** - Determines how long a machine health check should wait for a node to join the cluster, before considering a machine unhealthy.|**Type:** `string`<br/>**Examples:** `"10m", "100s"`<br/>**Default:** `"8m0s"`|
+| `global.controlPlane.machineHealthCheck.nodeStartupTimeout` | **Node startup timeout** - Determines how long a machine health check should wait for a node to join the cluster, before considering a machine unhealthy.|**Type:** `string`<br/>**Examples:** `"10m"`, `"100s"`<br/>**Default:** `"8m0s"`|
 | `global.controlPlane.machineHealthCheck.unhealthyNotReadyTimeout` | **Timeout for ready** - If a node is not in condition 'Ready' after this timeout, it will be considered unhealthy.|**Type:** `string`<br/>**Example:** `"300s"`<br/>**Default:** `"10m0s"`|
 | `global.controlPlane.machineHealthCheck.unhealthyUnknownTimeout` | **Timeout for unknown condition** - If a node is in 'Unknown' condition after this timeout, it will be considered unhealthy.|**Type:** `string`<br/>**Example:** `"300s"`<br/>**Default:** `"10m0s"`|
 | `global.controlPlane.oidc` | **OIDC authentication**|**Type:** `object`<br/>|
@@ -296,7 +296,7 @@ Configuration of the control plane.
 | `global.controlPlane.oidc.issuerUrl` | **Issuer URL** - Exact issuer URL that will be included in identity tokens.|**Type:** `string`<br/>|
 | `global.controlPlane.oidc.usernameClaim` | **Username claim**|**Type:** `string`<br/>|
 | `global.controlPlane.oidc.usernamePrefix` | **Username prefix**|**Type:** `string`<br/>|
-| `global.controlPlane.replicas` | **Replicas** - The number of control plane nodes.|**Type:** `integer`<br/>**Default:** `3`|
+| `global.controlPlane.replicas` | **Replicas** - The number of control plane nodes.|**Type:** `integer`<br/>**Allowed values:** `1`, `3`, `5`<br/>**Default:** `3`|
 
 ### Internal
 Properties within the `.internal` top-level object
@@ -342,7 +342,7 @@ For Giant Swarm internal use only, not stable, or not supported by UIs.
 | `internal.advancedConfiguration.controlPlane.etcd.experimental.peerSkipClientSanVerification` | **Peer skip client SAN verification** - Skip verification of SAN field in client certificate for peer connections.|**Type:** `boolean`<br/>|
 | `internal.advancedConfiguration.controlPlane.etcd.extraArgs` | **Extra args**|**Type:** `object`<br/>|
 | `internal.advancedConfiguration.controlPlane.etcd.initialCluster` | **Initial cluster** - Initial cluster configuration for bootstrapping.|**Type:** `string`<br/>|
-| `internal.advancedConfiguration.controlPlane.etcd.initialClusterState` | **Initial cluster state**|**Type:** `string`<br/>|
+| `internal.advancedConfiguration.controlPlane.etcd.initialClusterState` | **Initial cluster state**|**Type:** `string`<br/>**Allowed values:** `new`, `existing`<br/>|
 | `internal.advancedConfiguration.controlPlane.etcd.quotaBackendBytesGiB` | **Quota backend bytes in GiB** - Raise the etcd default backend bytes limit up to 16GiB.|**Type:** `integer`<br/>**Default:** `8`|
 | `internal.advancedConfiguration.controlPlane.files` | **Files** - Custom cluster-specific files that are deployed to control plane nodes.|**Type:** `array`<br/>|
 | `internal.advancedConfiguration.controlPlane.files[*]` | **File from secret** - It defines a file with content in a Secret|**Type:** `object`<br/>|
@@ -420,7 +420,7 @@ Properties within the `.global.metadata` object
 | `global.metadata.name` | **Cluster name** - Unique identifier, cannot be changed after creation.|**Type:** `string`<br/>|
 | `global.metadata.organization` | **Organization** - The name of organization that owns the cluster.|**Type:** `string`<br/>|
 | `global.metadata.preventDeletion` | **Prevent cluster deletion** - Setting this to true will set giantswarm.io/prevent-deletion label to true, which will block cluster deletion.|**Type:** `boolean`<br/>**Default:** `false`|
-| `global.metadata.servicePriority` | **Service priority** - The relative importance of this cluster.|**Type:** `string`<br/>**Default:** `"highest"`|
+| `global.metadata.servicePriority` | **Service priority** - The relative importance of this cluster.|**Type:** `string`<br/>**Allowed values:** `highest`, `medium`, `lowest`<br/>**Default:** `"highest"`|
 
 ### Node pools
 Properties within the `.global.nodePools` object
@@ -435,7 +435,7 @@ Properties within the `.global.nodePools` object
 | `global.nodePools.PATTERN.customNodeLabels[*]` | **Label**|**Type:** `string`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
 | `global.nodePools.PATTERN.customNodeTaints` | **Custom node taints**|**Type:** `array`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>**Default:** `[]`|
 | `global.nodePools.PATTERN.customNodeTaints[*]` |**None**|**Type:** `object`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
-| `global.nodePools.PATTERN.customNodeTaints[*].effect` | **Effect**|**Type:** `string`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
+| `global.nodePools.PATTERN.customNodeTaints[*].effect` | **Effect**|**Type:** `string`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>**Allowed values:** `NoSchedule`, `PreferNoSchedule`, `NoExecute`<br/>|
 | `global.nodePools.PATTERN.customNodeTaints[*].key` | **Key**|**Type:** `string`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
 | `global.nodePools.PATTERN.customNodeTaints[*].value` | **Value**|**Type:** `string`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
 | `global.nodePools.PATTERN.labels` | **Labels** - These labels are added to all Kubernetes resources defining this node pool.|**Type:** `object`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
@@ -443,13 +443,13 @@ Properties within the `.global.nodePools` object
 | `global.nodePools.PATTERN.machineHealthCheck` | **Machine health check**|**Type:** `object`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
 | `global.nodePools.PATTERN.machineHealthCheck.enabled` | **Enable**|**Type:** `boolean`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>**Default:** `true`|
 | `global.nodePools.PATTERN.machineHealthCheck.maxUnhealthy` | **Maximum unhealthy nodes**|**Type:** `string`<br/>**Example:** `"40%"`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>**Default:** `"40%"`|
-| `global.nodePools.PATTERN.machineHealthCheck.nodeStartupTimeout` | **Node startup timeout** - Determines how long a machine health check should wait for a node to join the cluster, before considering a machine unhealthy.|**Type:** `string`<br/>**Examples:** `"10m", "100s"`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>**Default:** `"8m0s"`|
+| `global.nodePools.PATTERN.machineHealthCheck.nodeStartupTimeout` | **Node startup timeout** - Determines how long a machine health check should wait for a node to join the cluster, before considering a machine unhealthy.|**Type:** `string`<br/>**Examples:** `"10m"`, `"100s"`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>**Default:** `"8m0s"`|
 | `global.nodePools.PATTERN.machineHealthCheck.unhealthyNotReadyTimeout` | **Timeout for ready** - If a node is not in condition 'Ready' after this timeout, it will be considered unhealthy.|**Type:** `string`<br/>**Example:** `"300s"`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>**Default:** `"10m0s"`|
 | `global.nodePools.PATTERN.machineHealthCheck.unhealthyUnknownTimeout` | **Timeout for unknown condition** - If a node is in 'Unknown' condition after this timeout, it will be considered unhealthy.|**Type:** `string`<br/>**Example:** `"300s"`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>**Default:** `"10m0s"`|
 | `global.nodePools.PATTERN.maxSize` | **Max size** - Maximum number of node pool nodes|**Type:** `integer`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
 | `global.nodePools.PATTERN.minSize` | **Min size** - Minimum number of node pool nodes|**Type:** `integer`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
 | `global.nodePools.PATTERN.replicas` | **Replicas** - The number of node pool nodes.|**Type:** `integer`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
-| `global.nodePools.PATTERN.type` | **Node pool type** - Controller that will manage the node pool. Only used to enable karpenter node pools.|**Type:** `string`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>**Default:** `"machinepool"`|
+| `global.nodePools.PATTERN.type` | **Node pool type** - Controller that will manage the node pool. Only used to enable karpenter node pools.|**Type:** `string`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>**Allowed values:** `machinepool`, `karpenter`<br/>**Default:** `"machinepool"`|
 
 ### Other global
 
@@ -577,7 +577,7 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.storage.filesystems[*]` | **File system** - The filesystem to be configured and/or used in the “files” section. Either “mount” or “path” needs to be specified.|**Type:** `object`<br/>|
 | `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.storage.filesystems[*].mount` | **Mount** - It contains the set of mount and formatting options for the filesystem. A non-null entry indicates that the filesystem should be mounted before it is used by Ignition.|**Type:** `object`<br/>|
 | `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.storage.filesystems[*].mount.device` | **Device** - The absolute path to the device. Devices are typically referenced by the /dev/disk/by-* symlinks.|**Type:** `string`<br/>|
-| `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.storage.filesystems[*].mount.format` | **Format** - The filesystem format (ext4, btrfs, or xfs).|**Type:** `string`<br/>|
+| `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.storage.filesystems[*].mount.format` | **Format** - The filesystem format (ext4, btrfs, or xfs).|**Type:** `string`<br/>**Allowed values:** `ext4`, `btrfs`, `xfs`<br/>|
 | `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.storage.filesystems[*].mount.label` | **Label** - The label of the filesystem.|**Type:** `string`<br/>|
 | `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.storage.filesystems[*].mount.options` | **Options** - Any additional options to be passed to the format-specific mkfs utility.|**Type:** `array`<br/>|
 | `providerIntegration.bastion.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.storage.filesystems[*].mount.options[*]` |An additional option to be passed to the format-specific mkfs utility.|**Type:** `string`<br/>|
@@ -639,7 +639,19 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.components.containerd.sandboxContainerImage` | **Sandbox image** - The image used by sandbox / pause container|**Type:** `object`<br/>|
 | `providerIntegration.components.containerd.sandboxContainerImage.name` | **Repository**|**Type:** `string`<br/>**Default:** `"giantswarm/pause"`|
 | `providerIntegration.components.containerd.sandboxContainerImage.tag` | **Tag**|**Type:** `string`<br/>**Default:** `"3.9"`|
-| `providerIntegration.components.systemd` | **systemd**||
+| `providerIntegration.components.systemd` | **systemd**|**Default:** `null`|
+| `providerIntegration.components.systemd[option#1]` |**None**|**Type:** `null`<br/>|
+| `providerIntegration.components.systemd[option#2]` |**None**|**Type:** `object`<br/>|
+| `providerIntegration.components.systemd[option#2].ntpd` | **ntpd** - ntpd daemon that synchronizes the system clock with NTP servers.|**Type:** `object`<br/>|
+| `providerIntegration.components.systemd[option#2].ntpd.enabled` | **enable** - If true, the ntpd daemon is enabled and other clients are disabled.|**Type:** `boolean`<br/>**Default:** `false`|
+| `providerIntegration.components.systemd[option#2].ntpd.servers` |**None**|**Type:** `array`<br/>|
+| `providerIntegration.components.systemd[option#2].ntpd.servers[*]` |**None**|**Type:** `object`<br/>|
+| `providerIntegration.components.systemd[option#2].ntpd.servers[*].address` | **address** - Address or FQDN of NTP server.|**Type:** `string`<br/>|
+| `providerIntegration.components.systemd[option#2].ntpd.servers[*].maxpoll` | **maxpoll** - maximum poll intervals for NTP message in power of 2 seconds.|**Type:** `integer`<br/>|
+| `providerIntegration.components.systemd[option#2].ntpd.servers[*].minpoll` | **minpoll** - minimum poll intervals for NTP messages in power of 2 seconds.|**Type:** `integer`<br/>|
+| `providerIntegration.components.systemd[option#2].timesyncd` | **timesyncd** - systemd-timesyncd is a system service that may be used to synchronize the local system clock with a remote Network Time Protocol (NTP) server.|**Type:** `object`<br/>|
+| `providerIntegration.components.systemd[option#2].timesyncd.ntp` | **NTP** - A list of NTP server host names or IP addresses.|**Type:** `array`<br/>|
+| `providerIntegration.components.systemd[option#2].timesyncd.ntp[*]` |**None**|**Type:** `string`<br/>|
 | `providerIntegration.connectivity` | **Connectivity** - Internal connectivity configuration.|**Type:** `object`<br/>|
 | `providerIntegration.connectivity.proxy` | **Proxy** - Whether/how outgoing traffic is routed through proxy servers.|**Type:** `object`<br/>|
 | `providerIntegration.connectivity.proxy.noProxy` | **No proxy** - To be passed to the NO_PROXY environment variable in all hosts.|**Type:** `object`<br/>|
@@ -654,6 +666,12 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.additionalAdmissionPlugins` | **Additional admission plugins** - A list of plugins to enable, in addition to the default ones that include DefaultStorageClass, DefaultTolerationSeconds, LimitRanger, MutatingAdmissionWebhook, NamespaceLifecycle, PersistentVolumeClaimResize, Priority, ResourceQuota, ServiceAccount and ValidatingAdmissionWebhook.|**Type:** `array`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.additionalAdmissionPlugins[*]` | **Additional admission plugin**|**Type:** `string`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.apiAudiences` | **API audiences** - Identifiers of the API. The service account token authenticator will validate that tokens used against the API are bound to at least one of these audiences. If the --service-account-issuer flag is configured and this flag is not, 'api-audiences' field defaults to a single element list containing the issuer URL.||
+| `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.apiAudiences[option#1]` |**None**|**Type:** `null`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.apiAudiences[option#2]` |**None**|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.apiAudiences[option#2].templateName` | **Template name** - The name of the Helm template which renders the 'api-audiences' value|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.apiAudiences[option#2].value` | **Value** - Static value for api-audiences.|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.apiAudiences[option#2][option#1]` |**None**||
+| `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.apiAudiences[option#2][option#2]` |**None**||
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.cloudConfig` | **cloud config** - The path of the cloud config file.|**Type:** `string`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.featureGates` | **Feature gates** - A list of feature gates to enable or disable.|**Type:** `array`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.featureGates[*]` | **Feature gate** - A feature gate to enable or disable.|**Type:** `object`<br/>|
@@ -661,6 +679,13 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.featureGates[*].name` | **Name** - Name of the feature gate.|**Type:** `string`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuers` | **Service account issuers** - Configuration of the identifier of the service account token issuer. For each issuer, you must specify either `url`, `clusterDomainPrefix` or `templateName`. The first issuer is used by Kubernetes to issue tokens, while the second and further issuers, if any, are trusted regarding tokens. Specifying multiple issuers can make sense for migrations.|**Type:** `array`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuers[*]` |**None**||
+| `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuers[*][option#1]` |**None**|**Type:** `object`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuers[*][option#1].clusterDomainPrefix` | **Cluster domain prefix** - Prefix that is prepended to the cluster domain name, so that resulting URL is used as the identifier of the service account token issuer.|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuers[*][option#1].templateName` | **Template name** - The name of the Helm template which renders the 'url' value|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuers[*][option#1].url` | **URL** - This URL is used as the identifier of the service account token issuer.|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuers[*][option#1][option#1]` |**None**||
+| `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuers[*][option#1][option#2]` |**None**||
+| `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.apiServer.serviceAccountIssuers[*][option#1][option#3]` |**None**||
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.controllerManager` | **Controller manager** - Configuration of controller manager|**Type:** `object`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.controllerManager.externalCloudVolumePlugin` | **External cloud volume plugin** - The plugin to use if the controller-manager cloud provider is set to external. Most in-tree providers are deprecated and this should only be set if you really need it.|**Type:** `string`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.clusterConfiguration.controllerManager.featureGates` | **Feature gates** - A list of feature gates to enable or disable.|**Type:** `array`<br/>|
@@ -673,7 +698,7 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.controlPlane.kubeadmConfig.diskSetup.filesystems[*].device` | **Device** - The absolute path to the device. Devices are typically referenced by the /dev/disk/by-* symlinks.|**Type:** `string`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.diskSetup.filesystems[*].extraOpts` | **Extra options** - ExtraOpts defined extra options to add to the command for creating the filesystem.|**Type:** `array`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.diskSetup.filesystems[*].extraOpts[*]` |An additional option to be passed to the format-specific mkfs utility.|**Type:** `string`<br/>|
-| `providerIntegration.controlPlane.kubeadmConfig.diskSetup.filesystems[*].filesystem` | **Format** - The filesystem format (ext4, btrfs, or xfs).|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.diskSetup.filesystems[*].filesystem` | **Format** - The filesystem format (ext4, btrfs, or xfs).|**Type:** `string`<br/>**Allowed values:** `ext4`, `btrfs`, `xfs`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.diskSetup.filesystems[*].label` | **Label** - The label of the filesystem.|**Type:** `string`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.diskSetup.filesystems[*].overwrite` | **Overwrite** - Overwrite defines whether or not to overwrite any existing filesystem. If true, any pre-existing file system will be destroyed. Use with Caution.|**Type:** `boolean`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.diskSetup.filesystems[*].partition` | **Partition** - Partition specifies the partition to use. The valid options are: 'auto|any', 'auto', 'any', 'none', and <NUM>, where NUM is the actual partition number.|**Type:** `string`<br/>|
@@ -713,7 +738,7 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.storage.filesystems[*]` | **File system** - The filesystem to be configured and/or used in the “files” section. Either “mount” or “path” needs to be specified.|**Type:** `object`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.storage.filesystems[*].mount` | **Mount** - It contains the set of mount and formatting options for the filesystem. A non-null entry indicates that the filesystem should be mounted before it is used by Ignition.|**Type:** `object`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.storage.filesystems[*].mount.device` | **Device** - The absolute path to the device. Devices are typically referenced by the /dev/disk/by-* symlinks.|**Type:** `string`<br/>|
-| `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.storage.filesystems[*].mount.format` | **Format** - The filesystem format (ext4, btrfs, or xfs).|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.storage.filesystems[*].mount.format` | **Format** - The filesystem format (ext4, btrfs, or xfs).|**Type:** `string`<br/>**Allowed values:** `ext4`, `btrfs`, `xfs`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.storage.filesystems[*].mount.label` | **Label** - The label of the filesystem.|**Type:** `string`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.storage.filesystems[*].mount.options` | **Options** - Any additional options to be passed to the format-specific mkfs utility.|**Type:** `array`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.storage.filesystems[*].mount.options[*]` |An additional option to be passed to the format-specific mkfs utility.|**Type:** `string`<br/>|
@@ -776,19 +801,19 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.controlPlane.kubeadmConfig.preKubeadmCommands[*]` |**None**|**Type:** `string`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.taints` | **Custom node taints**|**Type:** `array`<br/>**Default:** `[]`|
 | `providerIntegration.controlPlane.kubeadmConfig.taints[*]` |**None**|**Type:** `object`<br/>|
-| `providerIntegration.controlPlane.kubeadmConfig.taints[*].effect` | **Effect**|**Type:** `string`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.taints[*].effect` | **Effect**|**Type:** `string`<br/>**Allowed values:** `NoSchedule`, `PreferNoSchedule`, `NoExecute`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.taints[*].key` | **Key**|**Type:** `string`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.taints[*].value` | **Value**|**Type:** `string`<br/>|
 | `providerIntegration.controlPlane.resources` | **Resources configuration** - GVK and other configuration for control plane resources.|**Type:** `object`<br/>|
 | `providerIntegration.controlPlane.resources.controlPlane` | **Control plane resource config**|**Type:** `object`<br/>**Default:** `{"api":{"group":"controlplane.cluster.x-k8s.io","kind":"KubeadmControlPlane","version":"v1beta1"}}`|
 | `providerIntegration.controlPlane.resources.controlPlane.api` | **Schema for Kubernetes API group, version and kind** - It can be used to specify which CustomResourceDefinition is used.|**Type:** `object`<br/>|
-| `providerIntegration.controlPlane.resources.controlPlane.api.group` | **API group**|**Type:** `string`<br/>**Examples:** `"cluster.x-k8s.io", "controlplane.cluster.x-k8s.io", "infrastructure.cluster.x-k8s.io"`<br/>|
-| `providerIntegration.controlPlane.resources.controlPlane.api.kind` | **API kind**|**Type:** `string`<br/>**Examples:** `"Cluster", "KubeadmControlPlane"`<br/>|
-| `providerIntegration.controlPlane.resources.controlPlane.api.version` | **API version**|**Type:** `string`<br/>**Examples:** `"v1alpha1", "v1alpha2", "v1beta1", "v1"`<br/>|
+| `providerIntegration.controlPlane.resources.controlPlane.api.group` | **API group**|**Type:** `string`<br/>**Examples:** `"cluster.x-k8s.io"`, `"controlplane.cluster.x-k8s.io"`, `"infrastructure.cluster.x-k8s.io"`<br/>|
+| `providerIntegration.controlPlane.resources.controlPlane.api.kind` | **API kind**|**Type:** `string`<br/>**Examples:** `"Cluster"`, `"KubeadmControlPlane"`<br/>|
+| `providerIntegration.controlPlane.resources.controlPlane.api.version` | **API version**|**Type:** `string`<br/>**Examples:** `"v1alpha1"`, `"v1alpha2"`, `"v1beta1"`, `"v1"`<br/>|
 | `providerIntegration.controlPlane.resources.infrastructureMachineTemplate` | **Infrastructure Machine template** - Group, version and kind of provider-specific infrastructure Machine template resource.|**Type:** `object`<br/>|
 | `providerIntegration.controlPlane.resources.infrastructureMachineTemplate.group` | **API group**|**Type:** `string`<br/>**Example:** `"infrastructure.cluster.x-k8s.io"`<br/>|
-| `providerIntegration.controlPlane.resources.infrastructureMachineTemplate.kind` | **API kind**|**Type:** `string`<br/>**Examples:** `"AWSMachineTemplate", "AzureMachineTemplate"`<br/>|
-| `providerIntegration.controlPlane.resources.infrastructureMachineTemplate.version` | **API version**|**Type:** `string`<br/>**Examples:** `"v1alpha1", "v1beta1", "v1beta2", "v1", "v2"`<br/>|
+| `providerIntegration.controlPlane.resources.infrastructureMachineTemplate.kind` | **API kind**|**Type:** `string`<br/>**Examples:** `"AWSMachineTemplate"`, `"AzureMachineTemplate"`<br/>|
+| `providerIntegration.controlPlane.resources.infrastructureMachineTemplate.version` | **API version**|**Type:** `string`<br/>**Examples:** `"v1alpha1"`, `"v1beta1"`, `"v1beta2"`, `"v1"`, `"v2"`<br/>|
 | `providerIntegration.controlPlane.resources.infrastructureMachineTemplateSpecTemplateName` | **Infrastructure Machine template spec template name** - The name of Helm template that renders Infrastructure Machine template spec.|**Type:** `string`<br/>|
 | `providerIntegration.environmentVariables` | **environmentVariables for provider**|**Type:** `object`<br/>|
 | `providerIntegration.environmentVariables.hostName` |Environment for host name.|**Type:** `string`<br/>|
@@ -831,7 +856,7 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.storage.filesystems[*]` | **File system** - The filesystem to be configured and/or used in the “files” section. Either “mount” or “path” needs to be specified.|**Type:** `object`<br/>|
 | `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.storage.filesystems[*].mount` | **Mount** - It contains the set of mount and formatting options for the filesystem. A non-null entry indicates that the filesystem should be mounted before it is used by Ignition.|**Type:** `object`<br/>|
 | `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.storage.filesystems[*].mount.device` | **Device** - The absolute path to the device. Devices are typically referenced by the /dev/disk/by-* symlinks.|**Type:** `string`<br/>|
-| `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.storage.filesystems[*].mount.format` | **Format** - The filesystem format (ext4, btrfs, or xfs).|**Type:** `string`<br/>|
+| `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.storage.filesystems[*].mount.format` | **Format** - The filesystem format (ext4, btrfs, or xfs).|**Type:** `string`<br/>**Allowed values:** `ext4`, `btrfs`, `xfs`<br/>|
 | `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.storage.filesystems[*].mount.label` | **Label** - The label of the filesystem.|**Type:** `string`<br/>|
 | `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.storage.filesystems[*].mount.options` | **Options** - Any additional options to be passed to the format-specific mkfs utility.|**Type:** `array`<br/>|
 | `providerIntegration.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.storage.filesystems[*].mount.options[*]` |An additional option to be passed to the format-specific mkfs utility.|**Type:** `string`<br/>|
@@ -891,23 +916,22 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.kubeadmConfig.preKubeadmCommands[*]` |**None**|**Type:** `string`<br/>|
 | `providerIntegration.kubeadmConfig.taints` | **Custom node taints**|**Type:** `array`<br/>**Default:** `[]`|
 | `providerIntegration.kubeadmConfig.taints[*]` |**None**|**Type:** `object`<br/>|
-| `providerIntegration.kubeadmConfig.taints[*].effect` | **Effect**|**Type:** `string`<br/>|
+| `providerIntegration.kubeadmConfig.taints[*].effect` | **Effect**|**Type:** `string`<br/>**Allowed values:** `NoSchedule`, `PreferNoSchedule`, `NoExecute`<br/>|
 | `providerIntegration.kubeadmConfig.taints[*].key` | **Key**|**Type:** `string`<br/>|
 | `providerIntegration.kubeadmConfig.taints[*].value` | **Value**|**Type:** `string`<br/>|
 | `providerIntegration.kubernetesVersion` | **Kubernetes version**|**Type:** `string`<br/>**Default:** `"1.25.16"`|
 | `providerIntegration.osImage` | **OS image (deprecated)** - OS image Helm values have been deprecated. All OS-related information should now be obtained from the Release resource.|**Type:** `object`<br/>|
-| `providerIntegration.osImage.channel` | **Channel**|**Type:** `string`<br/>**Default:** `"stable"`|
+| `providerIntegration.osImage.channel` | **Channel**|**Type:** `string`<br/>**Allowed values:** `stable`, `beta`, `alpha`, `lts`<br/>**Default:** `"stable"`|
 | `providerIntegration.osImage.name` | **Name**|**Type:** `string`<br/>|
 | `providerIntegration.osImage.toolingVersion` | **Tooling version** - Version of tooling that is used to build the OS image. In practice, this is the capi-image-builder version.|**Type:** `string`<br/>|
 | `providerIntegration.osImage.variant` | **Variant (deprecated)** - The usage of variant has been deprecated, use toolingVersion instead. See cluster.component.os.tooling.version helper in order to use the new OS tooling version.|**Type:** `string`<br/>|
 | `providerIntegration.osImage.version` | **Version**|**Type:** `string`<br/>|
 | `providerIntegration.pauseProperties` | **Pause properties** - A map of property names and their values that will affect setting pause annotation|**Type:** `object`<br/>|
-| `providerIntegration.pauseProperties.*` |**None**|**Types:** `string, number, integer, boolean, null`<br/>|
+| `providerIntegration.pauseProperties.*` |**None**|**Types:** `null`, `boolean`, `number`, `integer`, `string`<br/>|
 | `providerIntegration.provider` | **Provider** - The name of the Cluster API provider. The name here must match the name of the provider in cluster-<provider> app name.|**Type:** `string`<br/>|
 | `providerIntegration.registry` | **Registry** - Configuration for container image registries|**Type:** `object`<br/>|
 | `providerIntegration.registry.mirrorsTemplateName` | **Registry Mirrors Configuration Template** - Name of a template that returns the containerd registry mirrors configuration. Defines how different registries (docker.io, gsoci.azurecr.io) should be mirrored to improve pull reliability, especially in regions with network restrictions.|**Type:** `string`<br/>|
 | `providerIntegration.registry.templateName` | **Registry URL Template** - Name of a template that returns the base URL for the container image registry (e.g., 'gsoci.azurecr.io'). Used for the sandbox image and other container images.|**Type:** `string`<br/>|
-| `providerIntegration.resourcesApi` | **Resources API** - Group, version and kind configuration that is required and used by a specific Cluster API provider.|**Type:** `object`<br/>|
 | `providerIntegration.resourcesApi.bastionResourceEnabled` | **Bastion resource enabled** - Flag that indicates if the Bastion resource is enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.|**Type:** `boolean`<br/>**Default:** `true`|
 | `providerIntegration.resourcesApi.cleanupHelmReleaseResourcesEnabled` | **Cleanup HelmRelease hook job resource enabled** - Flag that indicates if the Cleanup HelmRelease Hook Job is enabeld and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.|**Type:** `boolean`<br/>**Default:** `false`|
 | `providerIntegration.resourcesApi.clusterResourceEnabled` | **Cluster resource enabled** - Flag that indicates if the Cluster resource is enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.|**Type:** `boolean`<br/>**Default:** `true`|
@@ -915,8 +939,8 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.resourcesApi.helmRepositoryResourcesEnabled` | **HelmRepository resources enabled** - Flag that indicates if the HelmRepository resources are enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.|**Type:** `boolean`<br/>**Default:** `false`|
 | `providerIntegration.resourcesApi.infrastructureCluster` | **Infrastructure cluster** - Group, version and kind of provider-specific infrastructure cluster resource.|**Type:** `object`<br/>|
 | `providerIntegration.resourcesApi.infrastructureCluster.group` | **API group**|**Type:** `string`<br/>**Example:** `"infrastructure.cluster.x-k8s.io"`<br/>|
-| `providerIntegration.resourcesApi.infrastructureCluster.kind` | **API kind**|**Type:** `string`<br/>**Examples:** `"AWSCluster", "AzureCluster", "VCDCluster", "VSphereCluster"`<br/>|
-| `providerIntegration.resourcesApi.infrastructureCluster.version` | **API version**|**Type:** `string`<br/>**Examples:** `"v1alpha1", "v1beta1", "v1beta2", "v1", "v2"`<br/>|
+| `providerIntegration.resourcesApi.infrastructureCluster.kind` | **API kind**|**Type:** `string`<br/>**Examples:** `"AWSCluster"`, `"AzureCluster"`, `"VCDCluster"`, `"VSphereCluster"`<br/>|
+| `providerIntegration.resourcesApi.infrastructureCluster.version` | **API version**|**Type:** `string`<br/>**Examples:** `"v1alpha1"`, `"v1beta1"`, `"v1beta2"`, `"v1"`, `"v2"`<br/>|
 | `providerIntegration.resourcesApi.machineHealthCheckResourceEnabled` | **MachineHealthCheck resource enabled** - Flag that indicates if the MachineHealthCheck resource is enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.|**Type:** `boolean`<br/>**Default:** `true`|
 | `providerIntegration.resourcesApi.machinePoolResourcesEnabled` | **Machine pool resources enabled** - Flag that indicates if the machine pool resources are enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.|**Type:** `boolean`<br/>**Default:** `true`|
 | `providerIntegration.teleport` | **Teleport** - Teleport configuration for cluster access|**Type:** `object`<br/>**Default:** `{"enabled":true,"initialJoinToken":"","proxyAddr":"teleport.giantswarm.io:443","version":"16.5.12"}`|
@@ -935,7 +959,7 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.workers.defaultNodePools.PATTERN.customNodeLabels[*]` | **Label**|**Type:** `string`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
 | `providerIntegration.workers.defaultNodePools.PATTERN.customNodeTaints` | **Custom node taints**|**Type:** `array`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>**Default:** `[]`|
 | `providerIntegration.workers.defaultNodePools.PATTERN.customNodeTaints[*]` |**None**|**Type:** `object`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
-| `providerIntegration.workers.defaultNodePools.PATTERN.customNodeTaints[*].effect` | **Effect**|**Type:** `string`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
+| `providerIntegration.workers.defaultNodePools.PATTERN.customNodeTaints[*].effect` | **Effect**|**Type:** `string`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>**Allowed values:** `NoSchedule`, `PreferNoSchedule`, `NoExecute`<br/>|
 | `providerIntegration.workers.defaultNodePools.PATTERN.customNodeTaints[*].key` | **Key**|**Type:** `string`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
 | `providerIntegration.workers.defaultNodePools.PATTERN.customNodeTaints[*].value` | **Value**|**Type:** `string`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
 | `providerIntegration.workers.defaultNodePools.PATTERN.labels` | **Labels** - These labels are added to all Kubernetes resources defining this node pool.|**Type:** `object`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
@@ -943,13 +967,13 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.workers.defaultNodePools.PATTERN.machineHealthCheck` | **Machine health check**|**Type:** `object`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
 | `providerIntegration.workers.defaultNodePools.PATTERN.machineHealthCheck.enabled` | **Enable**|**Type:** `boolean`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>**Default:** `true`|
 | `providerIntegration.workers.defaultNodePools.PATTERN.machineHealthCheck.maxUnhealthy` | **Maximum unhealthy nodes**|**Type:** `string`<br/>**Example:** `"40%"`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>**Default:** `"40%"`|
-| `providerIntegration.workers.defaultNodePools.PATTERN.machineHealthCheck.nodeStartupTimeout` | **Node startup timeout** - Determines how long a machine health check should wait for a node to join the cluster, before considering a machine unhealthy.|**Type:** `string`<br/>**Examples:** `"10m", "100s"`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>**Default:** `"8m0s"`|
+| `providerIntegration.workers.defaultNodePools.PATTERN.machineHealthCheck.nodeStartupTimeout` | **Node startup timeout** - Determines how long a machine health check should wait for a node to join the cluster, before considering a machine unhealthy.|**Type:** `string`<br/>**Examples:** `"10m"`, `"100s"`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>**Default:** `"8m0s"`|
 | `providerIntegration.workers.defaultNodePools.PATTERN.machineHealthCheck.unhealthyNotReadyTimeout` | **Timeout for ready** - If a node is not in condition 'Ready' after this timeout, it will be considered unhealthy.|**Type:** `string`<br/>**Example:** `"300s"`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>**Default:** `"10m0s"`|
 | `providerIntegration.workers.defaultNodePools.PATTERN.machineHealthCheck.unhealthyUnknownTimeout` | **Timeout for unknown condition** - If a node is in 'Unknown' condition after this timeout, it will be considered unhealthy.|**Type:** `string`<br/>**Example:** `"300s"`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>**Default:** `"10m0s"`|
 | `providerIntegration.workers.defaultNodePools.PATTERN.maxSize` | **Max size** - Maximum number of node pool nodes|**Type:** `integer`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
 | `providerIntegration.workers.defaultNodePools.PATTERN.minSize` | **Min size** - Minimum number of node pool nodes|**Type:** `integer`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
 | `providerIntegration.workers.defaultNodePools.PATTERN.replicas` | **Replicas** - The number of node pool nodes.|**Type:** `integer`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>|
-| `providerIntegration.workers.defaultNodePools.PATTERN.type` | **Node pool type** - Controller that will manage the node pool. Only used to enable karpenter node pools.|**Type:** `string`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>**Default:** `"machinepool"`|
+| `providerIntegration.workers.defaultNodePools.PATTERN.type` | **Node pool type** - Controller that will manage the node pool. Only used to enable karpenter node pools.|**Type:** `string`<br/>**Key pattern:**<br/>`PATTERN`=`^[a-z0-9][-a-z0-9]{3,18}[a-z0-9]$`<br/>**Allowed values:** `machinepool`, `karpenter`<br/>**Default:** `"machinepool"`|
 | `providerIntegration.workers.kubeadmConfig` | **Kubeadm config** - Configuration of workers nodes.|**Type:** `object`<br/>|
 | `providerIntegration.workers.kubeadmConfig.enabled` | **Enable kubeadm config** - Flag that indicates if the kubeadm config should be rendered.|**Type:** `boolean`<br/>**Default:** `true`|
 | `providerIntegration.workers.kubeadmConfig.files` | **Files** - Provider-specific files that are deployed to worker nodes. They are specified in the cluster-<provider> apps.|**Type:** `array`<br/>|
@@ -987,7 +1011,7 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.storage.filesystems[*]` | **File system** - The filesystem to be configured and/or used in the “files” section. Either “mount” or “path” needs to be specified.|**Type:** `object`<br/>|
 | `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.storage.filesystems[*].mount` | **Mount** - It contains the set of mount and formatting options for the filesystem. A non-null entry indicates that the filesystem should be mounted before it is used by Ignition.|**Type:** `object`<br/>|
 | `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.storage.filesystems[*].mount.device` | **Device** - The absolute path to the device. Devices are typically referenced by the /dev/disk/by-* symlinks.|**Type:** `string`<br/>|
-| `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.storage.filesystems[*].mount.format` | **Format** - The filesystem format (ext4, btrfs, or xfs).|**Type:** `string`<br/>|
+| `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.storage.filesystems[*].mount.format` | **Format** - The filesystem format (ext4, btrfs, or xfs).|**Type:** `string`<br/>**Allowed values:** `ext4`, `btrfs`, `xfs`<br/>|
 | `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.storage.filesystems[*].mount.label` | **Label** - The label of the filesystem.|**Type:** `string`<br/>|
 | `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.storage.filesystems[*].mount.options` | **Options** - Any additional options to be passed to the format-specific mkfs utility.|**Type:** `array`<br/>|
 | `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.storage.filesystems[*].mount.options[*]` |An additional option to be passed to the format-specific mkfs utility.|**Type:** `string`<br/>|
@@ -1047,7 +1071,7 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.workers.kubeadmConfig.preKubeadmCommands[*]` |**None**|**Type:** `string`<br/>|
 | `providerIntegration.workers.kubeadmConfig.taints` | **Custom node taints**|**Type:** `array`<br/>**Default:** `[]`|
 | `providerIntegration.workers.kubeadmConfig.taints[*]` |**None**|**Type:** `object`<br/>|
-| `providerIntegration.workers.kubeadmConfig.taints[*].effect` | **Effect**|**Type:** `string`<br/>|
+| `providerIntegration.workers.kubeadmConfig.taints[*].effect` | **Effect**|**Type:** `string`<br/>**Allowed values:** `NoSchedule`, `PreferNoSchedule`, `NoExecute`<br/>|
 | `providerIntegration.workers.kubeadmConfig.taints[*].key` | **Key**|**Type:** `string`<br/>|
 | `providerIntegration.workers.kubeadmConfig.taints[*].value` | **Value**|**Type:** `string`<br/>|
 | `providerIntegration.workers.resources` | **Resources configuration** - Infrastructure template for worker resources when using MachineDeployment.|**Type:** `object`<br/>|
@@ -1060,7 +1084,6 @@ Information about the workload cluster release.
 | **Property** | **Description** | **More Details** |
 | :----------- | :-------------- | :--------------- |
 | `global.release.version` | **Version**|**Type:** `string`<br/>|
-
 
 
 <!-- DOCS_END -->
