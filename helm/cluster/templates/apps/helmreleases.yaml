@@ -9,7 +9,7 @@
 {{- $app := tpl (.Files.Get $path) $ | fromYaml }}
 {{- $appName := $app.appName }}
 
-{{- /* For hr installations targeting the MC, we want to add the cluster name as a prefix to the appName 
+{{- /* For hr installations targeting the MC, we want to add the cluster name as a prefix to the appName
 to avoid naming conflicts in case of multiple clusters deployed in the same namespace.
 */}}
 {{- $releaseName := $appName }}
@@ -68,7 +68,7 @@ to avoid naming conflicts in case of multiple clusters deployed in the same name
 {{- end }}
 {{- if $app.useOCISource }}
 ---
-apiVersion: source.toolkit.fluxcd.io/v1beta2
+apiVersion: source.toolkit.fluxcd.io/v1
 kind: OCIRepository
 metadata:
   name: {{ include "cluster.resource.name" $ }}-{{ $appName }}
