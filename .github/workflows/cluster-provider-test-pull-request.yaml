@@ -11,14 +11,14 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v6
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
 
     - name: Set up Git
       run: |
         git config --global user.email "dev@giantswarm.io"
         git config --global user.name "taylorbot"
 
-    - uses: oleksiyrudenko/gha-git-credentials@v2.1.2
+    - uses: oleksiyrudenko/gha-git-credentials@8bb1fe6d543b2233ef1856cd3b0181f5abbd4d6a # v2.1.2
       with:
         global: true
         actor: 'taylorbot'
