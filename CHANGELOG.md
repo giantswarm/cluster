@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Bump Flux OCIRepository version to v1.
+- Control Plane: Remove handling of clusterRole resources for kamaji Datastore CRs.
 
 ## [6.5.0] - 2026-05-20
 
