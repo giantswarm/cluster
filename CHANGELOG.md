@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Feature Gates: Add support for defining maximum Kubernetes version.
+
 ### Changed
 
 - Bump Flux OCIRepository version to v1.
