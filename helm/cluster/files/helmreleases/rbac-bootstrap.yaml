@@ -7,6 +7,8 @@ namespace: kube-system
 version: 0.2.3
 interval: 1m
 defaultValues:
+  clusterReader:
+    enabled: true
   bindings:
     - role: view
       groups:
