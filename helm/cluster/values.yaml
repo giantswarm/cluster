@@ -107,6 +107,7 @@ internal:
         enablePriorityAndFairness: true
         featureGates:
           - enabled: true
+            maxKubernetesVersion: 1.35.0
             minKubernetesVersion: 1.27.0
             name: StatefulSetAutoDeletePVC
           - enabled: true
@@ -115,6 +116,7 @@ internal:
       controllerManager:
         featureGates:
           - enabled: true
+            maxKubernetesVersion: 1.35.0
             minKubernetesVersion: 1.27.0
             name: StatefulSetAutoDeletePVC
         terminatedPodGCThreshold: 125

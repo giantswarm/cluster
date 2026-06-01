@@ -7,13 +7,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Changed
-
-- Migration hook: add Phase E at the end of the script to scale `chart-operator` on the WC back up to `replicas=1`. Phase 0b scales it to 0 to neutralize it during Phase A-D, but nothing in the rest of the system restores it after the migration: app-operator-MC's reconcile of the chart-operator App CR only checks helm release status ("deployed"), not the live Deployment's replica count. Without Phase E, every post-migration cluster ended up with chart-operator-WC permanently at replicas=0, and user-managed App CRs on the WC stopped reconciling. Surfaced by checking the live Deployment after Round 72.
-- Migration hook: add a release-version gate at the top of the script. If the live Cluster CR's `release.giantswarm.io/version` label has a major version >= 35, exit 0 immediately — the cluster is already migrated and the rest of the script would be a no-op except for Phase 0b, which would needlessly scale chart-operator-WC to 0 for ~5 min on every subsequent upgrade (until app-operator-MC's chart-operator-special-path reconcile restores it). The major-version cut handles prereleases like `35.0.0-jose` correctly (treated as v35+). Falls through and runs the hook if the label can't be read. Adds `get` on `cluster.x-k8s.io/clusters` to the hook's Role for this purpose.
-- Migration hook: extend Phase A/B/C/C.5 with a sixth neutralization category for bundle-rendered MC HelmReleases (`SUB_HR_SELECTOR`). Without this, `aws-nth-bundle`'s inner HRs (`<cluster>-aws-node-termination-handler`, `<cluster>-aws-nth-crossplane-resources`) were getting deleted as part of Phase D's bundle helm uninstall manifest, which fired Flux helm-controller's finalizer and ran `helm uninstall` on the managed WC release. Round 68 saw this on 5/5 clusters (10 total uninstalls). The new category pauses the inner HRs and strips their `finalizers.fluxcd.io` in Phase A/B so Phase D's helm uninstall deletes the HR objects without triggering Flux GC of the WC releases. Adds matching RBAC for HelmReleases.
-- HelmReleases: add `upgrade.remediation.remediateLastFailure: false` (with `retries: -1`) so Flux helm-controller skips the rollback/uninstall step on upgrade failure and re-attempts the upgrade on its next reconcile interval. This avoids the wedge that occurs when adopting chart-operator-installed v1 releases (helm-controller refuses to roll back to a release it didn't create, which gates retries in the default behaviour).
-
 ### Added
 
 - Add pre-delete hook Job to remove `HelmRelease` CRs when deleting a cluster. This is required because sometimes flux does not have enough time to clean up the `HelmRelease` CRs before the control plane API is deleted.
@@ -21,9 +14,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Migration hook: add Phase E at the end of the script to scale `chart-operator` on the WC back up to `replicas=1`. Phase 0b scales it to 0 to neutralize it during Phase A-D, but nothing in the rest of the system restores it after the migration: app-operator-MC's reconcile of the chart-operator App CR only checks helm release status ("deployed"), not the live Deployment's replica count. Without Phase E, every post-migration cluster ended up with chart-operator-WC permanently at replicas=0, and user-managed App CRs on the WC stopped reconciling. Surfaced by checking the live Deployment after Round 72.
+- Migration hook: add a release-version gate at the top of the script. If the live Cluster CR's `release.giantswarm.io/version` label has a major version >= 35, exit 0 immediately — the cluster is already migrated and the rest of the script would be a no-op except for Phase 0b, which would needlessly scale chart-operator-WC to 0 for ~5 min on every subsequent upgrade (until app-operator-MC's chart-operator-special-path reconcile restores it). The major-version cut handles prereleases like `35.0.0-jose` correctly (treated as v35+). Falls through and runs the hook if the label can't be read. Adds `get` on `cluster.x-k8s.io/clusters` to the hook's Role for this purpose.
+- Migration hook: extend Phase A/B/C/C.5 with a sixth neutralization category for bundle-rendered MC HelmReleases (`SUB_HR_SELECTOR`). Without this, `aws-nth-bundle`'s inner HRs (`<cluster>-aws-node-termination-handler`, `<cluster>-aws-nth-crossplane-resources`) were getting deleted as part of Phase D's bundle helm uninstall manifest, which fired Flux helm-controller's finalizer and ran `helm uninstall` on the managed WC release. Round 68 saw this on 5/5 clusters (10 total uninstalls). The new category pauses the inner HRs and strips their `finalizers.fluxcd.io` in Phase A/B so Phase D's helm uninstall deletes the HR objects without triggering Flux GC of the WC releases. Adds matching RBAC for HelmReleases.
+- HelmReleases: add `upgrade.remediation.remediateLastFailure: false` (with `retries: -1`) so Flux helm-controller skips the rollback/uninstall step on upgrade failure and re-attempts the upgrade on its next reconcile interval. This avoids the wedge that occurs when adopting chart-operator-installed v1 releases (helm-controller refuses to roll back to a release it didn't create, which gates retries in the default behaviour).
 - HR cleanup pre-delete hook: only force-clean HelmReleases targeting the workload cluster (`spec.kubeConfig.secretRef` set). Leave HelmReleases targeting the management cluster (bundle HRs and crossplane-resources HRs) untouched so the subsequent `helm uninstall <cluster>` lets `helm-controller` run `helm uninstall` against each MC-side release in the normal way. The previous indiscriminate finalizer-strip was skipping that uninstall and orphaning the manifests those releases had rendered on the MC — including Crossplane `Role` and `Queue` CRs that map 1:1 to AWS IAM roles and SQS queues, silently leaking those resources on every cluster delete. The hook's original WC-only purpose (unblocking CAPI cluster GC when the WC apiserver disappears mid-uninstall) is preserved unchanged. The previous Step 4 OCIRepository cleanup is also dropped — each MC-side bundle's `helm uninstall` now removes its rendered OCIRepositories naturally.
-- Control Plane: Make etcd image tag configurable. ([#841](https://github.com/giantswarm/cluster/pull/841))
-- Chart: Require `global.release.version` if using Releases to give a better rendering error message.
 - Migration hook: handle bundle sub-Apps (e.g. `kyverno`, `alloy-events`) with the same pause + strip-finalizers + delete sequence already used for non-bundle default Apps, and extend the WC Chart CR cleanup to cover their Chart CRs as well. This prevents the bundle cascade in the final phase from triggering `helm uninstall` on the underlying applications via `app-operator` → WC Chart CR deletion → `chart-operator` reconciliation.
 - Migration hook: bump `backoffLimit` from 3 to 6 to give the job more retries on transient API errors.
 - Migration hook: reorder cleanup phases to close the race between MC sub-App CR deletion and WC Chart CR finalizer-strip. The hook now (A) pauses every MC App CR and WC Chart CR, then (B) strips finalizers from every one of them, and only then (C) deletes them. With finalizers gone everywhere before any deletion happens, an in-flight `app-operator` reconcile that races our pause cannot trigger `chart-operator`'s helm-uninstall path on the WC.
@@ -41,6 +36,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - HelmReleases: Apply `tpl` to rendered values, matching the behavior of the old `apps.yaml` template. This ensures template expressions in provider-specific values (e.g., `{{ include "aws-partition" $ }}`) are resolved before being written into the HelmRelease `spec.values`.
+
+## [6.6.0] - 2026-06-01
+
+### Added
+
+- Feature Gates: Add support for defining maximum Kubernetes version.
+
+### Changed
+
+- Bump Flux OCIRepository version to v1.
+- Control Plane: Remove handling of clusterRole resources for kamaji Datastore CRs and create kamaji-etcd polex here.
+
+## [6.5.0] - 2026-05-20
+
+### Changed
+
+- Control Plane: Make etcd image tag configurable. ([#841](https://github.com/giantswarm/cluster/pull/841))
+- Chart: Require `global.release.version` if using Releases to give a better rendering error message.
+- Chart: Fix validation errors.
 
 ## [6.4.0] - 2026-04-15
 
@@ -1013,7 +1027,9 @@ For Kubernetes <v1.29, you will need to re-enable it using the respective values
 
 - Update and clean up the template repo.
 
-[Unreleased]: https://github.com/giantswarm/cluster/compare/v6.4.0...HEAD
+[Unreleased]: https://github.com/giantswarm/cluster/compare/v6.6.0...HEAD
+[6.6.0]: https://github.com/giantswarm/cluster/compare/v6.5.0...v6.6.0
+[6.5.0]: https://github.com/giantswarm/cluster/compare/v6.4.0...v6.5.0
 [6.4.0]: https://github.com/giantswarm/cluster/compare/v6.3.0...v6.4.0
 [6.3.0]: https://github.com/giantswarm/cluster/compare/v6.2.0...v6.3.0
 [6.2.0]: https://github.com/giantswarm/cluster/compare/v6.1.0...v6.2.0

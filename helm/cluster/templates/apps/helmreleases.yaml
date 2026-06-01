@@ -67,7 +67,7 @@ to avoid naming conflicts in case of multiple clusters deployed in the same name
 {{- $appVersion = include "cluster.app.version" $ }}
 {{- end }}
 ---
-apiVersion: source.toolkit.fluxcd.io/v1beta2
+apiVersion: source.toolkit.fluxcd.io/v1
 kind: OCIRepository
 metadata:
   name: {{ include "cluster.resource.name" $ }}-{{ $appName }}
