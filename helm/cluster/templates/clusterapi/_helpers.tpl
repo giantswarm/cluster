@@ -91,12 +91,13 @@
 {{- if $renderWithoutRelease }}
 {{- /* In offline testing mode, include all feature gates without version filtering */}}
 {{- $filteredFeatureGates = append $filteredFeatureGates . }}
-{{- else if not .minKubernetesVersion }}
-{{- /* No version requirement, always include */}}
+{{- else }}
+{{- $meetsMin := or (not .minKubernetesVersion) (and $kubernetesVersion (semverCompare (printf ">=%s" .minKubernetesVersion) $kubernetesVersion)) }}
+{{- $meetsMax := or (not .maxKubernetesVersion) (and $kubernetesVersion (semverCompare (printf "<%s" .maxKubernetesVersion) $kubernetesVersion)) }}
+{{- if and $meetsMin $meetsMax }}
+{{- /* Include only when the Kubernetes version satisfies both the min and max constraints */}}
 {{- $filteredFeatureGates = append $filteredFeatureGates . }}
-{{- else if and $kubernetesVersion (ne $kubernetesVersion "") (semverCompare (printf ">=%s" .minKubernetesVersion) $kubernetesVersion) }}
-{{- /* Version requirement met */}}
-{{- $filteredFeatureGates = append $filteredFeatureGates . }}
+{{- end }}
 {{- end }}
 {{- end }}
 {{- /* Merge feature gates (later entries override earlier ones) */}}

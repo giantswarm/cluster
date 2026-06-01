@@ -177,6 +177,12 @@
                         "title": "Enabled",
                         "description": "Whether to enable or disable the feature gate."
                     },
+                    "maxKubernetesVersion": {
+                        "type": "string",
+                        "title": "Maximum Kubernetes version",
+                        "description": "Optional maximum Kubernetes version allowed for this feature gate to be functional. Uses semantic versioning (e.g., '1.33.0'). If specified and the cluster version is above this threshold, the feature gate will be ignored.",
+                        "pattern": "^\\d+\\.\\d+\\.\\d+$"
+                    },
                     "minKubernetesVersion": {
                         "type": "string",
                         "title": "Minimum Kubernetes version",
@@ -2387,6 +2393,7 @@
                                             "default": [
                                                 {
                                                     "enabled": true,
+                                                    "maxKubernetesVersion": "1.35.0",
                                                     "minKubernetesVersion": "1.27.0",
                                                     "name": "StatefulSetAutoDeletePVC"
                                                 },
@@ -2409,6 +2416,7 @@
                                             "default": [
                                                 {
                                                     "enabled": true,
+                                                    "maxKubernetesVersion": "1.35.0",
                                                     "minKubernetesVersion": "1.27.0",
                                                     "name": "StatefulSetAutoDeletePVC"
                                                 }
