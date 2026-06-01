@@ -214,6 +214,40 @@ cluster:
                     name: var-lib-containerd.mount
 ```
 
+#### Kamaji control plane
+
+The cluster chart can render a [KamajiControlPlane](https://kamaji.clastix.io/) instead of a `KubeadmControlPlane`. With Kamaji,
+the control plane components (`kube-apiserver`, `kube-controller-manager`, `kube-scheduler`) run as pods on the management cluster
+rather than on dedicated control plane nodes in the workload cluster, while worker nodes still join the cluster as usual.
+
+To enable it, set the control plane provider to `kamaji` and point the `controlPlane.resources.controlPlane.api` value at the
+`KamajiControlPlane` CRD:
+
+```yaml
+# cluster-<provider> values.yaml
+cluster:
+  providerIntegration:
+    resourcesApi:
+      controlPlaneResource:
+        enabled: true
+        provider: kamaji
+    controlPlane:
+      resources:
+        controlPlane:
+          api:
+            group: controlplane.cluster.x-k8s.io
+            kind: KamajiControlPlane
+            version: v1alpha1
+```
+
+Kamaji-specific configuration (API server / controller-manager / scheduler `extraArgs` and resources, addons such as CoreDNS,
+kube-proxy and Konnectivity, tenant control plane `deployment` settings, `kubelet`, `network`, etc.) is set under
+`.Values.cluster.providerIntegration.controlPlane.kamaji`. See [helm/cluster/ci/test-kamaji-control-plane-values.yaml](helm/cluster/ci/test-kamaji-control-plane-values.yaml)
+for a complete example.
+
+Note: since there are no control plane machines with Kamaji, the `infrastructureMachineTemplate` and kubeadm-related values
+under `controlPlane.kubeadmConfig` do not apply to the control plane (they still apply to workers via `workers.kubeadmConfig`).
+
 #### Node pool resources
 
 There are two node pool resources, MachinePool and KubeadmConfig, and both are rendered unders a single resource flag which
