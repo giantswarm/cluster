@@ -4,6 +4,7 @@
 {{- include "cluster.internal.controlPlane.kubeadm.files.audit" $ }}
 {{- include "cluster.internal.controlPlane.kubeadm.files.encryption" $ }}
 {{- include "cluster.internal.controlPlane.kubeadm.files.fairness" $ }}
+{{- include "cluster.internal.controlPlane.kubeadm.files.selinux" $ }}
 {{- include "cluster.internal.controlPlane.kubeadm.files.oidc" $ }}
 {{- include "cluster.internal.controlPlane.kubeadm.files.provider" $ }}
 {{- include "cluster.internal.controlPlane.kubeadm.files.custom" $ }}
@@ -70,6 +71,15 @@
   permissions: "0644"
   encoding: base64
   content: {{ tpl ($.Files.Get "files/etc/kubernetes/patches/kube-controller-manager0+json.yaml") . | b64enc }}
+{{- end }}
+
+{{- define "cluster.internal.controlPlane.kubeadm.files.selinux" }}
+{{- if ne $.Values.global.components.selinux.mode "disabled" }}
+- path: /etc/kubernetes/patches/kube-apiserver1selinux+json.yaml
+  permissions: "0644"
+  encoding: base64
+  content: {{ tpl ($.Files.Get "files/etc/kubernetes/patches/kube-apiserver1selinux+json.yaml") . | b64enc }}
+{{- end }}
 {{- end }}
 
 {{- define "cluster.internal.controlPlane.kubeadm.files.oidc" }}
