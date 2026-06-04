@@ -10,6 +10,6 @@ dependsOn: coredns
 namespace: kube-system
 # used by renovate
 # repo: giantswarm/observability-bundle
-version: 2.9.0
+version: 3.0.0
 defaultValues:
   managementCluster: {{ $.Values.global.managementCluster }}
