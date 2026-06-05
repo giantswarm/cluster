@@ -291,6 +291,7 @@ providerIntegration:
     infrastructureCluster: {}
     machineHealthCheckResourceEnabled: true
     machinePoolResourcesEnabled: true
+    externalAutoscalerEnabled: true
   teleport:
     enabled: true
     initialJoinToken: ""
