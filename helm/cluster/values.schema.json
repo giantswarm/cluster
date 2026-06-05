@@ -3822,6 +3822,12 @@
                                 ]
                             }
                         },
+                        "externalAutoscalerEnabled": {
+                            "type": "boolean",
+                            "title": "External autoscaler enabled",
+                            "description": "Flag that indicates if an external (to CAPI) autoscaler is used.",
+                            "default": true
+                        },
                         "helmRepositoryResourcesEnabled": {
                             "type": "boolean",
                             "title": "HelmRepository resources enabled",
@@ -3841,12 +3847,6 @@
                             "type": "boolean",
                             "title": "Machine pool resources enabled",
                             "description": "Flag that indicates if the machine pool resources are enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.",
-                            "default": true
-                        },
-                        "externalAutoscalerEnabled": {
-                            "type": "boolean",
-                            "title": "External autoscaler enabled",
-                            "description": "Flag that indicates if an external (to CAPI) autoscaler is used.",
                             "default": true
                         }
                     },
