@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Add support for AKS clusters
+
 ### Fixed
 
 - Control Plane: Ensure components start correctly when SELinux is set to enforcing.
