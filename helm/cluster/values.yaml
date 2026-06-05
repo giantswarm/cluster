@@ -287,11 +287,11 @@ providerIntegration:
     controlPlaneResource:
       enabled: true
       provider: kubeadm
+    externalAutoscalerEnabled: true
     helmRepositoryResourcesEnabled: false
     infrastructureCluster: {}
     machineHealthCheckResourceEnabled: true
     machinePoolResourcesEnabled: true
-    externalAutoscalerEnabled: true
   teleport:
     enabled: true
     initialJoinToken: ""
