@@ -6,7 +6,7 @@ clusterValues:
   secret: false
 inCluster: true
 dependsOnHelmRelease: true
-dependsOn: coredns
+dependsOn: {{ if not (eq $.Values.providerIntegration.provider "aks") }}["coredns"]{{ else }}[]{{ end }}
 namespace: kube-system
 # used by renovate
 # repo: giantswarm/observability-bundle
