@@ -7,7 +7,7 @@ kind: MachinePool
 metadata:
   annotations:
     machine-pool.giantswarm.io/name: {{ include "cluster.resource.name" $ }}-{{ $nodePoolName }}
-    {{- if $.Values.providerIntegration.resourcesApi.externalAutoscalerEnabled }}
+    {{- if $.Values.providerIntegration.resourcesApi.externalAutoscaler.enabled }}
     cluster.x-k8s.io/replicas-managed-by: "external-autoscaler"
     {{- end }}
     {{- include "cluster.annotations.custom" $ | indent 4 }}

@@ -3762,7 +3762,7 @@
                         "machineHealthCheckResourceEnabled",
                         "bastionResourceEnabled",
                         "infrastructureCluster",
-                        "externalAutoscalerEnabled"
+                        "externalAutoscaler"
                     ],
                     "properties": {
                         "bastionResourceEnabled": {
@@ -3822,11 +3822,21 @@
                                 ]
                             }
                         },
-                        "externalAutoscalerEnabled": {
-                            "type": "boolean",
-                            "title": "External autoscaler enabled",
-                            "description": "Flag that indicates if an external (to CAPI) autoscaler is used.",
-                            "default": true
+                        "externalAutoscaler": {
+                            "type": "object",
+                            "title": "External autoscaler",
+                            "description": "Configuration for external autoscaler.",
+                            "required": [
+                                "enabled"
+                            ],
+                            "properties": {
+                                "enabled": {
+                                    "type": "boolean",
+                                    "title": "Enabled",
+                                    "description": "Flag that indicates if an external (to CAPI) autoscaler is used.",
+                                    "default": true
+                                }
+                            }
                         },
                         "helmRepositoryResourcesEnabled": {
                             "type": "boolean",

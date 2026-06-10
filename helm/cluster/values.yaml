@@ -287,7 +287,8 @@ providerIntegration:
     controlPlaneResource:
       enabled: true
       provider: kubeadm
-    externalAutoscalerEnabled: true
+    externalAutoscaler:
+      enabled: true
     helmRepositoryResourcesEnabled: false
     infrastructureCluster: {}
     machineHealthCheckResourceEnabled: true
