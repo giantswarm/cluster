@@ -1,7 +1,6 @@
 appName: external-dns-crossplane-resources
 configKey: externalDnsCrossplaneResources
 namespace: {{ .Release.Namespace }}
-useOCISource: true
 # repo: giantswarm/external-dns-crossplane-resources
 version: 0.2.0
 inCluster: true
