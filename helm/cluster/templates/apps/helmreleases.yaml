@@ -177,13 +177,46 @@ spec:
   {{- if $userConfig.values }}
   {{- $appHelmValues = mergeOverwrite $appHelmValues (deepCopy $userConfig.values) -}}
   {{- end }}
-  {{- if $appHelmValues }}
+  {{- /* extraConfigs carry the App platform `priority` (1-150, default 25) that fixes their
+         merge position relative to cluster config (slot 50) and user config (slot 100),
+         regardless of their position in the list. Flux merges valuesFrom strictly in list
+         order, so bucket the entries around those slots, stably sorted by priority. */}}
+  {{- $extraConfigs := concat ($app.extraConfigs | default list) ($userConfig.extraConfigs | default list) }}
+  {{- $extraConfigsLow := list }}
+  {{- $extraConfigsMid := list }}
+  {{- $extraConfigsHigh := list }}
+  {{- range $priority := untilStep 1 151 1 }}
+  {{- range $extraConfig := $extraConfigs }}
+  {{- if eq (int ($extraConfig.priority | default 25)) $priority }}
+  {{- if le $priority 50 }}
+  {{- $extraConfigsLow = append $extraConfigsLow $extraConfig }}
+  {{- else if le $priority 100 }}
+  {{- $extraConfigsMid = append $extraConfigsMid $extraConfig }}
+  {{- else }}
+  {{- $extraConfigsHigh = append $extraConfigsHigh $extraConfig }}
+  {{- end }}
+  {{- end }}
+  {{- end }}
+  {{- end }}
+  {{- /* Flux merges inline `values` after every valuesFrom entry, so an extraConfig with
+         priority > 100 could never override user config delivered inline. When such entries
+         exist, ship the merged values as a ConfigMap at the user-config slot instead, so the
+         priority > 100 entries can be merged after it. */}}
+  {{- $userValuesViaConfigMap := and $extraConfigsHigh $appHelmValues }}
+  {{- if and $appHelmValues (not $userValuesViaConfigMap) }}
   values: {{- (tpl ($appHelmValues | toYaml | toString) $) | nindent 4 }}
   {{- end }}
-  {{- $extraConfigs := concat ($app.extraConfigs | default list) ($userConfig.extraConfigs | default list) }}
   {{- $hasClusterValues := or (($app.clusterValues).configMap) (($app.clusterValues).secret) }}
   {{- if or $extraConfigs $hasClusterValues }}
   valuesFrom:
+    {{- range $extraConfig := $extraConfigsLow }}
+  {{- $kind := $extraConfig.kind }}
+  {{- if eq $kind "configMap" }}{{ $kind = "ConfigMap" }}{{ else if eq $kind "secret" }}{{ $kind = "Secret" }}{{ end }}
+  - kind: {{ $kind }}
+    name: {{ $extraConfig.name }}
+    valuesKey: values
+    optional: {{ $extraConfig.optional | default false  }}
+    {{- end }}
     {{- if ($app.clusterValues).configMap }}
   - kind: ConfigMap
     name: {{ include "cluster.resource.name" $ }}-cluster-values
@@ -196,7 +229,21 @@ spec:
     valuesKey: values
     optional: false
     {{- end }}
-    {{- range $extraConfig := $extraConfigs }}
+    {{- range $extraConfig := $extraConfigsMid }}
+  {{- $kind := $extraConfig.kind }}
+  {{- if eq $kind "configMap" }}{{ $kind = "ConfigMap" }}{{ else if eq $kind "secret" }}{{ $kind = "Secret" }}{{ end }}
+  - kind: {{ $kind }}
+    name: {{ $extraConfig.name }}
+    valuesKey: values
+    optional: {{ $extraConfig.optional | default false  }}
+    {{- end }}
+    {{- if $userValuesViaConfigMap }}
+  - kind: ConfigMap
+    name: {{ include "cluster.resource.name" $ }}-{{ $appName }}-user-values
+    valuesKey: values
+    optional: false
+    {{- end }}
+    {{- range $extraConfig := $extraConfigsHigh }}
   {{- $kind := $extraConfig.kind }}
   {{- if eq $kind "configMap" }}{{ $kind = "ConfigMap" }}{{ else if eq $kind "secret" }}{{ $kind = "Secret" }}{{ end }}
   - kind: {{ $kind }}
@@ -205,6 +252,19 @@ spec:
     optional: {{ $extraConfig.optional | default false  }}
     {{- end }}
   {{- end }}
+{{- if $userValuesViaConfigMap }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "cluster.resource.name" $ }}-{{ $appName }}-user-values
+  namespace: {{ $.Release.Namespace }}
+  labels:
+    {{- include "cluster.labels.common.all" $ | nindent 4 }}
+data:
+  values: |
+    {{- (tpl ($appHelmValues | toYaml | toString) $) | nindent 4 }}
+{{- end }}
 {{- /* end if $shouldRenderApp */}}
 {{- end }}
 {{- /* end with $rootScope */}}
