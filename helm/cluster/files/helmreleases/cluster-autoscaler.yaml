@@ -2,11 +2,11 @@ appName: cluster-autoscaler
 chartName: cluster-autoscaler-app
 configKey: clusterAutoscaler
 inCluster: {{ eq $.Values.providerIntegration.provider "azure" }}
-dependsOn: {{ if not (eq $.Values.providerIntegration.provider "azure") }}kyverno-crds{{ else }}[]{{ end }}
+dependsOn: {{ if not (eq $.Values.providerIntegration.provider "azure") }}["kyverno-crds"]{{ else }}[]{{ end }}
 namespace: kube-system
 # used by renovate
 # repo: giantswarm/cluster-autoscaler-app
-version: 1.35.0-1
+version: 2.0.0
 defaultValues:
   clusterID: {{ include "cluster.resource.name" $ }}
   provider: {{ .Values.providerIntegration.provider }}

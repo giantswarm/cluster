@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Migrate default applications from App CRs to Flux HelmRelease CRs.
+- Add support for AKS clusters
 
 ### Fixed
 

@@ -7,6 +7,6 @@ namespace: kube-system
 driftDetection: enabled
 # used by renovate
 # repo: giantswarm/security-bundle
-version: 1.17.1
+version: 2.0.0
 defaultValues:
   clusterID: {{ include "cluster.resource.name" $ }}

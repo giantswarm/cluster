@@ -2,12 +2,12 @@
 appName: observability-bundle
 configKey: observabilityBundle
 inCluster: true
-dependsOn: coredns
+dependsOn: {{ if not (eq $.Values.providerIntegration.provider "aks") }}["coredns"]{{ else }}[]{{ end }}
 namespace: kube-system
 driftDetection: enabled
 # used by renovate
 # repo: giantswarm/observability-bundle
-version: 2.9.0
+version: 3.0.0
 defaultValues:
   managementCluster: {{ $.Values.global.managementCluster }}
   clusterID: {{ include "cluster.resource.name" $ }}
