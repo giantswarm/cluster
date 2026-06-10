@@ -1,5 +1,4 @@
 appName: cluster-probes
-useOCISource: true
 configKey: clusterProbes
 namespace: {{ .Release.Namespace }}
 # used by renovate
