@@ -1,4 +1,4 @@
-{{- if $.Values.providerIntegration.resourcesApi.machinePoolResourcesEnabled }}
+{{- if $.Values.providerIntegration.resourcesApi.machinePoolResources.enabled }}
 {{- if eq $.Values.providerIntegration.resourcesApi.nodePoolKind "MachinePool" }}
 {{- range $nodePoolName, $nodePoolConfig := $.Values.global.nodePools | default $.Values.providerIntegration.workers.defaultNodePools }}
 {{- $_ := set $ "nodePool" (dict "name" $nodePoolName "config" $nodePoolConfig) }}
@@ -7,7 +7,7 @@ kind: MachinePool
 metadata:
   annotations:
     machine-pool.giantswarm.io/name: {{ include "cluster.resource.name" $ }}-{{ $nodePoolName }}
-    {{- if $.Values.providerIntegration.resourcesApi.externalAutoscaler.enabled }}
+    {{- if $.Values.providerIntegration.resourcesApi.machinePoolResources.externalAutoscaler.enabled }}
     cluster.x-k8s.io/replicas-managed-by: "external-autoscaler"
     {{- end }}
     {{- include "cluster.annotations.custom" $ | indent 4 }}

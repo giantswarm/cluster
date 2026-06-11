@@ -1,5 +1,5 @@
 {{- if or
-  $.Values.providerIntegration.resourcesApi.machinePoolResourcesEnabled
+  $.Values.providerIntegration.resourcesApi.machinePoolResources.enabled
   (and
     $.Values.providerIntegration.resourcesApi.controlPlaneResource.enabled
     (eq $.Values.providerIntegration.resourcesApi.controlPlaneResource.provider "kubeadm")

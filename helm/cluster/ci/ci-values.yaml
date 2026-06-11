@@ -548,7 +548,8 @@ providerIntegration:
     controlPlaneResource:
       enabled: true
       provider: kubeadm
-    machinePoolResourcesEnabled: true
+    machinePoolResources:
+      enabled: true
     machineHealthCheckResourceEnabled: true
     bastionResourceEnabled: true
     infrastructureCluster:

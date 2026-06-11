@@ -10,7 +10,7 @@ became a feature and we need to keep the hashing in place.
 Full-line comments are excluded from the hash so that simple changes will not lead to
 node rollouts and thus possibly interruped workloads for customers.
 */}}
-{{- if $.Values.providerIntegration.resourcesApi.machinePoolResourcesEnabled }}
+{{- if $.Values.providerIntegration.resourcesApi.machinePoolResources.enabled }}
 {{- if eq $.Values.providerIntegration.resourcesApi.nodePoolKind "MachinePool" }}
 {{- if $.Values.providerIntegration.workers.kubeadmConfig.enabled }}
 {{- range $nodePoolName, $nodePoolConfig := $.Values.global.nodePools | default $.Values.providerIntegration.workers.defaultNodePools }}
