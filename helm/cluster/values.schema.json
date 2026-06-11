@@ -3758,7 +3758,7 @@
                     "required": [
                         "clusterResourceEnabled",
                         "controlPlaneResource",
-                        "machinePoolResourcesEnabled",
+                        "machinePoolResources",
                         "machineHealthCheckResourceEnabled",
                         "bastionResourceEnabled",
                         "infrastructureCluster"
@@ -3836,11 +3836,38 @@
                             "description": "Flag that indicates if the MachineHealthCheck resource is enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.",
                             "default": true
                         },
-                        "machinePoolResourcesEnabled": {
-                            "type": "boolean",
-                            "title": "Machine pool resources enabled",
-                            "description": "Flag that indicates if the machine pool resources are enabled and templated. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.",
-                            "default": true
+                        "machinePoolResources": {
+                            "type": "object",
+                            "title": "Machine pool resources",
+                            "description": "Configuration for machine pool resources. This is meant only for the initial development purposes for the sake of incrementally integrating cluster chart into cluster-$provider apps.",
+                            "required": [
+                                "enabled",
+                                "externalAutoscaler"
+                            ],
+                            "properties": {
+                                "enabled": {
+                                    "type": "boolean",
+                                    "title": "Enabled",
+                                    "description": "Flag that indicates if the machine pool resources are enabled and templated.",
+                                    "default": true
+                                },
+                                "externalAutoscaler": {
+                                    "type": "object",
+                                    "title": "External autoscaler",
+                                    "description": "Configuration for external autoscaler.",
+                                    "required": [
+                                        "enabled"
+                                    ],
+                                    "properties": {
+                                        "enabled": {
+                                            "type": "boolean",
+                                            "title": "Enabled",
+                                            "description": "Flag that indicates if an external (to CAPI) autoscaler is used.",
+                                            "default": true
+                                        }
+                                    }
+                                }
+                            }
                         }
                     },
                     "allOf": [
@@ -3848,8 +3875,13 @@
                             "if": {
                                 "type": "object",
                                 "properties": {
-                                    "machinePoolResourcesEnabled": {
-                                        "const": true
+                                    "machinePoolResources": {
+                                        "type": "object",
+                                        "properties": {
+                                            "enabled": {
+                                                "const": true
+                                            }
+                                        }
                                     }
                                 }
                             },
@@ -3878,8 +3910,13 @@
                             "if": {
                                 "type": "object",
                                 "properties": {
-                                    "machinePoolResourcesEnabled": {
-                                        "const": true
+                                    "machinePoolResources": {
+                                        "type": "object",
+                                        "properties": {
+                                            "enabled": {
+                                                "const": true
+                                            }
+                                        }
                                     },
                                     "nodePoolKind": {
                                         "const": "MachinePool"

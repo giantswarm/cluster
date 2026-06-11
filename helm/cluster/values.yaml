@@ -290,7 +290,10 @@ providerIntegration:
     helmRepositoryResourcesEnabled: false
     infrastructureCluster: {}
     machineHealthCheckResourceEnabled: true
-    machinePoolResourcesEnabled: true
+    machinePoolResources:
+      enabled: true
+      externalAutoscaler:
+        enabled: true
   teleport:
     enabled: true
     initialJoinToken: ""

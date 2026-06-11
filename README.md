@@ -251,7 +251,7 @@ under `controlPlane.kubeadmConfig` do not apply to the control plane (they still
 #### Node pool resources
 
 There are two node pool resources, MachinePool and KubeadmConfig, and both are rendered unders a single resource flag which
-is `machinePoolResourcesEnabled` (which should have been called `nodePoolPoolResourcesEnabled` 🙈).
+is `machinePoolResources.enabled` (which should have been called `nodePoolResources.enabled` 🙈).
 
 Besides the above two resource flags, there are few other values that have to be specified:
 - Type of node pools that the cluster-\<provider\> app is using, which is set under `.Values.cluster.providerIntegration.resourcesApi.nodePoolKind `.
@@ -268,7 +268,8 @@ Here is the YAML that shows all of the above Helm values:
 cluster:
   providerIntegration:
     resourcesApi:
-      machinePoolResourcesEnabled: true
+      machinePoolResources:
+        enabled: true
       nodePoolKind: MachinePool
       infrastructureMachinePool:
         group: infrastructure.cluster.x-k8s.io

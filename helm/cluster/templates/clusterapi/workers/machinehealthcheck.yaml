@@ -1,4 +1,4 @@
-{{- if $.Values.providerIntegration.resourcesApi.machinePoolResourcesEnabled }}
+{{- if $.Values.providerIntegration.resourcesApi.machinePoolResources.enabled }}
 {{- if $.Values.providerIntegration.resourcesApi.machineHealthCheckResourceEnabled }}
 {{- range $nodePoolName, $nodePoolConfig := $.Values.global.nodePools | default $.Values.providerIntegration.workers.defaultNodePools }}
 {{- if $nodePoolConfig.machineHealthCheck }}

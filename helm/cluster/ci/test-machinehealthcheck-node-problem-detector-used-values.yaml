@@ -43,7 +43,8 @@ providerIntegration:
       kind: AWSCluster
       version: v1beta1
     machineHealthCheckResourceEnabled: true
-    machinePoolResourcesEnabled: true
+    machinePoolResources:
+      enabled: true
     nodePoolKind: MachinePool
     infrastructureMachinePool:
       group: infrastructure.cluster.x-k8s.io
