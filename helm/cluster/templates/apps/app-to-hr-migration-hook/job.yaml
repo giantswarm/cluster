@@ -1,0 +1,728 @@
+{{/*
+Pre-upgrade hook to safely migrate default apps from App CRs to HelmReleases.
+
+The defining problem this hook solves is the race between MC App CR deletion
+and WC Chart CR cleanup. Concretely:
+  - app-operator (MC) reacts to a sub-App CR deletion by issuing DELETE on
+    the corresponding WC Chart CR
+  - if that WC Chart CR still has its chart-operator finalizer, chart-operator
+    on the WC processes the deletion and runs helm uninstall on the underlying
+    application
+  - the application gets uninstalled, then Flux later re-installs it fresh
+
+To close this race we strip every relevant finalizer in the system BEFORE any
+deletion happens. With finalizers gone, even if app-operator races and deletes
+a WC Chart CR, chart-operator's deletion handler is never invoked → no helm
+uninstall runs.
+
+  - Direct default apps:    have release.giantswarm.io/version, version!=0.0.0
+  - Bundle App CRs:         have release.giantswarm.io/version, version=0.0.0
+  - Bundle sub-App CRs:     have app.kubernetes.io/managed-by=Helm
+                            (rendered by the bundle helm chart) and
+                            do NOT have release.giantswarm.io/version
+
+Phases:
+  0a: Lift the helm upgrade timeout on our own App CR (15m vs the 5m default)
+      so the cascade in Phase D fits inside the helm timeout window.
+  0:  Strip depends-on annotations from default App CRs.
+  0b: Scale chart-operator on the WC to 0 (removes the actor that runs
+      `helm uninstall` on the WC).
+  A:  Pause everything (MC default Apps + sub-Apps + WC Chart CRs).
+  B:  Strip finalizers from everything.
+  C:  Delete everything (instant — no operator processing).
+  D:  Delete bundle App CRs and wait for cascade.
+
+Phase A buys us defense in depth — once operatorkit observes the pause, it
+skips reconciles. Phase B is the load-bearing protection — with finalizers
+gone, even an in-flight reconcile that we missed cannot trigger helm uninstall.
+Phase C is then a no-op for the operators. Phase D triggers the bundle helm
+release uninstall on the MC; that uninstall fires DELETE on sub-App CRs the
+bundle had rendered, but they're already gone, so it's a no-op.
+*/}}
+{{- if $.Values.providerIntegration.apps }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "cluster.resource.name" $ }}-migrate-apps-to-helmreleases
+  namespace: {{ $.Release.Namespace }}
+  labels:
+    {{- include "cluster.labels.common.all" $ | nindent 4 }}
+  annotations:
+    helm.sh/hook: pre-upgrade
+    helm.sh/hook-weight: "-10"
+    # Note: only `before-hook-creation` is set here — hook-succeeded is omitted
+    # on purpose so the pod sticks around after success and we can pull logs
+    # for forensic analysis when something goes wrong. The job itself is GC'd
+    # by the next pre-upgrade hook (before-hook-creation policy) and by
+    # `ttlSecondsAfterFinished` once it succeeds.
+    helm.sh/hook-delete-policy: before-hook-creation
+spec:
+  backoffLimit: 6
+  ttlSecondsAfterFinished: 300
+  template:
+    metadata:
+      labels:
+        {{- include "cluster.labels.common.all" $ | nindent 8 }}
+    spec:
+      serviceAccountName: {{ include "cluster.resource.name" $ }}-migrate-apps
+      restartPolicy: Never
+      containers:
+      - name: kubectl
+        image: gsoci.azurecr.io/giantswarm/kubectl:{{ .Values.providerIntegration.kubernetesVersion }}
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1000
+          runAsGroup: 1000
+          allowPrivilegeEscalation: false
+          seccompProfile:
+            type: RuntimeDefault
+          capabilities:
+            drop:
+            - ALL
+        resources:
+          requests:
+            cpu: 10m
+            memory: 128Mi
+          limits:
+            cpu: 200m
+            memory: 512Mi
+        command:
+        - /bin/sh
+        - -c
+        - |
+          # /bin/sh in the kubectl image is dash, which does not support
+          # `set -o pipefail`. We keep the strict `-eu` we've always had
+          # (errexit + nounset); pipefail is a bash-only extension here.
+          set -eu
+          CLUSTER_NAME="{{ include "cluster.resource.name" $ }}"
+          NAMESPACE="{{ $.Release.Namespace }}"
+          CHART_NAMESPACE="giantswarm"
+          BATCH_SIZE=10
+
+          # Retry wrapper for kubectl. Under 5-cluster concurrent migration
+          # load the MC API server intermittently rejects requests with
+          # `Unauthorized` (transient auth-cache issue). Without this wrapper
+          # `set -eu` causes the hook script to exit on the first such
+          # rejection — helm marks the upgrade failed, chart-operator retries,
+          # and the cycle repeats. Across rounds 34/35/37/39 this retry storm
+          # correlated with bundle sub-app uninstalls because chart-operator
+          # on the WC came back up between attempts.
+          #
+          # Up to 5 attempts with linear backoff (2s, 4s, 6s, 8s, 10s).
+          # Only retries on transient errors; non-transient errors fail fast.
+          # Important: capture stdout and stderr SEPARATELY so callers that
+          # pipe stdout (e.g. into `base64 -d` or `jsonpath` parsing) don't
+          # get polluted with kubectl warnings (rate-limit, deprecated APIs).
+          kubectl_retry() {
+            local max=5 i=1 rc
+            local errfile="/tmp/kubectl_retry.err.$$"
+            while [ $i -le $max ]; do
+              kubectl "$@" 2>"$errfile"
+              rc=$?
+              if [ $rc -eq 0 ]; then
+                # On success, propagate any stderr (warnings) but NOT into stdout.
+                cat "$errfile" >&2
+                rm -f "$errfile"
+                return 0
+              fi
+              if grep -qE "Unauthorized|connection refused|i/o timeout|TLS handshake|the server is currently unable|EOF" "$errfile"; then
+                echo "  RETRY: kubectl $1 returned transient error (attempt $i/$max), waiting $((i * 2))s" >&2
+                cat "$errfile" >&2
+                sleep $((i * 2))
+                i=$((i + 1))
+                continue
+              fi
+              cat "$errfile" >&2
+              rm -f "$errfile"
+              return $rc
+            done
+            echo "  ERROR: kubectl $1 exhausted $max attempts" >&2
+            cat "$errfile" >&2
+            rm -f "$errfile"
+            return 1
+          }
+
+          # Fetch WC kubeconfig
+          echo "Fetching WC kubeconfig for $CLUSTER_NAME"
+          kubectl_retry get secret -n "$NAMESPACE" "${CLUSTER_NAME}-kubeconfig" \
+            -o jsonpath='{.data.value}' | base64 -d > /tmp/wc-kubeconfig
+          WC="--kubeconfig /tmp/wc-kubeconfig"
+
+          # Label selectors
+          DEFAULT_APP_LABEL="release.giantswarm.io/version"
+          HELM_MANAGED_LABEL="app.kubernetes.io/managed-by=Helm"
+          EXCLUDE_OPERATORS="app.kubernetes.io/name notin (app-operator,chart-operator)"
+
+          # Direct default apps: tagged with the release label and version != 0.0.0
+          # (the !=0.0.0 condition excludes bundle App CRs, which carry version=0.0.0).
+          NON_BUNDLE_SELECTOR="giantswarm.io/cluster=$CLUSTER_NAME,app-operator.giantswarm.io/version!=0.0.0,$EXCLUDE_OPERATORS,$DEFAULT_APP_LABEL"
+          # Bundle sub-Apps: rendered by helm (managed-by=Helm) and lack the
+          # release label (only direct defaults and bundles have it).
+          SUB_APP_SELECTOR="giantswarm.io/cluster=$CLUSTER_NAME,$HELM_MANAGED_LABEL,!$DEFAULT_APP_LABEL,$EXCLUDE_OPERATORS"
+          # Bundle App CRs (security-bundle, observability-bundle, aws-nth-bundle):
+          # carry app-operator.giantswarm.io/version=0.0.0 because chart-operator-MC
+          # runs them, not the per-cluster app-operator.
+          BUNDLE_APP_SELECTOR="giantswarm.io/cluster=$CLUSTER_NAME,app-operator.giantswarm.io/version=0.0.0,$DEFAULT_APP_LABEL"
+          # Discovery selectors used by Phase 0.
+          CLUSTER_SELECTOR="giantswarm.io/cluster=$CLUSTER_NAME,$DEFAULT_APP_LABEL"
+
+          # WC Chart CRs:
+          #   - Direct default apps' Chart CRs carry the release label.
+          #   - Sub-app Chart CRs carry app.kubernetes.io/managed-by=Helm
+          #     (copied through from the helm-rendered MC sub-App CR).
+          WC_CHART_DIRECT_SELECTOR="$DEFAULT_APP_LABEL"
+          WC_CHART_SUBAPP_SELECTOR="$HELM_MANAGED_LABEL,$EXCLUDE_OPERATORS"
+
+          # Bundle sub-HRs on MC: helm-managed HRs in org-* that belong to a
+          # bundle's helm release (not the cluster-aws release itself).
+          # Most bundles (security-bundle, observability-bundle, karpenter-bundle,
+          # aws-ebs-csi-driver-bundle) render sub-App CRs and are covered by
+          # $SUB_APP_SELECTOR. aws-nth-bundle's chart, however, renders HRs
+          # directly. Without neutralizing them here, Phase D's bundle helm
+          # uninstall DELETEs them, helm-controller's finalizer fires, and the
+          # managed WC release is uninstalled — see Round 68's regression.
+          # The instance-label differentiator works because cluster-aws-rendered
+          # HRs carry app.kubernetes.io/instance=<cluster> while bundle-rendered
+          # HRs carry app.kubernetes.io/instance=<cluster>-<bundle-name>.
+          SUB_HR_SELECTOR="giantswarm.io/cluster=$CLUSTER_NAME,$HELM_MANAGED_LABEL,app.kubernetes.io/instance!=$CLUSTER_NAME"
+
+          # Helper: check if an app is an operator that must be kept alive.
+          is_operator() {
+            case "$1" in *-app-operator|*-chart-operator) return 0 ;; esac
+            return 1
+          }
+
+          # Pause MC App CRs by selector.
+          pause_apps_in_mc() {
+            DESC="$1"; SEL="$2"
+            echo "  Pausing $DESC"
+            kubectl_retry annotate apps.application.giantswarm.io -n "$NAMESPACE" \
+              -l "$SEL" \
+              "operatorkit.giantswarm.io/paused=true" --overwrite
+          }
+
+          # Pause WC Chart CRs by selector.
+          pause_charts_in_wc() {
+            DESC="$1"; SEL="$2"
+            echo "  Pausing $DESC"
+            kubectl_retry $WC annotate chart.application.giantswarm.io -n "$CHART_NAMESPACE" \
+              -l "$SEL" \
+              "operatorkit.giantswarm.io/paused=true" --overwrite
+          }
+
+          # Strip finalizers from MC App CRs by selector. Individual patches may
+          # fail if the resource has no finalizers — that's OK.
+          strip_app_finalizers() {
+            DESC="$1"; SEL="$2"
+            echo "  Stripping finalizers from $DESC"
+            APPS=$(kubectl_retry get apps.application.giantswarm.io -n "$NAMESPACE" \
+              -l "$SEL" \
+              -o jsonpath='{.items[*].metadata.name}')
+            COUNT=0
+            for APP in $APPS; do
+              (kubectl patch apps.application.giantswarm.io "$APP" -n "$NAMESPACE" --type=json \
+                -p='[{"op": "remove", "path": "/metadata/finalizers"}]' 2>/dev/null || true) &
+              COUNT=$((COUNT + 1))
+              if [ $((COUNT % BATCH_SIZE)) -eq 0 ]; then wait; fi
+            done
+            wait
+          }
+
+          # Strip finalizers from WC Chart CRs by selector.
+          strip_chart_finalizers() {
+            DESC="$1"; SEL="$2"
+            echo "  Stripping finalizers from $DESC"
+            CHARTS=$(kubectl_retry $WC get chart.application.giantswarm.io -n "$CHART_NAMESPACE" \
+              -l "$SEL" \
+              -o jsonpath='{.items[*].metadata.name}')
+            COUNT=0
+            for CHART in $CHARTS; do
+              (kubectl $WC patch chart.application.giantswarm.io "$CHART" -n "$CHART_NAMESPACE" --type=json \
+                -p='[{"op": "remove", "path": "/metadata/finalizers"}]' 2>/dev/null || true) &
+              COUNT=$((COUNT + 1))
+              if [ $((COUNT % BATCH_SIZE)) -eq 0 ]; then wait; fi
+            done
+            wait
+          }
+
+          # Delete MC App CRs by selector.
+          delete_apps_in_mc() {
+            DESC="$1"; SEL="$2"
+            echo "  Deleting $DESC"
+            kubectl_retry delete apps.application.giantswarm.io -n "$NAMESPACE" \
+              -l "$SEL" \
+              --ignore-not-found=true --wait=false
+          }
+
+          # Delete WC Chart CRs by selector.
+          delete_charts_in_wc() {
+            DESC="$1"; SEL="$2"
+            echo "  Deleting $DESC"
+            kubectl_retry $WC delete chart.application.giantswarm.io -n "$CHART_NAMESPACE" \
+              -l "$SEL" \
+              --ignore-not-found=true
+          }
+
+          # Pause MC HRs by selector (suspend Flux reconciliation).
+          pause_hrs_in_mc() {
+            DESC="$1"; SEL="$2"
+            echo "  Suspending $DESC"
+            HRS=$(kubectl_retry get helmreleases.helm.toolkit.fluxcd.io -n "$NAMESPACE" \
+              -l "$SEL" \
+              -o jsonpath='{.items[*].metadata.name}')
+            COUNT=0
+            for HR in $HRS; do
+              (kubectl patch helmreleases.helm.toolkit.fluxcd.io "$HR" -n "$NAMESPACE" --type=merge \
+                -p '{"spec":{"suspend":true}}' 2>/dev/null || true) &
+              COUNT=$((COUNT + 1))
+              if [ $((COUNT % BATCH_SIZE)) -eq 0 ]; then wait; fi
+            done
+            wait
+          }
+
+          # Strip finalizers from MC HRs by selector. The critical step: with
+          # finalizers.fluxcd.io gone, when Phase D's helm uninstall deletes
+          # these HRs, helm-controller's deletion handler does NOT run
+          # `helm uninstall` on the managed WC release, so the WC release
+          # survives intact. The new bundle HR (created by cluster-aws's
+          # post-migration template) re-renders these inner HRs, and Flux's
+          # default takeOwnership adopts the existing WC release on next
+          # reconcile.
+          strip_hr_finalizers() {
+            DESC="$1"; SEL="$2"
+            echo "  Stripping finalizers from $DESC"
+            HRS=$(kubectl_retry get helmreleases.helm.toolkit.fluxcd.io -n "$NAMESPACE" \
+              -l "$SEL" \
+              -o jsonpath='{.items[*].metadata.name}')
+            COUNT=0
+            for HR in $HRS; do
+              (kubectl patch helmreleases.helm.toolkit.fluxcd.io "$HR" -n "$NAMESPACE" --type=json \
+                -p='[{"op": "remove", "path": "/metadata/finalizers"}]' 2>/dev/null || true) &
+              COUNT=$((COUNT + 1))
+              if [ $((COUNT % BATCH_SIZE)) -eq 0 ]; then wait; fi
+            done
+            wait
+          }
+
+          # Delete MC HRs by selector. With finalizers stripped, deletion is
+          # instant. We could let Phase D's helm uninstall delete them, but
+          # explicit deletion in Phase C keeps the order deterministic and
+          # matches the existing pattern for the App/Chart categories.
+          delete_hrs_in_mc() {
+            DESC="$1"; SEL="$2"
+            echo "  Deleting $DESC"
+            kubectl_retry delete helmreleases.helm.toolkit.fluxcd.io -n "$NAMESPACE" \
+              -l "$SEL" \
+              --ignore-not-found=true --wait=false
+          }
+
+          # ============================================================
+          # Gate: skip the hook on already-migrated clusters
+          # ============================================================
+          # The migration is a one-time transformation that converts default
+          # App CRs to HelmRelease CRs. Once a cluster has been migrated to
+          # release v35.0.0 (or any prerelease/patch of v35+), there are no
+          # default App CRs left to migrate — Phase A-D would be no-ops, but
+          # Phase 0b would still scale chart-operator-WC to 0 unnecessarily,
+          # creating a ~5min window where no Chart CR reconciles run on the
+          # WC (app-operator-MC's chart-operator-special-path reconciles it
+          # back to replicas=1 on its next cycle, but during the gap any
+          # user-managed Chart CRs on the WC pause).
+          #
+          # The pre-upgrade hook runs BEFORE helm applies the new manifest,
+          # so the live Cluster CR still carries the PREVIOUS release's
+          # release.giantswarm.io/version label. We extract the major
+          # version (string-cut, not semver-parse) so that prereleases like
+          # "35.0.0-jose" correctly compare as v35+: MAJOR is just the
+          # leading numeric segment. Fall through and run the hook if we
+          # can't determine the version — that's the safer default.
+          CURRENT_RELEASE=$(kubectl_retry get cluster.cluster.x-k8s.io \
+            "$CLUSTER_NAME" -n "$NAMESPACE" \
+            -o jsonpath='{.metadata.labels.release\.giantswarm\.io/version}' 2>/dev/null || true)
+          if [ -n "$CURRENT_RELEASE" ]; then
+            MAJOR=$(echo "$CURRENT_RELEASE" | cut -d'.' -f1)
+            if [ "$MAJOR" -ge 35 ] 2>/dev/null; then
+              echo "Gate: cluster ${CLUSTER_NAME} is on release ${CURRENT_RELEASE} (major>=35); migration already done, skipping hook"
+              exit 0
+            fi
+            echo "Gate: cluster ${CLUSTER_NAME} is on release ${CURRENT_RELEASE} (major<35); running migration"
+          else
+            echo "Gate: could not read release.giantswarm.io/version label from Cluster CR ${CLUSTER_NAME}; running migration for safety"
+          fi
+
+          # ============================================================
+          # Phase 0a: Lift the helm upgrade timeout on our own App CR
+          # ============================================================
+          # The cluster's App CR (the one that deploys this very chart) has
+          # `spec.upgrade.timeout` defaulting to 5m. Under fresh-state
+          # 5-cluster concurrent migration load, kubectl's client-side
+          # rate-limiter and the MC API server's auth/throttle interactions
+          # push our Phase A→C work past 5m, helm hits the timeout, marks
+          # the upgrade failed, and the cycle repeats. This patch only
+          # affects FUTURE retries (chart-operator-MC re-reads the App CR
+          # at the start of each helm upgrade), so the current run will
+          # still hit 5m if it's the first attempt — but the next retry
+          # will get a generous window. Phase 0b protections still hold,
+          # so the wasted first attempt cannot uninstall anything.
+          echo "Phase 0a: Lifting spec.upgrade.timeout on $CLUSTER_NAME App CR to 15m"
+          kubectl_retry patch apps.application.giantswarm.io "$CLUSTER_NAME" \
+            -n "$NAMESPACE" --type merge \
+            -p '{"spec":{"upgrade":{"timeout":"15m"}}}'
+
+          # ============================================================
+          # Phase 0: Remove dependency annotations
+          # ============================================================
+          # Prevents app-operator from pausing MC Chart CRs in reaction to
+          # dependency App CRs being removed in subsequent phases.
+          echo "Phase 0: Removing depends-on annotations from default App CRs"
+          kubectl_retry annotate apps.application.giantswarm.io -n "$NAMESPACE" \
+            -l "$CLUSTER_SELECTOR" \
+            "app-operator.giantswarm.io/depends-on-"
+
+          # ============================================================
+          # Phase 0b: Scale chart-operator on the WC down to 0
+          # ============================================================
+          # Bundle sub-app Chart CRs in the WC are repeatedly observed to
+          # have their underlying helm releases uninstalled across
+          # 5-cluster concurrent migration runs (Round 34/35/37 — same set
+          # of 10 apps every time, only bundle sub-apps, never non-bundle
+          # default apps). Phase C.5 forensic re-checks have ruled out
+          # the in-flight `app-operator` reconcile race as the trigger.
+          # The pattern points strongly at chart-operator on the WC
+          # processing a Chart CR deletion event with a stale informer
+          # cache (operator's cached object still has the finalizer we
+          # stripped), running `helm uninstall`, and only then noticing
+          # the live state.
+          #
+          # Scaling chart-operator on the WC to 0 BEFORE we touch any
+          # WC Chart CR removes the actor that runs `helm uninstall` on
+          # the WC. Any deletion event we then issue is processed by K8s
+          # alone (no controller). chart-operator on the WC is restored
+          # automatically by Flux (its new HelmRelease in 35.0.0-jose)
+          # after the migration completes.
+          #
+          # IMPORTANT: We force-delete the pod with `--grace-period=0
+          # --force` rather than letting the SIGTERM-driven graceful
+          # shutdown play out. Round 43 evidence: with the timeout
+          # pre-set so there is no retry storm and only a single hook
+          # execution, 2/5 clusters still lost a bundle sub-app. The
+          # remaining viable mechanism is chart-operator's
+          # `terminationGracePeriodSeconds` window: after `kubectl scale
+          # --replicas=0` lands SIGTERM, the pod has up to 30s to drain
+          # its work queue, and any queued reconcile that resolves to
+          # `helm uninstall` (stale informer cache observing a
+          # finalizer/deletionTimestamp transition) fires DURING graceful
+          # shutdown. Force-delete eliminates that window.
+          echo "Phase 0b: Scaling chart-operator deployment on the WC to 0"
+          kubectl_retry $WC scale deployment chart-operator -n "$CHART_NAMESPACE" \
+            --replicas=0
+          # Force-delete every existing chart-operator pod so it terminates
+          # immediately instead of getting up to terminationGracePeriodSeconds
+          # to drain reconciles that could fire helm uninstall.
+          PODS=$(kubectl $WC get pods -n "$CHART_NAMESPACE" -l app=chart-operator -o jsonpath='{.items[*].metadata.name}' 2>/dev/null)
+          for POD in $PODS; do
+            echo "  Force-deleting chart-operator pod: $POD"
+            kubectl_retry $WC delete pod "$POD" -n "$CHART_NAMESPACE" \
+              --grace-period=0 --force --ignore-not-found=true
+          done
+          # Confirm no chart-operator pods remain. Replicas=0 prevents the
+          # ReplicaSet from re-creating; force-delete made the existing pods
+          # disappear immediately.
+          for i in $(seq 1 5); do
+            PODS=$(kubectl $WC get pods -n "$CHART_NAMESPACE" -l app=chart-operator --no-headers 2>/dev/null | wc -l | tr -d ' ')
+            if [ "$PODS" -eq 0 ]; then
+              echo "  chart-operator on WC is down"
+              break
+            fi
+            echo "  still seeing $PODS chart-operator pod(s) (attempt $i)"
+            sleep 2
+          done
+          # Hard post-condition: chart-operator on WC MUST be down before we
+          # proceed. If pods linger, the actor that runs `helm uninstall` on
+          # the WC is still alive and the load-bearing protection of Phase 0b
+          # is gone. Fail loudly so helm marks the upgrade failed and chart-
+          # operator-MC retries the whole hook.
+          PODS=$(kubectl $WC get pods -n "$CHART_NAMESPACE" -l app=chart-operator --no-headers 2>/dev/null | wc -l | tr -d ' ')
+          if [ "$PODS" -ne 0 ]; then
+            echo "  FATAL: chart-operator on WC still has $PODS pod(s) after 5 attempts; aborting" >&2
+            kubectl $WC get pods -n "$CHART_NAMESPACE" -l app=chart-operator -o wide 2>&1 | head -20 >&2 || true
+            exit 1
+          fi
+
+          # ============================================================
+          # Phase A: Pause everything
+          # ============================================================
+          # Add the operatorkit pause annotation to every resource we are
+          # about to clean up. Once operatorkit observes the annotation it
+          # skips the resource's reconcile entirely. This is defence in depth;
+          # the load-bearing protection is Phase B.
+          echo "Phase A: Pausing all resources to be cleaned up"
+          pause_apps_in_mc "non-bundle App CRs" "$NON_BUNDLE_SELECTOR"
+          pause_apps_in_mc "bundle sub-App CRs" "$SUB_APP_SELECTOR"
+          pause_charts_in_wc "direct default app Chart CRs" "$WC_CHART_DIRECT_SELECTOR"
+          pause_charts_in_wc "bundle sub-app Chart CRs" "$WC_CHART_SUBAPP_SELECTOR"
+          pause_hrs_in_mc "bundle sub-HRs" "$SUB_HR_SELECTOR"
+          # Bundle App CRs are intentionally NOT paused. We WANT the cascade
+          # (app-operator → bundle Chart CR delete → chart-operator-MC →
+          # helm uninstall on the bundle release on MC) to fire in Phase D.
+          # Phase D blocks until the cascade completes, so the bundle helm
+          # release storage on MC is fully gone before the hook exits and
+          # before helm proceeds to apply the cluster-aws upgrade diff. When
+          # Flux helm-controller eventually picks up the new bundle HR, it
+          # sees no existing release in storage and runs a fresh `helm install`
+          # at the new bundle version — no takeOwnership upgrade, no race
+          # with chart-operator-MC reverting it.
+          # The bundle uninstall manifest (rendered by the pre-migration
+          # version of the bundle helm chart) contains sub-App CRs in the
+          # cluster's organization namespace only — those were already
+          # removed in Phase C, so the uninstall's K8s DELETEs are no-ops.
+          # The actual WC sub-app helm releases (alloy-events, kyverno, etc.
+          # on the WC) are stored on the WC and untouched by the bundle
+          # uninstall on the MC.
+
+          # ============================================================
+          # Phase A.5: Synchronization barrier
+          # ============================================================
+          # operatorkit checks the pause annotation at the start of each
+          # reconcile loop. A reconcile that started BEFORE we set the pause
+          # can still complete its handlers — including (for app-operator)
+          # creating a fresh WC Chart CR, or (for chart-operator on the WC)
+          # re-adding its finalizer to a Chart CR we just stripped.
+          #
+          # Sleep long enough for any in-flight reconcile to drain.
+          # operatorkit's default rate-limit base delay + reconcile interval
+          # is on the order of 10s; we sleep 30s to be safe.
+          echo "Phase A.5: Sleeping 30s for operators to observe the pause"
+          sleep 30
+
+          # Snapshot for forensic trail. Print counts so a later log scrape
+          # can confirm what selectors matched at this point. (kubectl
+          # annotate is not a clean way to verify annotations were set; the
+          # counts let us cross-check against later phases.)
+          echo "Phase A.5: Selector coverage snapshot:"
+          NB_COUNT=$(kubectl_retry get apps.application.giantswarm.io -n "$NAMESPACE" -l "$NON_BUNDLE_SELECTOR" --no-headers 2>/dev/null | wc -l | tr -d ' ')
+          SUB_COUNT=$(kubectl_retry get apps.application.giantswarm.io -n "$NAMESPACE" -l "$SUB_APP_SELECTOR" --no-headers 2>/dev/null | wc -l | tr -d ' ')
+          BUNDLE_COUNT=$(kubectl_retry get apps.application.giantswarm.io -n "$NAMESPACE" -l "$BUNDLE_APP_SELECTOR" --no-headers 2>/dev/null | wc -l | tr -d ' ')
+          BUNDLE_NAMES_SNAPSHOT=$(kubectl_retry get apps.application.giantswarm.io -n "$NAMESPACE" -l "$BUNDLE_APP_SELECTOR" -o jsonpath='{.items[*].metadata.name}' 2>/dev/null)
+          WC_DIRECT_COUNT=$(kubectl_retry $WC get chart.application.giantswarm.io -n "$CHART_NAMESPACE" -l "$WC_CHART_DIRECT_SELECTOR" --no-headers 2>/dev/null | wc -l | tr -d ' ')
+          WC_SUB_COUNT=$(kubectl_retry $WC get chart.application.giantswarm.io -n "$CHART_NAMESPACE" -l "$WC_CHART_SUBAPP_SELECTOR" --no-headers 2>/dev/null | wc -l | tr -d ' ')
+          SUB_HR_COUNT=$(kubectl_retry get helmreleases.helm.toolkit.fluxcd.io -n "$NAMESPACE" -l "$SUB_HR_SELECTOR" --no-headers 2>/dev/null | wc -l | tr -d ' ')
+          echo "  non-bundle MC App CRs:       ${NB_COUNT}"
+          echo "  bundle sub-App CRs (MC):     ${SUB_COUNT}"
+          echo "  bundle App CRs (MC):         ${BUNDLE_COUNT}"
+          echo "  bundle App names:            $BUNDLE_NAMES_SNAPSHOT"
+          echo "  direct default WC Chart CRs: ${WC_DIRECT_COUNT}"
+          echo "  bundle sub-app WC Chart CRs: ${WC_SUB_COUNT}"
+          echo "  bundle sub-HRs (MC):         ${SUB_HR_COUNT}"
+
+          # ============================================================
+          # Phase B: Strip finalizers from everything
+          # ============================================================
+          # This is the critical step that closes the race. With every
+          # finalizer removed, app-operator's deletion handler can't trigger
+          # chart-operator's helm uninstall — even if a stale-cache reconcile
+          # races and deletes a WC Chart CR after our pause annotation, the
+          # Chart CR has no finalizer, so chart-operator never runs uninstall.
+          echo "Phase B: Stripping finalizers from all resources"
+          strip_app_finalizers "non-bundle App CRs" "$NON_BUNDLE_SELECTOR"
+          strip_app_finalizers "bundle sub-App CRs" "$SUB_APP_SELECTOR"
+          strip_chart_finalizers "direct default app Chart CRs" "$WC_CHART_DIRECT_SELECTOR"
+          strip_chart_finalizers "bundle sub-app Chart CRs" "$WC_CHART_SUBAPP_SELECTOR"
+          strip_hr_finalizers "bundle sub-HRs" "$SUB_HR_SELECTOR"
+          # Bundle App CR finalizers are intentionally NOT stripped (see Phase A)
+          # — Phase D needs the cascade to fire so chart-operator-MC fully
+          # uninstalls the bundle helm release on MC before the hook exits.
+
+          # ============================================================
+          # Phase C: Delete everything
+          # ============================================================
+          # All deletions are now instant — no finalizers to process, no
+          # operator handlers fire. Order between MC and WC no longer matters.
+          echo "Phase C: Deleting all neutralized resources"
+          delete_apps_in_mc "non-bundle App CRs" "$NON_BUNDLE_SELECTOR"
+          delete_apps_in_mc "bundle sub-App CRs" "$SUB_APP_SELECTOR"
+          delete_charts_in_wc "direct default app Chart CRs" "$WC_CHART_DIRECT_SELECTOR"
+          delete_charts_in_wc "bundle sub-app Chart CRs" "$WC_CHART_SUBAPP_SELECTOR"
+          delete_hrs_in_mc "bundle sub-HRs" "$SUB_HR_SELECTOR"
+
+          # ============================================================
+          # Phase C.5: Forensic re-check for resurrected resources
+          # ============================================================
+          # Wait briefly, then re-list. If anything matching our selectors
+          # came back (because some operator's reconcile created it after
+          # Phase B's strip), we want to know — these are the resources
+          # that, if they have a finalizer attached, can drive `chart-operator`
+          # on the WC into running `helm uninstall`.
+          sleep 5
+          echo "Phase C.5: Forensic re-check for resurrected resources"
+          NB_RESURR=$(kubectl_retry get apps.application.giantswarm.io -n "$NAMESPACE" -l "$NON_BUNDLE_SELECTOR" --no-headers 2>/dev/null | wc -l | tr -d ' ')
+          SUB_RESURR=$(kubectl_retry get apps.application.giantswarm.io -n "$NAMESPACE" -l "$SUB_APP_SELECTOR" --no-headers 2>/dev/null | wc -l | tr -d ' ')
+          WC_DIRECT_RESURR=$(kubectl_retry $WC get chart.application.giantswarm.io -n "$CHART_NAMESPACE" -l "$WC_CHART_DIRECT_SELECTOR" --no-headers 2>/dev/null | wc -l | tr -d ' ')
+          WC_SUB_RESURR=$(kubectl_retry $WC get chart.application.giantswarm.io -n "$CHART_NAMESPACE" -l "$WC_CHART_SUBAPP_SELECTOR" --no-headers 2>/dev/null | wc -l | tr -d ' ')
+          SUB_HR_RESURR=$(kubectl_retry get helmreleases.helm.toolkit.fluxcd.io -n "$NAMESPACE" -l "$SUB_HR_SELECTOR" --no-headers 2>/dev/null | wc -l | tr -d ' ')
+          echo "  non-bundle MC App CRs:       ${NB_RESURR} (expected 0)"
+          echo "  bundle sub-App CRs (MC):     ${SUB_RESURR} (expected 0)"
+          echo "  direct default WC Chart CRs: ${WC_DIRECT_RESURR} (expected 0)"
+          echo "  bundle sub-app WC Chart CRs: ${WC_SUB_RESURR} (expected 0)"
+          echo "  bundle sub-HRs (MC):         ${SUB_HR_RESURR} (expected 0)"
+          if [ "$NB_RESURR" != "0" ] || [ "$SUB_RESURR" != "0" ] || [ "$WC_DIRECT_RESURR" != "0" ] || [ "$WC_SUB_RESURR" != "0" ] || [ "$SUB_HR_RESURR" != "0" ]; then
+            echo "  WARNING: resurrected resources detected. Listing names + finalizers:"
+            kubectl get apps.application.giantswarm.io -n "$NAMESPACE" -l "$NON_BUNDLE_SELECTOR" -o custom-columns="KIND:.kind,NAME:.metadata.name,FINALIZERS:.metadata.finalizers" 2>/dev/null || true
+            kubectl get apps.application.giantswarm.io -n "$NAMESPACE" -l "$SUB_APP_SELECTOR" -o custom-columns="KIND:.kind,NAME:.metadata.name,FINALIZERS:.metadata.finalizers" 2>/dev/null || true
+            kubectl $WC get chart.application.giantswarm.io -n "$CHART_NAMESPACE" -l "$WC_CHART_DIRECT_SELECTOR" -o custom-columns="KIND:.kind,NAME:.metadata.name,FINALIZERS:.metadata.finalizers" 2>/dev/null || true
+            kubectl $WC get chart.application.giantswarm.io -n "$CHART_NAMESPACE" -l "$WC_CHART_SUBAPP_SELECTOR" -o custom-columns="KIND:.kind,NAME:.metadata.name,FINALIZERS:.metadata.finalizers" 2>/dev/null || true
+            kubectl get helmreleases.helm.toolkit.fluxcd.io -n "$NAMESPACE" -l "$SUB_HR_SELECTOR" -o custom-columns="KIND:.kind,NAME:.metadata.name,FINALIZERS:.metadata.finalizers" 2>/dev/null || true
+            echo "  Re-running Phase B + C on resurrected set:"
+            strip_app_finalizers "non-bundle App CRs (resurrected)" "$NON_BUNDLE_SELECTOR"
+            strip_app_finalizers "bundle sub-App CRs (resurrected)" "$SUB_APP_SELECTOR"
+            strip_chart_finalizers "direct default app Chart CRs (resurrected)" "$WC_CHART_DIRECT_SELECTOR"
+            strip_chart_finalizers "bundle sub-app Chart CRs (resurrected)" "$WC_CHART_SUBAPP_SELECTOR"
+            strip_hr_finalizers "bundle sub-HRs (resurrected)" "$SUB_HR_SELECTOR"
+            delete_apps_in_mc "non-bundle App CRs (resurrected)" "$NON_BUNDLE_SELECTOR"
+            delete_apps_in_mc "bundle sub-App CRs (resurrected)" "$SUB_APP_SELECTOR"
+            delete_charts_in_wc "direct default app Chart CRs (resurrected)" "$WC_CHART_DIRECT_SELECTOR"
+            delete_charts_in_wc "bundle sub-app Chart CRs (resurrected)" "$WC_CHART_SUBAPP_SELECTOR"
+            delete_hrs_in_mc "bundle sub-HRs (resurrected)" "$SUB_HR_SELECTOR"
+          fi
+
+          # ============================================================
+          # Phase D: Cascade-delete bundle App CRs and BLOCK until uninstall
+          # of the bundle helm release on MC completes
+          # ============================================================
+          # We deliberately DO NOT pause the bundle App CR (Phase A) and DO NOT
+          # strip its finalizer (Phase B). We want app-operator's deletion
+          # handler to run the full cascade:
+          #   bundle App CR delete
+          #     → app-operator deletes the bundle Chart CR (giantswarm ns, MC)
+          #     → chart-operator-MC's deletion handler runs `helm uninstall`
+          #       on the bundle helm release (org-jose ns, MC)
+          #     → bundle helm release storage is removed from MC
+          #
+          # The wait below is the load-bearing protection. It blocks the hook's
+          # exit until every bundle App CR is fully drained (finalizer chain
+          # cleared = cascade fully complete = bundle helm release storage
+          # gone). Once the hook exits, helm proceeds with the cluster-aws
+          # upgrade diff, creating the new bundle HelmRelease object on MC.
+          # Flux helm-controller then sees no existing release in storage for
+          # the bundle name and runs a FRESH `helm install` at the new bundle
+          # version (no takeOwnership upgrade, no race with chart-operator-MC
+          # reverting it back to the old version, no manifest-item deletion of
+          # the sub-app HRs that helm-controller is about to install).
+          #
+          # The bundle uninstall manifest is the OLD chart's (e.g.
+          # observability-bundle 2.6.0). Its items are sub-App CRs in
+          # `org-jose` — already removed in Phase C. So the actual K8s DELETEs
+          # the uninstall fires are no-ops. The WC sub-app helm releases
+          # (alloy-events, kyverno, ...) are stored on the WC and untouched
+          # by this MC-side bundle uninstall.
+          #
+          # We need the cluster App CR's `spec.upgrade.timeout` to be at least
+          # ~15m for this wait + the rest of the hook to fit comfortably.
+          echo "Phase D: Cascade-deleting bundle App CRs (wait for full uninstall on MC)"
+          # Snapshot the bundle App CR names BEFORE delete — once they're gone
+          # we still need to poll for their helm release secrets to confirm
+          # chart-operator-MC's helm uninstall actually finished.
+          BUNDLE_APP_NAMES_FOR_DRAIN=$(kubectl_retry get apps.application.giantswarm.io \
+            -n "$NAMESPACE" -l "$BUNDLE_APP_SELECTOR" \
+            -o jsonpath='{.items[*].metadata.name}')
+          delete_apps_in_mc "bundle App CRs" "$BUNDLE_APP_SELECTOR"
+          BUNDLE_DRAIN_TIMEOUT=720
+          ELAPSED=0
+          # First wait for the App CRs themselves to disappear. App CR removal
+          # signals that app-operator's deletion handler ran (which deletes
+          # the bundle Chart CR). It does NOT signal that chart-operator-MC's
+          # helm uninstall on the bundle release has completed — the App CR's
+          # finalizer is removed before the Chart CR's finalizer chain finishes.
+          while [ $ELAPSED -lt $BUNDLE_DRAIN_TIMEOUT ]; do
+            REMAINING=$(kubectl get apps.application.giantswarm.io -n "$NAMESPACE" \
+              -l "$BUNDLE_APP_SELECTOR" --no-headers 2>/dev/null | wc -l | tr -d ' ')
+            if [ "$REMAINING" = "0" ]; then
+              echo "  All bundle App CRs gone after ${ELAPSED}s; now waiting for helm release secrets"
+              break
+            fi
+            REMAINING_NAMES=$(kubectl get apps.application.giantswarm.io -n "$NAMESPACE" \
+              -l "$BUNDLE_APP_SELECTOR" -o jsonpath='{.items[*].metadata.name}' 2>/dev/null)
+            echo "  $REMAINING bundle App CRs remaining at ${ELAPSED}/${BUNDLE_DRAIN_TIMEOUT}s: $REMAINING_NAMES"
+            sleep 10
+            ELAPSED=$((ELAPSED + 10))
+          done
+          if [ "$REMAINING" != "0" ]; then
+            echo "  FATAL: bundle App CRs did not drain within ${BUNDLE_DRAIN_TIMEOUT}s" >&2
+            kubectl get apps.application.giantswarm.io -n "$NAMESPACE" -l "$BUNDLE_APP_SELECTOR" \
+              -o custom-columns="NAME:.metadata.name,FINALIZERS:.metadata.finalizers,DELETIONTS:.metadata.deletionTimestamp" 2>/dev/null || true
+            # Aborting now leaves Flux to race takeOwnership against chart-
+            # operator-MC's still-in-flight helm uninstall — the exact
+            # failure mode this hook exists to prevent. Helm will mark the
+            # upgrade failed and chart-operator-MC will retry the whole hook.
+            exit 1
+          fi
+          # Now poll for the bundle helm release SECRETS to be gone. This is
+          # the load-bearing check: helm release secrets stay in storage until
+          # chart-operator-MC's helm uninstall fully completes. Without this
+          # wait, the hook exits while secrets are still in storage; helm-
+          # controller's takeOwnership upgrade then claims the release; later
+          # chart-operator-MC's uninstall finishes and wipes the secrets,
+          # which deletes the manifest items (sub-app HRs) and triggers
+          # helm-controller to uninstall the WC sub-app releases.
+          # ELAPSED is intentionally not reset: the App CR drain above and
+          # this secret-poll share a single BUNDLE_DRAIN_TIMEOUT budget,
+          # because they are sequential parts of the same cascade and we
+          # don't want to grant the secret-poll a fresh full window.
+          echo "  Polling bundle helm release secrets to confirm uninstall completion..."
+          while [ $ELAPSED -lt $BUNDLE_DRAIN_TIMEOUT ]; do
+            ALL_GONE=true
+            STILL_PRESENT=""
+            for B in $BUNDLE_APP_NAMES_FOR_DRAIN; do
+              SECRET_COUNT=$(kubectl get secrets -n "$NAMESPACE" -l owner=helm,name="$B" \
+                --no-headers 2>/dev/null | wc -l | tr -d ' ')
+              if [ "$SECRET_COUNT" != "0" ]; then
+                ALL_GONE=false
+                STILL_PRESENT="$STILL_PRESENT $B(${SECRET_COUNT})"
+              fi
+            done
+            if [ "$ALL_GONE" = "true" ]; then
+              echo "  All bundle helm release secrets gone after ${ELAPSED}s — uninstall fully complete"
+              break
+            fi
+            echo "  Bundle helm release secrets still present at ${ELAPSED}/${BUNDLE_DRAIN_TIMEOUT}s:$STILL_PRESENT"
+            sleep 10
+            ELAPSED=$((ELAPSED + 10))
+          done
+          if [ "$ALL_GONE" != "true" ]; then
+            echo "  FATAL: bundle helm release secrets still present after ${BUNDLE_DRAIN_TIMEOUT}s" >&2
+            echo "  Listing remaining helm release secrets:"
+            kubectl get secrets -n "$NAMESPACE" -l owner=helm 2>/dev/null | head -20 || true
+            # Same reason as the bundle App CR drain abort above: proceeding
+            # past this point means Flux's takeOwnership will race a still-
+            # in-flight chart-operator-MC uninstall. Helm will mark the
+            # upgrade failed and chart-operator-MC will retry.
+            exit 1
+          fi
+
+          # ============================================================
+          # Phase E: Scale chart-operator on the WC back up to 1
+          # ============================================================
+          # Phase 0b scaled chart-operator-WC to 0 to neutralize it during
+          # Phase A-D. Nothing else in the system restores it after the
+          # migration: app-operator-MC reconciles the cluster's
+          # chart-operator App CR but only checks helm release status
+          # ("deployed"), not the live Deployment's replica count — so
+          # the kubectl-scale damage is permanent without this step.
+          #
+          # If we skip this, every post-migration cluster ends up with
+          # chart-operator-WC at replicas=0, and user-managed App CRs on
+          # the WC stop reconciling.
+          echo "Phase E: Scaling chart-operator deployment on the WC back to 1"
+          kubectl_retry $WC scale deployment chart-operator -n "$CHART_NAMESPACE" \
+            --replicas=1
+
+          # ============================================================
+          # Forensic event dump
+          # ============================================================
+          echo ""
+          echo "=== WC events in $CHART_NAMESPACE namespace (last 30, sorted by time) ==="
+          kubectl $WC get events -n "$CHART_NAMESPACE" --sort-by='.lastTimestamp' 2>&1 | tail -30 || true
+
+          echo ""
+          echo "Migration hook completed successfully"
+{{- end }}

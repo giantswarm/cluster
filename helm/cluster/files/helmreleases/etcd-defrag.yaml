@@ -1,8 +1,5 @@
 appName: etcd-defrag
 configKey: etcdDefrag
-clusterValues:
-  configMap: false
-  secret: false
 dependsOn: kyverno-crds
 namespace: kube-system
 # used by renovate

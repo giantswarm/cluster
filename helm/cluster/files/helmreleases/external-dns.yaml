@@ -1,9 +1,6 @@
 appName: external-dns
 chartName: external-dns-app
 configKey: externalDns
-clusterValues:
-  configMap: true
-  secret: true
 dependsOn: prometheus-operator-crd
 namespace: kube-system
 # used by renovate
@@ -19,3 +16,12 @@ defaultValues:
   annotationFilter: giantswarm.io/external-dns=managed
   ciliumNetworkPolicy:
     enabled: true
+  {{- if .Values.global.connectivity.proxy.enabled }}
+  env:
+    - name: NO_PROXY
+      value: {{ include "cluster.connectivity.proxy.noProxy" (dict "global" .Values.global "providerIntegration" .Values.providerIntegration) | quote }}
+    - name: HTTP_PROXY
+      value: {{ .Values.global.connectivity.proxy.httpProxy | quote }}
+    - name: HTTPS_PROXY
+      value: {{ .Values.global.connectivity.proxy.httpsProxy | quote }}
+  {{- end }}

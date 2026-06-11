@@ -4,10 +4,8 @@ configKey: kamajiEtcd
 additionalAnnotations:
   helm.sh/resource-policy: "keep"
 interval: 1m
-prependClusterName: true
-skipKubeConfig: true
+inCluster: true
 namespace: {{ $.Release.Namespace }}
-serviceAccountName: automation
 # used by renovate
 # repo: giantswarm/kamaji-etcd-app
 version: 0.3.0
