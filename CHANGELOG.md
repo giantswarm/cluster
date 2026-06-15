@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Migrate default applications from App CRs to Flux HelmRelease CRs.
 - Add support for AKS clusters
+- HelmReleases: honor the App platform `priority` field (1-150, default 25) on `extraConfigs` entries. `valuesFrom` entries are now ordered by priority around the cluster config (slot 50) and user config (slot 100) layers instead of list order, preserving the App CR merge semantics after the migration. When an extraConfig has priority above 100, the app's merged values are delivered via a `<cluster>-<app>-user-values` ConfigMap at the user-config slot instead of inline `spec.values`, so that entry can still override user config. ([giantswarm#36096](https://github.com/giantswarm/giantswarm/issues/36096))
 
 ### Fixed
 
