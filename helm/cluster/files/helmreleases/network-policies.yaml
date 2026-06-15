@@ -4,7 +4,7 @@ catalog: cluster
 namespace: kube-system
 # used by renovate
 # repo: giantswarm/network-policies-app
-version: 0.1.3
+version: 0.2.0
 dependsOn: {{ if not (eq $.Values.providerIntegration.provider "aks") }}["cilium"]{{ else }}[]{{ end }}
 interval: 1m
 disable: {{ .Values.global.connectivity.network.allowAllEgress }}
