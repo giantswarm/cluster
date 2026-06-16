@@ -58,10 +58,7 @@ global:
         - kind: secret
           name: sec-pre-cluster-1
           priority: 30
-          # sortAlpha is case-sensitive, a capital letter is sorted before the lowercase one.
-          # The value schema already prevents that, but not all systems might run the checks or can be skipped too.
-          # The sort helper converts them to a numerical value and calls lower() too.
-        - kind: CONFIGMAP
+        - kind: configMap
           name: cm-pre-cluster
           priority: 20
         - kind: secret
@@ -75,7 +72,7 @@ global:
         - kind: configMap
           name: cm-pre-user
           priority: 90
-        - kind: SECRET
+        - kind: secret
           name: sec-pre-cluster-2
           priority: 30
         - kind: configMap
@@ -93,10 +90,7 @@ global:
         - kind: secret
           name: sec-pre-cluster-1
           priority: 30
-          # sortAlpha is case-sensitive, a capital letter is sorted before the lowercase one.
-          # The value schema already prevents that, but not all systems might run the checks or can be skipped too.
-          # The sort helper converts them to a numerical value and calls lower() too.
-        - kind: CONFIGMAP
+        - kind: configMap
           name: cm-pre-cluster
           priority: 20
         - kind: secret
@@ -104,7 +98,7 @@ global:
           priority: 130
         - kind: configMap
           name: cm-default        # no priority -> defaults to 25
-        - kind: SECRET
+        - kind: secret
           name: sec-pre-user
           priority: 90
         - kind: configMap
