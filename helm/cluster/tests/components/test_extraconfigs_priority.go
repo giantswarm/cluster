@@ -31,14 +31,16 @@ var _ = Describe("extraConfigs priority ordering", func() {
 			// configMaps first (by priority band, user-values at slot 100), then
 			// secrets (by priority) — a secret always overrides a configMap.
 			expected := []string{
-				"ConfigMap/cm-pre-cluster",  // priority 20
-				"ConfigMap/cm-default",      // priority 25 (defaulted)
-				"ConfigMap/cm-pre-user",     // priority 90
+				"ConfigMap/cm-pre-cluster",         // priority 20
+				"ConfigMap/cm-default",             // priority 25 (defaulted)
+				"ConfigMap/cm-pre-user",            // priority 90
 				"ConfigMap/" + userValuesConfigMap, // user-values slot (100)
-				"ConfigMap/cm-post-user",    // priority 120
-				"Secret/sec-pre-cluster",    // priority 30
-				"Secret/sec-pre-user",       // priority 90
-				"Secret/sec-post-user",      // priority 130
+				"ConfigMap/cm-post-user-1",         // priority 120, 1st in list order
+				"ConfigMap/cm-post-user-2",         // priority 120, 2nd in list order
+				"Secret/sec-pre-cluster-1",         // priority 30, 1st in list order
+				"Secret/sec-pre-cluster-2",         // priority 30, 2nd in list order
+				"Secret/sec-pre-user",              // priority 90
+				"Secret/sec-post-user",             // priority 130
 			}
 			Expect(strings.Fields(strings.TrimSpace(order))).To(Equal(expected))
 		},
