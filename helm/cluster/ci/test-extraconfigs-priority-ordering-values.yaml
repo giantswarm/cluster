@@ -1,0 +1,154 @@
+# Exercises the App-platform `priority` ordering of extraConfigs as reproduced
+# in the HelmRelease `spec.valuesFrom` list (see the `cluster.app.sortedValuesFrom`
+# helper and giantswarm/giantswarm#36096).
+#
+# App platform built the configMap layers and the secret layers in two independent
+# passes and merged the secret blob OVER the configMap blob, so:
+#   * ALL configMaps merge before ALL secrets (a secret always overrides a configMap,
+#     regardless of priority);
+#   * within each kind the order is, by priority band:
+#       extras priority <= 50  ->  cluster-values slot (50)  ->
+#       extras 50 < priority <= 100  ->  user-values slot (100)  ->
+#       extras priority > 100
+#   * equal-priority extras keep their authored order;
+#   * an extra with no priority defaults to 25.
+#
+# Flux merges `valuesFrom` strictly top-to-bottom (later wins), so the rendered list
+# must already be in that order. The merged default+provider+user values are delivered
+# through a `<cluster>-<app>-user-values` ConfigMap at the user-config slot (NOT inline
+# `spec.values`, which Flux always merges last).
+#
+# No default app sets `clusterValues`, so the cluster-values slot (50) does not appear
+# in practice; the entries below straddle it to document where it would land.
+#
+# Each app's extraConfigs are authored DELIBERATELY OUT OF ORDER and with mixed kinds.
+# Expected rendered `spec.valuesFrom` for both apps (configMaps first, then secrets):
+#   - ConfigMap cm-pre-cluster          (priority 20)
+#   - ConfigMap cm-default              (priority 25, defaulted)
+#   - ConfigMap cm-pre-user             (priority 90)
+#   - ConfigMap <cluster>-<app>-user-values   (user-values slot, 100)
+#   - ConfigMap cm-post-user            (priority 120)
+#   - Secret    sec-pre-cluster         (priority 30)
+#   - Secret    sec-pre-user            (priority 90)
+#   - Secret    sec-post-user           (priority 130)
+
+global:
+  managementCluster: giantmc
+  release:
+    version: v27.0.0-alpha.1
+  metadata:
+    name: awesome
+    organization: giantswarm
+  connectivity:
+    baseDomain: example.gigantic.io
+  nodePools:
+    def00:
+      minSize: 3
+      maxSize: 20
+  apps:
+    # WC-targeted, non-bundle default app.
+    certExporter:
+      values:
+        # Lands in the <cluster>-cert-exporter-user-values ConfigMap (user-config slot 100).
+        sentinel: from-user-values
+      extraConfigs:
+        - kind: configMap
+          name: cm-post-user-1
+          priority: 120
+        - kind: secret
+          name: sec-pre-cluster-1
+          priority: 30
+        - kind: configMap
+          name: cm-pre-cluster
+          priority: 20
+        - kind: secret
+          name: sec-post-user
+          priority: 130
+        - kind: configMap
+          name: cm-default        # no priority -> defaults to 25
+        - kind: secret
+          name: sec-pre-user
+          priority: 90
+        - kind: configMap
+          name: cm-pre-user
+          priority: 90
+        - kind: secret
+          name: sec-pre-cluster-2
+          priority: 30
+        - kind: configMap
+          name: cm-post-user-2
+          priority: 120
+    # MC-targeted (inCluster) bundle. Same extraConfigs mix to show the ordering
+    # logic is identical regardless of where the HelmRelease targets.
+    securityBundle:
+      values:
+        sentinel: from-user-values
+      extraConfigs:
+        - kind: configMap
+          name: cm-post-user-1
+          priority: 120
+        - kind: secret
+          name: sec-pre-cluster-1
+          priority: 30
+        - kind: configMap
+          name: cm-pre-cluster
+          priority: 20
+        - kind: secret
+          name: sec-post-user
+          priority: 130
+        - kind: configMap
+          name: cm-default        # no priority -> defaults to 25
+        - kind: secret
+          name: sec-pre-user
+          priority: 90
+        - kind: configMap
+          name: cm-pre-user
+          priority: 90
+        - kind: secret
+          name: sec-pre-cluster-2
+          priority: 30
+        - kind: configMap
+          name: cm-post-user-2
+          priority: 120
+providerIntegration:
+  environmentVariables:
+    hostName: COREOS_EC2_HOSTNAME
+    ipv4: COREOS_EC2_IPV4_LOCAL
+  provider: aws
+  apps:
+    certExporter:
+      enable: true
+    securityBundle:
+      enable: true
+  resourcesApi:
+    bastionResourceEnabled: false
+    clusterResourceEnabled: true
+    controlPlaneResource:
+      enabled: true
+      provider: kubeadm
+    infrastructureCluster:
+      group: infrastructure.cluster.x-k8s.io
+      kind: AWSCluster
+      version: v1beta1
+    machineHealthCheckResourceEnabled: true
+    machinePoolResourcesEnabled: true
+    nodePoolKind: MachinePool
+    infrastructureMachinePool:
+      group: infrastructure.cluster.x-k8s.io
+      version: v1beta1
+      kind: AWSMachinePool
+    helmRepositoryResourcesEnabled: true
+  controlPlane:
+    resources:
+      infrastructureMachineTemplate:
+        group: infrastructure.cluster.x-k8s.io
+        kind: AWSMachineTemplate
+        version: v1beta1
+      infrastructureMachineTemplateSpecTemplateName: cluster.internal.test.controlPlane.machineTemplate.spec
+  workers:
+    defaultNodePools:
+      def00:
+        customNodeLabels:
+        - label=default
+        maxSize: 3
+        minSize: 3

@@ -590,3 +590,65 @@ Note: time.ParseDuration is not available in Helm/Sprig's template FuncMap, henc
 {{- /* Return total */ -}}
 {{- $total -}}
 {{- end -}}
+
+{{- /*
+cluster.app.sortedValuesFrom — reproduce the App platform's config merge order
+as a single Flux `valuesFrom` list (Flux merges the list top-to-bottom, later
+entries overriding earlier ones).
+
+App platform (github.com/giantswarm/app/pkg/values) builds the configMap layers
+and the secret layers in two independent passes and then merges the secret blob
+OVER the configMap blob — so a secret ALWAYS overrides a configMap regardless of
+priority. Within each kind the band order is:
+  pre-cluster extras (priority <= 50) -> cluster config (slot 50)
+  -> post-cluster/pre-user extras (50 < p <= 100) -> user config (slot 100)
+  -> post-user extras (p > 100)
+Equal-priority extras keep their authored order; an extra at exactly 50/100
+precedes the platform layer at that slot (the band is half-open: minExcl < p <= max).
+
+We encode each entry as a sort key `KIND_PRIORITY_SOURCE_INDEX`:
+  KIND     0=configMap 1=secret      (all configMaps sort before all secrets)
+  PRIORITY %03d                       (numeric order via zero-pad)
+  SOURCE   0=extraConfig 1=platform   (extra precedes platform at equal priority)
+  INDEX    %03d authored position     (stable tie-break for equal-priority extras)
+then sortAlpha the keys and emit. Returns a YAML array of {kind,name} dicts.
+
+Arg: a dict with keys:
+  extraConfigs           list of {kind,name,priority}
+  clusterValuesConfigMap name | ""   (slot 50, configMap)
+  clusterValuesSecret    name | ""   (slot 50, secret)
+  userValuesConfigMap    name | ""   (slot 100, configMap)
+  root                   $ (for tpl-ing extraConfig names)
+*/ -}}
+{{- define "cluster.app.sortedValuesFrom" -}}
+{{- $keyed := dict -}}
+{{- $keys := list -}}
+{{- if .clusterValuesConfigMap -}}
+{{- $k := printf "0_%03d_1_000" 50 -}}
+{{- $keyed = set $keyed $k (dict "kind" "ConfigMap" "name" .clusterValuesConfigMap "optional" false) -}}
+{{- $keys = append $keys $k -}}
+{{- end -}}
+{{- if .clusterValuesSecret -}}
+{{- $k := printf "1_%03d_1_000" 50 -}}
+{{- $keyed = set $keyed $k (dict "kind" "Secret" "name" .clusterValuesSecret "optional" false) -}}
+{{- $keys = append $keys $k -}}
+{{- end -}}
+{{- if .userValuesConfigMap -}}
+{{- $k := printf "0_%03d_1_000" 100 -}}
+{{- $keyed = set $keyed $k (dict "kind" "ConfigMap" "name" .userValuesConfigMap "optional" false) -}}
+{{- $keys = append $keys $k -}}
+{{- end -}}
+{{- range $i, $ec := .extraConfigs -}}
+{{- $isSecret := eq (lower ($ec.kind | default "configMap")) "secret" -}}
+{{- $kindOrder := ternary "1" "0" $isSecret -}}
+{{- $prio := int ($ec.priority | default 25) -}}
+{{- $k := printf "%s_%03d_0_%03d" $kindOrder $prio $i -}}
+{{- $keyed = set $keyed $k (dict "kind" (ternary "Secret" "ConfigMap" $isSecret) "name" (tpl $ec.name $.root) "optional" ($ec.optional | default false)) -}}
+{{- $keys = append $keys $k -}}
+{{- end -}}
+{{- $out := list -}}
+{{- range $k := sortAlpha $keys -}}
+{{- $out = append $out (get $keyed $k) -}}
+{{- end -}}
+{{- $out | toYaml -}}
+{{- end -}}
