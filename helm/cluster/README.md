@@ -1144,7 +1144,7 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.kubeadmConfig.taints[*].effect` | **Effect**|**Type:** `string`<br/>**Allowed values:** `NoSchedule`, `PreferNoSchedule`, `NoExecute`<br/>|
 | `providerIntegration.kubeadmConfig.taints[*].key` | **Key**|**Type:** `string`<br/>|
 | `providerIntegration.kubeadmConfig.taints[*].value` | **Value**|**Type:** `string`<br/>|
-| `providerIntegration.kubernetesVersion` | **Kubernetes version**|**Type:** `string`<br/>**Default:** `"1.25.16"`|
+| `providerIntegration.kubernetesVersion` | **Kubernetes version**|**Type:** `string`<br/>**Default:** `"1.33.4"`|
 | `providerIntegration.osImage` | **OS image (deprecated)** - OS image Helm values have been deprecated. All OS-related information should now be obtained from the Release resource.|**Type:** `object`<br/>|
 | `providerIntegration.osImage.channel` | **Channel**|**Type:** `string`<br/>**Allowed values:** `stable`, `beta`, `alpha`, `lts`<br/>**Default:** `"stable"`|
 | `providerIntegration.osImage.name` | **Name**|**Type:** `string`<br/>|
