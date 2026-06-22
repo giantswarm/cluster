@@ -2,7 +2,6 @@ appName: chart-operator-extensions
 configKey: chartOperatorExtensions
 dependsOn:
 - prometheus-operator-crd
-- kyverno-crds
 namespace: giantswarm
 createNamespace: true
 # used by renovate
