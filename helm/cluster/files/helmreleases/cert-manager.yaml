@@ -3,7 +3,7 @@ chartName: cert-manager-app
 configKey: certManager
 dependsOn:
   - prometheus-operator-crd
-  - kube-prometheus-stack
+  - alloy-podlogs-crds
 namespace: kube-system
 # used by renovate
 # repo: giantswarm/cert-manager-app
