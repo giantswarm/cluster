@@ -7,13 +7,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Changed
-
-- Migration hook: add Phase E at the end of the script to scale `chart-operator` on the WC back up to `replicas=1`. Phase 0b scales it to 0 to neutralize it during Phase A-D, but nothing in the rest of the system restores it after the migration: app-operator-MC's reconcile of the chart-operator App CR only checks helm release status ("deployed"), not the live Deployment's replica count. Without Phase E, every post-migration cluster ended up with chart-operator-WC permanently at replicas=0, and user-managed App CRs on the WC stopped reconciling. Surfaced by checking the live Deployment after Round 72.
-- Migration hook: add a release-version gate at the top of the script. If the live Cluster CR's `release.giantswarm.io/version` label has a major version >= 35, exit 0 immediately — the cluster is already migrated and the rest of the script would be a no-op except for Phase 0b, which would needlessly scale chart-operator-WC to 0 for ~5 min on every subsequent upgrade (until app-operator-MC's chart-operator-special-path reconcile restores it). The major-version cut handles prereleases like `35.0.0-jose` correctly (treated as v35+). Falls through and runs the hook if the label can't be read. Adds `get` on `cluster.x-k8s.io/clusters` to the hook's Role for this purpose.
-- Migration hook: extend Phase A/B/C/C.5 with a sixth neutralization category for bundle-rendered MC HelmReleases (`SUB_HR_SELECTOR`). Without this, `aws-nth-bundle`'s inner HRs (`<cluster>-aws-node-termination-handler`, `<cluster>-aws-nth-crossplane-resources`) were getting deleted as part of Phase D's bundle helm uninstall manifest, which fired Flux helm-controller's finalizer and ran `helm uninstall` on the managed WC release. Round 68 saw this on 5/5 clusters (10 total uninstalls). The new category pauses the inner HRs and strips their `finalizers.fluxcd.io` in Phase A/B so Phase D's helm uninstall deletes the HR objects without triggering Flux GC of the WC releases. Adds matching RBAC for HelmReleases.
-- HelmReleases: add `upgrade.remediation.remediateLastFailure: false` (with `retries: -1`) so Flux helm-controller skips the rollback/uninstall step on upgrade failure and re-attempts the upgrade on its next reconcile interval. This avoids the wedge that occurs when adopting chart-operator-installed v1 releases (helm-controller refuses to roll back to a release it didn't create, which gates retries in the default behaviour).
-
 ### Added
 
 - Add pre-delete hook Job to remove `HelmRelease` CRs when deleting a cluster. This is required because sometimes flux does not have enough time to clean up the `HelmRelease` CRs before the control plane API is deleted.
@@ -24,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Updated `cert-manager` to v4.0.0 and migrated the values to match the new chart's schema.
 - Support templating on the `global.apps.<name>.extraConfigs.name` field.
+- HelmReleases: honor the App platform `priority` field (1-150, default 25) on `extraConfigs` entries. `valuesFrom` entries are now ordered by priority around the cluster config (slot 50) and user config (slot 100) layers instead of list order, preserving the App CR merge semantics after the migration. When an extraConfig has priority above 100, the app's merged values are delivered via a `<cluster>-<app>-user-values` ConfigMap at the user-config slot instead of inline `spec.values`, so that entry can still override user config. ([giantswarm#36096](https://github.com/giantswarm/giantswarm/issues/36096))
 
 ## [6.7.0] - 2026-06-17
 
