@@ -458,6 +458,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Apps: Bump `cluster-autoscaler` to v1.29.3-gs1. ([#286](https://github.com/giantswarm/cluster/pull/286))
 - Deprecate `cluster.component.flatcar.version` named template in favor of `cluster.os.version`.
 
+### Changed
+
+- Updated `cert-manager` to v4.0.0 and migrated the values to match the new chart's schema.
+
 ## [1.0.0] - 2024-07-24
 
 ### Changed
