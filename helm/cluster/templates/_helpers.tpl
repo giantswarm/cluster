@@ -276,11 +276,13 @@ Where `data` is the data to hash and `global` is the top level scope.
 */}}
 {{- define "cluster.app.version" }}
 {{- $appVersion := "N/A" }}
+{{- if $.Values.providerIntegration.useReleases }}
 {{- $_ := (include "cluster.internal.get-release-resource" $) }}
 {{- if $.GiantSwarm.Release }}
 {{- range $_, $app := $.GiantSwarm.Release.spec.apps }}
 {{- if eq $app.name $.appName }}
 {{- $appVersion = $app.version }}
+{{- end }}
 {{- end }}
 {{- end }}
 {{- end }}
