@@ -12,8 +12,11 @@ version: 4.0.1
 defaultValues:
   # Since v4.0.0, cert-manager upstream values need to be under the cert-manager key.
   # This gates the config based on the cert-manager app version
+  {{- $certManagerVersion := "N/A" }}
+  {{- if $.Values.providerIntegration.useReleases }}
   {{- $_ := set $ "appName" "cert-manager" }}
-  {{- $certManagerVersion := include "cluster.app.version" $ | trim }}
+  {{- $certManagerVersion = include "cluster.app.version" $ | trim }}
+  {{- end }}
   {{- if or (eq $certManagerVersion "N/A") (semverCompare ">=4.0.0" $certManagerVersion) }}
   cert-manager:
     # cert-manager's DNS01 solver by default tries to reach authoritative nameservers directly, using
