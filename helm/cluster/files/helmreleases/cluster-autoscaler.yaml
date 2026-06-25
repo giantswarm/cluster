@@ -1,22 +1,26 @@
 appName: cluster-autoscaler
 chartName: cluster-autoscaler-app
 configKey: clusterAutoscaler
-inCluster: {{ eq $.Values.providerIntegration.provider "azure" }}
+# repo: giantswarm/cluster-autoscaler-app
+version: 2.0.1
 {{- if ne $.Values.providerIntegration.provider "azure" }}
 dependsOn:
 - kyverno-crds
 {{- end }}
+
+{{- if eq $.Values.providerIntegration.provider "azure" }}
+inCluster: true
+{{- end }}
+
+{{- if ne $.Values.providerIntegration.provider "azure" }}
 namespace: kube-system
-# used by renovate
-# repo: giantswarm/cluster-autoscaler-app
-version: 2.0.1
+{{- end }}
 defaultValues:
   clusterID: {{ include "cluster.resource.name" $ }}
   provider: {{ .Values.providerIntegration.provider }}
   {{- if .Values.global.connectivity.proxy.enabled }}
-  cluster:
-    proxy:
-      noProxy: {{ include "cluster.connectivity.proxy.noProxy" (dict "global" .Values.global "providerIntegration" .Values.providerIntegration) | quote }}
-      http: {{ .Values.global.connectivity.proxy.httpProxy | quote }}
-      https: {{ .Values.global.connectivity.proxy.httpsProxy | quote }}
+  proxy:
+    http: {{ .Values.global.connectivity.proxy.httpProxy | quote }}
+    https: {{ .Values.global.connectivity.proxy.httpsProxy | quote }}
+    noProxy: {{ include "cluster.connectivity.proxy.noProxy" (dict "global" .Values.global "providerIntegration" .Values.providerIntegration) | quote }}
   {{- end }}

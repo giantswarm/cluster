@@ -1,26 +1,24 @@
 appName: cert-manager
 chartName: cert-manager-app
 configKey: certManager
-dependsOn:
-  - prometheus-operator-crd
-  - alloy-podlogs-crds
-namespace: kube-system
-# used by renovate
 # repo: giantswarm/cert-manager-app
 version: 4.0.1
+dependsOn:
+- alloy-podlogs-crds
+- prometheus-operator-crd
+
+namespace: kube-system
 defaultValues:
-  # cert-manager's DNS01 solver by default tries to reach authoritative nameservers directly, using
-  # their public IPs. Since those are not reachable from private clusters, we instead rely on the
-  # recursive nameserver (e.g. for AWS, that's normally the default nameserver requested in EC2 instances).
-  dns01RecursiveNameserversOnly: true
-  ingressShim:
-    defaultIssuerName: letsencrypt-giantswarm
-    defaultIssuerKind: ClusterIssuer
-    defaultIssuerGroup: cert-manager.io
   ciliumNetworkPolicy:
     enabled: true
+  # Authoritative nameservers aren't reachable in private clusters, use the resolver instead.
+  dns01RecursiveNameserversOnly: true
+  ingressShim:
+    defaultIssuerGroup: cert-manager.io
+    defaultIssuerKind: ClusterIssuer
+    defaultIssuerName: letsencrypt-giantswarm
   {{- if .Values.global.connectivity.proxy.enabled }}
-  no_proxy: {{ include "cluster.connectivity.proxy.noProxy" (dict "global" .Values.global "providerIntegration" .Values.providerIntegration) | quote }}
   http_proxy: {{ .Values.global.connectivity.proxy.httpProxy | quote }}
   https_proxy: {{ .Values.global.connectivity.proxy.httpsProxy | quote }}
+  no_proxy: {{ include "cluster.connectivity.proxy.noProxy" (dict "global" .Values.global "providerIntegration" .Values.providerIntegration) | quote }}
   {{- end }}
