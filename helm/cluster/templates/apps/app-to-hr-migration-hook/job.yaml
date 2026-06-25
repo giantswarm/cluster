@@ -43,7 +43,7 @@ bundle had rendered, but they're already gone, so it's a no-op.
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ include "cluster.resource.name" $ }}-migrate-apps-to-helmreleases
+  name: {{ include "cluster.resource.name" $ }}-migrate-apps
   namespace: {{ $.Release.Namespace }}
   labels:
     {{- include "cluster.labels.common.all" $ | nindent 4 }}
@@ -57,15 +57,19 @@ metadata:
     # `ttlSecondsAfterFinished` once it succeeds.
     helm.sh/hook-delete-policy: before-hook-creation
 spec:
-  backoffLimit: 6
-  ttlSecondsAfterFinished: 300
   template:
     metadata:
       labels:
         {{- include "cluster.labels.common.all" $ | nindent 8 }}
     spec:
       serviceAccountName: {{ include "cluster.resource.name" $ }}-migrate-apps
-      restartPolicy: Never
+      volumes:
+      - name: wc-kubeconfig
+        secret:
+          secretName: {{ include "cluster.resource.name" $ }}-kubeconfig
+          items:
+          - key: value
+            path: wc-kubeconfig
       containers:
       - name: kubectl
         image: gsoci.azurecr.io/giantswarm/kubectl:{{ .Values.providerIntegration.kubernetesVersion }}
@@ -79,13 +83,65 @@ spec:
           capabilities:
             drop:
             - ALL
-        resources:
-          requests:
-            cpu: 10m
-            memory: 128Mi
-          limits:
-            cpu: 200m
-            memory: 512Mi
+        volumeMounts:
+        - name: wc-kubeconfig
+          subPath: wc-kubeconfig
+          mountPath: /tmp/wc-kubeconfig
+          readOnly: true
+        env:
+        - name: CLUSTER_NAME
+          value: {{ include "cluster.resource.name" $ }}
+        - name: NAMESPACE
+          value: {{ $.Release.Namespace }}
+        - name: CHART_NAMESPACE
+          value: giantswarm
+        - name: BATCH_SIZE
+          value: "10"
+        - name: WC
+          value: --kubeconfig /tmp/wc-kubeconfig
+        - name: DEFAULT_APP_LABEL
+          value: release.giantswarm.io/version
+        - name: HELM_MANAGED_LABEL
+          value: app.kubernetes.io/managed-by=Helm
+        - name: EXCLUDE_OPERATORS
+          value: app.kubernetes.io/name notin (app-operator,chart-operator)
+        # Direct default apps: tagged with the release label and version != 0.0.0
+        # (the !=0.0.0 condition excludes bundle App CRs, which carry version=0.0.0).
+        - name: NON_BUNDLE_SELECTOR
+          value: giantswarm.io/cluster=$(CLUSTER_NAME),app-operator.giantswarm.io/version!=0.0.0,$(DEFAULT_APP_LABEL),$(EXCLUDE_OPERATORS)
+        # Bundle sub-Apps: rendered by helm (managed-by=Helm) and lack the
+        # release label (only direct defaults and bundles have it).
+        - name: SUB_APP_SELECTOR
+          value: giantswarm.io/cluster=$(CLUSTER_NAME),$(HELM_MANAGED_LABEL),!$(DEFAULT_APP_LABEL),$(EXCLUDE_OPERATORS)
+        # Bundle App CRs (security-bundle, observability-bundle, aws-nth-bundle):
+        # carry app-operator.giantswarm.io/version=0.0.0 because chart-operator-MC
+        # runs them, not the per-cluster app-operator.
+        - name: BUNDLE_APP_SELECTOR
+          value: giantswarm.io/cluster=$(CLUSTER_NAME),app-operator.giantswarm.io/version=0.0.0,$(DEFAULT_APP_LABEL)
+        # Discovery selectors used by Phase 0.
+        - name: CLUSTER_SELECTOR
+          value: giantswarm.io/cluster=$(CLUSTER_NAME),$(DEFAULT_APP_LABEL)
+        # WC Chart CRs:
+        #   - Direct default apps' Chart CRs carry the release label.
+        #   - Sub-app Chart CRs carry app.kubernetes.io/managed-by=Helm
+        #     (copied through from the helm-rendered MC sub-App CR).
+        - name: WC_CHART_DIRECT_SELECTOR
+          value: $(DEFAULT_APP_LABEL)
+        - name: WC_CHART_SUBAPP_SELECTOR
+          value: $(HELM_MANAGED_LABEL),$(EXCLUDE_OPERATORS)
+        # Bundle sub-HRs on MC: helm-managed HRs in org-* that belong to a
+        # bundle's helm release (not the cluster-aws release itself).
+        # Most bundles (security-bundle, observability-bundle, karpenter-bundle,
+        # aws-ebs-csi-driver-bundle) render sub-App CRs and are covered by
+        # $SUB_APP_SELECTOR. aws-nth-bundle's chart, however, renders HRs
+        # directly. Without neutralizing them here, Phase D's bundle helm
+        # uninstall DELETEs them, helm-controller's finalizer fires, and the
+        # managed WC release is uninstalled — see Round 68's regression.
+        # The instance-label differentiator works because cluster-aws-rendered
+        # HRs carry app.kubernetes.io/instance=<cluster> while bundle-rendered
+        # HRs carry app.kubernetes.io/instance=<cluster>-<bundle-name>.
+        - name: SUB_HR_SELECTOR
+          value: giantswarm.io/cluster=$(CLUSTER_NAME),$(HELM_MANAGED_LABEL),app.kubernetes.io/instance!=$(CLUSTER_NAME)
         command:
         - /bin/sh
         args:
@@ -95,10 +151,6 @@ spec:
           # `set -o pipefail`. We keep the strict `-eu` we've always had
           # (errexit + nounset); pipefail is a bash-only extension here.
           set -eu
-          CLUSTER_NAME="{{ include "cluster.resource.name" $ }}"
-          NAMESPACE="{{ $.Release.Namespace }}"
-          CHART_NAMESPACE="giantswarm"
-          BATCH_SIZE=10
 
           # Retry wrapper for kubectl. Under 5-cluster concurrent migration
           # load the MC API server intermittently rejects requests with
@@ -117,151 +169,133 @@ spec:
           kubectl_retry() {
             local max=5 i=1 rc
             local errfile="/tmp/kubectl_retry.err.$$"
-            while [ $i -le $max ]; do
-              kubectl "$@" 2>"$errfile"
-              rc=$?
-              if [ $rc -eq 0 ]; then
+
+            while [ ${i} -le ${max} ]
+            do
+              kubectl "${@}" 2> "${errfile}"
+              rc=${?}
+
+              if [ ${rc} -eq 0 ]
+              then
                 # On success, propagate any stderr (warnings) but NOT into stdout.
-                cat "$errfile" >&2
-                rm -f "$errfile"
+                cat "${errfile}" >&2
+                rm -f "${errfile}"
                 return 0
               fi
-              if grep -qE "Unauthorized|connection refused|i/o timeout|TLS handshake|the server is currently unable|EOF" "$errfile"; then
-                echo "  RETRY: kubectl $1 returned transient error (attempt $i/$max), waiting $((i * 2))s" >&2
-                cat "$errfile" >&2
+
+              if grep --quiet --extended-regexp "Unauthorized|connection refused|i/o timeout|TLS handshake|the server is currently unable|EOF" "${errfile}"
+              then
+                echo "  RETRY: kubectl ${1} returned transient error (attempt ${i}/${max}), waiting $((i * 2))s" >&2
+                cat "${errfile}" >&2
                 sleep $((i * 2))
                 i=$((i + 1))
                 continue
               fi
-              cat "$errfile" >&2
-              rm -f "$errfile"
-              return $rc
+
+              cat "${errfile}" >&2
+              rm -f "${errfile}"
+              return ${rc}
             done
-            echo "  ERROR: kubectl $1 exhausted $max attempts" >&2
-            cat "$errfile" >&2
-            rm -f "$errfile"
+
+            echo "  ERROR: kubectl ${1} exhausted ${max} attempts" >&2
+            cat "${errfile}" >&2
+            rm -f "${errfile}"
             return 1
           }
 
-          # Fetch WC kubeconfig
-          echo "Fetching WC kubeconfig for $CLUSTER_NAME"
-          kubectl_retry get secret -n "$NAMESPACE" "${CLUSTER_NAME}-kubeconfig" \
-            -o jsonpath='{.data.value}' | base64 -d > /tmp/wc-kubeconfig
-          WC="--kubeconfig /tmp/wc-kubeconfig"
-
-          # Label selectors
-          DEFAULT_APP_LABEL="release.giantswarm.io/version"
-          HELM_MANAGED_LABEL="app.kubernetes.io/managed-by=Helm"
-          EXCLUDE_OPERATORS="app.kubernetes.io/name notin (app-operator,chart-operator)"
-
-          # Direct default apps: tagged with the release label and version != 0.0.0
-          # (the !=0.0.0 condition excludes bundle App CRs, which carry version=0.0.0).
-          NON_BUNDLE_SELECTOR="giantswarm.io/cluster=$CLUSTER_NAME,app-operator.giantswarm.io/version!=0.0.0,$EXCLUDE_OPERATORS,$DEFAULT_APP_LABEL"
-          # Bundle sub-Apps: rendered by helm (managed-by=Helm) and lack the
-          # release label (only direct defaults and bundles have it).
-          SUB_APP_SELECTOR="giantswarm.io/cluster=$CLUSTER_NAME,$HELM_MANAGED_LABEL,!$DEFAULT_APP_LABEL,$EXCLUDE_OPERATORS"
-          # Bundle App CRs (security-bundle, observability-bundle, aws-nth-bundle):
-          # carry app-operator.giantswarm.io/version=0.0.0 because chart-operator-MC
-          # runs them, not the per-cluster app-operator.
-          BUNDLE_APP_SELECTOR="giantswarm.io/cluster=$CLUSTER_NAME,app-operator.giantswarm.io/version=0.0.0,$DEFAULT_APP_LABEL"
-          # Discovery selectors used by Phase 0.
-          CLUSTER_SELECTOR="giantswarm.io/cluster=$CLUSTER_NAME,$DEFAULT_APP_LABEL"
-
-          # WC Chart CRs:
-          #   - Direct default apps' Chart CRs carry the release label.
-          #   - Sub-app Chart CRs carry app.kubernetes.io/managed-by=Helm
-          #     (copied through from the helm-rendered MC sub-App CR).
-          WC_CHART_DIRECT_SELECTOR="$DEFAULT_APP_LABEL"
-          WC_CHART_SUBAPP_SELECTOR="$HELM_MANAGED_LABEL,$EXCLUDE_OPERATORS"
-
-          # Bundle sub-HRs on MC: helm-managed HRs in org-* that belong to a
-          # bundle's helm release (not the cluster-aws release itself).
-          # Most bundles (security-bundle, observability-bundle, karpenter-bundle,
-          # aws-ebs-csi-driver-bundle) render sub-App CRs and are covered by
-          # $SUB_APP_SELECTOR. aws-nth-bundle's chart, however, renders HRs
-          # directly. Without neutralizing them here, Phase D's bundle helm
-          # uninstall DELETEs them, helm-controller's finalizer fires, and the
-          # managed WC release is uninstalled — see Round 68's regression.
-          # The instance-label differentiator works because cluster-aws-rendered
-          # HRs carry app.kubernetes.io/instance=<cluster> while bundle-rendered
-          # HRs carry app.kubernetes.io/instance=<cluster>-<bundle-name>.
-          SUB_HR_SELECTOR="giantswarm.io/cluster=$CLUSTER_NAME,$HELM_MANAGED_LABEL,app.kubernetes.io/instance!=$CLUSTER_NAME"
-
           # Helper: check if an app is an operator that must be kept alive.
           is_operator() {
-            case "$1" in *-app-operator|*-chart-operator) return 0 ;; esac
-            return 1
+            case "${1}" in
+              *-app-operator|*-chart-operator)
+                return 0
+                ;;
+              *)
+                return 1
+                ;;
+            esac
           }
 
           # Pause MC App CRs by selector.
           pause_apps_in_mc() {
-            DESC="$1"; SEL="$2"
-            echo "  Pausing $DESC"
-            kubectl_retry annotate apps.application.giantswarm.io -n "$NAMESPACE" \
-              -l "$SEL" \
-              "operatorkit.giantswarm.io/paused=true" --overwrite
+            DESC="${1}"
+            SEL="${2}"
+
+            echo "  Pausing ${DESC}"
+            kubectl_retry annotate apps.application.giantswarm.io --namespace "${NAMESPACE}" --selector "${SEL}" operatorkit.giantswarm.io/paused=true --overwrite
           }
 
           # Pause WC Chart CRs by selector.
           pause_charts_in_wc() {
-            DESC="$1"; SEL="$2"
-            echo "  Pausing $DESC"
-            kubectl_retry $WC annotate chart.application.giantswarm.io -n "$CHART_NAMESPACE" \
-              -l "$SEL" \
-              "operatorkit.giantswarm.io/paused=true" --overwrite
+            DESC="${1}"
+            SEL="${2}"
+
+            echo "  Pausing ${DESC}"
+            kubectl_retry ${WC} annotate chart.application.giantswarm.io --namespace "${CHART_NAMESPACE}" --selector "${SEL}" operatorkit.giantswarm.io/paused=true --overwrite
           }
 
           # Strip finalizers from MC App CRs by selector. Individual patches may
           # fail if the resource has no finalizers — that's OK.
           strip_app_finalizers() {
-            DESC="$1"; SEL="$2"
-            echo "  Stripping finalizers from $DESC"
-            APPS=$(kubectl_retry get apps.application.giantswarm.io -n "$NAMESPACE" \
-              -l "$SEL" \
-              -o jsonpath='{.items[*].metadata.name}')
+            DESC="${1}"
+            SEL="${2}"
+
+            echo "  Stripping finalizers from ${DESC}"
+            APPS=($(kubectl_retry get apps.application.giantswarm.io --namespace "${NAMESPACE}" --selector "${SEL}" --output jsonpath="{ .items[*].metadata.name }"))
             COUNT=0
-            for APP in $APPS; do
-              (kubectl patch apps.application.giantswarm.io "$APP" -n "$NAMESPACE" --type=json \
-                -p='[{"op": "remove", "path": "/metadata/finalizers"}]' 2>/dev/null || true) &
+
+            for APP in ${APPS[@]}
+            do
+              (kubectl patch apps.application.giantswarm.io --namespace "${NAMESPACE}" "${APP}" --type json --patch '[{ "op": "remove", "path": "/metadata/finalizers" }]' 2> /dev/null || :) &
               COUNT=$((COUNT + 1))
-              if [ $((COUNT % BATCH_SIZE)) -eq 0 ]; then wait; fi
+
+              if [ $((COUNT % BATCH_SIZE)) -eq 0 ]
+              then
+                wait
+              fi
             done
+
             wait
           }
 
           # Strip finalizers from WC Chart CRs by selector.
           strip_chart_finalizers() {
-            DESC="$1"; SEL="$2"
-            echo "  Stripping finalizers from $DESC"
-            CHARTS=$(kubectl_retry $WC get chart.application.giantswarm.io -n "$CHART_NAMESPACE" \
-              -l "$SEL" \
-              -o jsonpath='{.items[*].metadata.name}')
+            DESC="${1}"
+            SEL="${2}"
+
+            echo "  Stripping finalizers from ${DESC}"
+            CHARTS=($(kubectl_retry ${WC} get charts.application.giantswarm.io --namespace "${CHART_NAMESPACE}" --selector "${SEL}" --output jsonpath='{ .items[*].metadata.name }'))
             COUNT=0
-            for CHART in $CHARTS; do
-              (kubectl $WC patch chart.application.giantswarm.io "$CHART" -n "$CHART_NAMESPACE" --type=json \
-                -p='[{"op": "remove", "path": "/metadata/finalizers"}]' 2>/dev/null || true) &
+
+            for CHART in ${CHARTS[@]}
+            do
+              (kubectl ${WC} patch charts.application.giantswarm.io --namespace "${CHART_NAMESPACE}" "${CHART}" --type json --patch '[{ "op": "remove", "path": "/metadata/finalizers" }]' 2> /dev/null || :) &
               COUNT=$((COUNT + 1))
-              if [ $((COUNT % BATCH_SIZE)) -eq 0 ]; then wait; fi
+
+              if [ $((COUNT % BATCH_SIZE)) -eq 0 ]
+              then
+                wait
+              fi
             done
+
             wait
           }
 
           # Delete MC App CRs by selector.
           delete_apps_in_mc() {
-            DESC="$1"; SEL="$2"
-            echo "  Deleting $DESC"
-            kubectl_retry delete apps.application.giantswarm.io -n "$NAMESPACE" \
-              -l "$SEL" \
-              --ignore-not-found=true --wait=false
+            DESC="${1}"
+            SEL="${2}"
+
+            echo "  Deleting ${DESC}"
+            kubectl_retry delete apps.application.giantswarm.io --namespace "${NAMESPACE}" --selector "${SEL}" --ignore-not-found --wait=false
           }
 
           # Delete WC Chart CRs by selector.
           delete_charts_in_wc() {
-            DESC="$1"; SEL="$2"
-            echo "  Deleting $DESC"
-            kubectl_retry $WC delete chart.application.giantswarm.io -n "$CHART_NAMESPACE" \
-              -l "$SEL" \
-              --ignore-not-found=true
+            DESC="${1}"
+            SEL="${2}"
+
+            echo "  Deleting ${DESC}"
+            kubectl_retry ${WC} delete charts.application.giantswarm.io --namespace "${CHART_NAMESPACE}" --selector "${SEL}" --ignore-not-found
           }
 
           # Pause MC HRs by selector (suspend Flux reconciliation).
@@ -726,4 +760,14 @@ spec:
 
           echo ""
           echo "Migration hook completed successfully"
+        resources:
+          requests:
+            cpu: 10m
+            memory: 128Mi
+          limits:
+            cpu: 200m
+            memory: 512Mi
+      restartPolicy: Never
+  backoffLimit: 6
+  ttlSecondsAfterFinished: 300
 {{- end }}
