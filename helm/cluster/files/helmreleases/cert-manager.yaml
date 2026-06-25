@@ -9,14 +9,33 @@ dependsOn:
 
 namespace: kube-system
 defaultValues:
-  ciliumNetworkPolicy:
-    enabled: true
+  {{- /* Get cert-manager version. */}}
+  {{- $version := "N/A" }}
+  {{- if .Values.providerIntegration.useReleases }}
+  {{- $_ := set $ "appName" "cert-manager" }}
+  {{- $version := include "cluster.app.version" $ | trim }}
+  {{- end }}
+  {{- /* Check cert-manager version. Since v4.0.0, upstream properties need to be under the `cert-manager` key. */}}
+  {{- if or (eq $version "N/A") (semverCompare ">=4.0.0" $version) }}
+  cert-manager:
+    # Authoritative nameservers aren't reachable in private clusters, use the resolver instead.
+    dns01RecursiveNameserversOnly: true
+    ingressShim:
+      defaultIssuerGroup: cert-manager.io
+      defaultIssuerKind: ClusterIssuer
+      defaultIssuerName: letsencrypt-giantswarm
+  {{- else }}
   # Authoritative nameservers aren't reachable in private clusters, use the resolver instead.
   dns01RecursiveNameserversOnly: true
   ingressShim:
     defaultIssuerGroup: cert-manager.io
     defaultIssuerKind: ClusterIssuer
     defaultIssuerName: letsencrypt-giantswarm
+  {{- end}}
+
+  {{- /* Top-level custom properties (independent of upstream). */}}
+  ciliumNetworkPolicy:
+    enabled: true
   {{- if .Values.global.connectivity.proxy.enabled }}
   http_proxy: {{ .Values.global.connectivity.proxy.httpProxy | quote }}
   https_proxy: {{ .Values.global.connectivity.proxy.httpsProxy | quote }}
