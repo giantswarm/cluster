@@ -7,9 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added
+### Changed
 
-- Add pre-delete hook Job to remove `HelmRelease` CRs when deleting a cluster. This is required because sometimes flux does not have enough time to clean up the `HelmRelease` CRs before the control plane API is deleted.
+- Migrate default applications from App CRs to Flux HelmRelease CRs.
+- HelmReleases: honor the App platform `priority` field (1-150, default 25) on `extraConfigs` entries. `valuesFrom` entries are now ordered by priority around the cluster config (slot 50) and user config (slot 100) layers instead of list order, preserving the App CR merge semantics after the migration. When an extraConfig has priority above 100, the app's merged values are delivered via a `<cluster>-<app>-user-values` ConfigMap at the user-config slot instead of inline `spec.values`, so that entry can still override user config. ([giantswarm#36096](https://github.com/giantswarm/giantswarm/issues/36096))
 
 ### Changed
 
@@ -18,11 +19,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [6.8.0] - 2026-07-14
 
+### Added
+
+- Support templating on the `global.apps.<name>.extraConfigs.name` field.
+
 ### Changed
 
 - Updated `cert-manager` to v4.0.0 and migrated the values to match the new chart's schema.
 - Support templating on the `global.apps.<name>.extraConfigs.name` field.
-- HelmReleases: honor the App platform `priority` field (1-150, default 25) on `extraConfigs` entries. `valuesFrom` entries are now ordered by priority around the cluster config (slot 50) and user config (slot 100) layers instead of list order, preserving the App CR merge semantics after the migration. When an extraConfig has priority above 100, the app's merged values are delivered via a `<cluster>-<app>-user-values` ConfigMap at the user-config slot instead of inline `spec.values`, so that entry can still override user config. ([giantswarm#36096](https://github.com/giantswarm/giantswarm/issues/36096))
 
 ## [6.7.0] - 2026-06-17
 
@@ -88,8 +92,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Helpers: Use `.Chart.AppVersion` in `app.kubernetes.io/version` label.
-- Migrate default apps from `App` CRs to Flux `HelmRelease` CRs.
-- Remove `clusterValues` references from HelmRelease app definitions and pass required values explicitly via `defaultValues`.
 
 ## [6.0.0] - 2026-03-09
 
