@@ -3677,7 +3677,7 @@
                 "kubernetesVersion": {
                     "type": "string",
                     "title": "Kubernetes version",
-                    "default": "1.33.4"
+                    "default": "1.35.6"
                 },
                 "osImage": {
                     "type": "object",

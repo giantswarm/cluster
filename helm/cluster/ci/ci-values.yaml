@@ -538,7 +538,7 @@ providerIntegration:
     - echo "aws nodes command before kubeadm"
     postKubeadmCommands:
     - echo "aws nodes command after kubeadm"
-  kubernetesVersion: 1.25.16
+  kubernetesVersion: 1.35.6
   pauseProperties:
     global.connectivity.vpcMode: private
   osImage:
