@@ -276,7 +276,7 @@ providerIntegration:
           storage: {}
           systemd: {}
     taints: []
-  kubernetesVersion: 1.33.4
+  kubernetesVersion: 1.35.6
   osImage:
     channel: stable
   registry: {}

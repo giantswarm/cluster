@@ -1,7 +1,8 @@
 appName: prometheus-blackbox-exporter
 configKey: prometheusBlackboxExporter
-dependsOn: prometheus-operator-crd
-namespace: kube-system
-# used by renovate
 # repo: giantswarm/prometheus-blackbox-exporter
 version: 0.8.0
+dependsOn:
+- prometheus-operator-crd
+
+namespace: kube-system

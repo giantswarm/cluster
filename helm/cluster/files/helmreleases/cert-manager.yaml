@@ -1,43 +1,43 @@
 appName: cert-manager
 chartName: cert-manager-app
 configKey: certManager
-dependsOn:
-  - prometheus-operator-crd
-  - alloy-podlogs-crds
-namespace: kube-system
-# used by renovate
 # repo: giantswarm/cert-manager-app
 version: 4.1.0
+dependsOn:
+- alloy-podlogs-crds
+- prometheus-operator-crd
+
+namespace: kube-system
 defaultValues:
-  # Since v4.0.0, cert-manager upstream values need to be under the cert-manager key.
-  # This gates the config based on the cert-manager app version
-  {{- $certManagerVersion := "N/A" }}
-  {{- if $.Values.providerIntegration.useReleases }}
+  {{- /* Get cert-manager version. */}}
+  {{- $version := "N/A" }}
+  {{- if .Values.providerIntegration.useReleases }}
   {{- $_ := set $ "appName" "cert-manager" }}
-  {{- $certManagerVersion = include "cluster.app.version" $ | trim }}
+  {{- $version := include "cluster.app.version" $ | trim }}
   {{- end }}
-  {{- if or (eq $certManagerVersion "N/A") (semverCompare ">=4.0.0" $certManagerVersion) }}
+  {{- /* Check cert-manager version. Since v4.0.0, upstream properties need to be under the `cert-manager` key. */}}
+  {{- if or (eq $version "N/A") (semverCompare ">=4.0.0" $version) }}
   cert-manager:
-    # cert-manager's DNS01 solver by default tries to reach authoritative nameservers directly, using
-    # their public IPs. Since those are not reachable from private clusters, we instead rely on the
-    # recursive nameserver (e.g. for AWS, that's normally the default nameserver requested in EC2 instances).
+    # Authoritative nameservers aren't reachable in private clusters, use the resolver instead.
     dns01RecursiveNameserversOnly: true
     ingressShim:
-      defaultIssuerName: letsencrypt-giantswarm
-      defaultIssuerKind: ClusterIssuer
       defaultIssuerGroup: cert-manager.io
+      defaultIssuerKind: ClusterIssuer
+      defaultIssuerName: letsencrypt-giantswarm
   {{- else }}
-  # Duplicated block for < v4.0.0 versions
+  # Authoritative nameservers aren't reachable in private clusters, use the resolver instead.
   dns01RecursiveNameserversOnly: true
   ingressShim:
-    defaultIssuerName: letsencrypt-giantswarm
-    defaultIssuerKind: ClusterIssuer
     defaultIssuerGroup: cert-manager.io
-  {{- end }}
+    defaultIssuerKind: ClusterIssuer
+    defaultIssuerName: letsencrypt-giantswarm
+  {{- end}}
+
+  {{- /* Top-level custom properties (independent of upstream). */}}
   ciliumNetworkPolicy:
     enabled: true
   {{- if .Values.global.connectivity.proxy.enabled }}
-  no_proxy: {{ include "cluster.connectivity.proxy.noProxy" (dict "global" .Values.global "providerIntegration" .Values.providerIntegration) | quote }}
   http_proxy: {{ .Values.global.connectivity.proxy.httpProxy | quote }}
   https_proxy: {{ .Values.global.connectivity.proxy.httpsProxy | quote }}
+  no_proxy: {{ include "cluster.connectivity.proxy.noProxy" (dict "global" .Values.global "providerIntegration" .Values.providerIntegration) | quote }}
   {{- end }}

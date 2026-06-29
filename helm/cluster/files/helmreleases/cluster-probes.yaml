@@ -1,14 +1,14 @@
 appName: cluster-probes
 configKey: clusterProbes
-namespace: {{ .Release.Namespace }}
-# used by renovate
 # repo: giantswarm/cluster-probes
 version: 0.0.2
+
 inCluster: true
+
 defaultValues:
   interval: 60s
   module: http_2xx_insecure
   scrapeTimeout: 10s
-  clusterName: "{{ .Values.global.metadata.name }}"
-  baseDomain: "{{ .Values.global.connectivity.baseDomain }}"
-  apiServerPort: "{{ .Values.global.controlPlane.apiServerPort }}"
+  clusterName: {{ .Values.global.metadata.name }}
+  baseDomain: {{ .Values.global.connectivity.baseDomain }}
+  apiServerPort: {{ .Values.global.controlPlane.apiServerPort | quote }}

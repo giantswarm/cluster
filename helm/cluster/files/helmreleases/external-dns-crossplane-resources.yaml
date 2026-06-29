@@ -1,6 +1,5 @@
 appName: external-dns-crossplane-resources
 configKey: externalDnsCrossplaneResources
-namespace: {{ .Release.Namespace }}
 # repo: giantswarm/external-dns-crossplane-resources
 version: 0.3.0
 

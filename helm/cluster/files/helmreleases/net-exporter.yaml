@@ -1,11 +1,11 @@
 appName: net-exporter
 configKey: netExporter
-dependsOn: prometheus-operator-crd
-timeout: 15m
-namespace: kube-system
-# used by renovate
 # repo: giantswarm/net-exporter
 version: 1.24.0
+dependsOn:
+- prometheus-operator-crd
+
+namespace: kube-system
 defaultValues:
   ciliumNetworkPolicy:
     enabled: true
@@ -14,8 +14,8 @@ defaultValues:
       Disabled: false
   Hosts: giantswarm.io.,kubernetes.default.svc.cluster.local.
   NetExporter:
-  {{- if ($.Values.providerIntegration.components.systemd).timesyncd }}
+    {{- if ($.Values.providerIntegration.components.systemd).timesyncd }}
     NTPServers: {{ join "," (compact $.Values.providerIntegration.components.systemd.timesyncd.ntp) }}
-  {{- else }}
+    {{- else }}
     NTPServers: 0.flatcar.pool.ntp.org.,1.flatcar.pool.ntp.org.
-  {{- end }}
+    {{- end }}
