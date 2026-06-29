@@ -10,6 +10,6 @@ dependsOn: {{ if not (eq $.Values.providerIntegration.provider "aks") }}["coredn
 namespace: kube-system
 # used by renovate
 # repo: giantswarm/observability-bundle
-version: 3.1.0
+version: 3.2.0
 defaultValues:
   managementCluster: {{ $.Values.global.managementCluster }}
