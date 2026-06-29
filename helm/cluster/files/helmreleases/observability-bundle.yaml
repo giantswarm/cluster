@@ -1,13 +1,15 @@
-# Includes prometheus-operator-crd
 appName: observability-bundle
 configKey: observabilityBundle
-inCluster: true
-dependsOn: {{ if not (eq $.Values.providerIntegration.provider "aks") }}["coredns"]{{ else }}[]{{ end }}
-namespace: kube-system
-driftDetection: enabled
-# used by renovate
 # repo: giantswarm/observability-bundle
 version: 3.3.0
+{{- if ne $.Values.providerIntegration.provider "aks" }}
+dependsOn:
+- coredns
+{{- end }}
+
+inCluster: true
+driftDetection: enabled
+
 defaultValues:
   managementCluster: {{ $.Values.global.managementCluster }}
   clusterID: {{ include "cluster.resource.name" $ }}

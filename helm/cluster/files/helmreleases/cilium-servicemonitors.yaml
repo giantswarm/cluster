@@ -1,9 +1,8 @@
 appName: cilium-servicemonitors
 configKey: ciliumServiceMonitors
-enabled: true
-dependsOn:
-- prometheus-operator-crd
-namespace: kube-system
-# used by renovate
 # repo: giantswarm/cilium-servicemonitors-app
 version: 0.2.0
+dependsOn:
+- prometheus-operator-crd
+
+namespace: kube-system

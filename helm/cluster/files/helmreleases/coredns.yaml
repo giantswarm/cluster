@@ -1,11 +1,14 @@
 appName: coredns
 chartName: coredns-app
 configKey: coreDns
-namespace: kube-system
-# used by renovate
 # repo: giantswarm/coredns-app
 version: 1.31.0
-dependsOn: {{ if not (eq $.Values.providerIntegration.provider "aks") }}["cilium"]{{ else }}[]{{ end }}
+{{- if ne $.Values.providerIntegration.provider "aks" }}
+dependsOn:
+- cilium
+{{- end }}
+
+namespace: kube-system
 defaultValues:
   coredns:
     cluster:

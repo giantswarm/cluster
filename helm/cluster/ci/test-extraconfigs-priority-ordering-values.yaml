@@ -52,30 +52,30 @@ global:
         # Lands in the <cluster>-cert-exporter-user-values ConfigMap (user-config slot 100).
         sentinel: from-user-values
       extraConfigs:
-        - kind: configMap
+        - kind: ConfigMap
           name: cm-post-user-1
           priority: 120
-        - kind: secret
+        - kind: Secret
           name: sec-pre-cluster-1
           priority: 30
-        - kind: configMap
+        - kind: ConfigMap
           name: cm-pre-cluster
           priority: 20
-        - kind: secret
+        - kind: Secret
           name: sec-post-user
           priority: 130
-        - kind: configMap
+        - kind: ConfigMap
           name: cm-default        # no priority -> defaults to 25
-        - kind: secret
+        - kind: Secret
           name: sec-pre-user
           priority: 90
-        - kind: configMap
+        - kind: ConfigMap
           name: cm-pre-user
           priority: 90
-        - kind: secret
+        - kind: Secret
           name: sec-pre-cluster-2
           priority: 30
-        - kind: configMap
+        - kind: ConfigMap
           name: cm-post-user-2
           priority: 120
     # MC-targeted (inCluster) bundle. Same extraConfigs mix to show the ordering
@@ -84,30 +84,30 @@ global:
       values:
         sentinel: from-user-values
       extraConfigs:
-        - kind: configMap
+        - kind: ConfigMap
           name: cm-post-user-1
           priority: 120
-        - kind: secret
+        - kind: Secret
           name: sec-pre-cluster-1
           priority: 30
-        - kind: configMap
+        - kind: ConfigMap
           name: cm-pre-cluster
           priority: 20
-        - kind: secret
+        - kind: Secret
           name: sec-post-user
           priority: 130
-        - kind: configMap
+        - kind: ConfigMap
           name: cm-default        # no priority -> defaults to 25
-        - kind: secret
+        - kind: Secret
           name: sec-pre-user
           priority: 90
-        - kind: configMap
+        - kind: ConfigMap
           name: cm-pre-user
           priority: 90
-        - kind: secret
+        - kind: Secret
           name: sec-pre-cluster-2
           priority: 30
-        - kind: configMap
+        - kind: ConfigMap
           name: cm-post-user-2
           priority: 120
 providerIntegration:

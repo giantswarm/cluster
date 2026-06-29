@@ -1,17 +1,18 @@
 appName: rbac-bootstrap
 configKey: rbacBootstrap
-namespace: kube-system
-# used by renovate
 # repo: giantswarm/rbac-bootstrap-app
 version: 0.3.0
+
 interval: 1m
+
+namespace: kube-system
 defaultValues:
   clusterReader:
     enabled: true
   bindings:
-    - role: view
-      groups:
-        - giantswarm-ad:giantswarm-admins
-        - giantswarm-ad:giantswarm:giantswarm-admins
-        - giantswarm-github:giantswarm:giantswarm-admins
-        - giantswarm-github:giantswarm-admins
+  - role: view
+    groups:
+    - giantswarm-ad:giantswarm-admins
+    - giantswarm-ad:giantswarm:giantswarm-admins
+    - giantswarm-github:giantswarm:giantswarm-admins
+    - giantswarm-github:giantswarm-admins
