@@ -200,7 +200,8 @@ spec:
   {{- if $sortedValuesFrom }}
   valuesFrom:
   {{- range $entry := $sortedValuesFrom }}
-  - kind: {{ $entry.kind }}
+  {{- /* `kind` was either "configMap" or "secret" in Apps, but HelmReleases expect "ConfigMap" or "Secret". */}}
+  - kind: {{ $entry.kind | lower | get (dict "configmap" "ConfigMap" "secret" "Secret") | required "invalid kind in extra config" }}
     name: {{ $entry.name }}
     valuesKey: values
     optional: {{ $entry.optional }}

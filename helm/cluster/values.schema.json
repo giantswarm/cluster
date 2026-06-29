@@ -324,7 +324,9 @@
                                 "title": "Kind",
                                 "description": "Specifies whether the resource is a config map or a secret.",
                                 "enum": [
+                                    "configMap",
                                     "ConfigMap",
+                                    "secret",
                                     "Secret"
                                 ]
                             },
