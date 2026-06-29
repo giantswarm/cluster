@@ -10,13 +10,30 @@ namespace: kube-system
 # repo: giantswarm/cert-manager-app
 version: 4.0.1
 defaultValues:
-  # cert-manager's DNS01 solver by default tries to reach authoritative nameservers directly, using
-  # their public IPs. Since those are not reachable from private clusters, we instead rely on the
-  # recursive nameserver (e.g. for AWS, that's normally the default nameserver requested in EC2 instances).
+  # Since v4.0.0, cert-manager upstream values need to be under the cert-manager key.
+  # This gates the config based on the cert-manager app version
+  {{- $certManagerVersion := "N/A" }}
+  {{- if $.Values.providerIntegration.useReleases }}
+  {{- $_ := set $ "appName" "cert-manager" }}
+  {{- $certManagerVersion = include "cluster.app.version" $ | trim }}
+  {{- end }}
+  {{- if or (eq $certManagerVersion "N/A") (semverCompare ">=4.0.0" $certManagerVersion) }}
+  cert-manager:
+    # cert-manager's DNS01 solver by default tries to reach authoritative nameservers directly, using
+    # their public IPs. Since those are not reachable from private clusters, we instead rely on the
+    # recursive nameserver (e.g. for AWS, that's normally the default nameserver requested in EC2 instances).
+    dns01RecursiveNameserversOnly: true
+    ingressShim:
+      defaultIssuerName: letsencrypt-giantswarm
+      defaultIssuerKind: ClusterIssuer
+      defaultIssuerGroup: cert-manager.io
+  {{- else }}
+  # Duplicated block for < v4.0.0 versions
   dns01RecursiveNameserversOnly: true
   ingressShim:
     defaultIssuerName: letsencrypt-giantswarm
     defaultIssuerKind: ClusterIssuer
     defaultIssuerGroup: cert-manager.io
+  {{- end }}
   ciliumNetworkPolicy:
     enabled: true
