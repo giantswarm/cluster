@@ -193,10 +193,10 @@ spec:
                 return 0
               elif grep -qE "Unauthorized|connection refused|i/o timeout|TLS handshake|the server is currently unable|EOF" "${errfile}"
               then
-                echo "  RETRY: kubectl ${*} returned transient error (attempt ${i}/${max}), waiting $(( ${i} * 2 ))s" >&2
+                echo "  RETRY: kubectl ${*} returned transient error (attempt ${i}/${max}), waiting $(( i * 2 ))s" >&2
                 cat "${errfile}" >&2
-                sleep $(( ${i} * 2 ))
-                i=$(( ${i} + 1 ))
+                sleep $(( i * 2 ))
+                i=$(( i + 1 ))
               else
                 cat "${errfile}" >&2
                 rm -f "${errfile}"
@@ -250,9 +250,9 @@ spec:
             for helmrelease in ${helmreleases}
             do
               (kubectl patch helmreleases.helm.toolkit.fluxcd.io --namespace "${NAMESPACE}" "${helmrelease}" --type merge --patch '{ "spec": { "suspend": true } }' 2> /dev/null || :) &
-              count=$(( ${count} + 1 ))
+              count=$(( count + 1 ))
 
-              if [ $(( ${count} % ${BATCH_SIZE} )) -eq 0 ]
+              if [ $(( count % BATCH_SIZE )) -eq 0 ]
               then
                 wait
               fi
@@ -275,9 +275,9 @@ spec:
             for app in ${apps}
             do
               (kubectl patch apps.application.giantswarm.io --namespace "${NAMESPACE}" "${app}" --type json --patch '[{ "op": "remove", "path": "/metadata/finalizers" }]' 2> /dev/null || :) &
-              count=$(( ${count} + 1 ))
+              count=$(( count + 1 ))
 
-              if [ $(( ${count} % ${BATCH_SIZE} )) -eq 0 ]
+              if [ $(( count % BATCH_SIZE )) -eq 0 ]
               then
                 wait
               fi
@@ -299,9 +299,9 @@ spec:
             for chart in ${charts}
             do
               (kubectl ${WC} patch charts.application.giantswarm.io --namespace "${CHART_NAMESPACE}" "${chart}" --type json --patch '[{ "op": "remove", "path": "/metadata/finalizers" }]' 2> /dev/null || :) &
-              count=$(( ${count} + 1 ))
+              count=$(( count + 1 ))
 
-              if [ $(( ${count} % ${BATCH_SIZE} )) -eq 0 ]
+              if [ $(( count % BATCH_SIZE )) -eq 0 ]
               then
                 wait
               fi
@@ -330,9 +330,9 @@ spec:
             for helmrelease in ${helmreleases}
             do
               (kubectl patch helmreleases.helm.toolkit.fluxcd.io --namespace "${NAMESPACE}" "${helmrelease}" --type json --patch '[{ "op": "remove", "path": "/metadata/finalizers" }]' 2> /dev/null || :) &
-              count=$(( ${count} + 1 ))
+              count=$(( count + 1 ))
 
-              if [ $(( ${count} % ${BATCH_SIZE} )) -eq 0 ]
+              if [ $(( count % BATCH_SIZE )) -eq 0 ]
               then
                 wait
               fi
@@ -737,7 +737,7 @@ spec:
 
             echo "  ${remaining_count} bundle App CRs remaining at ${elapsed}/${bundle_drain_timeout}s: ${remaining}"
             sleep 10
-            elapsed=$(( ${elapsed} + 10 ))
+            elapsed=$(( elapsed + 10 ))
           done
 
           if [ ${remaining_count} -gt 0 ]
@@ -790,7 +790,7 @@ spec:
 
             echo "  Bundle helm release secrets still present at ${elapsed}/${bundle_drain_timeout}s:${still_present}"
             sleep 10
-            elapsed=$(( ${elapsed} + 10 ))
+            elapsed=$(( elapsed + 10 ))
           done
 
           if ! ${all_gone}
