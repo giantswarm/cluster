@@ -26,7 +26,7 @@ There are cases where we don't want to deploy the coreDns control plane componen
 {{- end -}}
 
 {{/*
-Resolve App CR inconcistencies when baseDomain is taken from cluster-values.
+Resolve App CR inconcistencies when baseDomain is taken from the catalog or from cluster-values.
 See https://github.com/giantswarm/giantswarm/issues/29733
 */}}
 {{- define "cluster.internal.apps.baseDomain" -}}
