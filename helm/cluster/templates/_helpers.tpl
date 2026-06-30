@@ -288,36 +288,6 @@ Where `data` is the data to hash and `global` is the top level scope.
 {{- end }}
 
 {{/*
-  cluster.app.catalog is a public named helper template that returns a catalog of the app that is specified under
-  property 'appName' in the object that is passed to the template. App catalog is obtained from the Release resource.
-
-  Example usage in template:
-
-    {{- $_ := set $ "appName" "foo-bar-controller" }}
-    {{- $appCatalog := include "cluster.app.catalog" $ }}
-    catalog: {{ $appCatalog }}
-*/}}
-{{- define "cluster.app.catalog" }}
-{{- $appCatalog := "" }}
-{{- $_ := (include "cluster.internal.get-release-resource" $) }}
-{{- if $.GiantSwarm.Release }}
-{{- range $_, $app := $.GiantSwarm.Release.spec.apps }}
-{{- if eq $app.name $.appName }}
-{{- $appCatalog = $app.catalog }}
-{{- end }}
-{{- end }}
-{{- end }}
-{{- $renderWithoutReleaseResource := ((($.GiantSwarm.internal).ephemeralConfiguration).offlineTesting).renderWithoutReleaseResource | default false }}
-{{- if $appCatalog }}
-{{- $appCatalog }}
-{{- else if $renderWithoutReleaseResource -}}
-{{- printf "fake-app-catalog-from-offline-cluster-chart-rendering" }}
-{{- else }}
-{{- fail (printf "Application not found in Release/%s: %s" (($.GiantSwarm.Release).metadata).name $.appName) }}
-{{- end }}
-{{- end }}
-
-{{/*
   cluster.app.in-release is a public named helper template that checks if the app that is specified under
   property 'appName' in the object that is passed to the template exists in the Release.
 

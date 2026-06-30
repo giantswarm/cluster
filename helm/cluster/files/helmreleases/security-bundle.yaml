@@ -1,6 +1,5 @@
 appName: security-bundle
 configKey: securityBundle
-catalog: giantswarm
 # repo: giantswarm/security-bundle
 version: 2.1.0
 dependsOn:

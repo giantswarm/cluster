@@ -1,6 +1,5 @@
 appName: network-policies
 configKey: networkPolicies
-catalog: cluster
 # repo: giantswarm/network-policies-app
 version: 0.2.0
 {{- if ne $.Values.providerIntegration.provider "aks" }}
