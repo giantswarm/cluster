@@ -17,11 +17,6 @@
             "description": "Non-persistent app configuration that is meant for development and operation purposes only, and can be removed at any point.",
             "additionalProperties": false,
             "properties": {
-                "catalogOverride": {
-                    "type": "string",
-                    "title": "Catalog override",
-                    "description": "Name of the catalog from which the app is installed."
-                },
                 "disable": {
                     "type": "boolean",
                     "title": "Disable",
