@@ -89,7 +89,7 @@ spec:
       restartPolicy: Never
       containers:
       - name: kubectl
-        image: gsoci.azurecr.io/giantswarm/kubectl:{{ .Values.providerIntegration.kubernetesVersion }}
+        image: gsoci.azurecr.io/giantswarm/docker-kubectl:1.36.2
         securityContext:
           runAsNonRoot: true
           runAsUser: 1000
