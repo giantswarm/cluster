@@ -16,7 +16,7 @@ providerIntegration:
     hostName: COREOS_EC2_HOSTNAME
     ipv4: COREOS_EC2_IPV4_LOCAL
   provider: aws
-  kubernetesVersion: 1.35.6
+  kubernetesVersion: 1.33.0
   resourcesApi:
     bastionResourceEnabled: false
     clusterResourceEnabled: true
