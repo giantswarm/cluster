@@ -78,15 +78,16 @@ metadata:
     helm.sh/hook-weight: "-10"
     helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
 spec:
-  backoffLimit: 3
-  ttlSecondsAfterFinished: 300
   template:
     metadata:
       labels:
         {{- include "cluster.labels.common.all" $ | nindent 8 }}
     spec:
       serviceAccountName: {{ include "cluster.resource.name" $ }}-cleanup-hrs
-      restartPolicy: Never
+      volumes:
+      - name: tmp
+        emptyDir:
+          sizeLimit: 100Mi
       containers:
       - name: kubectl
         image: gsoci.azurecr.io/giantswarm/docker-kubectl:1.36.2
@@ -100,43 +101,49 @@ spec:
           capabilities:
             drop:
             - ALL
-        resources:
-          requests:
-            cpu: 10m
-            memory: 128Mi
-          limits:
-            cpu: 200m
-            memory: 512Mi
+          readOnlyRootFilesystem: true
+        volumeMounts:
+        - name: tmp
+          mountPath: /tmp
+        env:
+        # Since we are using `readOnlyRootFilesystem: true`, this moves the cache directory to the `emptyDir` mount to keep the performance improvement.
+        - name: KUBECACHEDIR
+          value: /tmp/.kube/cache
+        - name: CLUSTER_NAME
+          value: {{ include "cluster.resource.name" $ }}
+        - name: NAMESPACE
+          value: {{ $.Release.Namespace }}
+        - name: BATCH_SIZE
+          value: "10"
         command:
         - /bin/sh
+        args:
         - -c
         - |
           set -eu
-          CLUSTER_NAME="{{ include "cluster.resource.name" $ }}"
-          NAMESPACE="{{ $.Release.Namespace }}"
-          BATCH_SIZE=10
 
-          echo "Cleaning up WC-targeted HelmReleases for cluster $CLUSTER_NAME"
+          echo "Cleaning up WC-targeted HelmReleases for cluster ${CLUSTER_NAME}"
 
-          # Discover every HR labelled with our cluster, paired with its
+          # Discover every HR labeled with our cluster, paired with its
           # `spec.kubeConfig.secretRef.name`. The presence of that field is
           # how we tell WC-targeted (helm-controller talks to the WC apiserver
           # via that kubeconfig secret) from MC-targeted (field empty,
           # helm-controller talks to the MC). See the file header for why
           # we only act on the WC set.
-          HR_PAIRS=$(kubectl get helmreleases.helm.toolkit.fluxcd.io -n "$NAMESPACE" \
-            -l "giantswarm.io/cluster=$CLUSTER_NAME" \
-            -o jsonpath='{range .items[*]}{.metadata.name}|{.spec.kubeConfig.secretRef.name}{"\n"}{end}' 2>/dev/null) || true
+          helmrelease_pairs="$(kubectl get helmreleases.helm.toolkit.fluxcd.io --namespace "${NAMESPACE}" --selector giantswarm.io/cluster="${CLUSTER_NAME}" --output jsonpath='{ range .items[*] }{ .metadata.name }|{ .spec.kubeConfig.secretRef.name }{ "\n" }{ end }' 2> /dev/null || :)"
 
-          # Filter by the second field. WC-targeted: secretRef.name non-empty.
+          # WC-targeted: secretRef.name non-empty.
+          wc_helmreleases="$(echo "${helmrelease_pairs}" | awk -F "|" 'NF==2 && $2 != "" {print $1}')"
+          wc_helmreleases_count=$(echo "${wc_helmreleases}" | grep -c . || :)
+          echo "  WC-targeted: ${wc_helmreleases_count} (force-cleaned by this hook)"
+
           # MC-targeted: secretRef.name empty.
-          WC_HELMRELEASES=$(echo "$HR_PAIRS" | awk -F'|' 'NF==2 && $2 != "" {print $1}')
-          MC_COUNT=$(echo "$HR_PAIRS" | awk -F'|' 'NF==2 && $2 == "" {print $1}' | grep -c . || true)
-          WC_COUNT=$(echo "$WC_HELMRELEASES" | grep -c . || true)
-          echo "  WC-targeted: $WC_COUNT (force-cleaned by this hook)"
-          echo "  MC-targeted: $MC_COUNT (left for helm-controller to uninstall normally)"
+          mc_helmreleases="$(echo "${helmrelease_pairs}" | awk -F "|" 'NF==2 && $2 == "" {print $1}')"
+          mc_helmreleases_count=$(echo "${mc_helmreleases}" | grep -c . || :)
+          echo "  MC-targeted: ${mc_helmreleases_count} (left for helm-controller to uninstall normally)"
 
-          if [ -z "$WC_HELMRELEASES" ]; then
+          if [ ${wc_helmreleases_count} -eq 0 ]
+          then
             echo "No WC-targeted HelmReleases found; nothing to do."
             exit 0
           fi
@@ -145,13 +152,18 @@ spec:
           # This prevents Flux from re-adding the finalizer after we remove it
           # in Step 2.
           echo "  Step 1: Suspending WC-targeted HelmReleases"
-          COUNT=0
-          for HR in $WC_HELMRELEASES; do
-            (kubectl patch helmreleases.helm.toolkit.fluxcd.io "$HR" -n "$NAMESPACE" \
-              --type=merge -p='{"spec":{"suspend":true}}' 2>/dev/null || true) &
-            COUNT=$((COUNT + 1))
-            if [ $((COUNT % BATCH_SIZE)) -eq 0 ]; then wait; fi
+          count=0
+          for wc_helmrelease in ${wc_helmreleases}
+          do
+            (kubectl patch helmreleases.helm.toolkit.fluxcd.io --namespace "${NAMESPACE}" "${wc_helmrelease}" --type merge --patch '{ "spec": { "suspend": true } }' 2> /dev/null || :) &
+            count=$((count + 1))
+
+            if [ $((count % BATCH_SIZE)) -eq 0 ]
+            then
+              wait
+            fi
           done
+
           wait
 
           # Brief pause to let in-flight reconciliations complete before
@@ -161,17 +173,24 @@ spec:
           # Step 2: Remove finalizers from WC-targeted HRs. Two passes to handle
           # the race where an in-flight reconciliation re-adds the finalizer
           # after suspend lands.
-          for PASS in 1 2; do
-            echo "  Step 2 pass $PASS: Removing finalizers from WC-targeted HelmReleases"
-            COUNT=0
-            for HR in $WC_HELMRELEASES; do
-              (kubectl patch helmreleases.helm.toolkit.fluxcd.io "$HR" -n "$NAMESPACE" --type=json \
-                -p='[{"op": "remove", "path": "/metadata/finalizers"}]' 2>/dev/null || true) &
-              COUNT=$((COUNT + 1))
-              if [ $((COUNT % BATCH_SIZE)) -eq 0 ]; then wait; fi
+          for pass in 1 2
+          do
+            echo "  Step 2 pass ${pass}: Removing finalizers from WC-targeted HelmReleases"
+            count=0
+            for wc_helmrelease in ${wc_helmreleases}
+            do
+              (kubectl patch helmreleases.helm.toolkit.fluxcd.io --namespace "${NAMESPACE}" "${wc_helmrelease}" --type json --patch '[{ "op": "remove", "path": "/metadata/finalizers" }]' 2> /dev/null || :) &
+              count=$((count + 1))
+
+              if [ $((count % BATCH_SIZE)) -eq 0 ]
+              then
+                wait
+              fi
             done
+
             wait
-            [ "$PASS" -eq 1 ] && sleep 3
+
+            [ "${pass}" -ne 2 ] && sleep 3
           done
 
           # Step 3: Delete WC-targeted HRs. With suspend + no finalizer, this
@@ -180,17 +199,30 @@ spec:
           # with helm-controller running `helm uninstall` against each
           # MC-side release in the normal way (header explains why).
           echo "  Step 3: Deleting WC-targeted HelmReleases"
-          COUNT=0
-          TOTAL=0
-          for HR in $WC_HELMRELEASES; do
-            TOTAL=$((TOTAL + 1))
-            (kubectl delete helmreleases.helm.toolkit.fluxcd.io "$HR" -n "$NAMESPACE" \
-              --wait=false 2>/dev/null || true) &
-            COUNT=$((COUNT + 1))
-            if [ $((COUNT % BATCH_SIZE)) -eq 0 ]; then wait; fi
+          count=0
+          for wc_helmrelease in ${wc_helmreleases}
+          do
+            (kubectl delete helmreleases.helm.toolkit.fluxcd.io --namespace "${NAMESPACE}" "${wc_helmrelease}" --wait=false 2> /dev/null || :) &
+            count=$((count + 1))
+
+            if [ $((count % BATCH_SIZE)) -eq 0 ]
+            then
+              wait
+            fi
           done
+
           wait
 
-          echo "Processed $TOTAL WC-targeted HelmReleases for cluster $CLUSTER_NAME"
-          echo "Leaving $MC_COUNT MC-targeted HelmReleases for helm-controller-driven uninstall."
+          echo "Processed ${count} WC-targeted HelmReleases for cluster ${CLUSTER_NAME}"
+          echo "Leaving ${mc_helmreleases_count} MC-targeted HelmReleases for helm-controller-driven uninstall."
+        resources:
+          requests:
+            cpu: 10m
+            memory: 128Mi
+          limits:
+            cpu: 200m
+            memory: 512Mi
+      restartPolicy: Never
+  backoffLimit: 3
+  ttlSecondsAfterFinished: 3600
 {{- end }}
