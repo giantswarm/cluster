@@ -1,13 +1,3 @@
-global:
-  managementCluster: giantmc
-  release:
-    version: v34.0.0
-  metadata:
-    name: tainted
-    organization: giantswarm
-  connectivity:
-    baseDomain: example.gigantic.io
-
 providerIntegration:
   kubeadmConfig:
     taints:
@@ -60,3 +50,14 @@ providerIntegration:
       group: infrastructure.cluster.x-k8s.io
       version: v1beta1
       kind: AWSMachinePool
+
+# Required values
+global:
+  managementCluster: giantmc
+  connectivity:
+    baseDomain: example.gigantic.io
+  metadata:
+    name: tainted
+    organization: giantswarm
+  release:
+    version: v34.0.0
