@@ -608,12 +608,12 @@ Arg: a dict with keys:
 {{- $keyed = set $keyed $k (dict "kind" "ConfigMap" "name" .userValuesConfigMap "optional" false) -}}
 {{- $keys = append $keys $k -}}
 {{- end -}}
-{{- range $i, $ec := .extraConfigs -}}
-{{- $isSecret := eq (lower ($ec.kind | default "configMap")) "secret" -}}
-{{- $kindOrder := ternary "1" "0" $isSecret -}}
-{{- $prio := int ($ec.priority | default 25) -}}
+{{- range $i, $extraConfig := .extraConfigs -}}
+{{- $isSecret := $extraConfig.kind | default "ConfigMap" | lower | eq "secret" -}}
+{{- $kindOrder := $isSecret | ternary "1" "0" -}}
+{{- $prio := $extraConfig.priority | default 25 | int -}}
 {{- $k := printf "%s_%03d_0_%03d" $kindOrder $prio $i -}}
-{{- $keyed = set $keyed $k (dict "kind" (ternary "Secret" "ConfigMap" $isSecret) "name" (tpl $ec.name $.root) "optional" ($ec.optional | default false)) -}}
+{{- $keyed = set $keyed $k (dict "kind" ($isSecret | ternary "Secret" "ConfigMap") "name" (tpl $extraConfig.name $.root) "optional" ($extraConfig.optional | default false)) -}}
 {{- $keys = append $keys $k -}}
 {{- end -}}
 {{- $out := list -}}
