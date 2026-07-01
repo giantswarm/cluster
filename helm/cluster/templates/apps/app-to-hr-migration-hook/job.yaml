@@ -98,20 +98,24 @@ spec:
         # Since we are using `readOnlyRootFilesystem: true`, this moves the cache directory to the `emptyDir` mount to keep the performance improvement.
         - name: KUBECACHEDIR
           value: /tmp/.kube/cache
+        - name: WC
+          value: --kubeconfig /tmp/wc-kubeconfig
         - name: CLUSTER_NAME
           value: {{ include "cluster.resource.name" $ }}
         - name: NAMESPACE
           value: {{ $.Release.Namespace }}
         - name: CHART_NAMESPACE
           value: giantswarm
+        {{- /* Also used in `activeDeadlineSeconds`. */}}
+        {{- $upgradeTimeoutMinutes := 15 }}
+        - name: UPGRADE_TIMEOUT
+          value: "{{ $upgradeTimeoutMinutes }}m"
         - name: MAX_RETRIES
           value: "5"
         - name: BATCH_SIZE
           value: "10"
         - name: BUNDLE_DRAIN_TIMEOUT
           value: "720"
-        - name: WC
-          value: --kubeconfig /tmp/wc-kubeconfig
         - name: DEFAULT_APP_LABEL
           value: release.giantswarm.io/version
         - name: HELM_MANAGED_LABEL
@@ -425,8 +429,8 @@ spec:
           # will get a generous window. Phase 0b protections still hold,
           # so the wasted first attempt cannot uninstall anything.
 
-          echo "Phase 0a: Lifting spec.upgrade.timeout on ${CLUSTER_NAME} App CR to 15m"
-          kubectl_retry patch apps.application.giantswarm.io --namespace "${NAMESPACE}" "${CLUSTER_NAME}" --type merge --patch '{ "spec": { "upgrade": { "timeout": "15m" } } }'
+          echo "Phase 0a: Lifting spec.upgrade.timeout on ${CLUSTER_NAME} App CR to ${UPGRADE_TIMEOUT}"
+          kubectl_retry patch apps.application.giantswarm.io --namespace "${NAMESPACE}" "${CLUSTER_NAME}" --type merge --patch '{ "spec": { "upgrade": { "timeout": "'"${UPGRADE_TIMEOUT}"'" } } }'
 
           # ============================================================
           # Phase 0: Remove dependency annotations
@@ -728,13 +732,18 @@ spec:
           # helm uninstall on the bundle release has completed — the App CR's
           # finalizer is removed before the Chart CR's finalizer chain finishes.
 
-          while [ ${elapsed} -lt ${BUNDLE_DRAIN_TIMEOUT} ]
+          while :
           do
             remaining="$(kubectl_retry get apps.application.giantswarm.io --namespace "${NAMESPACE}" --selector "${BUNDLE_APP_SELECTOR}" --output jsonpath="{ .items[*].metadata.name }")"
             remaining_count=$(count_words "${remaining}")
             if [ ${remaining_count} -eq 0 ]
             then
               echo "  All bundle App CRs gone after ${elapsed}s; now waiting for helm release secrets"
+              break
+            fi
+
+            if [ ${elapsed} -ge ${BUNDLE_DRAIN_TIMEOUT} ]
+            then
               break
             fi
 
@@ -767,10 +776,11 @@ spec:
           # because they are sequential parts of the same cascade and we
           # don't want to grant the secret-poll a fresh full window.
 
+          echo "  Polling bundle helm release secrets to confirm uninstall completion..."
+
           all_gone=true
 
-          echo "  Polling bundle helm release secrets to confirm uninstall completion..."
-          while [ ${elapsed} -lt ${BUNDLE_DRAIN_TIMEOUT} ]
+          while :
           do
             all_gone=true
             still_present=""
@@ -788,6 +798,11 @@ spec:
             if ${all_gone}
             then
               echo "  All bundle helm release secrets gone after ${elapsed}s — uninstall fully complete"
+              break
+            fi
+
+            if [ ${elapsed} -ge ${BUNDLE_DRAIN_TIMEOUT} ]
+            then
               break
             fi
 
@@ -838,9 +853,10 @@ spec:
             cpu: 10m
             memory: 128Mi
           limits:
-            cpu: 200m
+            cpu: 1
             memory: 512Mi
       restartPolicy: Never
+  activeDeadlineSeconds: {{ mul $upgradeTimeoutMinutes 60 }}
   backoffLimit: 6
   ttlSecondsAfterFinished: 3600
 {{- end }}

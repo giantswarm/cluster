@@ -32,7 +32,6 @@ rules:
   - secrets
   verbs:
   - list
-  - get
 - apiGroups:
   - application.giantswarm.io
   resources:
@@ -42,7 +41,6 @@ rules:
   - get
   - patch
   - delete
-  - deletecollection
 # Phase A/B/C/C.5 also neutralize bundle-rendered HelmReleases on the MC
 # (specifically, aws-nth-bundle's inner HRs — see $SUB_HR_SELECTOR in
 # job.yaml). Without these verbs, those HRs leak into Phase D's bundle
@@ -57,5 +55,4 @@ rules:
   - get
   - patch
   - delete
-  - deletecollection
 {{- end }}
