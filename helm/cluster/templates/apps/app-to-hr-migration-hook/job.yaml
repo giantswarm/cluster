@@ -178,7 +178,8 @@ spec:
           # correlated with bundle sub-app uninstalls because chart-operator
           # on the WC came back up between attempts.
           #
-          # Up to 5 attempts with linear backoff (2s, 4s, 6s, 8s, 10s).
+          # Up to 5 attempts with linear backoff between them (2s, 4s, 6s, 8s);
+          # no backoff after the final attempt, since nothing retries after it.
           # Only retries on transient errors; non-transient errors fail fast.
           # Important: capture stdout and stderr SEPARATELY so callers that
           # pipe stdout (e.g. into `base64 -d` or `jsonpath` parsing) don't
@@ -187,34 +188,32 @@ spec:
             local i=1
             local errfile="/tmp/kubectl_retry.err.$$"
 
-            while [ ${i} -le ${MAX_RETRIES} ]
+            while :
             do
               local rc=0
               kubectl "${@}" 2> "${errfile}" || rc=${?}
 
-              if [ ${rc} -eq 0 ]
+              # Transient failure: retry while attempts remain, otherwise give
+              # up. Success and non-transient errors skip this block entirely.
+              if [ ${rc} -ne 0 ] && grep -qE "Unauthorized|connection refused|i/o timeout|TLS handshake|the server is currently unable|EOF" "${errfile}"
               then
-                # On success, propagate any stderr (warnings) but NOT into stdout.
-                cat "${errfile}" >&2
-                rm -f "${errfile}"
-                return 0
-              elif grep -qE "Unauthorized|connection refused|i/o timeout|TLS handshake|the server is currently unable|EOF" "${errfile}"
-              then
-                echo "  RETRY: kubectl ${*} returned transient error (attempt ${i}/${MAX_RETRIES}), waiting $(( i * 2 ))s" >&2
-                cat "${errfile}" >&2
-                sleep $(( i * 2 ))
-                i=$(( i + 1 ))
-              else
-                cat "${errfile}" >&2
-                rm -f "${errfile}"
-                return ${rc}
+                if [ ${i} -lt ${MAX_RETRIES} ]
+                then
+                  echo "  RETRY: kubectl ${*} returned transient error (attempt ${i}/${MAX_RETRIES}), retrying in $(( i * 2 ))s" >&2
+                  cat "${errfile}" >&2
+                  sleep $(( i * 2 ))
+                  i=$(( i + 1 ))
+                  continue
+                else
+                  echo "  ERROR: kubectl ${*} returned transient error (attempt ${i}/${MAX_RETRIES}), returning" >&2
+                fi
               fi
-            done
 
-            echo "  ERROR: kubectl ${*} exhausted ${MAX_RETRIES} attempts" >&2
-            cat "${errfile}" >&2
-            rm -f "${errfile}"
-            return 1
+              # Terminal: success, non-transient error, or retries exhausted.
+              cat "${errfile}" >&2
+              rm -f "${errfile}"
+              return ${rc}
+            done
           }
 
           # Count whitespace-separated tokens in the argument. dash has no
