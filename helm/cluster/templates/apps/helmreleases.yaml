@@ -191,8 +191,8 @@ spec:
   {{- end }}
   {{- $sortArgs := dict
         "extraConfigs" $extraConfigs
-        "clusterValuesConfigMap" (($app.clusterValues).configMap | ternary (printf "%s-cluster-values" (include "cluster.resource.name" $)) "")
-        "clusterValuesSecret" (($app.clusterValues).secret | ternary (printf "%s-cluster-values" (include "cluster.resource.name" $)) "")
+        "clusterValuesConfigMap" (($app.clusterValues).configMap | default false | ternary (printf "%s-cluster-values" (include "cluster.resource.name" $)) "")
+        "clusterValuesSecret" (($app.clusterValues).secret | default false | ternary (printf "%s-cluster-values" (include "cluster.resource.name" $)) "")
         "userValuesConfigMap" $userValuesConfigMap
         "root" $ }}
   {{- $sortedValuesFrom := include "cluster.app.sortedValuesFrom" $sortArgs | fromYamlArray }}
