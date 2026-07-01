@@ -104,8 +104,12 @@ spec:
           value: {{ $.Release.Namespace }}
         - name: CHART_NAMESPACE
           value: giantswarm
+        - name: MAX_RETRIES
+          value: "5"
         - name: BATCH_SIZE
           value: "10"
+        - name: BUNDLE_DRAIN_TIMEOUT
+          value: "720"
         - name: WC
           value: --kubeconfig /tmp/wc-kubeconfig
         - name: DEFAULT_APP_LABEL
@@ -177,10 +181,9 @@ spec:
           # get polluted with kubectl warnings (rate-limit, deprecated APIs).
           kubectl_retry() {
             local i=1
-            local max=5
             local errfile="/tmp/kubectl_retry.err.$$"
 
-            while [ ${i} -le ${max} ]
+            while [ ${i} -le ${MAX_RETRIES} ]
             do
               local rc=0
               kubectl "${@}" 2> "${errfile}" || rc=${?}
@@ -193,7 +196,7 @@ spec:
                 return 0
               elif grep -qE "Unauthorized|connection refused|i/o timeout|TLS handshake|the server is currently unable|EOF" "${errfile}"
               then
-                echo "  RETRY: kubectl ${*} returned transient error (attempt ${i}/${max}), waiting $(( i * 2 ))s" >&2
+                echo "  RETRY: kubectl ${*} returned transient error (attempt ${i}/${MAX_RETRIES}), waiting $(( i * 2 ))s" >&2
                 cat "${errfile}" >&2
                 sleep $(( i * 2 ))
                 i=$(( i + 1 ))
@@ -204,7 +207,7 @@ spec:
               fi
             done
 
-            echo "  ERROR: kubectl ${*} exhausted ${max} attempts" >&2
+            echo "  ERROR: kubectl ${*} exhausted ${MAX_RETRIES} attempts" >&2
             cat "${errfile}" >&2
             rm -f "${errfile}"
             return 1
@@ -487,7 +490,7 @@ spec:
           # disappear immediately.
           for i in 1 2 3 4 5
           do
-            pods="$(kubectl ${WC} get pods --namespace "${CHART_NAMESPACE}" --selector app=chart-operator --output jsonpath="{ .items[*].metadata.name }" 2> /dev/null)"
+            pods="$(kubectl_retry ${WC} get pods --namespace "${CHART_NAMESPACE}" --selector app=chart-operator --output jsonpath="{ .items[*].metadata.name }")"
             pods_count=$(count_words "${pods}")
             if [ ${pods_count} -eq 0 ]
             then
@@ -713,11 +716,11 @@ spec:
           # we still need to poll for their helm release secrets to confirm
           # chart-operator-MC's helm uninstall actually finished.
 
-          bundle_app_names_for_drain="$(kubectl_retry get apps.application.giantswarm.io --namespace "${NAMESPACE}" --selector "${BUNDLE_APP_SELECTOR}" --output jsonpath="{ .items[*].metadata.name }")"
-          delete_apps_in_mc "bundle App CRs" "${BUNDLE_APP_SELECTOR}"
-          bundle_drain_timeout=720
+          bundle_apps="$(kubectl_retry get apps.application.giantswarm.io --namespace "${NAMESPACE}" --selector "${BUNDLE_APP_SELECTOR}" --output jsonpath="{ .items[*].metadata.name }")"
           elapsed=0
           remaining_count=0
+
+          delete_apps_in_mc "bundle App CRs" "${BUNDLE_APP_SELECTOR}"
 
           # First wait for the App CRs themselves to disappear. App CR removal
           # signals that app-operator's deletion handler ran (which deletes
@@ -725,7 +728,7 @@ spec:
           # helm uninstall on the bundle release has completed — the App CR's
           # finalizer is removed before the Chart CR's finalizer chain finishes.
 
-          while [ ${elapsed} -lt ${bundle_drain_timeout} ]
+          while [ ${elapsed} -lt ${BUNDLE_DRAIN_TIMEOUT} ]
           do
             remaining="$(kubectl_retry get apps.application.giantswarm.io --namespace "${NAMESPACE}" --selector "${BUNDLE_APP_SELECTOR}" --output jsonpath="{ .items[*].metadata.name }")"
             remaining_count=$(count_words "${remaining}")
@@ -735,14 +738,14 @@ spec:
               break
             fi
 
-            echo "  ${remaining_count} bundle App CRs remaining at ${elapsed}/${bundle_drain_timeout}s: ${remaining}"
+            echo "  ${remaining_count} bundle App CRs remaining at ${elapsed}/${BUNDLE_DRAIN_TIMEOUT}s: ${remaining}"
             sleep 10
             elapsed=$(( elapsed + 10 ))
           done
 
           if [ ${remaining_count} -gt 0 ]
           then
-            echo "  FATAL: bundle App CRs did not drain within ${bundle_drain_timeout}s" >&2
+            echo "  FATAL: bundle App CRs did not drain within ${BUNDLE_DRAIN_TIMEOUT}s" >&2
             kubectl get apps.application.giantswarm.io --namespace "${NAMESPACE}" --selector "${BUNDLE_APP_SELECTOR}" --output custom-columns="NAME:.metadata.name,FINALIZERS:.metadata.finalizers,DELETIONTS:.metadata.deletionTimestamp" 2> /dev/null || :
             # Aborting now leaves Flux to race takeOwnership against chart-
             # operator-MC's still-in-flight helm uninstall — the exact
@@ -767,18 +770,18 @@ spec:
           all_gone=true
 
           echo "  Polling bundle helm release secrets to confirm uninstall completion..."
-          while [ ${elapsed} -lt ${bundle_drain_timeout} ]
+          while [ ${elapsed} -lt ${BUNDLE_DRAIN_TIMEOUT} ]
           do
             all_gone=true
             still_present=""
 
-            for bundle_app_name_for_drain in ${bundle_app_names_for_drain}
+            for bundle_app in ${bundle_apps}
             do
-              secret_names="$(kubectl_retry get secrets --namespace "${NAMESPACE}" --selector owner=helm,name="${bundle_app_name_for_drain}" --output jsonpath="{ .items[*].metadata.name }")"
-              if [ -n "${secret_names}" ]
+              secrets="$(kubectl_retry get secrets --namespace "${NAMESPACE}" --selector owner=helm,name="${bundle_app}" --output jsonpath="{ .items[*].metadata.name }")"
+              if [ -n "${secrets}" ]
               then
                 all_gone=false
-                still_present="${still_present} ${bundle_app_name_for_drain} ($(count_words "${secret_names}"))"
+                still_present="${still_present} ${bundle_app} ($(count_words "${secrets}"))"
               fi
             done
 
@@ -788,14 +791,14 @@ spec:
               break
             fi
 
-            echo "  Bundle helm release secrets still present at ${elapsed}/${bundle_drain_timeout}s:${still_present}"
+            echo "  Bundle helm release secrets still present at ${elapsed}/${BUNDLE_DRAIN_TIMEOUT}s:${still_present}"
             sleep 10
             elapsed=$(( elapsed + 10 ))
           done
 
           if ! ${all_gone}
           then
-            echo "  FATAL: bundle helm release secrets still present after ${bundle_drain_timeout}s" >&2
+            echo "  FATAL: bundle helm release secrets still present after ${BUNDLE_DRAIN_TIMEOUT}s" >&2
             echo "  Listing remaining helm release secrets:"
             kubectl get secrets --namespace "${NAMESPACE}" --selector owner=helm 2> /dev/null | head -n 20 || :
             # Same reason as the bundle App CR drain abort above: proceeding
@@ -828,6 +831,7 @@ spec:
 
           echo ; echo "=== WC events in ${CHART_NAMESPACE} namespace (last 30, sorted by time) ==="
           kubectl ${WC} get events --namespace "${CHART_NAMESPACE}" --sort-by .lastTimestamp 2>&1 | tail -30 || :
+
           echo ; echo "Migration hook completed successfully"
         resources:
           requests:
