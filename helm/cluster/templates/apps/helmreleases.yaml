@@ -191,16 +191,15 @@ spec:
   {{- end }}
   {{- $sortArgs := dict
         "extraConfigs" $extraConfigs
-        "clusterValuesConfigMap" (ternary (printf "%s-cluster-values" (include "cluster.resource.name" $)) "" (not (empty ($app.clusterValues).configMap)))
-        "clusterValuesSecret" (ternary (printf "%s-cluster-values" (include "cluster.resource.name" $)) "" (not (empty ($app.clusterValues).secret)))
+        "clusterValuesConfigMap" (($app.clusterValues).configMap | ternary (printf "%s-cluster-values" (include "cluster.resource.name" $)) "")
+        "clusterValuesSecret" (($app.clusterValues).secret | ternary (printf "%s-cluster-values" (include "cluster.resource.name" $)) "")
         "userValuesConfigMap" $userValuesConfigMap
         "root" $ }}
   {{- $sortedValuesFrom := include "cluster.app.sortedValuesFrom" $sortArgs | fromYamlArray }}
   {{- if $sortedValuesFrom }}
   valuesFrom:
   {{- range $entry := $sortedValuesFrom }}
-  {{- /* `kind` was either "configMap" or "secret" in Apps, but HelmReleases expect "ConfigMap" or "Secret". */}}
-  - kind: {{ $entry.kind | lower | get (dict "configmap" "ConfigMap" "secret" "Secret") | required "invalid kind in extra config" }}
+  - kind: {{ $entry.kind }}
     name: {{ $entry.name }}
     valuesKey: values
     optional: {{ $entry.optional }}
