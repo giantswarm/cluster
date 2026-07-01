@@ -220,9 +220,10 @@ spec:
             cpu: 10m
             memory: 128Mi
           limits:
-            cpu: 200m
+            cpu: 1
             memory: 512Mi
       restartPolicy: Never
+  activeDeadlineSeconds: 600
   backoffLimit: 3
   ttlSecondsAfterFinished: 3600
 {{- end }}
