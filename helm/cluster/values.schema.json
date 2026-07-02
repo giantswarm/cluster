@@ -37,7 +37,7 @@
                             "name": {
                                 "type": "string",
                                 "title": "Name",
-                                "description": "Name of the config map or secret. The object must exist in the same namespace as the cluster App."
+                                "description": "Name of the config map or secret. The object must exist in the same namespace as the cluster App. Supports templating."
                             },
                             "priority": {
                                 "type": "integer",
