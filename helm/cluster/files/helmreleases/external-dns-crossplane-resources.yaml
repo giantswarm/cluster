@@ -3,7 +3,7 @@ configKey: externalDnsCrossplaneResources
 namespace: {{ .Release.Namespace }}
 useOCISource: true
 # repo: giantswarm/external-dns-crossplane-resources
-version: 0.2.0
+version: 0.2.1-dev.external-dn--ad-identity.2026-07-02.15-55-49.hbce44c3
 
 prependClusterName: true
 skipKubeConfig: true
