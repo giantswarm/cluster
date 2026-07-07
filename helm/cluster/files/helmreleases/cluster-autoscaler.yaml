@@ -6,6 +6,7 @@ version: 2.0.3
 {{- if ne $.Values.providerIntegration.provider "azure" }}
 dependsOn:
 - kyverno-crds
+- vertical-pod-autoscaler-crd
 {{- end }}
 
 {{- if eq $.Values.providerIntegration.provider "azure" }}
