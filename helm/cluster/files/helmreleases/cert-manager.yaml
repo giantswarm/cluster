@@ -37,7 +37,8 @@ defaultValues:
   ciliumNetworkPolicy:
     enabled: true
   {{- if .Values.global.connectivity.proxy.enabled }}
-  http_proxy: {{ .Values.global.connectivity.proxy.httpProxy | quote }}
-  https_proxy: {{ .Values.global.connectivity.proxy.httpsProxy | quote }}
-  no_proxy: {{ include "cluster.connectivity.proxy.noProxy" (dict "global" .Values.global "providerIntegration" .Values.providerIntegration) | quote }}
+  proxy:
+    http: {{ .Values.global.connectivity.proxy.httpProxy | quote }}
+    https: {{ .Values.global.connectivity.proxy.httpsProxy | quote }}
+    noProxy: {{ include "cluster.connectivity.proxy.noProxy" (dict "global" .Values.global "providerIntegration" .Values.providerIntegration) | quote }}
   {{- end }}
