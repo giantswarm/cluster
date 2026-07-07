@@ -4,6 +4,7 @@ configKey: certExporter
 version: 2.11.1
 dependsOn:
 - kyverno-crds
+- vertical-pod-autoscaler-crd
 
 namespace: kube-system
 defaultValues:
