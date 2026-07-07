@@ -5,6 +5,9 @@ configKey: clusterAutoscaler
 version: 2.0.3
 {{- if ne $.Values.providerIntegration.provider "azure" }}
 dependsOn:
+{{- if eq $.Values.providerIntegration.provider "aws" }}
+- aws-pod-identity-webhook
+{{- end }}
 - kyverno-crds
 - vertical-pod-autoscaler-crd
 {{- end }}
