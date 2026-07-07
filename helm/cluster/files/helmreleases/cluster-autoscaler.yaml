@@ -17,7 +17,8 @@ namespace: kube-system
 {{- end }}
 defaultValues:
   clusterID: {{ include "cluster.resource.name" $ }}
-  provider: {{ .Values.providerIntegration.provider }}
+  {{- /* Cluster Autoscaler distinguishes between AWS and CAPA, so we have to be specific. */}}
+  provider: {{ eq .Values.providerIntegration.provider "aws" | ternary "capa" .Values.providerIntegration.provider }}
   {{- if .Values.global.connectivity.proxy.enabled }}
   proxy:
     http: {{ .Values.global.connectivity.proxy.httpProxy | quote }}
