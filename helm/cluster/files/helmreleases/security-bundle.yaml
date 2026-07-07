@@ -2,8 +2,6 @@ appName: security-bundle
 configKey: securityBundle
 # repo: giantswarm/security-bundle
 version: 2.1.0
-dependsOn:
-- prometheus-operator-crd
 
 inCluster: true
 driftDetection: enabled
