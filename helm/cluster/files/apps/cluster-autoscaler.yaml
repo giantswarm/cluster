@@ -9,4 +9,4 @@ dependsOn: {{ if not (eq $.Values.providerIntegration.provider "azure") }}["kyve
 namespace: kube-system
 # used by renovate
 # repo: giantswarm/cluster-autoscaler-app
-version: 2.0.2
+version: 2.0.3
