@@ -2,10 +2,6 @@ appName: observability-bundle
 configKey: observabilityBundle
 # repo: giantswarm/observability-bundle
 version: 3.3.0
-{{- if ne $.Values.providerIntegration.provider "aks" }}
-dependsOn:
-- coredns
-{{- end }}
 
 inCluster: true
 driftDetection: enabled
