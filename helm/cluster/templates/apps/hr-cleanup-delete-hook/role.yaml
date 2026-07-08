@@ -17,6 +17,7 @@ rules:
   - helmreleases
   verbs:
   - list
+  - get
   - patch
   - delete
 {{- end }}
