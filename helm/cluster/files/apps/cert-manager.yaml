@@ -8,7 +8,7 @@ dependsOn: prometheus-operator-crd
 namespace: kube-system
 # used by renovate
 # repo: giantswarm/cert-manager-app
-version: 4.0.1
+version: 4.1.0
 defaultValues:
   # Since v4.0.0, cert-manager upstream values need to be under the cert-manager key.
   # This gates the config based on the cert-manager app version
