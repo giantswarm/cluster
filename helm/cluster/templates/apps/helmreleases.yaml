@@ -189,7 +189,7 @@ spec:
   valuesFrom:
     {{- range $extraConfig := $extraConfigs }}
   - kind: {{ $extraConfig.kind }}
-    name: {{ $extraConfig.name }}
+    name: {{ tpl $extraConfig.name $ }}
     valuesKey: values
     optional: {{ $extraConfig.optional | default false  }}
     {{- end }}

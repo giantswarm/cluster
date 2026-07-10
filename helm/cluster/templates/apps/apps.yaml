@@ -129,7 +129,7 @@ spec:
   extraConfigs:
   {{- range $extraConfig := $extraConfigs }}
   - kind: {{ $extraConfig.kind }}
-    name: {{ $extraConfig.name }}
+    name: {{ tpl $extraConfig.name $ }}
     namespace: {{ $extraConfig.namespace | default $.Release.Namespace }}
     {{- if $extraConfig.priority }}
     priority: {{ $extraConfig.priority }}

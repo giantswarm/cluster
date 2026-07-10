@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Support templating on the `global.apps.<name>.extraConfigs.name` field.
+
 ## [6.7.0] - 2026-06-17
 
 ### Changed
