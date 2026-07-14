@@ -112,17 +112,10 @@ spec:
     kind: OCIRepository
     name: {{ include "cluster.resource.name" $ }}-{{ $appName }}
   {{- $dependencies := list }}
-  {{- if $.Values.providerIntegration.useReleases}}
-    {{- $dependenciesFromRelease := include "cluster.app.dependencies" $ | fromYamlArray }}
-    {{- range $_, $dependency := $dependenciesFromRelease }}
-      {{- $dependencies = append $dependencies $dependency }}
-    {{- end }}
+  {{- if $.Values.providerIntegration.useReleases }}
+  {{- $dependencies = include "cluster.app.dependencies" $ | fromYamlArray }}
   {{- else if $app.dependsOn }}
-    {{- if kindIs "string" $app.dependsOn }}
-    {{- $dependencies = list $app.dependsOn }}
-    {{- else }}
-    {{- $dependencies = $app.dependsOn }}
-    {{- end }}
+  {{- $dependencies = $app.dependsOn }}
   {{- end }}
   {{- if $dependencies }}
   dependsOn:
