@@ -23,6 +23,8 @@
 - rm -rf /var/lib/selinux
 - cp -a /usr/lib/selinux/policy /var/lib/selinux
 - semodule -DB
+# Load policy for containerd to work with any container_domain type (other than container_t)
+- semodule -i /etc/selinux/flatcar-containerd-patch.cil
 {{- end }}
 # Remove audit rules that suppress SELinux AVC logs in Flatcar
 # Required for generating SELinux policies (e.g. using security-profiles-operator)
