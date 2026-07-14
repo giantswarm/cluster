@@ -7,8 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [6.8.0] - 2026-07-14
+
 ### Changed
 
+- Updated `cert-manager` to v4.0.0 and migrated the values to match the new chart's schema.
 - Support templating on the `global.apps.<name>.extraConfigs.name` field.
 
 ## [6.7.0] - 2026-06-17
@@ -461,10 +464,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Set `kubeProxyReplacement` to `'true'` instead of deprecated value `strict` in cilium values.
 - Apps: Bump `cluster-autoscaler` to v1.29.3-gs1. ([#286](https://github.com/giantswarm/cluster/pull/286))
 - Deprecate `cluster.component.flatcar.version` named template in favor of `cluster.os.version`.
-
-### Changed
-
-- Updated `cert-manager` to v4.0.0 and migrated the values to match the new chart's schema.
 
 ## [1.0.0] - 2024-07-24
 
@@ -1015,7 +1014,8 @@ For Kubernetes <v1.29, you will need to re-enable it using the respective values
 
 - Update and clean up the template repo.
 
-[Unreleased]: https://github.com/giantswarm/cluster/compare/v6.7.0...HEAD
+[Unreleased]: https://github.com/giantswarm/cluster/compare/v6.8.0...HEAD
+[6.8.0]: https://github.com/giantswarm/cluster/compare/v6.7.0...v6.8.0
 [6.7.0]: https://github.com/giantswarm/cluster/compare/v6.6.0...v6.7.0
 [6.6.0]: https://github.com/giantswarm/cluster/compare/v6.5.0...v6.6.0
 [6.5.0]: https://github.com/giantswarm/cluster/compare/v6.4.0...v6.5.0
