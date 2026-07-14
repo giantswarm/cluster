@@ -60,6 +60,7 @@ global:
         enabled: false
     selinux:
       mode: permissive
+      writablePolicyStore: true
   connectivity:
     bastion:
       enabled: true

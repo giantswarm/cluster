@@ -18,6 +18,12 @@
 
 {{- define "cluster.internal.kubeadm.preKubeadmCommands.selinux" }}
 {{- if ne $.Values.global.components.selinux.mode "disabled" }}
+{{- if $.Values.global.components.selinux.writablePolicyStore }}
+# Make `/var/lib/selinux` writable for loading additional policies
+- rm -rf /var/lib/selinux
+- cp -a /usr/lib/selinux/policy /var/lib/selinux
+- semodule -DB
+{{- end }}
 # Remove audit rules that suppress SELinux AVC logs in Flatcar
 # Required for generating SELinux policies (e.g. using security-profiles-operator)
 - rm -f /etc/audit/rules.d/80-selinux.rules
