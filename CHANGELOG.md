@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- SELinux: Add `global.components.selinux.writablePolicyStore` value (default `true`) to allow loading additional SELinux policies.
+
+### Changed
+
+- SELinux: Keep AVC audit logs (required for SELinux policy generation).
+- SELinux: Relabel the whole filesystem except read-only `/usr` (previously only `/etc/kubernetes`).
+
+### Fixed
+
+- SELinux: Correctly label CA certificates in `/etc/ssl/certs` for mounting into containers.
+
 ## [6.8.0] - 2026-07-14
 
 ### Changed
