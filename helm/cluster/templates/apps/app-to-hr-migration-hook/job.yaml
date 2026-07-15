@@ -126,10 +126,13 @@ spec:
         # (the !=0.0.0 condition excludes bundle App CRs, which carry version=0.0.0).
         - name: NON_BUNDLE_SELECTOR
           value: giantswarm.io/cluster=$(CLUSTER_NAME),app-operator.giantswarm.io/version!=0.0.0,$(DEFAULT_APP_LABEL),$(EXCLUDE_OPERATORS)
-        # Bundle sub-Apps: rendered by helm (managed-by=Helm) and lack the
-        # release label (only direct defaults and bundles have it).
-        - name: SUB_APP_SELECTOR
-          value: giantswarm.io/cluster=$(CLUSTER_NAME),$(HELM_MANAGED_LABEL),!$(DEFAULT_APP_LABEL),$(EXCLUDE_OPERATORS)
+        # Bundle sub-Apps are NOT selected by a static label selector. The
+        # "helm-managed + no release label" signature is NOT exclusive to
+        # GiantSwarm default bundles: a CUSTOMER-installed bundle's sub-App CRs
+        # carry the same labels and would be wrongly paused/stripped/deleted.
+        # SUB_APP_SELECTOR is therefore computed at runtime in Phase 0c as a
+        # positive allowlist keyed on the parent DEFAULT bundle
+        # (giantswarm.io/managed-by in (<default bundle App CR names>)).
         # Bundle App CRs (security-bundle, observability-bundle, aws-nth-bundle):
         # carry app-operator.giantswarm.io/version=0.0.0 because chart-operator-MC
         # runs them, not the per-cluster app-operator.
@@ -144,8 +147,12 @@ spec:
         #     (copied through from the helm-rendered MC sub-App CR).
         - name: WC_CHART_DIRECT_SELECTOR
           value: $(DEFAULT_APP_LABEL)
-        - name: WC_CHART_SUBAPP_SELECTOR
-          value: $(HELM_MANAGED_LABEL),$(EXCLUDE_OPERATORS)
+        # Bundle sub-app WC Chart CRs are matched by NAME at runtime (Phase 0c
+        # derives the names from the default bundle sub-Apps). A label selector
+        # cannot be used here: WC Chart CRs carry giantswarm.io/managed-by=app-operator
+        # (no parent-bundle information), so the allowlist label used on the MC
+        # is unavailable, and "managed-by=Helm" alone would also match customer
+        # bundle sub-app Chart CRs.
         # Bundle sub-HRs on MC: helm-managed HRs in org-* that belong to a
         # bundle's helm release (not the cluster-aws release itself).
         # Most bundles (security-bundle, observability-bundle, karpenter-bundle,
@@ -365,6 +372,90 @@ spec:
             kubectl_retry ${WC} delete charts.application.giantswarm.io --namespace "${CHART_NAMESPACE}" --selector "${selector}" --ignore-not-found
           }
 
+          # The three helpers below operate on an explicit, space-separated LIST
+          # of WC Chart CR names (rather than a label selector). They are used
+          # for bundle sub-app charts, which cannot be selected by label on the
+          # WC (see the WC_CHART_DIRECT_SELECTOR note above). An empty list makes
+          # every helper a no-op, which is the correct behaviour when the cluster
+          # has no default bundles.
+
+          # Pause WC Chart CRs by name.
+          pause_charts_in_wc_by_name() {
+            local description="${1}"
+            local names="${2}"
+
+            echo "  Pausing ${description}"
+            local count=0
+            for chart in ${names}
+            do
+              (kubectl ${WC} annotate charts.application.giantswarm.io --namespace "${CHART_NAMESPACE}" "${chart}" operatorkit.giantswarm.io/paused=true --overwrite 2> /dev/null || :) &
+              count=$(( count + 1 ))
+
+              if [ $(( count % BATCH_SIZE )) -eq 0 ]
+              then
+                wait
+              fi
+            done
+
+            wait
+          }
+
+          # Strip finalizers from WC Chart CRs by name.
+          strip_chart_finalizers_by_name() {
+            local description="${1}"
+            local names="${2}"
+
+            echo "  Stripping finalizers from ${description}"
+            local count=0
+            for chart in ${names}
+            do
+              (kubectl ${WC} patch charts.application.giantswarm.io --namespace "${CHART_NAMESPACE}" "${chart}" --type json --patch '[{ "op": "remove", "path": "/metadata/finalizers" }]' 2> /dev/null || :) &
+              count=$(( count + 1 ))
+
+              if [ $(( count % BATCH_SIZE )) -eq 0 ]
+              then
+                wait
+              fi
+            done
+
+            wait
+          }
+
+          # Delete WC Chart CRs by name.
+          delete_charts_in_wc_by_name() {
+            local description="${1}"
+            local names="${2}"
+
+            echo "  Deleting ${description}"
+            local count=0
+            for chart in ${names}
+            do
+              (kubectl ${WC} delete charts.application.giantswarm.io --namespace "${CHART_NAMESPACE}" "${chart}" --ignore-not-found --wait=false 2> /dev/null || :) &
+              count=$(( count + 1 ))
+
+              if [ $(( count % BATCH_SIZE )) -eq 0 ]
+              then
+                wait
+              fi
+            done
+
+            wait
+          }
+
+          # Count how many of the given WC Chart CR names still exist.
+          count_existing_charts_in_wc() {
+            local names="${1}"
+            local existing=0
+            for chart in ${names}
+            do
+              if kubectl ${WC} get charts.application.giantswarm.io --namespace "${CHART_NAMESPACE}" "${chart}" --output name > /dev/null 2>&1
+              then
+                existing=$(( existing + 1 ))
+              fi
+            done
+            echo ${existing}
+          }
+
           # Delete MC HRs by selector. With finalizers stripped, deletion is
           # instant. We could let Phase D's helm uninstall delete them, but
           # explicit deletion in Phase C keeps the order deterministic and
@@ -520,6 +611,54 @@ spec:
           fi
 
           # ============================================================
+          # Phase 0c: Scope bundle sub-app selection to DEFAULT bundles only
+          # ============================================================
+          # SUB_APP_SELECTOR and the WC sub-app chart set must match ONLY the
+          # sub-Apps of GiantSwarm DEFAULT bundles — never a customer-installed
+          # bundle's sub-Apps, which share the same "helm-managed, no release
+          # label" signature and would otherwise be paused/stripped/deleted.
+          # We derive a positive allowlist from the default bundle App CRs
+          # (BUNDLE_APP_SELECTOR is release-gated, so it only matches default
+          # bundles):
+          #   - MC sub-App CRs: match giantswarm.io/managed-by in (<bundle names>).
+          #     Every default bundle sub-App carries this label with its parent
+          #     bundle App CR name as the value; customer sub-Apps point at a
+          #     non-default bundle and standalone customer apps lack the label,
+          #     so both are excluded.
+          #   - WC Chart CRs carry giantswarm.io/managed-by=app-operator (no
+          #     parent-bundle info), so they are matched by NAME: the WC chart
+          #     name equals the MC sub-App name with the "<cluster>-" prefix
+          #     stripped.
+          # With no default bundles the allowlist collapses to a sentinel that
+          # matches nothing and the WC name list is empty, so every sub-app
+          # operation becomes a safe no-op.
+
+          echo "Phase 0c: Scoping bundle sub-app selection to default bundles"
+          bundle_app_names="$(kubectl_retry get apps.application.giantswarm.io --namespace "${NAMESPACE}" --selector "${BUNDLE_APP_SELECTOR}" --output jsonpath="{ .items[*].metadata.name }")"
+          echo "  default bundle App CRs: ${bundle_app_names:-<none>}"
+
+          # Comma-join for the set-based label selector. When there are no
+          # default bundles, use a sentinel that cannot match any resource
+          # (a bare "in ()" is invalid selector syntax).
+          bundle_names_csv="$(echo ${bundle_app_names} | tr ' ' ',')"
+          if [ -z "${bundle_names_csv}" ]
+          then
+            bundle_names_csv="__no_default_bundles_present__"
+          fi
+          SUB_APP_SELECTOR="giantswarm.io/cluster=${CLUSTER_NAME},giantswarm.io/managed-by in (${bundle_names_csv})"
+          echo "  SUB_APP_SELECTOR: ${SUB_APP_SELECTOR}"
+
+          # WC sub-app Chart CR names = MC sub-App CR names with the cluster
+          # prefix stripped. This is the exact set we pause/strip/delete on the WC.
+          sub_app_names="$(kubectl_retry get apps.application.giantswarm.io --namespace "${NAMESPACE}" --selector "${SUB_APP_SELECTOR}" --output jsonpath="{ .items[*].metadata.name }")"
+          WC_SUB_CHART_NAMES=""
+          for sub_app_name in ${sub_app_names}
+          do
+            WC_SUB_CHART_NAMES="${WC_SUB_CHART_NAMES} ${sub_app_name#${CLUSTER_NAME}-}"
+          done
+          echo "  WC sub-app Chart CR names:${WC_SUB_CHART_NAMES:- <none>}"
+
+          # ============================================================
           # Phase A: Pause everything
           # ============================================================
           # Add the operatorkit pause annotation to every resource we are
@@ -531,7 +670,7 @@ spec:
           pause_apps_in_mc "non-bundle App CRs" "${NON_BUNDLE_SELECTOR}"
           pause_apps_in_mc "bundle sub-App CRs" "${SUB_APP_SELECTOR}"
           pause_charts_in_wc "direct default app Chart CRs" "${WC_CHART_DIRECT_SELECTOR}"
-          pause_charts_in_wc "bundle sub-app Chart CRs" "${WC_CHART_SUBAPP_SELECTOR}"
+          pause_charts_in_wc_by_name "bundle sub-app Chart CRs" "${WC_SUB_CHART_NAMES}"
           pause_hrs_in_mc "bundle sub-HRs" "${SUB_HR_SELECTOR}"
 
           # Bundle App CRs are intentionally NOT paused. We WANT the cascade
@@ -587,8 +726,7 @@ spec:
           wc_direct_charts="$(kubectl_retry ${WC} get charts.application.giantswarm.io --namespace "${CHART_NAMESPACE}" --selector "${WC_CHART_DIRECT_SELECTOR}" --output jsonpath="{ .items[*].metadata.name }")"
           echo "  direct default WC Chart CRs: $(count_words "${wc_direct_charts}")"
 
-          wc_sub_app_charts="$(kubectl_retry ${WC} get charts.application.giantswarm.io --namespace "${CHART_NAMESPACE}" --selector "${WC_CHART_SUBAPP_SELECTOR}" --output jsonpath="{ .items[*].metadata.name }")"
-          echo "  bundle sub-app WC Chart CRs: $(count_words "${wc_sub_app_charts}")"
+          echo "  bundle sub-app WC Chart CRs: $(count_existing_charts_in_wc "${WC_SUB_CHART_NAMES}") (scoped to default bundles)"
 
           sub_helmreleases="$(kubectl_retry get helmreleases.helm.toolkit.fluxcd.io --namespace "${NAMESPACE}" --selector "${SUB_HR_SELECTOR}" --output jsonpath="{ .items[*].metadata.name }")"
           echo "  bundle sub-HRs (MC):         $(count_words "${sub_helmreleases}")"
@@ -606,7 +744,7 @@ spec:
           strip_app_finalizers "non-bundle App CRs" "${NON_BUNDLE_SELECTOR}"
           strip_app_finalizers "bundle sub-App CRs" "${SUB_APP_SELECTOR}"
           strip_chart_finalizers "direct default app Chart CRs" "${WC_CHART_DIRECT_SELECTOR}"
-          strip_chart_finalizers "bundle sub-app Chart CRs" "${WC_CHART_SUBAPP_SELECTOR}"
+          strip_chart_finalizers_by_name "bundle sub-app Chart CRs" "${WC_SUB_CHART_NAMES}"
           strip_hr_finalizers "bundle sub-HRs" "${SUB_HR_SELECTOR}"
 
           # Bundle App CR finalizers are intentionally NOT stripped (see Phase A)
@@ -623,7 +761,7 @@ spec:
           delete_apps_in_mc "non-bundle App CRs" "${NON_BUNDLE_SELECTOR}"
           delete_apps_in_mc "bundle sub-App CRs" "${SUB_APP_SELECTOR}"
           delete_charts_in_wc "direct default app Chart CRs" "${WC_CHART_DIRECT_SELECTOR}"
-          delete_charts_in_wc "bundle sub-app Chart CRs" "${WC_CHART_SUBAPP_SELECTOR}"
+          delete_charts_in_wc_by_name "bundle sub-app Chart CRs" "${WC_SUB_CHART_NAMES}"
           delete_hrs_in_mc "bundle sub-HRs" "${SUB_HR_SELECTOR}"
 
           # ============================================================
@@ -650,8 +788,7 @@ spec:
           wc_direct_charts_count=$(count_words "${wc_direct_charts}")
           echo "  direct default WC Chart CRs: ${wc_direct_charts_count} (expected 0)"
 
-          wc_sub_app_charts="$(kubectl_retry ${WC} get charts.application.giantswarm.io --namespace "${CHART_NAMESPACE}" --selector "${WC_CHART_SUBAPP_SELECTOR}" --output jsonpath="{ .items[*].metadata.name }")"
-          wc_sub_app_charts_count=$(count_words "${wc_sub_app_charts}")
+          wc_sub_app_charts_count=$(count_existing_charts_in_wc "${WC_SUB_CHART_NAMES}")
           echo "  bundle sub-app WC Chart CRs: ${wc_sub_app_charts_count} (expected 0)"
 
           sub_helmreleases="$(kubectl_retry get helmreleases.helm.toolkit.fluxcd.io --namespace "${NAMESPACE}" --selector "${SUB_HR_SELECTOR}" --output jsonpath="{ .items[*].metadata.name }")"
@@ -664,20 +801,20 @@ spec:
             kubectl get apps.application.giantswarm.io --namespace "${NAMESPACE}" --selector "${NON_BUNDLE_SELECTOR}" --output custom-columns="KIND:.kind,NAME:.metadata.name,FINALIZERS:.metadata.finalizers" 2> /dev/null || :
             kubectl get apps.application.giantswarm.io --namespace "${NAMESPACE}" --selector "${SUB_APP_SELECTOR}" --output custom-columns="KIND:.kind,NAME:.metadata.name,FINALIZERS:.metadata.finalizers" 2> /dev/null || :
             kubectl ${WC} get charts.application.giantswarm.io --namespace "${CHART_NAMESPACE}" --selector "${WC_CHART_DIRECT_SELECTOR}" --output custom-columns="KIND:.kind,NAME:.metadata.name,FINALIZERS:.metadata.finalizers" 2> /dev/null || :
-            kubectl ${WC} get charts.application.giantswarm.io --namespace "${CHART_NAMESPACE}" --selector "${WC_CHART_SUBAPP_SELECTOR}" --output custom-columns="KIND:.kind,NAME:.metadata.name,FINALIZERS:.metadata.finalizers" 2> /dev/null || :
+            for chart in ${WC_SUB_CHART_NAMES}; do kubectl ${WC} get charts.application.giantswarm.io --namespace "${CHART_NAMESPACE}" "${chart}" --output custom-columns="KIND:.kind,NAME:.metadata.name,FINALIZERS:.metadata.finalizers" 2> /dev/null || :; done
             kubectl get helmreleases.helm.toolkit.fluxcd.io --namespace "${NAMESPACE}" --selector "${SUB_HR_SELECTOR}" --output custom-columns="KIND:.kind,NAME:.metadata.name,FINALIZERS:.metadata.finalizers" 2> /dev/null || :
 
             echo "  Re-running Phase B + C on resurrected set:"
             strip_app_finalizers "non-bundle App CRs (resurrected)" "${NON_BUNDLE_SELECTOR}"
             strip_app_finalizers "bundle sub-App CRs (resurrected)" "${SUB_APP_SELECTOR}"
             strip_chart_finalizers "direct default app Chart CRs (resurrected)" "${WC_CHART_DIRECT_SELECTOR}"
-            strip_chart_finalizers "bundle sub-app Chart CRs (resurrected)" "${WC_CHART_SUBAPP_SELECTOR}"
+            strip_chart_finalizers_by_name "bundle sub-app Chart CRs (resurrected)" "${WC_SUB_CHART_NAMES}"
             strip_hr_finalizers "bundle sub-HRs (resurrected)" "${SUB_HR_SELECTOR}"
 
             delete_apps_in_mc "non-bundle App CRs (resurrected)" "${NON_BUNDLE_SELECTOR}"
             delete_apps_in_mc "bundle sub-App CRs (resurrected)" "${SUB_APP_SELECTOR}"
             delete_charts_in_wc "direct default app Chart CRs (resurrected)" "${WC_CHART_DIRECT_SELECTOR}"
-            delete_charts_in_wc "bundle sub-app Chart CRs (resurrected)" "${WC_CHART_SUBAPP_SELECTOR}"
+            delete_charts_in_wc_by_name "bundle sub-app Chart CRs (resurrected)" "${WC_SUB_CHART_NAMES}"
             delete_hrs_in_mc "bundle sub-HRs (resurrected)" "${SUB_HR_SELECTOR}"
           fi
 

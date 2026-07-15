@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Migration hook: scope bundle sub-app selection to GiantSwarm **default** bundles only. The previous `SUB_APP_SELECTOR` (`managed-by=Helm` + no release label) and `WC_CHART_SUBAPP_SELECTOR` (`managed-by=Helm`) also matched **customer-installed** bundle sub-Apps/Chart CRs (e.g. `gateway-api-bundle`, and on some clusters `fluxcd`/`dex`/`ingress-nginx`), which would be paused, finalizer-stripped and **deleted** during migration. Sub-App CRs on the MC are now matched by a positive allowlist keyed on the parent default bundle (`giantswarm.io/managed-by in (<default bundle App CR names>)`, derived at runtime in Phase 0c from the release-gated `BUNDLE_APP_SELECTOR`); WC Chart CRs are matched by name (derived from the default sub-App set), since WC Chart CRs carry `giantswarm.io/managed-by=app-operator` and cannot use the allowlist label.
+
 ### Changed
 
 - Migrate default applications from App CRs to Flux HelmRelease CRs.
