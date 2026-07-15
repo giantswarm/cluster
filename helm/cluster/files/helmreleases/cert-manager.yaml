@@ -31,7 +31,7 @@ defaultValues:
     defaultIssuerGroup: cert-manager.io
     defaultIssuerKind: ClusterIssuer
     defaultIssuerName: letsencrypt-giantswarm
-  {{- end}}
+  {{- end }}
 
   {{- /* Top-level custom properties (independent of upstream). */}}
   ciliumNetworkPolicy:
