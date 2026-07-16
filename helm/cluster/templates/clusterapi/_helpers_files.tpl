@@ -25,6 +25,12 @@
   permissions: "0644"
   encoding: base64
   content: {{ tpl ($.Files.Get "files/etc/selinux/config") . | b64enc }}
+{{- if and (ne $.Values.global.components.selinux.mode "disabled") $.Values.global.components.selinux.writablePolicyStore }}
+- path: /etc/selinux/flatcar-containerd-patch.cil
+  permissions: "0644"
+  encoding: base64
+  content: {{ tpl ($.Files.Get "files/etc/selinux/flatcar-containerd-patch.cil") . | b64enc }}
+{{- end }}
 {{- end }}
 
 {{- define "cluster.internal.kubeadm.files.systemd" }}

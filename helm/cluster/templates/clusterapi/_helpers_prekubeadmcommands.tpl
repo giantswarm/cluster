@@ -18,11 +18,28 @@
 
 {{- define "cluster.internal.kubeadm.preKubeadmCommands.selinux" }}
 {{- if ne $.Values.global.components.selinux.mode "disabled" }}
-# Fix label for kube-apiserver audit log directory
+{{- if $.Values.global.components.selinux.writablePolicyStore }}
+# Make `/var/lib/selinux` writable for loading additional policies
+- rm -rf /var/lib/selinux
+- cp -a /usr/lib/selinux/policy /var/lib/selinux
+- semodule -DB
+# Load policy for containerd to work with any container_domain type (other than container_t)
+- semodule -i /etc/selinux/flatcar-containerd-patch.cil
+{{- end }}
+# Remove audit rules that suppress SELinux AVC logs in Flatcar
+# Required for generating SELinux policies (e.g. using security-profiles-operator)
+- rm -f /etc/audit/rules.d/80-selinux.rules
+- systemctl restart audit-rules
+# All certs in /etc/ssl/certs are symlinked to /usr/share/ca-certificates in Flatcar
+# /usr is unlabeled and read-only in Flatcar. Copy certs to /etc/ssl/certs for correct labeling
+# Required for mounting /etc/ssl/certs into containers (e.g. kube-apiserver, cluster-autoscaler)
+- rm -rf /etc/ssl/certs
+- cp -a /usr/share/ca-certificates /etc/ssl/certs
+# Fix SELinux labels for everything except `/usr` (read-only in Flatcar)
+- restorecon -RFv -e /usr /
+# Change label for kube-apiserver audit log directory for access from containers
 - mkdir -p /var/log/apiserver
 - chcon -R -t container_file_t /var/log/apiserver
-# Fix labels for `/etc/kubernetes`
-- restorecon -RFv /etc/kubernetes
 {{- end }}
 {{- end }}
 
