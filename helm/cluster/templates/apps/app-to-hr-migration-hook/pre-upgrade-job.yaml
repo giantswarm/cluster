@@ -1,0 +1,76 @@
+{{- range $i, $target := list "mc" "wc" }}
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "cluster.resource.name" $ }}-pause-{{ $target }}-charts
+  namespace: {{ $.Release.Namespace }}
+  labels:
+    {{- include "cluster.labels.common.all" $ | nindent 4 }}
+  annotations:
+    helm.sh/hook: pre-upgrade
+    helm.sh/hook-weight: {{ $i | quote }}
+    helm.sh/hook-delete-policy: before-hook-creation
+spec:
+  template:
+    metadata:
+      labels:
+        {{- include "cluster.labels.common.all" $ | nindent 8 }}
+    spec:
+      {{- if eq $target "mc" }}
+      serviceAccountName: automation
+      {{- else if eq $target "wc" }}
+      automountServiceAccountToken: false
+      volumes:
+      - name: kubeconfig
+        secret:
+          secretName: {{ include "cluster.resource.name" $ }}-kubeconfig
+          items:
+          - key: value
+            path: kubeconfig
+      {{- end }}
+      containers:
+      - name: kubectl
+        image: gsoci.azurecr.io/giantswarm/docker-kubectl:1.36.2
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1000
+          runAsGroup: 1000
+          allowPrivilegeEscalation: false
+          seccompProfile:
+            type: RuntimeDefault
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+        {{- if eq $target "wc" }}
+        volumeMounts:
+        - name: kubeconfig
+          subPath: kubeconfig
+          mountPath: /etc/kubeconfig
+          readOnly: true
+        env:
+        - name: KUBECONFIG
+          value: /etc/kubeconfig
+        {{- end }}
+        args:
+        - annotate
+        - charts.application.giantswarm.io
+        - --namespace
+        - giantswarm
+        - --selector
+        - giantswarm.io/cluster={{ include "cluster.resource.name" $ }},helm.sh/chart
+        - chart-operator.giantswarm.io/paused=true
+        - --overwrite
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            cpu: 100m
+            memory: 100Mi
+      restartPolicy: Never
+  activeDeadlineSeconds: 300
+  backoffLimit: 5
+  ttlSecondsAfterFinished: 3600
+{{- end }}
