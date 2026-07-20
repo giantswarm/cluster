@@ -17,7 +17,7 @@
 {{/*
 There are cases where we don't want to deploy the coreDns control plane components (for example when using Kamaji.)
 */}}
-{{- define "cluster.internal.apps.coredns.mastersInstance.enabled" -}}
+{{- define "cluster.internal.apps.coredns.controlPlane.enabled" -}}
     {{- if not (include "kamaji.isEnabled" $) -}}
         {{- printf "true" -}}
     {{- else -}}

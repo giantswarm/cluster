@@ -17,4 +17,4 @@ defaultValues:
     podSecurityStandards:
       enforced: {{ .Values.global.podSecurityStandards.enforced }}
   controlPlane:
-    enabled: {{ include "cluster.internal.apps.coredns.mastersInstance.enabled" $ }}
+    enabled: {{ include "cluster.internal.apps.coredns.controlPlane.enabled" $ }}
