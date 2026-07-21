@@ -7,16 +7,14 @@ namespace: kube-system
 version: 1.31.0
 dependsOn: {{ if not (eq $.Values.providerIntegration.provider "aks") }}["cilium"]{{ else }}[]{{ end }}
 defaultValues:
-  cluster:
-    calico:
-      CIDR: {{ first .Values.global.connectivity.network.pods.cidrBlocks | quote }}
-    kubernetes:
-      API:
-        clusterIPRange: {{ first .Values.global.connectivity.network.services.cidrBlocks | quote }}
-      DNS:
-        IP: {{ include "cluster.internal.apps.coredns.dns" $ | quote }}
+  coredns:
+    cluster:
+      podCIDR: {{ first .Values.global.connectivity.network.pods.cidrBlocks | quote }}
+      serviceCIDR: {{ first .Values.global.connectivity.network.services.cidrBlocks | quote }}
+  service:
+    clusterIP: {{ include "cluster.internal.apps.coredns.dns" $ | quote }}
   global:
     podSecurityStandards:
       enforced: {{ .Values.global.podSecurityStandards.enforced }}
-  mastersInstance:
-    enabled: {{ include "cluster.internal.apps.coredns.mastersInstance.enabled" $ }}
+  controlPlane:
+    enabled: {{ include "cluster.internal.apps.coredns.controlPlane.enabled" $ }}

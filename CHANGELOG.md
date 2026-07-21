@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Migrate `coredns` HelmRelease values to the new `coredns-app` zone-aware interface.
+- Rename the internal `coredns` control plane helper to align with the `controlPlane` values key.
+
 ## [6.8.0] - 2026-07-14
 
 ### Changed
