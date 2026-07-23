@@ -1,0 +1,44 @@
+appName: cert-manager
+chartName: cert-manager-app
+configKey: certManager
+# repo: giantswarm/cert-manager-app
+version: 4.1.1
+dependsOn:
+- alloy-podlogs-crds
+- prometheus-operator-crd
+
+namespace: kube-system
+defaultValues:
+  {{- /* Get cert-manager version. */}}
+  {{- $version := "N/A" }}
+  {{- if .Values.providerIntegration.useReleases }}
+  {{- $_ := set $ "appName" "cert-manager" }}
+  {{- $version = include "cluster.app.version" $ | trim }}
+  {{- end }}
+  {{- /* Check cert-manager version. Since v4.0.0, upstream properties need to be under the `cert-manager` key. */}}
+  {{- if or (eq $version "N/A") (semverCompare ">=4.0.0" $version) }}
+  cert-manager:
+    # Authoritative nameservers aren't reachable in private clusters, use the resolver instead.
+    dns01RecursiveNameserversOnly: true
+    ingressShim:
+      defaultIssuerGroup: cert-manager.io
+      defaultIssuerKind: ClusterIssuer
+      defaultIssuerName: letsencrypt-giantswarm
+  {{- else }}
+  # Authoritative nameservers aren't reachable in private clusters, use the resolver instead.
+  dns01RecursiveNameserversOnly: true
+  ingressShim:
+    defaultIssuerGroup: cert-manager.io
+    defaultIssuerKind: ClusterIssuer
+    defaultIssuerName: letsencrypt-giantswarm
+  {{- end }}
+
+  {{- /* Top-level custom properties (independent of upstream). */}}
+  ciliumNetworkPolicy:
+    enabled: true
+  {{- if .Values.global.connectivity.proxy.enabled }}
+  proxy:
+    http: {{ .Values.global.connectivity.proxy.httpProxy | quote }}
+    https: {{ .Values.global.connectivity.proxy.httpsProxy | quote }}
+    noProxy: {{ include "cluster.connectivity.proxy.noProxy" (dict "global" .Values.global "providerIntegration" .Values.providerIntegration) | quote }}
+  {{- end }}

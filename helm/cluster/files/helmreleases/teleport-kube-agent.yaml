@@ -1,0 +1,19 @@
+appName: teleport-kube-agent
+configKey: teleportKubeAgent
+# repo: giantswarm/teleport-kube-agent-app
+version: 0.11.1
+dependsOn:
+- prometheus-operator-crd
+
+namespace: kube-system
+defaultValues:
+  {{- if .Values.global.connectivity.proxy.enabled }}
+  proxy:
+    http: {{ .Values.global.connectivity.proxy.httpProxy | quote }}
+    https: {{ .Values.global.connectivity.proxy.httpsProxy | quote }}
+    noProxy: {{ include "cluster.connectivity.proxy.noProxy" (dict "global" .Values.global "providerIntegration" .Values.providerIntegration) | quote }}
+  {{- end }}
+extraConfigs:
+- kind: configMap
+  name: {{ $.Values.global.metadata.name }}-teleport-kube-agent-config
+  namespace: {{ $.Release.Namespace }}

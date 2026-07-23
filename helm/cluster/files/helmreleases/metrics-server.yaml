@@ -1,14 +1,13 @@
 appName: metrics-server
 chartName: metrics-server-app
 configKey: metricsServer
-clusterValues:
-  configMap: true
-  secret: false
-dependsOn: kyverno-crds
-namespace: kube-system
-# used by renovate
 # repo: giantswarm/metrics-server-app
 version: 2.8.0
+dependsOn:
+- kyverno-crds
+
+namespace: kube-system
 defaultValues:
+  provider: {{ .Values.providerIntegration.provider }}
   ciliumNetworkPolicy:
     enabled: true

@@ -1,0 +1,10 @@
+appName: security-bundle
+configKey: securityBundle
+# repo: giantswarm/security-bundle
+version: 2.1.0
+
+inCluster: true
+driftDetection: enabled
+
+defaultValues:
+  clusterID: {{ include "cluster.resource.name" $ }}

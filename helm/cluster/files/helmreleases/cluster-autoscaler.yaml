@@ -1,0 +1,31 @@
+appName: cluster-autoscaler
+chartName: cluster-autoscaler-app
+configKey: clusterAutoscaler
+# repo: giantswarm/cluster-autoscaler-app
+version: 2.0.3
+{{- if ne $.Values.providerIntegration.provider "azure" }}
+dependsOn:
+{{- if eq $.Values.providerIntegration.provider "aws" }}
+- aws-pod-identity-webhook
+{{- end }}
+- kyverno-crds
+- vertical-pod-autoscaler-crd
+{{- end }}
+
+{{- if eq $.Values.providerIntegration.provider "azure" }}
+inCluster: true
+{{- end }}
+
+{{- if ne $.Values.providerIntegration.provider "azure" }}
+namespace: kube-system
+{{- end }}
+defaultValues:
+  clusterID: {{ include "cluster.resource.name" $ }}
+  {{- /* Cluster Autoscaler distinguishes between AWS and CAPA, so we have to be specific. */}}
+  provider: {{ eq .Values.providerIntegration.provider "aws" | ternary "capa" .Values.providerIntegration.provider }}
+  {{- if .Values.global.connectivity.proxy.enabled }}
+  proxy:
+    http: {{ .Values.global.connectivity.proxy.httpProxy | quote }}
+    https: {{ .Values.global.connectivity.proxy.httpsProxy | quote }}
+    noProxy: {{ include "cluster.connectivity.proxy.noProxy" (dict "global" .Values.global "providerIntegration" .Values.providerIntegration) | quote }}
+  {{- end }}

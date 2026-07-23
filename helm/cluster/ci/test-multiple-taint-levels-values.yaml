@@ -59,3 +59,5 @@ global:
   metadata:
     name: tainted
     organization: giantswarm
+  release:
+    version: v34.0.0

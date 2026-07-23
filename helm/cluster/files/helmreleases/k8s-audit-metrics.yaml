@@ -1,0 +1,8 @@
+appName: k8s-audit-metrics
+configKey: k8sAuditMetrics
+# repo: giantswarm/k8s-audit-metrics
+version: 0.10.13
+dependsOn:
+- kyverno-crds
+
+namespace: kube-system

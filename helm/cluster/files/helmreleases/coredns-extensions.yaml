@@ -1,0 +1,8 @@
+appName: coredns-extensions
+configKey: coreDnsExtensions
+# repo: giantswarm/coredns-extensions-app
+version: 0.1.3
+dependsOn:
+- vertical-pod-autoscaler-crd
+
+namespace: kube-system

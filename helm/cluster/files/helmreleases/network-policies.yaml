@@ -1,10 +1,13 @@
 appName: network-policies
 configKey: networkPolicies
-catalog: cluster
-namespace: kube-system
-# used by renovate
 # repo: giantswarm/network-policies-app
 version: 0.2.0
-dependsOn: {{ if not (eq $.Values.providerIntegration.provider "aks") }}["cilium"]{{ else }}[]{{ end }}
-interval: 1m
+{{- if ne $.Values.providerIntegration.provider "aks" }}
+dependsOn:
+- cilium
+{{- end }}
+
 disable: {{ .Values.global.connectivity.network.allowAllEgress }}
+interval: 1m
+
+namespace: kube-system

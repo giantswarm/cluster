@@ -1,11 +1,9 @@
 appName: node-exporter
 chartName: node-exporter-app
 configKey: nodeExporter
-clusterValues:
-  configMap: true
-  secret: false
-dependsOn: kyverno-crds
-namespace: kube-system
-# used by renovate
 # repo: giantswarm/node-exporter-app
 version: 1.20.11
+dependsOn:
+- kyverno-crds
+
+namespace: kube-system
