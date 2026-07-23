@@ -2640,6 +2640,25 @@
                                         "$ref": "#/$defs/fileFromSecret"
                                     }
                                 },
+                                "localEphemeralStorage": {
+                                    "type": "object",
+                                    "title": "Local ephemeral storage",
+                                    "description": "Cluster-wide parameters for the local instance-store NVMe feature. Enabled per node pool via `localNvme.enabled`; the bootstrap script mounts detected instance-store NVMe over the kubelet directory and adds a nodefs.available eviction backstop. No-op on nodes without instance store.",
+                                    "properties": {
+                                        "evictionHardNodefsAvailable": {
+                                            "type": "string",
+                                            "title": "nodefs.available eviction threshold",
+                                            "description": "Node-level disk-eviction backstop added on instance-store nodes only. An empty string skips the kubelet patch.",
+                                            "default": "10%"
+                                        },
+                                        "mountPath": {
+                                            "type": "string",
+                                            "title": "Mount path",
+                                            "description": "Path the detected instance-store NVMe is mounted over. Defaults to the kubelet directory so pod emptyDir volumes land on the NVMe.",
+                                            "default": "/var/lib/kubelet"
+                                        }
+                                    }
+                                },
                                 "postKubeadmCommands": {
                                     "$ref": "#/$defs/postKubeadmCommands"
                                 },

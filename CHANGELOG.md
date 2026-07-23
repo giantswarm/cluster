@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add opt-in local instance-store NVMe ephemeral storage for worker nodes. When any node pool sets `localNvme.enabled`, a self-gating bootstrap script mounts detected EC2 instance-store NVMe (RAID0 if multiple) over the kubelet directory so pod `emptyDir` volumes use it, and adds a `nodefs.available` disk-eviction backstop. The script is a no-op on nodes without instance store. Cluster-wide parameters live under `internal.advancedConfiguration.workers.localEphemeralStorage`.
+
 ### Changed
 
 - Migrate `coredns` HelmRelease values to the new `coredns-app` zone-aware interface.
