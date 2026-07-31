@@ -4,6 +4,7 @@ global:
   apps:
     certExporter: {}
     certManager: {}
+    certManagerCrossplaneResources: {}
     chartOperatorExtensions: {}
     cilium: {}
     ciliumServiceMonitors: {}
