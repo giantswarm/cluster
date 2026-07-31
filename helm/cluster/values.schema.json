@@ -2710,6 +2710,9 @@
                         "certManager": {
                             "$ref": "#/$defs/providerIntegrationAppConfig"
                         },
+                        "certManagerCrossplaneResources": {
+                            "$ref": "#/$defs/providerIntegrationAppConfig"
+                        },
                         "chartOperatorExtensions": {
                             "$ref": "#/$defs/providerIntegrationAppConfig"
                         },
