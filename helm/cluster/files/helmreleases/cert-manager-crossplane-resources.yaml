@@ -1,0 +1,14 @@
+appName: cert-manager-crossplane-resources
+configKey: certManagerCrossplaneResources
+namespace: {{ .Release.Namespace }}
+useOCISource: true
+# repo: giantswarm/cert-manager-crossplane-resources
+version: 0.1.1
+
+prependClusterName: true
+skipKubeConfig: true
+serviceAccountName: automation
+
+defaultValues:
+  provider: {{ .Values.providerIntegration.provider }}
+  clusterName: {{ include "cluster.resource.name" . }}

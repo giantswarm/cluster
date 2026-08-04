@@ -4,6 +4,7 @@ global:
   apps:
     certExporter: {}
     certManager: {}
+    certManagerCrossplaneResources: {}
     chartOperatorExtensions: {}
     cilium: {}
     ciliumServiceMonitors: {}
@@ -150,6 +151,8 @@ providerIntegration:
     certExporter:
       enable: false
     certManager:
+      enable: false
+    certManagerCrossplaneResources:
       enable: false
     chartOperatorExtensions:
       enable: false

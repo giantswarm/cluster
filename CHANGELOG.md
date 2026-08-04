@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add `cert-manager-crossplane-resources` HelmRelease.
+
 ### Changed
 
 - Migrate `coredns` HelmRelease values to the new `coredns-app` zone-aware interface.
