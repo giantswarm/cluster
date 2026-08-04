@@ -3,7 +3,7 @@ configKey: certManagerCrossplaneResources
 namespace: {{ .Release.Namespace }}
 useOCISource: true
 # repo: giantswarm/cert-manager-crossplane-resources
-version: 0.1.2-dev.add-workload-identity.2026-07-31.17-21-27.ha74da13
+version: 0.1.1
 
 prependClusterName: true
 skipKubeConfig: true
