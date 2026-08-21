@@ -1,0 +1,7 @@
+appName: observability-policies
+# repo: giantswarm/observability-policies
+version: 0.0.4
+dependsOn:
+- kyverno-crds
+
+namespace: kube-system

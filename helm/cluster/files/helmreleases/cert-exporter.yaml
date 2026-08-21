@@ -1,0 +1,13 @@
+appName: cert-exporter
+# repo: giantswarm/cert-exporter
+version: 2.12.0
+dependsOn:
+- cilium
+- kyverno-crds
+- prometheus-operator-crd
+- vertical-pod-autoscaler-crd
+
+namespace: kube-system
+defaultValues:
+  ciliumNetworkPolicy:
+    enabled: true
