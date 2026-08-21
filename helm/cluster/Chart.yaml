@@ -1,18 +1,18 @@
 apiVersion: v2
 name: cluster
 description: A helm chart for creating Cluster API clusters.
-version: 7.0.0
-appVersion: 7.0.0
+version: 8.0.0
+appVersion: 8.0.0
 home: https://github.com/giantswarm/cluster
 icon: https://s.giantswarm.io/app-icons/giantswarm/1/dark.svg
 sources:
-- https://github.com/giantswarm/cluster
+  - https://github.com/giantswarm/cluster
 maintainers:
-- name: Team Tenet
-  email: team-tenet@giantswarm.io
+  - name: Team Tenet
+    email: team-tenet@giantswarm.io
 keywords:
-- capi
-- cluster-api
+  - capi
+  - cluster-api
 annotations:
   application.giantswarm.io/app-type: cluster
   application.giantswarm.io/team: tenet
