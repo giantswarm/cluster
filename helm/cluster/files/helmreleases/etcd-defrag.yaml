@@ -1,6 +1,6 @@
 appName: etcd-defrag
 # repo: giantswarm/etcd-defrag-app
-version: 1.2.10
+version: 1.2.11
 dependsOn:
 - kyverno-crds
 
