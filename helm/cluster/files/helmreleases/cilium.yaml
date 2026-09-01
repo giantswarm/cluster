@@ -1,6 +1,6 @@
 appName: cilium
 # repo: giantswarm/cilium-app
-version: 1.5.1
+version: 1.6.0
 
 timeout: 1h
 remediationRetries: 0
