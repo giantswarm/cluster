@@ -6,8 +6,8 @@ kernelMemcgNotification: true
 evictionSoft:
   memory.available: "500Mi"
 evictionHard:
-  memory.available: "200Mi"
-  imagefs.available: "15%"
+  memory.available: {{ $.Values.internal.advancedConfiguration.kubelet.evictionHard.memoryAvailable | quote }}
+  imagefs.available: {{ $.Values.internal.advancedConfiguration.kubelet.evictionHard.imagefsAvailable | quote }}
 evictionSoftGracePeriod:
   memory.available: "5s"
 evictionMaxPodGracePeriod: 60
