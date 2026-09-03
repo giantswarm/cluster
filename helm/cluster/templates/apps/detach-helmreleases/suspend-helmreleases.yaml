@@ -1,0 +1,58 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "cluster.resource.name" $ }}-suspend-helmreleases
+  namespace: {{ $.Release.Namespace }}
+  labels:
+    {{- include "cluster.labels.common.all" $ | nindent 4 }}
+  annotations:
+    helm.sh/hook: pre-delete
+    helm.sh/hook-delete-policy: before-hook-creation
+spec:
+  template:
+    metadata:
+      labels:
+        {{- include "cluster.labels.common.all" $ | nindent 8 }}
+    spec:
+      serviceAccountName: automation
+      containers:
+      - name: kubectl
+        image: gsoci.azurecr.io/giantswarm/docker-kubectl:1.36.4
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1000
+          runAsGroup: 1000
+          allowPrivilegeEscalation: false
+          seccompProfile:
+            type: RuntimeDefault
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+        command:
+        - sh
+        args:
+        - -c
+        - |
+          # Exit on error.
+          set -o errexit -o nounset -o pipefail
+
+          # Suspend HelmReleases.
+          kubectl get helmreleases.helm.toolkit.fluxcd.io \
+            --namespace {{ $.Release.Namespace }} \
+            --selector giantswarm.io/cluster={{ include "cluster.resource.name" $ }},helm.sh/chart \
+            --output jsonpath='{ .items[?(@.spec.kubeConfig.secretRef.name == "{{ include "cluster.resource.name" $ }}-kubeconfig")].metadata.name }' | xargs --no-run-if-empty \
+          kubectl patch helmreleases.helm.toolkit.fluxcd.io \
+            --namespace {{ $.Release.Namespace }} \
+            --type merge \
+            --patch '{ "spec": { "suspend": true } }'
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            cpu: 100m
+            memory: 100Mi
+      restartPolicy: Never
+  activeDeadlineSeconds: 30
+  ttlSecondsAfterFinished: 3600
