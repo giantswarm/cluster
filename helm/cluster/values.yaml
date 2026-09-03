@@ -131,6 +131,9 @@ internal:
     kubelet:
       containerLogMaxFiles: 0
       containerLogMaxSize: ""
+      evictionHard:
+        imagefsAvailable: 15%
+        memoryAvailable: 200Mi
       featureGates:
         - enabled: true
           minKubernetesVersion: 1.33.0

@@ -2523,6 +2523,25 @@
                                     "description": "Specifies the maximum size of the container log file before it is rotated. For example: \"5Mi\" or \"256Ki\".",
                                     "default": ""
                                 },
+                                "evictionHard": {
+                                    "type": "object",
+                                    "title": "Hard eviction thresholds",
+                                    "description": "Thresholds at which the kubelet evicts pods immediately, without a grace period. These are subtracted from the node's allocatable resources.",
+                                    "properties": {
+                                        "imagefsAvailable": {
+                                            "type": "string",
+                                            "title": "Hard eviction threshold for available image filesystem space",
+                                            "description": "Maps to the kubelet's `imagefs.available` hard eviction signal. Absolute value (e.g. \"1Gi\") or percentage (e.g. \"15%\").",
+                                            "default": "15%"
+                                        },
+                                        "memoryAvailable": {
+                                            "type": "string",
+                                            "title": "Hard eviction threshold for available memory",
+                                            "description": "Maps to the kubelet's `memory.available` hard eviction signal. Absolute value (e.g. \"200Mi\") or percentage (e.g. \"5%\").",
+                                            "default": "200Mi"
+                                        }
+                                    }
+                                },
                                 "featureGates": {
                                     "$ref": "#/$defs/featureGates",
                                     "default": [
