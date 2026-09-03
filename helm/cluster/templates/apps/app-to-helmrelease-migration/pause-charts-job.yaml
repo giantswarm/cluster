@@ -1,14 +1,29 @@
+{{- $pause := true }}
+
+{{- /* Lookup cluster. */}}
+{{- $cluster := lookup "cluster.x-k8s.io/v1beta2" "Cluster" $.Release.Namespace (include "cluster.resource.name" $) }}
+{{- if $cluster }}
+{{- /* Get version. */}}
+{{- $version := get $cluster.metadata.labels "release.giantswarm.io/version" }}
+{{- /* If version is v35.0.0 or greater, including any pre-releases of it... */}}
+{{- if and $version (semverCompare ">=35.0.0-0" $version) }}
+{{- /* ... then do not pause charts. */}}
+{{- $pause = false }}
+{{- end }}
+{{- end }}
+
+{{- if $pause }}
 {{- range $target := list "mc" "wc" }}
 ---
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ include "cluster.resource.name" $ }}-release-{{ $target }}-charts
+  name: {{ include "cluster.resource.name" $ }}-pause-{{ $target }}-charts
   namespace: {{ $.Release.Namespace }}
   labels:
     {{- include "cluster.labels.common.all" $ | nindent 4 }}
   annotations:
-    helm.sh/hook: post-upgrade
+    helm.sh/hook: pre-upgrade
     helm.sh/hook-delete-policy: before-hook-creation
 spec:
   template:
@@ -28,36 +43,9 @@ spec:
           - key: value
             path: kubeconfig
       {{- end }}
-      {{- if eq $target "mc" }}
-      initContainers:
-      - name: wait
-        image: gsoci.azurecr.io/giantswarm/docker-kubectl:1.36.3
-        securityContext:
-          runAsNonRoot: true
-          runAsUser: 1000
-          runAsGroup: 1000
-          allowPrivilegeEscalation: false
-          seccompProfile:
-            type: RuntimeDefault
-          capabilities:
-            drop:
-            - ALL
-          readOnlyRootFilesystem: true
-        command:
-        - sleep
-        args:
-        - 1m
-        resources:
-          requests:
-            cpu: 100m
-            memory: 100Mi
-          limits:
-            cpu: 100m
-            memory: 100Mi
-      {{- end }}
       containers:
       - name: kubectl
-        image: gsoci.azurecr.io/giantswarm/docker-kubectl:1.36.3
+        image: gsoci.azurecr.io/giantswarm/docker-kubectl:1.36.4
         securityContext:
           runAsNonRoot: true
           runAsUser: 1000
@@ -79,23 +67,15 @@ spec:
         - name: KUBECONFIG
           value: /etc/kubeconfig
         {{- end }}
-        command:
-        - sh
         args:
-        - -c
-        - |
-          # Exit on error.
-          set -o errexit -o nounset -o pipefail
-
-          # Release charts.
-          kubectl get charts.application.giantswarm.io \
-            --namespace giantswarm \
-            --selector giantswarm.io/cluster={{ include "cluster.resource.name" $ }},helm.sh/chart \
-            --output name | xargs --no-run-if-empty \
-          kubectl patch \
-            --namespace giantswarm \
-            --type merge \
-            --patch '{ "metadata": { "annotations": { "chart-operator.giantswarm.io/paused": null }, "finalizers": [] } }'
+        - annotate
+        - charts.application.giantswarm.io
+        - --namespace
+        - giantswarm
+        - --selector
+        - giantswarm.io/cluster={{ include "cluster.resource.name" $ }},helm.sh/chart
+        - chart-operator.giantswarm.io/paused=true
+        - --overwrite
         resources:
           requests:
             cpu: 100m
@@ -104,6 +84,7 @@ spec:
             cpu: 100m
             memory: 100Mi
       restartPolicy: Never
-  activeDeadlineSeconds: {{ eq $target "mc" | ternary 90 30 }}
+  activeDeadlineSeconds: 30
   ttlSecondsAfterFinished: 3600
+{{- end }}
 {{- end }}
