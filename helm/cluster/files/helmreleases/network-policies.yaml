@@ -1,6 +1,6 @@
 appName: network-policies
 # repo: giantswarm/network-policies-app
-version: 0.2.0
+version: 0.3.0
 {{- if ne $.Values.providerIntegration.provider "aks" }}
 dependsOn:
 - cilium
