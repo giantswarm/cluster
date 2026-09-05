@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - SELinux: Relabel the whole filesystem except read-only `/usr` (previously only `/etc/kubernetes`).
 - SELinux: Correctly label CA certificates in `/etc/ssl/certs` for mounting into containers.
 - App to HR Migration: Skip v35.0.0 pre-releases and update `docker-kubectl` to v1.36.4.
+- Chart: Rework HelmRelease clean-up job.
 
 ## [8.0.0] - 2026-08-21
 
