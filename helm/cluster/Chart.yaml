@@ -1,8 +1,8 @@
 apiVersion: v2
 name: cluster
 description: A helm chart for creating Cluster API clusters.
-version: 8.0.0
-appVersion: 8.0.0
+version: 8.1.0
+appVersion: 8.1.0
 home: https://github.com/giantswarm/cluster
 icon: https://s.giantswarm.io/app-icons/giantswarm/1/dark.svg
 sources:
