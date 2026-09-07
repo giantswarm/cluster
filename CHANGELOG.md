@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [8.1.0] - 2026-09-07
+
 ### Added
 
 - Add `internal.advancedConfiguration.kubelet.evictionHard` values. Providers need them to tell autoscalers such as Karpenter how much of a node's resources is allocatable.
@@ -1044,7 +1046,8 @@ For Kubernetes <v1.29, you will need to re-enable it using the respective values
 
 - Update and clean up the template repo.
 
-[Unreleased]: https://github.com/giantswarm/cluster/compare/v8.0.0...HEAD
+[Unreleased]: https://github.com/giantswarm/cluster/compare/v8.1.0...HEAD
+[8.1.0]: https://github.com/giantswarm/cluster/compare/v8.0.0...v8.1.0
 [8.0.0]: https://github.com/giantswarm/cluster/compare/v7.0.0...v8.0.0
 [7.0.0]: https://github.com/giantswarm/cluster/compare/v6.8.0...v7.0.0
 [6.8.0]: https://github.com/giantswarm/cluster/compare/v6.7.0...v6.8.0
