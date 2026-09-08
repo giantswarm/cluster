@@ -1350,6 +1350,7 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.workers.kubeadmConfig.postKubeadmCommands` | **Post-kubeadm commands** - Extra commands to run after kubeadm runs.|**Type:** `array`<br/>|
 | `providerIntegration.workers.kubeadmConfig.postKubeadmCommands[*]` |**None**|**Type:** `string`<br/>|
 | `providerIntegration.workers.kubeadmConfig.preKubeadmCommands` | **Pre-kubeadm commands** - Extra commands to run before kubeadm runs.|**Type:** `array`<br/>|
+| `providerIntegration.workers.kubeadmConfig.preKubeadmCommandsTemplateName` | **Pre-kubeadm commands template name** - The name of the Helm template that renders additional provider-specific commands to run before kubeadm on worker nodes. The template is rendered once per node pool.|**Type:** `string`<br/>|
 | `providerIntegration.workers.kubeadmConfig.preKubeadmCommands[*]` |**None**|**Type:** `string`<br/>|
 | `providerIntegration.workers.kubeadmConfig.taints` | **Custom node taints**|**Type:** `array`<br/>**Default:** `[]`|
 | `providerIntegration.workers.kubeadmConfig.taints[*]` |**None**|**Type:** `object`<br/>|

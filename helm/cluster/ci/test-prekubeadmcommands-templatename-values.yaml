@@ -1,0 +1,56 @@
+global:
+  managementCluster: giantmc
+  release:
+    version: v27.0.0-alpha.1
+  metadata:
+    name: hooktest
+    organization: giantswarm
+  connectivity:
+    baseDomain: example.gigantic.io
+  providerSpecific:
+    region: eu-west-1
+providerIntegration:
+  environmentVariables:
+    hostName: COREOS_EC2_HOSTNAME
+    ipv4: COREOS_EC2_IPV4_LOCAL
+  provider: aws
+  resourcesApi:
+    bastionResourceEnabled: false
+    clusterResourceEnabled: true
+    controlPlaneResource:
+      enabled: true
+      provider: kubeadm
+    infrastructureCluster:
+      group: infrastructure.cluster.x-k8s.io
+      kind: AWSCluster
+      version: v1beta1
+    machineHealthCheckResourceEnabled: true
+    machinePoolResources:
+      enabled: true
+    nodePoolKind: MachinePool
+    infrastructureMachinePool:
+      group: infrastructure.cluster.x-k8s.io
+      version: v1beta1
+      kind: AWSMachinePool
+    helmRepositoryResourcesEnabled: true
+  controlPlane:
+    resources:
+      infrastructureMachineTemplate:
+        group: infrastructure.cluster.x-k8s.io
+        kind: AWSMachineTemplate
+        version: v1beta1
+      infrastructureMachineTemplateSpecTemplateName: cluster.internal.test.controlPlane.machineTemplate.spec
+  workers:
+    kubeadmConfig:
+      preKubeadmCommandsTemplateName: cluster.test.workers.kubeadm.preKubeadmCommands.provider
+    defaultNodePools:
+      pool0:
+        customNodeLabels:
+          - label=pool0
+        maxSize: 3
+        minSize: 3
+      pool1:
+        customNodeLabels:
+          - label=pool1
+        maxSize: 2
+        minSize: 1
