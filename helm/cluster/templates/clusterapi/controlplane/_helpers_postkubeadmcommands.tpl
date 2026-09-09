@@ -13,10 +13,26 @@
 {{- include "cluster.internal.controlPlane.kubeadm.postKubeadmCommands.custom" $ }}
 {{- end }}
 
-{{/* Provider-specific commands to run after kubeadm on control plane nodes */}}
+{{/*
+    Provider-specific commands to run after kubeadm on control plane nodes.
+
+    It includes:
+    - static commands from providerIntegration.controlPlane.kubeadmConfig.postKubeadmCommands,
+    - commands rendered by the provider template named in
+      providerIntegration.controlPlane.kubeadmConfig.postKubeadmCommandsTemplateName. The template is
+      rendered once with the root context. There is no node pool in this context, so the template
+      must not read $.nodePool.
+      The template must render a YAML list of strings, one command per item. The list is read with
+      fromYamlArray and every item is rendered like the static commands.
+*/}}
 {{- define "cluster.internal.controlPlane.kubeadm.postKubeadmCommands.provider" }}
 {{- range $command := $.Values.providerIntegration.controlPlane.kubeadmConfig.postKubeadmCommands }}
 - {{ $command }}
+{{- end }}
+{{- if $.Values.providerIntegration.controlPlane.kubeadmConfig.postKubeadmCommandsTemplateName }}
+{{- range $command := include $.Values.providerIntegration.controlPlane.kubeadmConfig.postKubeadmCommandsTemplateName $ | fromYamlArray }}
+- {{ $command }}
+{{- end }}
 {{- end }}
 {{- end }}
 
@@ -25,4 +41,9 @@
 {{- range $command := $.Values.internal.advancedConfiguration.controlPlane.postKubeadmCommands }}
 - {{ $command }}
 {{- end }}
+{{- end }}
+
+{{/* Test-only provider template, used by ci/test-kubeadmcommands-templatename-values.yaml */}}
+{{- define "cluster.test.controlPlane.kubeadm.postKubeadmCommands.provider" }}
+- echo "provider post command for control plane"
 {{- end }}
