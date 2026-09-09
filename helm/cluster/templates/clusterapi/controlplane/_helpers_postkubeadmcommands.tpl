@@ -22,13 +22,17 @@
       providerIntegration.controlPlane.kubeadmConfig.postKubeadmCommandsTemplateName. The template is
       rendered once with the root context. There is no node pool in this context, so the template
       must not read $.nodePool.
+      The template must render a YAML list of strings, one command per item. The list is read with
+      fromYamlArray and every item is rendered like the static commands.
 */}}
 {{- define "cluster.internal.controlPlane.kubeadm.postKubeadmCommands.provider" }}
 {{- range $command := $.Values.providerIntegration.controlPlane.kubeadmConfig.postKubeadmCommands }}
 - {{ $command }}
 {{- end }}
 {{- if $.Values.providerIntegration.controlPlane.kubeadmConfig.postKubeadmCommandsTemplateName }}
-{{- include $.Values.providerIntegration.controlPlane.kubeadmConfig.postKubeadmCommandsTemplateName $ }}
+{{- range $command := include $.Values.providerIntegration.controlPlane.kubeadmConfig.postKubeadmCommandsTemplateName $ | fromYamlArray }}
+- {{ $command }}
+{{- end }}
 {{- end }}
 {{- end }}
 

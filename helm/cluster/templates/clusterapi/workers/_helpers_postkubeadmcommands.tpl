@@ -22,13 +22,17 @@
       providerIntegration.workers.kubeadmConfig.postKubeadmCommandsTemplateName. The template is
       rendered once per node pool with the root context, so it can use $.nodePool.name and
       $.nodePool.config to emit commands for specific node pools only.
+      The template must render a YAML list of strings, one command per item. The list is read with
+      fromYamlArray and every item is rendered like the static commands.
 */}}
 {{- define "cluster.internal.workers.kubeadm.postKubeadmCommands.provider" }}
 {{- range $command := $.Values.providerIntegration.workers.kubeadmConfig.postKubeadmCommands }}
 - {{ $command }}
 {{- end }}
 {{- if $.Values.providerIntegration.workers.kubeadmConfig.postKubeadmCommandsTemplateName }}
-{{- include $.Values.providerIntegration.workers.kubeadmConfig.postKubeadmCommandsTemplateName $ }}
+{{- range $command := include $.Values.providerIntegration.workers.kubeadmConfig.postKubeadmCommandsTemplateName $ | fromYamlArray }}
+- {{ $command }}
+{{- end }}
 {{- end }}
 {{- end }}
 

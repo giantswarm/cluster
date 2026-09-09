@@ -3559,7 +3559,7 @@
                                 "postKubeadmCommandsTemplateName": {
                                     "type": "string",
                                     "title": "Post-kubeadm commands template name",
-                                    "description": "The name of the Helm template that renders additional provider-specific commands to run after kubeadm on control plane nodes. The template is rendered once for the control plane."
+                                    "description": "The name of the Helm template that renders additional provider-specific commands to run after kubeadm on control plane nodes. The template is rendered once for the control plane. It must render a YAML list of strings, one command per item."
                                 },
                                 "preKubeadmCommands": {
                                     "$ref": "#/$defs/preKubeadmCommands"
@@ -3567,7 +3567,7 @@
                                 "preKubeadmCommandsTemplateName": {
                                     "type": "string",
                                     "title": "Pre-kubeadm commands template name",
-                                    "description": "The name of the Helm template that renders additional provider-specific commands to run before kubeadm on control plane nodes. The template is rendered once for the control plane."
+                                    "description": "The name of the Helm template that renders additional provider-specific commands to run before kubeadm on control plane nodes. The template is rendered once for the control plane. It must render a YAML list of strings, one command per item."
                                 },
                                 "taints": {
                                     "$ref": "#/$defs/customNodeTaints"
@@ -4058,7 +4058,7 @@
                                 "postKubeadmCommandsTemplateName": {
                                     "type": "string",
                                     "title": "Post-kubeadm commands template name",
-                                    "description": "The name of the Helm template that renders additional provider-specific commands to run after kubeadm on worker nodes. The template is rendered once per node pool."
+                                    "description": "The name of the Helm template that renders additional provider-specific commands to run after kubeadm on worker nodes. The template is rendered once per node pool. It must render a YAML list of strings, one command per item."
                                 },
                                 "preKubeadmCommands": {
                                     "$ref": "#/$defs/preKubeadmCommands"
@@ -4066,7 +4066,7 @@
                                 "preKubeadmCommandsTemplateName": {
                                     "type": "string",
                                     "title": "Pre-kubeadm commands template name",
-                                    "description": "The name of the Helm template that renders additional provider-specific commands to run before kubeadm on worker nodes. The template is rendered once per node pool."
+                                    "description": "The name of the Helm template that renders additional provider-specific commands to run before kubeadm on worker nodes. The template is rendered once per node pool. It must render a YAML list of strings, one command per item."
                                 },
                                 "taints": {
                                     "$ref": "#/$defs/customNodeTaints"
