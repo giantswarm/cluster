@@ -39,7 +39,7 @@
 {{- end }}
 {{- end }}
 
-{{/* Test-only provider template, used by ci/test-prekubeadmcommands-templatename-values.yaml */}}
+{{/* Test-only provider template, used by ci/test-kubeadmcommands-templatename-values.yaml */}}
 {{- define "cluster.test.workers.kubeadm.preKubeadmCommands.provider" }}
-- echo "provider command for node pool {{ $.nodePool.name }}"
+- echo "provider pre command for node pool {{ $.nodePool.name }}"
 {{- end }}

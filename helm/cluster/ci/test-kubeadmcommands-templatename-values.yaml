@@ -34,6 +34,9 @@ providerIntegration:
       kind: AWSMachinePool
     helmRepositoryResourcesEnabled: true
   controlPlane:
+    kubeadmConfig:
+      postKubeadmCommandsTemplateName: cluster.test.controlPlane.kubeadm.postKubeadmCommands.provider
+      preKubeadmCommandsTemplateName: cluster.test.controlPlane.kubeadm.preKubeadmCommands.provider
     resources:
       infrastructureMachineTemplate:
         group: infrastructure.cluster.x-k8s.io
@@ -42,6 +45,7 @@ providerIntegration:
       infrastructureMachineTemplateSpecTemplateName: cluster.internal.test.controlPlane.machineTemplate.spec
   workers:
     kubeadmConfig:
+      postKubeadmCommandsTemplateName: cluster.test.workers.kubeadm.postKubeadmCommands.provider
       preKubeadmCommandsTemplateName: cluster.test.workers.kubeadm.preKubeadmCommands.provider
     defaultNodePools:
       pool0:

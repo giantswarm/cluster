@@ -3556,8 +3556,18 @@
                                 "postKubeadmCommands": {
                                     "$ref": "#/$defs/postKubeadmCommands"
                                 },
+                                "postKubeadmCommandsTemplateName": {
+                                    "type": "string",
+                                    "title": "Post-kubeadm commands template name",
+                                    "description": "The name of the Helm template that renders additional provider-specific commands to run after kubeadm on control plane nodes. The template is rendered once for the control plane."
+                                },
                                 "preKubeadmCommands": {
                                     "$ref": "#/$defs/preKubeadmCommands"
+                                },
+                                "preKubeadmCommandsTemplateName": {
+                                    "type": "string",
+                                    "title": "Pre-kubeadm commands template name",
+                                    "description": "The name of the Helm template that renders additional provider-specific commands to run before kubeadm on control plane nodes. The template is rendered once for the control plane."
                                 },
                                 "taints": {
                                     "$ref": "#/$defs/customNodeTaints"
@@ -4044,6 +4054,11 @@
                                 },
                                 "postKubeadmCommands": {
                                     "$ref": "#/$defs/postKubeadmCommands"
+                                },
+                                "postKubeadmCommandsTemplateName": {
+                                    "type": "string",
+                                    "title": "Post-kubeadm commands template name",
+                                    "description": "The name of the Helm template that renders additional provider-specific commands to run after kubeadm on worker nodes. The template is rendered once per node pool."
                                 },
                                 "preKubeadmCommands": {
                                     "$ref": "#/$defs/preKubeadmCommands"

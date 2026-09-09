@@ -1061,8 +1061,10 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.controlPlane.kubeadmConfig.mounts[*]` | **Additional mounts** - Mounts specifies a list of mount points to be setup.|**Type:** `array`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.mounts[*][*]` |**None**|**Type:** `string`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.postKubeadmCommands` | **Post-kubeadm commands** - Extra commands to run after kubeadm runs.|**Type:** `array`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.postKubeadmCommandsTemplateName` | **Post-kubeadm commands template name** - The name of the Helm template that renders additional provider-specific commands to run after kubeadm on control plane nodes. The template is rendered once for the control plane.|**Type:** `string`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.postKubeadmCommands[*]` |**None**|**Type:** `string`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.preKubeadmCommands` | **Pre-kubeadm commands** - Extra commands to run before kubeadm runs.|**Type:** `array`<br/>|
+| `providerIntegration.controlPlane.kubeadmConfig.preKubeadmCommandsTemplateName` | **Pre-kubeadm commands template name** - The name of the Helm template that renders additional provider-specific commands to run before kubeadm on control plane nodes. The template is rendered once for the control plane.|**Type:** `string`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.preKubeadmCommands[*]` |**None**|**Type:** `string`<br/>|
 | `providerIntegration.controlPlane.kubeadmConfig.taints` | **Custom node taints**|**Type:** `array`<br/>**Default:** `[]`|
 | `providerIntegration.controlPlane.kubeadmConfig.taints[*]` |**None**|**Type:** `object`<br/>|
@@ -1348,6 +1350,7 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.additionalConfig.systemd.units[*].name` | **Name** - The name of the unit. This must be suffixed with a valid unit type (e.g. “thing.service”).|**Type:** `string`<br/>|
 | `providerIntegration.workers.kubeadmConfig.ignition.containerLinuxConfig.strict` | **Strict** - It controls if AdditionalConfig should be strictly parsed. If so, warnings are treated as errors.|**Type:** `boolean`<br/>|
 | `providerIntegration.workers.kubeadmConfig.postKubeadmCommands` | **Post-kubeadm commands** - Extra commands to run after kubeadm runs.|**Type:** `array`<br/>|
+| `providerIntegration.workers.kubeadmConfig.postKubeadmCommandsTemplateName` | **Post-kubeadm commands template name** - The name of the Helm template that renders additional provider-specific commands to run after kubeadm on worker nodes. The template is rendered once per node pool.|**Type:** `string`<br/>|
 | `providerIntegration.workers.kubeadmConfig.postKubeadmCommands[*]` |**None**|**Type:** `string`<br/>|
 | `providerIntegration.workers.kubeadmConfig.preKubeadmCommands` | **Pre-kubeadm commands** - Extra commands to run before kubeadm runs.|**Type:** `array`<br/>|
 | `providerIntegration.workers.kubeadmConfig.preKubeadmCommandsTemplateName` | **Pre-kubeadm commands template name** - The name of the Helm template that renders additional provider-specific commands to run before kubeadm on worker nodes. The template is rendered once per node pool.|**Type:** `string`<br/>|
