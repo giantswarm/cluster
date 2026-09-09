@@ -27,8 +27,8 @@
 {{- range $command := $.Values.providerIntegration.workers.kubeadmConfig.preKubeadmCommands }}
 - {{ $command }}
 {{- end }}
-{{- with $.Values.providerIntegration.workers.kubeadmConfig.preKubeadmCommandsTemplateName }}
-{{- include . $ }}
+{{- if $.Values.providerIntegration.workers.kubeadmConfig.preKubeadmCommandsTemplateName }}
+{{- include $.Values.providerIntegration.workers.kubeadmConfig.preKubeadmCommandsTemplateName $ }}
 {{- end }}
 {{- end }}
 
