@@ -115,12 +115,30 @@ internal:
           - enabled: true
             minKubernetesVersion: 1.33.0
             name: MutableCSINodeAllocatableCount
+          - enabled: true
+            minKubernetesVersion: 1.33.0
+            name: ClusterTrustBundle
+          - enabled: true
+            minKubernetesVersion: 1.33.0
+            name: ClusterTrustBundleProjection
+          - enabled: true
+            minKubernetesVersion: 1.35.0
+            name: PodCertificateRequest
       controllerManager:
         featureGates:
           - enabled: true
             maxKubernetesVersion: 1.35.0
             minKubernetesVersion: 1.27.0
             name: StatefulSetAutoDeletePVC
+          - enabled: true
+            minKubernetesVersion: 1.33.0
+            name: ClusterTrustBundle
+          - enabled: true
+            minKubernetesVersion: 1.33.0
+            name: ClusterTrustBundleProjection
+          - enabled: true
+            minKubernetesVersion: 1.35.0
+            name: PodCertificateRequest
         terminatedPodGCThreshold: 125
       etcd:
         experimental: {}
@@ -138,6 +156,15 @@ internal:
         - enabled: true
           minKubernetesVersion: 1.33.0
           name: MutableCSINodeAllocatableCount
+        - enabled: true
+          minKubernetesVersion: 1.33.0
+          name: ClusterTrustBundle
+        - enabled: true
+          minKubernetesVersion: 1.33.0
+          name: ClusterTrustBundleProjection
+        - enabled: true
+          minKubernetesVersion: 1.35.0
+          name: PodCertificateRequest
       insecure: false
       kubeReserved:
         cpu: 350m
