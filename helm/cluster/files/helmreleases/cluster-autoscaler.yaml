@@ -1,7 +1,7 @@
 appName: cluster-autoscaler
 chartName: cluster-autoscaler-app
 # repo: giantswarm/cluster-autoscaler-app
-version: 2.0.4
+version: 2.1.0
 {{- if ne $.Values.providerIntegration.provider "azure" }}
 dependsOn:
 - cilium
