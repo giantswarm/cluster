@@ -2,7 +2,7 @@ appName: coredns
 chartName: coredns-app
 configKey: coreDns
 # repo: giantswarm/coredns-app
-version: 1.32.0
+version: 1.33.0
 {{- if ne $.Values.providerIntegration.provider "aks" }}
 dependsOn:
 - cilium
