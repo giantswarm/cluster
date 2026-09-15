@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [8.3.0] - 2026-09-15
+
 ### Changed
 
 - Enable the `ClusterTrustBundle` and `ClusterTrustBundleProjection` feature gates (Kubernetes 1.33+) and the `PodCertificateRequest` feature gate (Kubernetes 1.35+) by default on kube-apiserver, kube-controller-manager and kubelet.
@@ -1056,7 +1058,8 @@ For Kubernetes <v1.29, you will need to re-enable it using the respective values
 
 - Update and clean up the template repo.
 
-[Unreleased]: https://github.com/giantswarm/cluster/compare/v8.2.0...HEAD
+[Unreleased]: https://github.com/giantswarm/cluster/compare/v8.3.0...HEAD
+[8.3.0]: https://github.com/giantswarm/cluster/compare/v8.2.0...v8.3.0
 [8.2.0]: https://github.com/giantswarm/cluster/compare/v8.1.0...v8.2.0
 [8.1.0]: https://github.com/giantswarm/cluster/compare/v8.0.0...v8.1.0
 [8.0.0]: https://github.com/giantswarm/cluster/compare/v7.0.0...v8.0.0
