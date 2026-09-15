@@ -2371,6 +2371,21 @@
                                                     "enabled": true,
                                                     "minKubernetesVersion": "1.33.0",
                                                     "name": "MutableCSINodeAllocatableCount"
+                                                },
+                                                {
+                                                    "enabled": true,
+                                                    "minKubernetesVersion": "1.33.0",
+                                                    "name": "ClusterTrustBundle"
+                                                },
+                                                {
+                                                    "enabled": true,
+                                                    "minKubernetesVersion": "1.33.0",
+                                                    "name": "ClusterTrustBundleProjection"
+                                                },
+                                                {
+                                                    "enabled": true,
+                                                    "minKubernetesVersion": "1.35.0",
+                                                    "name": "PodCertificateRequest"
                                                 }
                                             ]
                                         }
@@ -2389,6 +2404,21 @@
                                                     "maxKubernetesVersion": "1.35.0",
                                                     "minKubernetesVersion": "1.27.0",
                                                     "name": "StatefulSetAutoDeletePVC"
+                                                },
+                                                {
+                                                    "enabled": true,
+                                                    "minKubernetesVersion": "1.33.0",
+                                                    "name": "ClusterTrustBundle"
+                                                },
+                                                {
+                                                    "enabled": true,
+                                                    "minKubernetesVersion": "1.33.0",
+                                                    "name": "ClusterTrustBundleProjection"
+                                                },
+                                                {
+                                                    "enabled": true,
+                                                    "minKubernetesVersion": "1.35.0",
+                                                    "name": "PodCertificateRequest"
                                                 }
                                             ]
                                         },
@@ -2549,6 +2579,21 @@
                                             "enabled": true,
                                             "minKubernetesVersion": "1.33.0",
                                             "name": "MutableCSINodeAllocatableCount"
+                                        },
+                                        {
+                                            "enabled": true,
+                                            "minKubernetesVersion": "1.33.0",
+                                            "name": "ClusterTrustBundle"
+                                        },
+                                        {
+                                            "enabled": true,
+                                            "minKubernetesVersion": "1.33.0",
+                                            "name": "ClusterTrustBundleProjection"
+                                        },
+                                        {
+                                            "enabled": true,
+                                            "minKubernetesVersion": "1.35.0",
+                                            "name": "PodCertificateRequest"
                                         }
                                     ]
                                 },
