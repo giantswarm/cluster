@@ -89,3 +89,51 @@ ciliumNetworkPolicy:
 {{- define "cluster.test.providerIntegration.apps.certExporter.config" }}
 foo: bar
 {{- end }}
+
+{{/*
+Tolerations for the Cilium components that have to be schedulable before the CNI,
+the CCM/CPI and the provider CSI node agents are up. Without them, those
+components (which all depend on Cilium) and Cilium itself deadlock.
+See https://github.com/giantswarm/giantswarm/issues/34121
+
+The emitted list is the union of:
+
+  - Provider-independent taints that are part of the node bootstrap sequence on
+    every provider, plus `karpenter.sh/unregistered`. The latter is applied by
+    Karpenter itself as a NodePool startup taint, so it never shows up in the
+    kubeadm config taints below and has to be listed here.
+  - Every taint the provider integration puts on nodes, i.e. the union of
+    `providerIntegration.kubeadmConfig.taints` (all nodes),
+    `providerIntegration.workers.kubeadmConfig.taints` and
+    `providerIntegration.controlPlane.kubeadmConfig.taints`.
+
+Tolerating a taint that a given provider never sets is a no-op, so the union is
+safe to emit unconditionally. Tolerations are keyed with `operator: Exists` and
+no `effect`, which covers every effect the matching taint may carry.
+
+The toleration for `agentNotReadyTaintKey` (`node.cilium.io/agent-not-ready`) is
+added by the cilium chart itself and must not be repeated here.
+*/}}
+{{- define "cluster.internal.apps.cilium.tolerations" -}}
+{{- $tolerations := list
+      (dict "key" "node-role.kubernetes.io/control-plane" "operator" "Exists")
+      (dict "key" "node.kubernetes.io/not-ready" "operator" "Exists")
+      (dict "key" "node.cloudprovider.kubernetes.io/uninitialized" "operator" "Exists")
+      (dict "key" "node.cluster.x-k8s.io/uninitialized" "operator" "Exists")
+      (dict "key" "karpenter.sh/unregistered" "operator" "Exists") -}}
+{{- $seenKeys := dict -}}
+{{- range $toleration := $tolerations -}}
+{{- $_ := set $seenKeys $toleration.key true -}}
+{{- end -}}
+{{- $providerTaints := concat
+      ($.Values.providerIntegration.kubeadmConfig.taints | default list)
+      ($.Values.providerIntegration.workers.kubeadmConfig.taints | default list)
+      ($.Values.providerIntegration.controlPlane.kubeadmConfig.taints | default list) -}}
+{{- range $taint := $providerTaints -}}
+{{- if not (hasKey $seenKeys $taint.key) -}}
+{{- $_ := set $seenKeys $taint.key true -}}
+{{- $tolerations = append $tolerations (dict "key" $taint.key "operator" "Exists") -}}
+{{- end -}}
+{{- end -}}
+{{- toYaml $tolerations -}}
+{{- end -}}
