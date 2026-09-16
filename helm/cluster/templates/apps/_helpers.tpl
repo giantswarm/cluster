@@ -115,25 +115,22 @@ The toleration for `agentNotReadyTaintKey` (`node.cilium.io/agent-not-ready`) is
 added by the cilium chart itself and must not be repeated here.
 */}}
 {{- define "cluster.internal.apps.cilium.tolerations" -}}
-{{- $tolerations := list
-      (dict "key" "node-role.kubernetes.io/control-plane" "operator" "Exists")
-      (dict "key" "node.kubernetes.io/not-ready" "operator" "Exists")
-      (dict "key" "node.cloudprovider.kubernetes.io/uninitialized" "operator" "Exists")
-      (dict "key" "node.cluster.x-k8s.io/uninitialized" "operator" "Exists")
-      (dict "key" "karpenter.sh/unregistered" "operator" "Exists") -}}
-{{- $seenKeys := dict -}}
-{{- range $toleration := $tolerations -}}
-{{- $_ := set $seenKeys $toleration.key true -}}
-{{- end -}}
+{{- $keys := list
+      "node-role.kubernetes.io/control-plane"
+      "node.kubernetes.io/not-ready"
+      "node.cloudprovider.kubernetes.io/uninitialized"
+      "node.cluster.x-k8s.io/uninitialized"
+      "karpenter.sh/unregistered" -}}
 {{- $providerTaints := concat
       ($.Values.providerIntegration.kubeadmConfig.taints | default list)
       ($.Values.providerIntegration.workers.kubeadmConfig.taints | default list)
       ($.Values.providerIntegration.controlPlane.kubeadmConfig.taints | default list) -}}
 {{- range $taint := $providerTaints -}}
-{{- if not (hasKey $seenKeys $taint.key) -}}
-{{- $_ := set $seenKeys $taint.key true -}}
-{{- $tolerations = append $tolerations (dict "key" $taint.key "operator" "Exists") -}}
+{{- $keys = append $keys $taint.key -}}
 {{- end -}}
+{{- $lines := list -}}
+{{- range $key := (uniq $keys) -}}
+{{- $lines = append $lines (printf "- key: %q\n  operator: Exists" $key) -}}
 {{- end -}}
-{{- toYaml $tolerations -}}
+{{- join "\n" $lines -}}
 {{- end -}}
