@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Add the `app.kubernetes.io/component` label with the app name to the resources rendered per app, so they can be listed together.
 
+### Changed
+
+- Cilium: Replace the catch-all `- operator: Exists` toleration on the `cilium-operator`, `hubble-relay`, `hubble-ui` and `certgen` components with an explicit list, rendered by the new `cluster.internal.apps.cilium.tolerations` helper. The list covers the provider-independent bootstrap taints plus `karpenter.sh/unregistered`, and adds one toleration per taint found in `providerIntegration.kubeadmConfig.taints`, `providerIntegration.workers.kubeadmConfig.taints` and `providerIntegration.controlPlane.kubeadmConfig.taints`. These components must be schedulable before the CNI, the CCM/CPI and the provider CSI node agents are up, otherwise they deadlock ([#34121](https://github.com/giantswarm/giantswarm/issues/34121)). Note that they no longer tolerate arbitrary customer-defined `customNodeTaints`.
+
 ## [8.3.0] - 2026-09-15
 
 ### Changed
