@@ -14,13 +14,13 @@ defaultValues:
   hubble:
     relay:
       tolerations:
-      - operator: Exists
+      {{- include "cluster.internal.apps.cilium.tolerations" $ | nindent 6 }}
     ui:
       tolerations:
-      - operator: Exists
+      {{- include "cluster.internal.apps.cilium.tolerations" $ | nindent 6 }}
   certgen:
     tolerations:
-    - operator: Exists
+    {{- include "cluster.internal.apps.cilium.tolerations" $ | nindent 4 }}
   # Configured by provider.
   defaultPolicies: {}
   # Configured by provider.

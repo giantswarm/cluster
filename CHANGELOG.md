@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Add the `app.kubernetes.io/component` label with the app name to the resources rendered per app, so they can be listed together.
 
+### Changed
+
+- Cilium: Replace the catch-all `- operator: Exists` toleration on the `hubble-relay`, `hubble-ui` and `certgen` components with an explicit list.
+
 ## [8.3.0] - 2026-09-15
 
 ### Changed
