@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add the `app.kubernetes.io/component` label with the app name to the resources rendered per app, so they can be listed together.
+
 ## [8.3.0] - 2026-09-15
 
 ### Changed

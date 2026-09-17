@@ -78,6 +78,7 @@ metadata:
   {{- end }}
   labels:
     {{- include "cluster.labels.common.all" $ | nindent 4 }}
+    app.kubernetes.io/component: {{ $appName | quote }}
 spec:
   url: oci://gsoci.azurecr.io/charts/giantswarm/{{ $app.chartName | default $app.appName }}
   ref:
@@ -99,6 +100,7 @@ metadata:
   {{- end }}
   labels:
     {{- include "cluster.labels.common.all" $ | nindent 4 }}
+    app.kubernetes.io/component: {{ $appName | quote }}
 spec:
   releaseName: {{ $releaseName | trunc 53 | trimSuffix "-" }}
   {{- if $app.inCluster }}
@@ -207,6 +209,7 @@ metadata:
   namespace: {{ $.Release.Namespace }}
   labels:
     {{- include "cluster.labels.common.all" $ | nindent 4 }}
+    app.kubernetes.io/component: {{ $appName | quote }}
 data:
   values: |
     {{- (tpl ($appHelmValues | toYaml | toString) $) | nindent 4 }}
