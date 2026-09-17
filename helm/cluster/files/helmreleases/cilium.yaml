@@ -11,16 +11,19 @@ defaultValues:
     mode: kubernetes
   k8sServiceHost: auto
   kubeProxyReplacement: "true"
+  operator:
+    tolerations:
+      {{- include "cluster.internal.apps.cilium.tolerations" $ | nindent 6 }}
   hubble:
     relay:
       tolerations:
-      - operator: Exists
+        {{- include "cluster.internal.apps.cilium.tolerations" $ | nindent 8 }}
     ui:
       tolerations:
-      - operator: Exists
+        {{- include "cluster.internal.apps.cilium.tolerations" $ | nindent 8 }}
   certgen:
     tolerations:
-    - operator: Exists
+      {{- include "cluster.internal.apps.cilium.tolerations" $ | nindent 6 }}
   # Configured by provider.
   defaultPolicies: {}
   # Configured by provider.
