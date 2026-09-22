@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Add the `app.kubernetes.io/component` label with the app name to the resources rendered per app, so they can be listed together.
 
+### Changed
+
+- Update `prometheus-blackbox-exporter` to v0.10.0. This adds three internet-egress probe targets on every cluster (`egress-github`, `egress-registry`, `egress-grafana`), which the `ClusterInternetEgressUnavailable` alert matches on the `egress-` prefix, so they are alert-covered from the moment they appear. It also raises the effective probe deadline on the egress targets from 4.5s to 15s so `probe_success` reports whether an endpoint is reachable rather than whether it is fast, and points the `dns-*-internal` ServiceMonitors at the internal DNS modules they were always meant to use.
+
 ## [8.3.0] - 2026-09-15
 
 ### Changed
