@@ -89,3 +89,13 @@ ciliumNetworkPolicy:
 {{- define "cluster.test.providerIntegration.apps.certExporter.config" }}
 foo: bar
 {{- end }}
+
+{{/* Taints to tolerate for Cilium */}}
+{{- define "cluster.internal.apps.cilium.tolerations" -}}
+- key: node-role.kubernetes.io/control-plane
+  operator: Exists
+- key: node.cluster.x-k8s.io/uninitialized
+  operator: Exists
+- key: node.cloudprovider.kubernetes.io/uninitialized
+  operator: Exists
+{{- end -}}
