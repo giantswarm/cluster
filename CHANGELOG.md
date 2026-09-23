@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [8.3.1] - 2026-09-23
+
 ### Added
 
 - Add the `app.kubernetes.io/component` label with the app name to the resources rendered per app, so they can be listed together.
@@ -1066,7 +1068,8 @@ For Kubernetes <v1.29, you will need to re-enable it using the respective values
 
 - Update and clean up the template repo.
 
-[Unreleased]: https://github.com/giantswarm/cluster/compare/v8.3.0...HEAD
+[Unreleased]: https://github.com/giantswarm/cluster/compare/v8.3.1...HEAD
+[8.3.1]: https://github.com/giantswarm/cluster/compare/v8.3.0...v8.3.1
 [8.3.0]: https://github.com/giantswarm/cluster/compare/v8.2.0...v8.3.0
 [8.2.0]: https://github.com/giantswarm/cluster/compare/v8.1.0...v8.2.0
 [8.1.0]: https://github.com/giantswarm/cluster/compare/v8.0.0...v8.1.0
