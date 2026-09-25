@@ -31,10 +31,11 @@
 - rm -f /etc/audit/rules.d/80-selinux.rules
 - systemctl restart audit-rules
 # All certs in /etc/ssl/certs are symlinked to /usr/share/ca-certificates in Flatcar
-# /usr is unlabeled and read-only in Flatcar. Copy certs to /etc/ssl/certs for correct labeling
+# /usr is unlabeled and read-only in Flatcar. Replace each symlink with a copy of its
+# target for correct labeling, without deleting /etc/ssl/certs itself. Relative symlinks
+# within /usr/share/ca-certificates are copied as-is (not dereferenced).
 # Required for mounting /etc/ssl/certs into containers (e.g. kube-apiserver, cluster-autoscaler)
-- rm -rf /etc/ssl/certs
-- cp -a /usr/share/ca-certificates /etc/ssl/certs
+- cp -a --remove-destination /usr/share/ca-certificates/. /etc/ssl/certs/
 # Fix SELinux labels for everything except `/usr` (read-only in Flatcar)
 - restorecon -RFv -e /usr /
 # Change label for kube-apiserver audit log directory for access from containers
