@@ -1,6 +1,6 @@
 appName: net-exporter
 # repo: giantswarm/net-exporter
-version: 1.24.0
+version: 1.24.1
 dependsOn:
 - cilium
 - prometheus-operator-crd
