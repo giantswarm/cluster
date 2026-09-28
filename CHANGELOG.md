@@ -11,6 +11,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Add `filesTemplateName` hook under `providerIntegration.workers.kubeadmConfig`. It names a provider template that renders a YAML list of files, once per node pool, so that a provider can deploy files to selected node pools only. A node pool for which the template renders nothing keeps its `KubeadmConfig` spec, and therefore its spec hash, unchanged.
 
+### Fixed
+
+- The `helm.sh/chart` label is valid for long chart versions: the 63-character cut trims the whole trailing run of `-`, `.` and `_`.
+
+## [8.3.2] - 2026-09-25
+
+### Changed
+
+- Stop deleting and recreating `/etc/ssl/certs` on nodes for fixing SELinux labeling, so any custom certificates placed there directly are preserved.
+
 ## [8.3.1] - 2026-09-23
 
 ### Added
@@ -1072,7 +1082,8 @@ For Kubernetes <v1.29, you will need to re-enable it using the respective values
 
 - Update and clean up the template repo.
 
-[Unreleased]: https://github.com/giantswarm/cluster/compare/v8.3.1...HEAD
+[Unreleased]: https://github.com/giantswarm/cluster/compare/v8.3.2...HEAD
+[8.3.2]: https://github.com/giantswarm/cluster/compare/v8.3.1...v8.3.2
 [8.3.1]: https://github.com/giantswarm/cluster/compare/v8.3.0...v8.3.1
 [8.3.0]: https://github.com/giantswarm/cluster/compare/v8.2.0...v8.3.0
 [8.2.0]: https://github.com/giantswarm/cluster/compare/v8.1.0...v8.2.0
