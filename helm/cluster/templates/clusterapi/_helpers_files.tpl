@@ -211,8 +211,9 @@ server = "https://{{ $registry }}"
 {{- $clusterName := required "clusterName is required for cluster.internal.processFiles function call" .clusterName }}
 {{- $outFiles := list }}
 {{- range $file := .files }}
-{{- if default false (index $file "contentFrom" "secret" "prependClusterNameAsPrefix") }}
-{{- $secret := (index $file "contentFrom" "secret") }}
+{{- $contentFrom := (required (printf "File %q must have `contentFrom`" (index $file "path")) (index $file "contentFrom")) }}
+{{- $secret := (required (printf "File %q must have `contentFrom.secret`" (index $file "path")) (index $contentFrom "secret")) }}
+{{- if default false (index $secret "prependClusterNameAsPrefix") }}
 {{- $secretName := (required "Secret name must be given" (index $secret "name")) }}
 {{- $_ := set $secret "name" (printf "%s-%s" $clusterName $secretName) }}
 {{- /* `prependClusterNameAsPrefix` is our own property, so remove it to make the dictionary CAPI-compatible */}}

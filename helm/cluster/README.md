@@ -1261,6 +1261,7 @@ Provider-specific properties that can be set by cluster-$provider chart in order
 | `providerIntegration.workers.kubeadmConfig` | **Kubeadm config** - Configuration of workers nodes.|**Type:** `object`<br/>|
 | `providerIntegration.workers.kubeadmConfig.enabled` | **Enable kubeadm config** - Flag that indicates if the kubeadm config should be rendered.|**Type:** `boolean`<br/>**Default:** `true`|
 | `providerIntegration.workers.kubeadmConfig.files` | **Files** - Provider-specific files that are deployed to worker nodes. They are specified in the cluster-<provider> apps.|**Type:** `array`<br/>|
+| `providerIntegration.workers.kubeadmConfig.filesTemplateName` | **Files template name** - The name of the Helm template that renders additional provider-specific files for worker nodes. The template is rendered once per node pool, so it can emit files for specific node pools only. It must render a YAML list of file objects, each of which specifies its content via contentFrom.secret.|**Type:** `string`<br/>|
 | `providerIntegration.workers.kubeadmConfig.files[*]` | **File from secret** - It defines a file with content in a Secret|**Type:** `object`<br/>|
 | `providerIntegration.workers.kubeadmConfig.files[*].contentFrom` | **Content from** - It specifies where the file content is coming from.|**Type:** `object`<br/>|
 | `providerIntegration.workers.kubeadmConfig.files[*].contentFrom.secret` | **Secret** - Kubernetes Secret resource with the file content.|**Type:** `object`<br/>|
