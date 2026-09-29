@@ -1,7 +1,7 @@
 appName: external-dns
 chartName: external-dns-app
 # repo: giantswarm/external-dns-app
-version: 3.5.0
+version: 3.6.0
 dependsOn:
 - cilium
 - prometheus-operator-crd
