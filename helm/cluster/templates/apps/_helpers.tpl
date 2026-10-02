@@ -99,3 +99,12 @@ foo: bar
 - key: node.cloudprovider.kubernetes.io/uninitialized
   operator: Exists
 {{- end -}}
+
+{{/* Taints to tolerate for the Cilium operator */}}
+{{- define "cluster.internal.apps.cilium.operator.tolerations" -}}
+{{ include "cluster.internal.apps.cilium.tolerations" $ }}
+- key: node.kubernetes.io/not-ready
+  operator: Exists
+- key: node.cilium.io/agent-not-ready
+  operator: Exists
+{{- end -}}

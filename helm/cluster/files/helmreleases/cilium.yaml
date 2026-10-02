@@ -11,6 +11,9 @@ defaultValues:
     mode: kubernetes
   k8sServiceHost: auto
   kubeProxyReplacement: "true"
+  operator:
+    tolerations:
+    {{- include "cluster.internal.apps.cilium.operator.tolerations" $ | nindent 4 }}
   hubble:
     relay:
       tolerations:
