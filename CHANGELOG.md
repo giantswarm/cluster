@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Cilium: Replace the catch-all `- operator: Exists` toleration on `cilium-operator` with an explicit list.
+
 ## [8.4.0] - 2026-09-29
 
 ### Added
