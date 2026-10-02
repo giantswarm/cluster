@@ -105,6 +105,4 @@ foo: bar
 {{ include "cluster.internal.apps.cilium.tolerations" $ }}
 - key: node.kubernetes.io/not-ready
   operator: Exists
-- key: node.cilium.io/agent-not-ready
-  operator: Exists
 {{- end -}}
