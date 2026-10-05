@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [9.0.1] - 2026-10-05
+
 ### Changed
 
 - Cilium: Replace the catch-all `- operator: Exists` toleration on `cilium-operator` with an explicit list.
@@ -1095,7 +1097,8 @@ For Kubernetes <v1.29, you will need to re-enable it using the respective values
 
 - Update and clean up the template repo.
 
-[Unreleased]: https://github.com/giantswarm/cluster/compare/v9.0.0...HEAD
+[Unreleased]: https://github.com/giantswarm/cluster/compare/v9.0.1...HEAD
+[9.0.1]: https://github.com/giantswarm/cluster/compare/v9.0.0...v9.0.1
 [9.0.0]: https://github.com/giantswarm/cluster/compare/v8.4.0...v9.0.0
 [8.4.0]: https://github.com/giantswarm/cluster/compare/v8.3.2...v8.4.0
 [8.3.2]: https://github.com/giantswarm/cluster/compare/v8.3.1...v8.3.2
