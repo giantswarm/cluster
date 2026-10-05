@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [9.0.2] - 2026-10-05
+
 ### Changed
 
 - `kubeadm`: Exclude `/etc/.systemd-confext` from `restorecon`.
@@ -1113,7 +1115,8 @@ For Kubernetes <v1.29, you will need to re-enable it using the respective values
 
 - Update and clean up the template repo.
 
-[Unreleased]: https://github.com/giantswarm/cluster/compare/v9.0.1...HEAD
+[Unreleased]: https://github.com/giantswarm/cluster/compare/v9.0.2...HEAD
+[9.0.2]: https://github.com/giantswarm/cluster/compare/v9.0.1...v9.0.2
 [9.0.1]: https://github.com/giantswarm/cluster/compare/v9.0.0...v9.0.1
 [9.0.0]: https://github.com/giantswarm/cluster/compare/v8.4.2...v9.0.0
 [8.4.2]: https://github.com/giantswarm/cluster/compare/v8.4.1...v8.4.2
