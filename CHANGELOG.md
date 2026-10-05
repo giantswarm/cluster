@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- `kubeadm`: Exclude `/etc/.systemd-confext` from `restorecon`.
+
 ## [8.4.1] - 2026-10-05
 
 ### Changed
