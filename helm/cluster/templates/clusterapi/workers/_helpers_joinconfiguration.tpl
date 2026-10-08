@@ -25,8 +25,13 @@ nodeRegistration:
     value: 0.0.0.0
   - name: node-ip
     value: {{ printf "${%s}" $.Values.providerIntegration.environmentVariables.ipv4 }}
+  {{- /*
+    On Karpenter node pools, `karpenter.sh/do-not-sync-taints=true` stops Karpenter from copying the NodePool
+    taints and startup taints onto the Node, which races with agents removing their startup taints.
+    See https://github.com/kubernetes-sigs/karpenter/issues/1772
+  */}}
   - name: node-labels
-    value: ip={{ printf "${%s}" $.Values.providerIntegration.environmentVariables.ipv4 }},role=worker,giantswarm.io/machine-pool={{ include "cluster.resource.name" $ }}-{{ $nodePool.name }}{{- if $nodePool.config.customNodeLabels }},{{ join "," $nodePool.config.customNodeLabels }}{{- end }}
+    value: ip={{ printf "${%s}" $.Values.providerIntegration.environmentVariables.ipv4 }},role=worker,giantswarm.io/machine-pool={{ include "cluster.resource.name" $ }}-{{ $nodePool.name }}{{- if $nodePool.config.customNodeLabels }},{{ join "," $nodePool.config.customNodeLabels }}{{- end }}{{- if eq $nodePool.config.type "karpenter" }},karpenter.sh/do-not-sync-taints=true{{- end }}
   - name: v
     value: "2"
   {{- $taints := concat $.Values.providerIntegration.kubeadmConfig.taints $.Values.providerIntegration.workers.kubeadmConfig.taints (or $nodePool.config.customNodeTaints list) }}
