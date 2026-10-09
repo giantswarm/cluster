@@ -4102,6 +4102,11 @@
                                 "ignition": {
                                     "$ref": "#/$defs/ignition"
                                 },
+                                "nodeLabelsTemplateName": {
+                                    "type": "string",
+                                    "title": "Node labels template name",
+                                    "description": "The name of the Helm template that renders additional provider-specific kubelet node labels for worker nodes. The template is rendered once per node pool, so it can emit labels for specific node pools only. It must render a YAML list of strings, one key=value label per item."
+                                },
                                 "postKubeadmCommands": {
                                     "$ref": "#/$defs/postKubeadmCommands"
                                 },
@@ -4120,6 +4125,11 @@
                                 },
                                 "taints": {
                                     "$ref": "#/$defs/customNodeTaints"
+                                },
+                                "taintsTemplateName": {
+                                    "type": "string",
+                                    "title": "Taints template name",
+                                    "description": "The name of the Helm template that renders additional provider-specific taints for worker nodes. The template is rendered once per node pool, so it can emit taints for specific node pools only. It must render a YAML list of taint objects with key, effect and optional value."
                                 }
                             }
                         },
