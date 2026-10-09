@@ -7,9 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Changed
+### Added
 
-- Workers: Add the `karpenter.sh/do-not-sync-taints=true` kubelet node label to Karpenter node pools.
+- Workers: Add `nodeLabelsTemplateName` and `taintsTemplateName` hooks under `providerIntegration.workers.kubeadmConfig`. They name provider templates, rendered once per node pool, that add kubelet node labels and taints.
 
 ## [9.0.2] - 2026-10-05
 
