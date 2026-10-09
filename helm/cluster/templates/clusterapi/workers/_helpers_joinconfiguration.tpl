@@ -25,13 +25,17 @@ nodeRegistration:
     value: 0.0.0.0
   - name: node-ip
     value: {{ printf "${%s}" $.Values.providerIntegration.environmentVariables.ipv4 }}
+  {{- $labels := concat (list (printf "ip=${%s}" $.Values.providerIntegration.environmentVariables.ipv4) "role=worker" (printf "giantswarm.io/machine-pool=%s-%s" (include "cluster.resource.name" $) $nodePool.name)) (or $nodePool.config.customNodeLabels list) }}
+  {{- with $.Values.providerIntegration.workers.kubeadmConfig.nodeLabelsTemplateName }}
+    {{- $labels = concat $labels (include . $ | fromYamlArray) }}
+  {{- end }}
   - name: node-labels
-    value: ip={{ printf "${%s}" $.Values.providerIntegration.environmentVariables.ipv4 }},role=worker,giantswarm.io/machine-pool={{ include "cluster.resource.name" $ }}-{{ $nodePool.name }}{{- if $nodePool.config.customNodeLabels }},{{ join "," $nodePool.config.customNodeLabels }}{{- end }}
+    value: {{ join "," $labels }}
   - name: v
     value: "2"
   {{- $taints := concat $.Values.providerIntegration.kubeadmConfig.taints $.Values.providerIntegration.workers.kubeadmConfig.taints (or $nodePool.config.customNodeTaints list) }}
-  {{- if eq $nodePool.config.type "karpenter" }}
-    {{- $taints = append $taints (dict "key" "karpenter.sh/unregistered" "effect" "NoExecute" "value" "karpenter") }}
+  {{- with $.Values.providerIntegration.workers.kubeadmConfig.taintsTemplateName }}
+    {{- $taints = concat $taints (include . $ | fromYamlArray) }}
   {{- end }}
   {{- with $taints }}
   taints:
@@ -39,5 +43,21 @@ nodeRegistration:
   {{- end }}
 patches:
   directory: /etc/kubernetes/patches
+{{- end }}
+{{- end }}
+
+{{/* Test-only provider template, used by `ci/test-node-labels-taints-templatename-values.yaml` */}}
+{{- define "cluster.test.workers.kubeadm.nodeLabels.provider" }}
+{{- if eq $.nodePool.name "pool0" }}
+- provider-label=pool0
+{{- end }}
+{{- end }}
+
+{{/* Test-only provider template, used by `ci/test-node-labels-taints-templatename-values.yaml` */}}
+{{- define "cluster.test.workers.kubeadm.taints.provider" }}
+{{- if eq $.nodePool.name "pool0" }}
+- key: provider-taint
+  value: pool0
+  effect: NoSchedule
 {{- end }}
 {{- end }}
