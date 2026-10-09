@@ -34,9 +34,6 @@ nodeRegistration:
   - name: v
     value: "2"
   {{- $taints := concat $.Values.providerIntegration.kubeadmConfig.taints $.Values.providerIntegration.workers.kubeadmConfig.taints (or $nodePool.config.customNodeTaints list) }}
-  {{- if eq $nodePool.config.type "karpenter" }}
-    {{- $taints = append $taints (dict "key" "karpenter.sh/unregistered" "effect" "NoExecute" "value" "karpenter") }}
-  {{- end }}
   {{- with $.Values.providerIntegration.workers.kubeadmConfig.taintsTemplateName }}
     {{- $taints = concat $taints (include . $ | fromYamlArray) }}
   {{- end }}
