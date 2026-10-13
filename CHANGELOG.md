@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [9.1.0] - 2026-10-13
+
 ### Added
 
 - Workers: Add `nodeLabelsTemplateName` and `taintsTemplateName` hooks under `providerIntegration.workers.kubeadmConfig`. They name provider templates, rendered once per node pool, that add kubelet node labels and taints.
@@ -1123,7 +1125,8 @@ For Kubernetes <v1.29, you will need to re-enable it using the respective values
 
 - Update and clean up the template repo.
 
-[Unreleased]: https://github.com/giantswarm/cluster/compare/v9.0.2...HEAD
+[Unreleased]: https://github.com/giantswarm/cluster/compare/v9.1.0...HEAD
+[9.1.0]: https://github.com/giantswarm/cluster/compare/v9.0.2...v9.1.0
 [9.0.2]: https://github.com/giantswarm/cluster/compare/v9.0.1...v9.0.2
 [9.0.1]: https://github.com/giantswarm/cluster/compare/v9.0.0...v9.0.1
 [9.0.0]: https://github.com/giantswarm/cluster/compare/v8.4.2...v9.0.0
