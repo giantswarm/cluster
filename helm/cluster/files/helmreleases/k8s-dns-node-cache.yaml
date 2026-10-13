@@ -1,7 +1,7 @@
 appName: k8s-dns-node-cache
 chartName: k8s-dns-node-cache-app
 # repo: giantswarm/k8s-dns-node-cache-app
-version: 2.11.0
+version: 2.11.1
 dependsOn:
 - cilium
 - kyverno-crds
