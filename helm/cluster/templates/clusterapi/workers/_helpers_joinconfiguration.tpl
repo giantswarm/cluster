@@ -25,17 +25,19 @@ nodeRegistration:
     value: 0.0.0.0
   - name: node-ip
     value: {{ printf "${%s}" $.Values.providerIntegration.environmentVariables.ipv4 }}
-  {{- $labels := concat (list (printf "ip=${%s}" $.Values.providerIntegration.environmentVariables.ipv4) "role=worker" (printf "giantswarm.io/machine-pool=%s-%s" (include "cluster.resource.name" $) $nodePool.name)) (or $nodePool.config.customNodeLabels list) }}
-  {{- with $.Values.providerIntegration.workers.kubeadmConfig.nodeLabelsTemplateName }}
-    {{- $labels = concat $labels (include . $ | fromYamlArray) }}
+  {{- $customNodeLabels := $nodePool.config.customNodeLabels | default list }}
+  {{- $labels := concat (list (printf "ip=${%s}" $.Values.providerIntegration.environmentVariables.ipv4) "role=worker" (printf "giantswarm.io/machine-pool=%s-%s" (include "cluster.resource.name" $) $nodePool.name)) $customNodeLabels }}
+  {{- if $.Values.providerIntegration.workers.kubeadmConfig.nodeLabelsTemplateName }}
+  {{- $labels = concat $labels (include $.Values.providerIntegration.workers.kubeadmConfig.nodeLabelsTemplateName $ | fromYamlArray) }}
   {{- end }}
   - name: node-labels
     value: {{ join "," $labels }}
   - name: v
     value: "2"
-  {{- $taints := concat $.Values.providerIntegration.kubeadmConfig.taints $.Values.providerIntegration.workers.kubeadmConfig.taints (or $nodePool.config.customNodeTaints list) }}
-  {{- with $.Values.providerIntegration.workers.kubeadmConfig.taintsTemplateName }}
-    {{- $taints = concat $taints (include . $ | fromYamlArray) }}
+  {{- $customNodeTaints := $nodePool.config.customNodeTaints | default list }}
+  {{- $taints := concat $.Values.providerIntegration.kubeadmConfig.taints $.Values.providerIntegration.workers.kubeadmConfig.taints $customNodeTaints }}
+  {{- if $.Values.providerIntegration.workers.kubeadmConfig.taintsTemplateName }}
+  {{- $taints = concat $taints (include $.Values.providerIntegration.workers.kubeadmConfig.taintsTemplateName $ | fromYamlArray) }}
   {{- end }}
   {{- with $taints }}
   taints:
