@@ -25,19 +25,23 @@ nodeRegistration:
     value: 0.0.0.0
   - name: node-ip
     value: {{ printf "${%s}" $.Values.providerIntegration.environmentVariables.ipv4 }}
-  {{- $customNodeLabels := $nodePool.config.customNodeLabels | default list }}
-  {{- $labels := concat (list (printf "ip=${%s}" $.Values.providerIntegration.environmentVariables.ipv4) "role=worker" (printf "giantswarm.io/machine-pool=%s-%s" (include "cluster.resource.name" $) $nodePool.name)) $customNodeLabels }}
+  {{- $labels := list (printf "ip=${%s}" $.Values.providerIntegration.environmentVariables.ipv4) "role=worker" (printf "giantswarm.io/machine-pool=%s-%s" (include "cluster.resource.name" $) $nodePool.name) }}
   {{- if $.Values.providerIntegration.workers.kubeadmConfig.nodeLabelsTemplateName }}
   {{- $labels = concat $labels (include $.Values.providerIntegration.workers.kubeadmConfig.nodeLabelsTemplateName $ | fromYamlArray) }}
+  {{- end }}
+  {{- if $nodePool.config.customNodeLabels }}
+  {{- $labels = concat $labels $nodePool.config.customNodeLabels }}
   {{- end }}
   - name: node-labels
     value: {{ join "," $labels }}
   - name: v
     value: "2"
-  {{- $customNodeTaints := $nodePool.config.customNodeTaints | default list }}
-  {{- $taints := concat $.Values.providerIntegration.kubeadmConfig.taints $.Values.providerIntegration.workers.kubeadmConfig.taints $customNodeTaints }}
+  {{- $taints := concat $.Values.providerIntegration.kubeadmConfig.taints $.Values.providerIntegration.workers.kubeadmConfig.taints }}
   {{- if $.Values.providerIntegration.workers.kubeadmConfig.taintsTemplateName }}
   {{- $taints = concat $taints (include $.Values.providerIntegration.workers.kubeadmConfig.taintsTemplateName $ | fromYamlArray) }}
+  {{- end }}
+  {{- if $nodePool.config.customNodeTaints }}
+  {{- $taints = concat $taints $nodePool.config.customNodeTaints }}
   {{- end }}
   {{- with $taints }}
   taints:
