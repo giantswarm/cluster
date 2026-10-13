@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Workers: Add `nodeLabelsTemplateName` and `taintsTemplateName` hooks under `providerIntegration.workers.kubeadmConfig`. They name provider templates, rendered once per node pool, that add kubelet node labels and taints.
+
+### Removed
+
+- Workers: Remove the `karpenter.sh/unregistered:NoExecute` taint from Karpenter node pools. Provider charts must add it via `taintsTemplateName`.
+
 ## [9.0.2] - 2026-10-05
 
 ### Changed
