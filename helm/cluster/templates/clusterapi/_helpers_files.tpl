@@ -14,10 +14,10 @@
 {{- end }}
 
 {{- define "cluster.internal.kubeadm.files.sysctl" }}
-- path: /etc/sysctl.d/hardening.conf
+- path: /etc/sysctl.d/00-hardening.conf
   permissions: "0644"
   encoding: base64
-  content: {{ $.Files.Get "files/etc/sysctl.d/hardening.conf" | b64enc }}
+  content: {{ $.Files.Get "files/etc/sysctl.d/00-hardening.conf" | b64enc }}
 {{- end }}
 
 {{- define "cluster.internal.kubeadm.files.selinux" }}
