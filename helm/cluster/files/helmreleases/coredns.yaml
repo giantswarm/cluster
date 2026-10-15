@@ -3,10 +3,8 @@ chartName: coredns-app
 configKey: coreDns
 # repo: giantswarm/coredns-app
 version: 1.34.0
-{{- if ne $.Values.providerIntegration.provider "aks" }}
 dependsOn:
 - cilium
-{{- end }}
 
 namespace: kube-system
 defaultValues:

@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Apps: Add `global.connectivity.cni.managed` (default `true`). When `false`, cilium isn't rendered and is dropped from the dependencies of every app.
+
+### Removed
+
+- Apps: Remove the static `aks` exceptions for the cilium dependency of network-policies and coredns.
+
 ## [9.1.0] - 2026-10-13
 
 ### Added

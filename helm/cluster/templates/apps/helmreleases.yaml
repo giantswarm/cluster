@@ -59,6 +59,8 @@ to avoid naming conflicts in case of multiple clusters deployed in the same name
 {{- $shouldRenderApp = and $shouldRenderApp $providerIntegrationAppConfig.enable }}
 {{- /* Releases */}}
 {{- $shouldRenderApp = and $shouldRenderApp (or (not $.Values.providerIntegration.useReleases) (include "cluster.app.in-release" $ | eq "true")) }}
+{{- /* CNI */}}
+{{- $shouldRenderApp = and $shouldRenderApp (or (ne $appName "cilium") $.Values.global.connectivity.cni.managed) }}
 
 {{- if $shouldRenderApp }}
 {{- $appVersion := $app.version -}}
@@ -118,6 +120,9 @@ spec:
   {{- $dependencies = include "cluster.app.dependencies" $ | fromYamlArray }}
   {{- else if $app.dependsOn }}
   {{- $dependencies = $app.dependsOn }}
+  {{- end }}
+  {{- if not $.Values.global.connectivity.cni.managed }}
+  {{- $dependencies = without $dependencies "cilium" }}
   {{- end }}
   {{- if $dependencies }}
   dependsOn:
