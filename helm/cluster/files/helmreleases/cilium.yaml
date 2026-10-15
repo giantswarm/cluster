@@ -2,7 +2,7 @@ appName: cilium
 # repo: giantswarm/cilium-app
 version: 1.6.1
 
-disable: {{ not .Values.global.connectivity.cni.managed }}
+disable: {{ not $.Values.global.connectivity.cni.managed }}
 timeout: 1h
 remediationRetries: 0
 
