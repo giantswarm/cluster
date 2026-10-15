@@ -119,6 +119,9 @@ spec:
   {{- else if $app.dependsOn }}
   {{- $dependencies = $app.dependsOn }}
   {{- end }}
+  {{- /* TODO: Replace this static Cilium special case with a generic check that drops dependencies on apps this
+         chart knows but doesn't render. Dependencies this chart doesn't know (e.g. apps installed by the provider
+         chart) must be kept. */}}
   {{- if not $.Values.global.connectivity.cni.managed }}
   {{- $dependencies = without $dependencies "cilium" }}
   {{- end }}
