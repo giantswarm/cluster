@@ -183,16 +183,18 @@
 {{- end }}
 
 {{- define "cluster.internal.kubeadm.ignition.containerLinuxConfig.additionalConfig.systemd.units.os" }}
-- name: os-hardening.service
+- name: demote-core-user.service
   enabled: true
   contents: |
     [Unit]
-    Description=Apply os hardening
+    Description=Remove core user privileges
+
     [Service]
     Type=oneshot
-    ExecStartPre=-/bin/bash -c "gpasswd -d core rkt; gpasswd -d core docker; gpasswd -d core wheel"
-    ExecStartPre=/bin/bash -c "until [ -f '/etc/sysctl.d/hardening.conf' ]; do echo Waiting for sysctl file; sleep 1s;done;"
-    ExecStart=/usr/sbin/sysctl -p /etc/sysctl.d/hardening.conf
+    ExecStart=-/usr/bin/gpasswd -d core docker
+    ExecStart=-/usr/bin/gpasswd -d core wheel
+    RemainAfterExit=yes
+
     [Install]
     WantedBy=multi-user.target
 {{- /*
