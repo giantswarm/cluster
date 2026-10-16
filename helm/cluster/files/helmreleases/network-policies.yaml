@@ -1,10 +1,8 @@
 appName: network-policies
 # repo: giantswarm/network-policies-app
 version: 0.3.2
-{{- if ne $.Values.providerIntegration.provider "aks" }}
 dependsOn:
 - cilium
-{{- end }}
 
 disable: {{ .Values.global.connectivity.network.allowAllEgress }}
 interval: 1m

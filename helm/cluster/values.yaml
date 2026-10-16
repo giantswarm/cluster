@@ -66,6 +66,8 @@ global:
     bastion:
       enabled: true
       replicas: 1
+    cni:
+      managed: true
     network:
       allowAllEgress: false
       pods:
