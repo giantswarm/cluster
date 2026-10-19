@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [9.2.0] - 2026-10-19
+
 ### Added
 
 - Apps: Add `global.connectivity.cni.managed` (default `true`). When `false`, Cilium isn't rendered and is dropped from the dependencies of every app.
@@ -1133,7 +1135,8 @@ For Kubernetes <v1.29, you will need to re-enable it using the respective values
 
 - Update and clean up the template repo.
 
-[Unreleased]: https://github.com/giantswarm/cluster/compare/v9.1.0...HEAD
+[Unreleased]: https://github.com/giantswarm/cluster/compare/v9.2.0...HEAD
+[9.2.0]: https://github.com/giantswarm/cluster/compare/v9.1.0...v9.2.0
 [9.1.0]: https://github.com/giantswarm/cluster/compare/v9.0.2...v9.1.0
 [9.0.2]: https://github.com/giantswarm/cluster/compare/v9.0.1...v9.0.2
 [9.0.1]: https://github.com/giantswarm/cluster/compare/v9.0.0...v9.0.1
