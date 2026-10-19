@@ -1,6 +1,6 @@
 appName: network-policies
 # repo: giantswarm/network-policies-app
-version: 0.3.2
+version: 0.4.0
 dependsOn:
 - cilium
 
