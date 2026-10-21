@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Ignition: Rename `/etc/sysctl.d/hardening.conf` to `80-hardening.conf` so it sorts after Flatcar's `65-baselayout.conf` but before Image Builder's `99-sysctl.conf` and Cilium's `99-zzz-override_cilium.conf`. Previously the unprefixed file sorted last and overrode both. As a result, nodes now run with `fs.inotify.max_user_watches = 524288` (previously `16384`) and `net.ipv4.conf.all.rp_filter = 0` (previously `1`).
+- Ignition: Clean up sysctl hardening. Drop keys already set by Image Builder or Cilium (`fs.inotify.max_user_watches`, `fs.inotify.max_user_instances`, `net.ipv4.conf.all.rp_filter`, `vm.overcommit_memory`, `kernel.panic`, `kernel.panic_on_oops`). Stop disabling `net.ipv4.tcp_timestamps`, since modern kernels randomize timestamp offsets.
+
+### Removed
+
+- Ignition: Remove `os-hardening.service`. Its `sysctl -p` duplicated what `systemd-sysctl` already applies at boot. Its `gpasswd` calls had no effect: glibc merges group memberships from `/usr/share/baselayout/group` (via `nss-usrfiles`) regardless of `/etc/group`.
+
 ## [8.4.2] - 2026-10-05
 
 ### Changed
