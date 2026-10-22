@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [9.3.0] - 2026-10-22
+
 ### Added
 
 - Ignition: Expose `sysctl` and `sysfs` configuration per node pool via `kernel.sysctls` (`/etc/sysctl.d/90-node-pool.conf`) and `kernel.sysfs` (`/etc/tmpfiles.d/00-node-pool.conf`). The parameters required by kubelet's `protectKernelDefaults` cannot be set by name, and the Image Builder and Cilium sysctl configuration keeps precedence.
@@ -1148,7 +1150,8 @@ For Kubernetes <v1.29, you will need to re-enable it using the respective values
 
 - Update and clean up the template repo.
 
-[Unreleased]: https://github.com/giantswarm/cluster/compare/v9.2.0...HEAD
+[Unreleased]: https://github.com/giantswarm/cluster/compare/v9.3.0...HEAD
+[9.3.0]: https://github.com/giantswarm/cluster/compare/v9.2.0...v9.3.0
 [9.2.0]: https://github.com/giantswarm/cluster/compare/v9.1.0...v9.2.0
 [9.1.0]: https://github.com/giantswarm/cluster/compare/v9.0.2...v9.1.0
 [9.0.2]: https://github.com/giantswarm/cluster/compare/v9.0.1...v9.0.2
