@@ -185,7 +185,7 @@ spec:
          default+provider+user values are delivered through the user-config slot as a
          ConfigMap (not inline `spec.values`, which Flux always merges last and which no
          valuesFrom entry could override). */}}
-  {{- $extraConfigs := concat ($app.extraConfigs | default list) ($userConfig.extraConfigs | default list) }}
+  {{- $extraConfigs := concat ($app.extraConfigs | default list) ($providerIntegrationAppConfig.extraConfigs | default list) ($userConfig.extraConfigs | default list) }}
   {{- $userValuesConfigMap := "" }}
   {{- if $appHelmValues }}
   {{- $userValuesConfigMap = printf "%s-%s-user-values" (include "cluster.resource.name" $) $appName }}
