@@ -2,6 +2,7 @@
 {{- include "cluster.internal.kubeadm.files" $ }}
 {{- include "cluster.internal.workers.kubeadm.files.provider" $ }}
 {{- include "cluster.internal.workers.kubeadm.files.custom" $ }}
+{{- include "cluster.internal.workers.kubeadm.files.kernel" $ }}
 {{- include "cluster.internal.workers.kubeadm.files.cloudConfig" $ }}
 {{- end }}
 
@@ -22,6 +23,29 @@
 {{- define "cluster.internal.workers.kubeadm.files.custom" }}
 {{- if $.Values.internal.advancedConfiguration.workers.files }}
 {{ include "cluster.internal.processFiles" (dict "files" $.Values.internal.advancedConfiguration.workers.files "clusterName" (include "cluster.resource.name" $)) }}
+{{- end }}
+{{- end }}
+
+{{/* Node pool kernel configuration files for worker nodes */}}
+{{- define "cluster.internal.workers.kubeadm.files.kernel" }}
+{{- with $.nodePool.config.kernel }}
+{{- if .sysctls }}
+- path: /etc/sysctl.d/90-node-pool.conf
+  permissions: "0644"
+  content: |
+    {{- range $key, $value := .sysctls }}
+    {{ $key }} = {{ if kindIs "float64" $value }}{{ $value | int64 }}{{ else }}{{ $value }}{{ end }}
+    {{- end }}
+{{- end }}
+{{- if .sysfs }}
+{{- /* tmpfiles.d interprets backslash escapes and % specifiers in the argument field. */}}
+- path: /etc/tmpfiles.d/00-node-pool.conf
+  permissions: "0644"
+  content: |
+    {{- range $path, $value := .sysfs }}
+    w {{ $path }} - - - - {{ if kindIs "float64" $value }}{{ $value | int64 }}{{ else }}{{ $value | toString | replace "\\" "\\\\" | replace "%" "%%" }}{{ end }}
+    {{- end }}
+{{- end }}
 {{- end }}
 {{- end }}
 
