@@ -107,6 +107,40 @@
             },
             "default": []
         },
+        "extraConfig": {
+            "type": "object",
+            "title": "Config map or secret",
+            "properties": {
+                "kind": {
+                    "type": "string",
+                    "title": "Kind",
+                    "description": "Specifies whether the resource is a config map or a secret.",
+                    "enum": [
+                        "configMap",
+                        "ConfigMap",
+                        "secret",
+                        "Secret"
+                    ]
+                },
+                "name": {
+                    "type": "string",
+                    "title": "Name",
+                    "description": "Name of the config map or secret. The object must exist in the same namespace as the cluster App."
+                },
+                "optional": {
+                    "type": "boolean",
+                    "title": "Optional",
+                    "description": "Optional marks this ValuesReference as optional. When set, a not found error for the values reference is ignored, but any ValuesKey, TargetPath or transient error will still result in a reconciliation failure."
+                },
+                "priority": {
+                    "type": "integer",
+                    "title": "Priority",
+                    "default": 25,
+                    "max": 150,
+                    "min": 1
+                }
+            }
+        },
         "featureGates": {
             "type": "array",
             "title": "Feature gates",
@@ -311,38 +345,7 @@
                     "title": "Extra config maps or secrets",
                     "description": "Extra config maps or secrets that will be used to customize to the app. The desired values must be under configmap or secret key 'values'. The values are merged in the order given, with the later values overwriting earlier, and then inline values overwriting those. Resources must be in the same namespace as the cluster.",
                     "items": {
-                        "type": "object",
-                        "title": "Config map or secret",
-                        "properties": {
-                            "kind": {
-                                "type": "string",
-                                "title": "Kind",
-                                "description": "Specifies whether the resource is a config map or a secret.",
-                                "enum": [
-                                    "configMap",
-                                    "ConfigMap",
-                                    "secret",
-                                    "Secret"
-                                ]
-                            },
-                            "name": {
-                                "type": "string",
-                                "title": "Name",
-                                "description": "Name of the config map or secret. The object must exist in the same namespace as the cluster App."
-                            },
-                            "optional": {
-                                "type": "boolean",
-                                "title": "Optional",
-                                "description": "Optional marks this ValuesReference as optional. When set, a not found error for the values reference is ignored, but any ValuesKey, TargetPath or transient error will still result in a reconciliation failure."
-                            },
-                            "priority": {
-                                "type": "integer",
-                                "title": "Priority",
-                                "default": 25,
-                                "max": 150,
-                                "min": 1
-                            }
-                        }
+                        "$ref": "#/$defs/extraConfig"
                     }
                 },
                 "values": {
@@ -1026,38 +1029,7 @@
                     "title": "Extra config maps or secrets",
                     "description": "Provider-specific extra config maps or secrets for the app. They are ordered by priority like the user's extraConfigs, and come before them at equal priority. Names are rendered as templates, so they can reference the cluster name. The desired values must be under configmap or secret key 'values'. Resources must be in the same namespace as the cluster.",
                     "items": {
-                        "type": "object",
-                        "title": "Config map or secret",
-                        "properties": {
-                            "kind": {
-                                "type": "string",
-                                "title": "Kind",
-                                "description": "Specifies whether the resource is a config map or a secret.",
-                                "enum": [
-                                    "configMap",
-                                    "ConfigMap",
-                                    "secret",
-                                    "Secret"
-                                ]
-                            },
-                            "name": {
-                                "type": "string",
-                                "title": "Name",
-                                "description": "Name of the config map or secret. The object must exist in the same namespace as the cluster App."
-                            },
-                            "optional": {
-                                "type": "boolean",
-                                "title": "Optional",
-                                "description": "Optional marks this ValuesReference as optional. When set, a not found error for the values reference is ignored, but any ValuesKey, TargetPath or transient error will still result in a reconciliation failure."
-                            },
-                            "priority": {
-                                "type": "integer",
-                                "title": "Priority",
-                                "default": 25,
-                                "max": 150,
-                                "min": 1
-                            }
-                        }
+                        "$ref": "#/$defs/extraConfig"
                     }
                 }
             }
