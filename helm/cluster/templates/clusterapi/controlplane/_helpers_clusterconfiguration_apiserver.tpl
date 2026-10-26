@@ -37,6 +37,10 @@ extraArgs:
 {{- end }}
 - name: enable-admission-plugins
   value: {{ include "cluster.internal.controlPlane.kubeadm.clusterConfiguration.apiServer.enableAdmissionPlugins" $ }}
+{{- if $.Values.internal.advancedConfiguration.controlPlane.apiServer.enableAggregatorRouting }}
+- name: enable-aggregator-routing
+  value: "true"
+{{- end }}
 {{- if $.Values.internal.advancedConfiguration.controlPlane.apiServer.enablePriorityAndFairness }}
 - name: enable-priority-and-fairness
   value: "true"
