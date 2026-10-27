@@ -2435,6 +2435,12 @@
                                             "maximum": 65535,
                                             "minimum": 0
                                         },
+                                        "enableAggregatorRouting": {
+                                            "type": "boolean",
+                                            "title": "Enable aggregator routing",
+                                            "description": "If true, the API server routes requests to webhooks and aggregated API servers directly to endpoint IPs instead of the Service ClusterIP.",
+                                            "default": false
+                                        },
                                         "enablePriorityAndFairness": {
                                             "type": "boolean",
                                             "title": "Enable priority and fairness",
