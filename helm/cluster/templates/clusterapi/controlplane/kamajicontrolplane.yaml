@@ -59,8 +59,10 @@ spec:
   scheduler:
     extraArgs:
       {{- include "cluster.internal.controlPlane.kamaji.scheduler.hardeningArgs" $ | indent 6 }}
+      {{- if .extraArgs }}
       {{- range .extraArgs }}
       - {{ . }}
+      {{- end }}
       {{- end }}
     {{- if and .resources (or .resources.limits .resources.requests) }}
     {{- with .resources }}
