@@ -10,11 +10,11 @@ namespace: kube-system
 defaultValues:
   ciliumNetworkPolicy:
     enabled: true
-  DNSCheck:
-    TCP:
-      Disabled: false
-  Hosts: giantswarm.io.,kubernetes.default.svc.cluster.local.
   NetExporter:
+    DNSCheck:
+      TCP:
+        Disabled: false
+    Hosts: giantswarm.io.,kubernetes.default.svc.cluster.local.
     {{- if ($.Values.providerIntegration.components.systemd).timesyncd }}
     NTPServers: {{ join "," (compact $.Values.providerIntegration.components.systemd.timesyncd.ntp) }}
     {{- else }}
