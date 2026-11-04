@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [9.5.0] - 2026-11-04
+
 ### Added
 
 - Control Plane: Add `internal.advancedConfiguration.controlPlane.apiServer.enableAggregatorRouting` to set `--enable-aggregator-routing` on KubeadmControlPlane (disabled by default).
@@ -1165,7 +1167,8 @@ For Kubernetes <v1.29, you will need to re-enable it using the respective values
 
 - Update and clean up the template repo.
 
-[Unreleased]: https://github.com/giantswarm/cluster/compare/v9.4.0...HEAD
+[Unreleased]: https://github.com/giantswarm/cluster/compare/v9.5.0...HEAD
+[9.5.0]: https://github.com/giantswarm/cluster/compare/v9.4.0...v9.5.0
 [9.4.0]: https://github.com/giantswarm/cluster/compare/v9.3.0...v9.4.0
 [9.3.0]: https://github.com/giantswarm/cluster/compare/v9.2.0...v9.3.0
 [9.2.0]: https://github.com/giantswarm/cluster/compare/v9.1.0...v9.2.0
