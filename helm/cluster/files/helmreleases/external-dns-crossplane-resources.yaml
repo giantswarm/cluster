@@ -1,6 +1,6 @@
 appName: external-dns-crossplane-resources
 # repo: giantswarm/external-dns-crossplane-resources
-version: 0.4.0
+version: 0.5.0
 
 inCluster: true
 
