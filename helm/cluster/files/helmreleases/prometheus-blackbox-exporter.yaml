@@ -4,6 +4,8 @@ version: 0.10.0
 dependsOn:
 - prometheus-operator-crd
 - vertical-pod-autoscaler-crd
+
+# DaemonSet rollouts exceed the default 5m timeout on large clusters.
 timeout: 30m
 
 namespace: kube-system
