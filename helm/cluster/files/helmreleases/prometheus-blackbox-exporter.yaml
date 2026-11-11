@@ -4,5 +4,6 @@ version: 0.10.0
 dependsOn:
 - prometheus-operator-crd
 - vertical-pod-autoscaler-crd
+timeout: 30m
 
 namespace: kube-system

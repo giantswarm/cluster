@@ -5,6 +5,7 @@ dependsOn:
 - cilium
 - prometheus-operator-crd
 - vertical-pod-autoscaler-crd
+timeout: 30m
 
 namespace: kube-system
 defaultValues:
