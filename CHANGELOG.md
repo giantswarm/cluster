@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Apps: Increase the HelmRelease timeout of cert-exporter, net-exporter, node-exporter and prometheus-blackbox-exporter from `5m` to `30m`, so their DaemonSet rollouts can complete on large workload clusters without Flux rolling the release back.
+
 ## [9.5.0] - 2026-11-04
 
 ### Added
