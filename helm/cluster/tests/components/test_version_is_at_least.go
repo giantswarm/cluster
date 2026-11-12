@@ -29,6 +29,11 @@ var _ = Describe("cluster.app.version.isAtLeast", func() {
 			"0.4.0":                                  false,
 			"0.4.9":                                  false,
 			"0.4.1-rb05cafcft20261006003606h0caf7a0": false,
+			"v100.0.0-dev.8234y65dh92783":            true,
+			"v0.4.0":                                 false,
+			"latest":                                 false,
+			"4c02ffe":                                false,
+			"1.2":                                    false,
 		}
 
 		// Render the internal helper through a test-only template in a copy of the chart, as
@@ -68,5 +73,19 @@ var _ = Describe("cluster.app.version.isAtLeast", func() {
 		values := yq.Run(manifests, `select(.kind=="ConfigMap" and .metadata.name=="awesome-cert-manager-user-values") | .data.values`)
 		Expect(yq.Run(values, `.cert-manager.dns01RecursiveNameserversOnly`)).To(Equal("true\n"))
 		Expect(yq.Run(values, `has("dns01RecursiveNameserversOnly")`)).To(Equal("false\n"))
+	})
+
+	It("compares the ephemeral versionOverride instead of the Release version", func() {
+		manifests := helm.Template(
+			helm.GetClusterChartDir(),
+			"ci-values.yaml",
+			"org-giantswarm",
+			"awesome",
+			"--set", "internal.ephemeralConfiguration.apps.certManager.versionOverride=3.9.0",
+		)
+
+		values := yq.Run(manifests, `select(.kind=="ConfigMap" and .metadata.name=="awesome-cert-manager-user-values") | .data.values`)
+		Expect(yq.Run(values, `.dns01RecursiveNameserversOnly`)).To(Equal("true\n"))
+		Expect(yq.Run(values, `has("cert-manager")`)).To(Equal("false\n"))
 	})
 })

@@ -288,9 +288,11 @@ Where `data` is the data to hash and `global` is the top level scope.
 {{- end }}
 
 {{/*
-  cluster.app.version.isAtLeast is a public named helper template that returns "true" when the version of the app
-  'appName' in the Release is 'version' (X.Y.Z) or newer, including its release candidates and dev builds. It also
-  returns "true" when Releases are not used or the app version is unknown, so new values are the default.
+  cluster.app.version.isAtLeast is a public named helper template that returns "true" when the deployed version of the
+  app 'appName' is 'version' (X.Y.Z) or newer, including its release candidates and dev builds. The deployed version
+  is the ephemeral versionOverride if set, else the version in the Release. It also returns "true" when the version
+  is unknown, so new values are the default, and nothing when the version is not semver, so a bad override does not
+  break the render. Pass 'appKey' when the app sets a custom configKey.
 
   Example usage in template:
 
@@ -299,8 +301,13 @@ Where `data` is the data to hash and `global` is the top level scope.
     {{- end }}
 */}}
 {{- define "cluster.app.version.isAtLeast" -}}
+{{- $appKey := .appKey | default (.appName | replace "-" "_" | camelcase | untitle) -}}
+{{- $ephemeralApps := (((.root.Values.internal).ephemeralConfiguration).apps) | default dict -}}
+{{- $override := ((get $ephemeralApps $appKey) | default dict).versionOverride -}}
 {{- $appVersion := "N/A" -}}
-{{- if .root.Values.providerIntegration.useReleases -}}
+{{- if $override -}}
+{{- $appVersion = $override -}}
+{{- else if .root.Values.providerIntegration.useReleases -}}
 {{- $appVersion = include "cluster.app.version" (merge (dict "appName" .appName) .root) | trim -}}
 {{- end -}}
 {{- include "cluster.internal.version.isAtLeast" (dict "version" $appVersion "minVersion" .version) -}}
@@ -309,11 +316,16 @@ Where `data` is the data to hash and `global` is the top level scope.
 {{/*
   cluster.internal.version.isAtLeast returns "true" when 'version' is 'minVersion' (X.Y.Z) or newer, or "N/A".
   The "-0" suffix makes the range include pre-release versions: release candidates (X.Y.Z-rc.N) and dev builds
-  (X.Y.Z-<build>), which semverCompare leaves out of a range without a pre-release.
+  (X.Y.Z-<build>), which semverCompare leaves out of a range without a pre-release. A version that is not semver
+  returns nothing, as semverCompare would fail the render.
 */}}
 {{- define "cluster.internal.version.isAtLeast" -}}
-{{- if or (eq .version "N/A") (semverCompare (printf ">=%s-0" .minVersion) .version) -}}
+{{- if eq .version "N/A" -}}
 true
+{{- else if regexMatch "^v?[0-9]+\\.[0-9]+\\.[0-9]+(-[0-9A-Za-z.-]+)?(\\+[0-9A-Za-z.-]+)?$" .version -}}
+{{- if semverCompare (printf ">=%s-0" .minVersion) .version -}}
+true
+{{- end -}}
 {{- end -}}
 {{- end -}}
 
