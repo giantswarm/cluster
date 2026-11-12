@@ -10,14 +10,8 @@ dependsOn:
 
 namespace: kube-system
 defaultValues:
-  {{- /* Get cert-manager version. */}}
-  {{- $version := "N/A" }}
-  {{- if .Values.providerIntegration.useReleases }}
-  {{- $_ := set $ "appName" "cert-manager" }}
-  {{- $version = include "cluster.app.version" $ | trim }}
-  {{- end }}
-  {{- /* Check cert-manager version. Since v4.0.0, upstream properties need to be under the `cert-manager` key. */}}
-  {{- if or (eq $version "N/A") (semverCompare ">=4.0.0" $version) }}
+  {{- /* Since v4.0.0, upstream properties need to be under the `cert-manager` key. */}}
+  {{- if include "cluster.app.version.isAtLeast" (dict "root" $ "appName" "cert-manager" "version" "4.0.0") }}
   cert-manager:
     # Authoritative nameservers aren't reachable in private clusters, use the resolver instead.
     dns01RecursiveNameserversOnly: true

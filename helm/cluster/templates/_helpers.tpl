@@ -288,6 +288,36 @@ Where `data` is the data to hash and `global` is the top level scope.
 {{- end }}
 
 {{/*
+  cluster.app.version.isAtLeast is a public named helper template that returns "true" when the version of the app
+  'appName' in the Release is 'version' (X.Y.Z) or newer, including its release candidates and dev builds. It also
+  returns "true" when Releases are not used or the app version is unknown, so new values are the default.
+
+  Example usage in template:
+
+    {{- if include "cluster.app.version.isAtLeast" (dict "root" $ "appName" "foo-bar-controller" "version" "1.2.0") }}
+    {{!-- Values supported since v1.2.0... --}}
+    {{- end }}
+*/}}
+{{- define "cluster.app.version.isAtLeast" -}}
+{{- $appVersion := "N/A" -}}
+{{- if .root.Values.providerIntegration.useReleases -}}
+{{- $appVersion = include "cluster.app.version" (merge (dict "appName" .appName) .root) | trim -}}
+{{- end -}}
+{{- include "cluster.internal.version.isAtLeast" (dict "version" $appVersion "minVersion" .version) -}}
+{{- end -}}
+
+{{/*
+  cluster.internal.version.isAtLeast returns "true" when 'version' is 'minVersion' (X.Y.Z) or newer, or "N/A".
+  The "-0" suffix makes the range include pre-release versions: release candidates (X.Y.Z-rc.N) and dev builds
+  (X.Y.Z-<build>), which semverCompare leaves out of a range without a pre-release.
+*/}}
+{{- define "cluster.internal.version.isAtLeast" -}}
+{{- if or (eq .version "N/A") (semverCompare (printf ">=%s-0" .minVersion) .version) -}}
+true
+{{- end -}}
+{{- end -}}
+
+{{/*
   cluster.app.in-release is a public named helper template that checks if the app that is specified under
   property 'appName' in the object that is passed to the template exists in the Release.
 
