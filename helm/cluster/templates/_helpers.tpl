@@ -288,19 +288,23 @@ Where `data` is the data to hash and `global` is the top level scope.
 {{- end }}
 
 {{/*
-  cluster.app.version.isAtLeast is a public named helper template that returns "true" when the deployed version of the
-  app 'appName' is 'version' (X.Y.Z) or newer, including its release candidates and dev builds. The deployed version
-  is the ephemeral versionOverride if set, else the version in the Release. It also returns "true" when the version
-  is unknown, so new values are the default, and nothing when the version is not semver, so a bad override does not
-  break the render. Pass 'appKey' when the app sets a custom configKey.
+  cluster.app.version.satisfies is a public named helper template that returns "true" when the deployed version of
+  the app 'appName' satisfies the semver 'constraint', and "false" otherwise. The deployed version is the ephemeral
+  versionOverride if set, else the version in the Release. Release candidates and dev builds (X.Y.Z-<pre-release>)
+  are compared as X.Y.Z, so they get the values of the version they build towards.
+
+  An unknown version (no Release, or the app is not in it) returns "true", so write the constraint for the versions
+  that get the new values. A version that is not semver returns "false" instead of failing the render.
+
+  Pass 'appKey' when the app sets a custom configKey.
 
   Example usage in template:
 
-    {{- if include "cluster.app.version.isAtLeast" (dict "root" $ "appName" "foo-bar-controller" "version" "1.2.0") }}
+    {{- if eq (include "cluster.app.version.satisfies" (dict "root" $ "appName" "foo-bar-controller" "constraint" ">=1.2.0")) "true" }}
     {{!-- Values supported since v1.2.0... --}}
     {{- end }}
 */}}
-{{- define "cluster.app.version.isAtLeast" -}}
+{{- define "cluster.app.version.satisfies" -}}
 {{- $appKey := .appKey | default (.appName | replace "-" "_" | camelcase | untitle) -}}
 {{- $ephemeralApps := (((.root.Values.internal).ephemeralConfiguration).apps) | default dict -}}
 {{- $override := ((get $ephemeralApps $appKey) | default dict).versionOverride -}}
@@ -310,23 +314,23 @@ Where `data` is the data to hash and `global` is the top level scope.
 {{- else if .root.Values.providerIntegration.useReleases -}}
 {{- $appVersion = include "cluster.app.version" (merge (dict "appName" .appName) .root) | trim -}}
 {{- end -}}
-{{- include "cluster.internal.version.isAtLeast" (dict "version" $appVersion "minVersion" .version) -}}
+{{- include "cluster.internal.version.satisfies" (dict "version" $appVersion "constraint" .constraint) -}}
 {{- end -}}
 
 {{/*
-  cluster.internal.version.isAtLeast returns "true" when 'version' is 'minVersion' (X.Y.Z) or newer, or "N/A".
-  The "-0" suffix makes the range include pre-release versions: release candidates (X.Y.Z-rc.N) and dev builds
-  (X.Y.Z-<build>), which semverCompare leaves out of a range without a pre-release. A version that is not semver
-  returns nothing, as semverCompare would fail the render.
+  cluster.internal.version.satisfies returns "true" when 'version' satisfies 'constraint' or is "N/A", and "false"
+  otherwise. The pre-release and build metadata of 'version' are dropped before the comparison, as semverCompare
+  leaves pre-release versions out of a constraint without a pre-release. A version that is not semver returns
+  "false", as semverCompare would fail the render.
 */}}
-{{- define "cluster.internal.version.isAtLeast" -}}
+{{- define "cluster.internal.version.satisfies" -}}
+{{- $result := false -}}
 {{- if eq .version "N/A" -}}
-true
+{{- $result = true -}}
 {{- else if regexMatch "^v?[0-9]+\\.[0-9]+\\.[0-9]+(-[0-9A-Za-z.-]+)?(\\+[0-9A-Za-z.-]+)?$" .version -}}
-{{- if semverCompare (printf ">=%s-0" .minVersion) .version -}}
-true
+{{- $result = semverCompare .constraint (regexReplaceAll "^v?([0-9]+\\.[0-9]+\\.[0-9]+).*$" .version "${1}") -}}
 {{- end -}}
-{{- end -}}
+{{- $result -}}
 {{- end -}}
 
 {{/*

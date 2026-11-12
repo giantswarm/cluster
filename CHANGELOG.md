@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Apps: Add `cluster.app.version.isAtLeast` helper to gate app values on the deployed app version, including release candidates, dev builds and version overrides.
+- Apps: Add `cluster.app.version.satisfies` helper to gate app values on a semver constraint of the deployed app version, including release candidates, dev builds and version overrides.
 
 ### Fixed
 
