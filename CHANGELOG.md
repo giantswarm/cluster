@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Apps: Add `cluster.app.version.satisfies` helper to gate app values on a semver constraint of the deployed app version, including release candidates, dev builds and version overrides.
+
+### Fixed
+
+- Apps: cert-manager release candidates and dev builds of v4 and newer get the v4 values.
+
 ## [9.5.0] - 2026-11-04
 
 ### Added
