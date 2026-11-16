@@ -1,7 +1,7 @@
 appName: node-exporter
 chartName: node-exporter-app
 # repo: giantswarm/node-exporter-app
-version: 1.21.0
+version: 1.21.1
 dependsOn:
 - kyverno-crds
 - prometheus-operator-crd
