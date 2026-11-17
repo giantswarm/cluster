@@ -7,7 +7,8 @@ dependsOn:
 - kyverno-crds
 - prometheus-operator-crd
 
-namespace: giantswarm
+namespace: security-profiles-operator
+createNamespace: true
 
 defaultValues:
   security-profiles-operator:
