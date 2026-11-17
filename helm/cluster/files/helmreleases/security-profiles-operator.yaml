@@ -1,0 +1,14 @@
+appName: security-profiles-operator
+# repo: giantswarm/security-profiles-operator-app
+version: 0.1.0
+dependsOn:
+- cert-manager
+- kyverno-crds
+- prometheus-operator-crd
+
+namespace: giantswarm
+
+defaultValues:
+  security-profiles-operator:
+    selinux:
+      enable: {{ and (ne .Values.global.components.selinux.mode "disabled") .Values.global.components.selinux.writablePolicyStore }}
