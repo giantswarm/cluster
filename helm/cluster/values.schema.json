@@ -1476,6 +1476,12 @@
                             "title": "security-bundle",
                             "description": "Configuration of security-bundle. For all available values see https://github.com/giantswarm/security-bundle."
                         },
+                        "securityProfilesOperator": {
+                            "$ref": "#/$defs/helmRelease",
+                            "type": "object",
+                            "title": "security-profiles-operator",
+                            "description": "Configuration of security-profiles-operator. For all available values see https://github.com/giantswarm/security-profiles-operator-app."
+                        },
                         "teleportKubeAgent": {
                             "$ref": "#/$defs/helmRelease",
                             "type": "object",
@@ -2943,6 +2949,9 @@
                             "$ref": "#/$defs/providerIntegrationAppConfig"
                         },
                         "securityBundle": {
+                            "$ref": "#/$defs/providerIntegrationAppConfig"
+                        },
+                        "securityProfilesOperator": {
                             "$ref": "#/$defs/providerIntegrationAppConfig"
                         },
                         "teleportKubeAgent": {

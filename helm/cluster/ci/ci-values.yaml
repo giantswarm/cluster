@@ -332,6 +332,8 @@ providerIntegration:
       enable: true
     securityBundle:
       enable: true
+    securityProfilesOperator:
+      enable: true
     teleportKubeAgent:
       enable: true
     verticalPodAutoscaler:
