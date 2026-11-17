@@ -37,7 +37,8 @@
 # Required for mounting /etc/ssl/certs into containers (e.g. kube-apiserver, cluster-autoscaler)
 - cp -a --remove-destination /usr/share/ca-certificates/. /etc/ssl/certs/
 # Fix SELinux labels for everything except `/usr` (read-only in Flatcar)
-- restorecon -RF -e /etc/.systemd-confext -e /usr /
+# `-i` ignores files removed during the walk (e.g. temporary files of other boot services)
+- restorecon -RFi -e /etc/.systemd-confext -e /usr /
 # Change label for kube-apiserver audit log directory for access from containers
 - mkdir -p /var/log/apiserver
 - chcon -R -t container_file_t /var/log/apiserver
