@@ -1,0 +1,9 @@
+appName: cilium-extensions
+# repo: giantswarm/cilium-extensions
+version: 0.1.0
+dependsOn:
+- cilium
+
+disable: {{ not $.Values.global.connectivity.cni.managed }}
+
+namespace: kube-system

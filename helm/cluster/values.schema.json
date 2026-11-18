@@ -1320,6 +1320,12 @@
                             "title": "Cilium",
                             "description": "Configuration of cilium-app. For all available values see https://github.com/giantswarm/cilium-app."
                         },
+                        "ciliumExtensions": {
+                            "$ref": "#/$defs/helmRelease",
+                            "type": "object",
+                            "title": "Cilium extensions",
+                            "description": "Configuration of cilium-extensions. For all available values see https://github.com/giantswarm/cilium-extensions."
+                        },
                         "ciliumServiceMonitors": {
                             "$ref": "#/$defs/helmRelease",
                             "type": "object",
@@ -2859,6 +2865,9 @@
                             "$ref": "#/$defs/providerIntegrationAppConfig"
                         },
                         "cilium": {
+                            "$ref": "#/$defs/providerIntegrationAppConfig"
+                        },
+                        "ciliumExtensions": {
                             "$ref": "#/$defs/providerIntegrationAppConfig"
                         },
                         "ciliumServiceMonitors": {

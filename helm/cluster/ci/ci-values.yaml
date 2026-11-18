@@ -297,6 +297,8 @@ providerIntegration:
       enable: true
     cilium:
       enable: true
+    ciliumExtensions:
+      enable: true
     ciliumServiceMonitors:
       enable: true
     clusterAutoscaler:
