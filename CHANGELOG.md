@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Apps: Add `cilium-extensions` HelmRelease, installed after `cilium`. It holds resources that need Cilium's CRDs, such as the CiliumNodeConfigs for ENI IP pre-allocation per node size. Disabled by default.
-- Apps: Add `security-profiles-operator` v0.1.0.
+- Apps: Add `security-profiles-operator` v0.1.1.
 
 ### Fixed
 

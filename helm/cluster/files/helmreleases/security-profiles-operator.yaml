@@ -1,6 +1,6 @@
 appName: security-profiles-operator
 # repo: giantswarm/security-profiles-operator-app
-version: 0.1.0
+version: 0.1.1
 dependsOn:
 - cert-manager
 - cilium
@@ -9,7 +9,6 @@ dependsOn:
 
 namespace: security-profiles-operator
 createNamespace: true
-
 defaultValues:
   security-profiles-operator:
     selinux:
