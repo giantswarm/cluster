@@ -54,6 +54,7 @@ var _ = Describe("global.connectivity.cni.managed", func() {
 			"awesome-coredns",
 			"awesome-network-policies",
 			"awesome-cert-manager",
+			"awesome-cilium-extensions",
 		))
 	})
 
@@ -63,5 +64,6 @@ var _ = Describe("global.connectivity.cni.managed", func() {
 		Expect(ciliumResources(manifests)).To(BeEmpty())
 		Expect(appsDependingOnCilium(manifests)).To(BeEmpty())
 		Expect(yq.Run(manifests, `select(.kind=="HelmRelease" and .metadata.name=="awesome-network-policies") | .metadata.name`)).NotTo(BeEmpty())
+		Expect(yq.Run(manifests, `select(.kind=="HelmRelease" and .metadata.name=="awesome-cilium-extensions") | .metadata.name`)).To(BeEmpty())
 	})
 })
