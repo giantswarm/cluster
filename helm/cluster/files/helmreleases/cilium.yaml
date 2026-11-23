@@ -11,6 +11,10 @@ defaultValues:
   ipam:
     mode: kubernetes
   k8sServiceHost: auto
+  {{- if eq (include "cluster.app.version.satisfies" (dict "root" $ "appName" "cilium" "constraint" ">=1.7.0")) "true" }}
+  k8s:
+    apiServerURLs: auto
+  {{- end }}
   kubeProxyReplacement: "true"
   operator:
     tolerations:

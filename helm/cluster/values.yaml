@@ -114,7 +114,7 @@ internal:
       apiServer:
         admissionConfiguration: {}
         auditPolicy: {}
-        enableAggregatorRouting: false
+        enableAggregatorRouting: true
         enablePriorityAndFairness: true
         featureGates:
           - enabled: true

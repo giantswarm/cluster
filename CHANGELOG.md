@@ -18,6 +18,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Control Plane: Move the Kamaji PolicyExceptions from the `policy-exceptions` namespace to `kube-system`.
 
+### Changed
+
+- Control Plane: Enable API server aggregator routing by default, so webhooks and aggregated APIs are reached directly at endpoint IPs. This rolls the control plane nodes.
+- Cilium: Discover the API server endpoints and fail over between them by default, so agents do not depend on the API load balancer. Only applies with cilium-app v1.7.0 or later, and providers can turn it off.
+
 ### Fixed
 
 - Control Plane: Remove the duplicate `app.kubernetes.io/managed-by` label from the Kamaji PolicyExceptions. The hardcoded `kyverno-policy-operator` value was overridden by `Helm` anyway.
