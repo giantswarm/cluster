@@ -77,7 +77,7 @@ spec:
         - Pod
         - Job
         names:
-        - {{ include "cluster.resource.name" $ }}-kamaji-etcd-etcd-*"
+        - {{ include "cluster.resource.name" $ }}-kamaji-etcd-etcd-*
         namespaces:
         - {{ .Release.Namespace }}
 {{- end }}

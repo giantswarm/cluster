@@ -47,12 +47,10 @@ spec:
   - name: restrict-seccomp-strict
     kind: ValidatingPolicy
   matchConditions:
-  # A 1:1 translation of the kyverno.io/v2 exception, including the trailing
-  # double quote of its name pattern, so it matches the same (no) objects.
   - name: kamaji-etcd
     expression: >-
       request.kind.kind in ['Pod', 'Job'] &&
       request.namespace == '{{ .Release.Namespace }}' &&
       has(object.metadata.name) &&
-      object.metadata.name.matches('^{{ include "cluster.resource.name" $ }}-kamaji-etcd-etcd-.*"$')
+      object.metadata.name.startsWith('{{ include "cluster.resource.name" $ }}-kamaji-etcd-etcd-')
 {{- end }}

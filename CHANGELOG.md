@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Control Plane: The Kamaji etcd PolicyException now matches the etcd Pods and Jobs. A stray `"` at the end of its name pattern meant it matched nothing.
 - SELinux: Node bootstrap no longer fails when a file is removed while `restorecon` relabels the node. `restorecon` now ignores removed files.
 
 ## [9.6.0] - 2026-11-16
