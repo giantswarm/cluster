@@ -1,0 +1,58 @@
+{{- if and (include "kamaji.isEnabled" $) $.Values.global.kyvernoPolicyExceptions.enabled }}
+apiVersion: policies.kyverno.io/v1
+kind: PolicyException
+metadata:
+  labels:
+    app.kubernetes.io/managed-by: kyverno-policy-operator
+    {{- include "cluster.labels.common.all" $  | nindent 4 }}
+  name: {{ include "cluster.resource.name" $ }}-kamaji
+  namespace: kube-system
+spec:
+  policyRefs:
+  - name: disallow-capabilities-strict
+    kind: ValidatingPolicy
+  - name: disallow-privilege-escalation
+    kind: ValidatingPolicy
+  - name: require-run-as-nonroot
+    kind: ValidatingPolicy
+  - name: restrict-seccomp-strict
+    kind: ValidatingPolicy
+  matchConditions:
+  - name: kamaji-control-plane
+    expression: >-
+      request.kind.kind in ['Deployment', 'Pod', 'ReplicaSet'] &&
+      request.namespace == '{{ $.Release.Namespace }}' &&
+      has(object.metadata.labels) &&
+      'kamaji.clastix.io/name' in object.metadata.labels &&
+      object.metadata.labels['kamaji.clastix.io/name'] == '{{ include "cluster.resource.name" $ }}'
+---
+apiVersion: policies.kyverno.io/v1
+kind: PolicyException
+metadata:
+  annotations:
+    "helm.sh/hook-weight": "-10"
+  labels:
+    app.kubernetes.io/managed-by: kyverno-policy-operator
+    {{- include "cluster.labels.common.all" $  | nindent 4 }}
+  name: {{ include "cluster.resource.name" $ }}-kamaji-etcd
+  namespace: kube-system
+spec:
+  policyRefs:
+  - name: disallow-capabilities-strict
+    kind: ValidatingPolicy
+  - name: disallow-privilege-escalation
+    kind: ValidatingPolicy
+  - name: require-run-as-nonroot
+    kind: ValidatingPolicy
+  - name: restrict-seccomp-strict
+    kind: ValidatingPolicy
+  matchConditions:
+  # A 1:1 translation of the kyverno.io/v2 exception, including the trailing
+  # double quote of its name pattern, so it matches the same (no) objects.
+  - name: kamaji-etcd
+    expression: >-
+      request.kind.kind in ['Pod', 'Job'] &&
+      request.namespace == '{{ .Release.Namespace }}' &&
+      has(object.metadata.name) &&
+      object.metadata.name.matches('^{{ include "cluster.resource.name" $ }}-kamaji-etcd-etcd-.*"$')
+{{- end }}

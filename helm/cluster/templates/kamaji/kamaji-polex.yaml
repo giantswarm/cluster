@@ -1,12 +1,13 @@
-{{- if (include "kamaji.isEnabled" $) }}
+{{- if and (include "kamaji.isEnabled" $) $.Values.global.kyvernoPolicyExceptions.enabled $.Values.global.kyvernoPolicyExceptions.legacy.enabled }}
 apiVersion: kyverno.io/v2
 kind: PolicyException
 metadata:
   labels:
     app.kubernetes.io/managed-by: kyverno-policy-operator
     {{- include "cluster.labels.common.all" $  | nindent 4 }}
+    policy.giantswarm.io/migrated-to-cel: "true"
   name: {{ include "cluster.resource.name" $ }}-kamaji
-  namespace: policy-exceptions
+  namespace: kube-system
 spec:
   background: true
   exceptions:
@@ -47,8 +48,9 @@ metadata:
   labels:
     app.kubernetes.io/managed-by: kyverno-policy-operator
     {{- include "cluster.labels.common.all" $  | nindent 4 }}
+    policy.giantswarm.io/migrated-to-cel: "true"
   name: {{ include "cluster.resource.name" $ }}-kamaji-etcd
-  namespace: policy-exceptions
+  namespace: kube-system
 spec:
   background: true
   exceptions:
