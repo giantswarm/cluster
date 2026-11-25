@@ -3,7 +3,6 @@ apiVersion: kyverno.io/v2
 kind: PolicyException
 metadata:
   labels:
-    app.kubernetes.io/managed-by: kyverno-policy-operator
     {{- include "cluster.labels.common.all" $  | nindent 4 }}
     policy.giantswarm.io/migrated-to-cel: "true"
   name: {{ include "cluster.resource.name" $ }}-kamaji
@@ -46,7 +45,6 @@ metadata:
   annotations:
     "helm.sh/hook-weight": "-10"
   labels:
-    app.kubernetes.io/managed-by: kyverno-policy-operator
     {{- include "cluster.labels.common.all" $  | nindent 4 }}
     policy.giantswarm.io/migrated-to-cel: "true"
   name: {{ include "cluster.resource.name" $ }}-kamaji-etcd

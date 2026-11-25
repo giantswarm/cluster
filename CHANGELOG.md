@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Control Plane: Remove the duplicate `app.kubernetes.io/managed-by` label from the Kamaji PolicyExceptions. The hardcoded `kyverno-policy-operator` value was overridden by `Helm` anyway.
 - Control Plane: The Kamaji etcd PolicyException now matches the etcd Pods and Jobs. A stray `"` at the end of its name pattern meant it matched nothing.
 - SELinux: Node bootstrap no longer fails when a file is removed while `restorecon` relabels the node. `restorecon` now ignores removed files.
 

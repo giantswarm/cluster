@@ -3,7 +3,6 @@ apiVersion: policies.kyverno.io/v1
 kind: PolicyException
 metadata:
   labels:
-    app.kubernetes.io/managed-by: kyverno-policy-operator
     {{- include "cluster.labels.common.all" $  | nindent 4 }}
   name: {{ include "cluster.resource.name" $ }}-kamaji
   namespace: kube-system
@@ -32,7 +31,6 @@ metadata:
   annotations:
     "helm.sh/hook-weight": "-10"
   labels:
-    app.kubernetes.io/managed-by: kyverno-policy-operator
     {{- include "cluster.labels.common.all" $  | nindent 4 }}
   name: {{ include "cluster.resource.name" $ }}-kamaji-etcd
   namespace: kube-system
