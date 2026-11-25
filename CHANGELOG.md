@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Apps: Add `cilium-extensions` HelmRelease, installed after `cilium`. It holds resources that need Cilium's CRDs, such as the CiliumNodeConfigs for ENI IP pre-allocation per node size. Disabled by default.
 - Apps: Add `security-profiles-operator` v0.1.1.
 
+### Changed
+
+- Apps: Enable `kubescape` in the `security-bundle` on management clusters. A cluster is the management cluster when its name equals `global.managementCluster`. Workload clusters keep the bundle's default, which leaves `kubescape` off. To turn it off on a management cluster, set `global.apps.securityBundle.values.apps.kubescape.enabled` to `false`.
+
 ### Fixed
 
 - SELinux: Node bootstrap no longer fails when a file is removed while `restorecon` relabels the node. `restorecon` now ignores removed files.

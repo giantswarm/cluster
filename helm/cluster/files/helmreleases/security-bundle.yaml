@@ -7,3 +7,11 @@ driftDetection: enabled
 
 defaultValues:
   clusterID: {{ include "cluster.resource.name" $ }}
+  {{- /* The management cluster is the cluster that has the same name as the management cluster
+         it is deployed on. Kubescape runs on every management cluster; on workload clusters the
+         bundle's own default (off) applies. */}}
+  {{- if eq (include "cluster.resource.name" $) $.Values.global.managementCluster }}
+  apps:
+    kubescape:
+      enabled: true
+  {{- end }}
