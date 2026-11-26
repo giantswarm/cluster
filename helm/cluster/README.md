@@ -585,6 +585,16 @@ For Giant Swarm internal use only, not stable, or not supported by UIs.
 | `internal.ephemeralConfiguration.offlineTesting` | **Offline testing** - Configure how Helm template rendering behaves when it is running during testing (e.g. locally or in the CI) and without connection to cluster.|**Type:** `object`<br/>|
 | `internal.ephemeralConfiguration.offlineTesting.renderWithoutReleaseResource` | **Render without Release resource** - Flag that indicates that Helm should render templates even when Release CR cannot be fetched from the cluster.|**Type:** `boolean`<br/>|
 
+### Kyverno PolicyExceptions
+Properties within the `.global.kyvernoPolicyExceptions` object
+The Kyverno PolicyExceptions this chart renders for a Kamaji control plane on the management cluster.
+
+| **Property** | **Description** | **More Details** |
+| :----------- | :-------------- | :--------------- |
+| `global.kyvernoPolicyExceptions.enabled` | **Enabled** - Render the Kyverno PolicyExceptions. They are only rendered when Kamaji is the control plane provider.|**Type:** `boolean`<br/>**Default:** `true`|
+| `global.kyvernoPolicyExceptions.legacy` | **Legacy** - The kyverno.io/v2 PolicyExceptions.|**Type:** `object`<br/>|
+| `global.kyvernoPolicyExceptions.legacy.enabled` | **Enabled** - Renders the kyverno.io/v2 PolicyException, which applies to ClusterPolicies only. Will be used as a global switch in a future release.|**Type:** `boolean`<br/>**Default:** `true`|
+
 ### Metadata
 Properties within the `.global.metadata` object
 

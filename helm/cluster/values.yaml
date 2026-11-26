@@ -96,6 +96,10 @@ global:
       structuredAuthentication:
         enabled: false
     replicas: 3
+  kyvernoPolicyExceptions:
+    enabled: true
+    legacy:
+      enabled: true
   metadata:
     preventDeletion: false
     servicePriority: highest

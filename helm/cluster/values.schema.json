@@ -2235,6 +2235,32 @@
                         }
                     }
                 },
+                "kyvernoPolicyExceptions": {
+                    "type": "object",
+                    "title": "Kyverno PolicyExceptions",
+                    "description": "The Kyverno PolicyExceptions this chart renders for a Kamaji control plane on the management cluster.",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean",
+                            "title": "Enabled",
+                            "description": "Render the Kyverno PolicyExceptions. They are only rendered when Kamaji is the control plane provider.",
+                            "default": true
+                        },
+                        "legacy": {
+                            "type": "object",
+                            "title": "Legacy",
+                            "description": "The kyverno.io/v2 PolicyExceptions.",
+                            "properties": {
+                                "enabled": {
+                                    "type": "boolean",
+                                    "title": "Enabled",
+                                    "description": "Renders the kyverno.io/v2 PolicyException, which applies to ClusterPolicies only. Will be used as a global switch in a future release.",
+                                    "default": true
+                                }
+                            }
+                        }
+                    }
+                },
                 "managementCluster": {
                     "type": "string",
                     "title": "Management cluster",
